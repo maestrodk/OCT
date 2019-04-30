@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OverloadClientTool")]
+[assembly: AssemblyProduct("Overload Client Tool")]
 [assembly: AssemblyCopyright("Copyright ©  2019 Søren Michélsen (with Olproxy code by Arne Bruijn)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

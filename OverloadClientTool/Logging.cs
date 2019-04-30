@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Threading;
@@ -6,6 +7,22 @@ using System.Windows.Forms;
 
 namespace OverloadClientTool
 {
+    public class MyListBox : ListBox
+    {
+        public MyListBox() : base()
+        {
+            
+        }
+
+        protected override void OnClick(EventArgs e)
+        {
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+        }
+    }
+
     public enum Level : int
     {
         Critical = 0,
@@ -24,7 +41,7 @@ namespace OverloadClientTool
         private const int DefaultLinesInTextBox = 1000;
 
         private bool disposed;
-        private ListBox listBox;
+        private MyListBox listBox;
         private string messageFormat;
         private readonly int maxEntriesInListBox;
         private bool canAddLogEntry;
@@ -56,6 +73,7 @@ namespace OverloadClientTool
             if (e.Index >= 0)
             {
                 ListBox listBox = ((ListBox)sender);
+                if (listBox.SelectedIndex > -1) listBox.SelectedIndex = -1;
 
                 if (listBox.Focused == false) listBox.ClearSelected();
 
@@ -219,11 +237,11 @@ namespace OverloadClientTool
 
         }
 
-        public ListBoxLog(ListBox listBox) : this(listBox, DefaualtMessageFormat, DefaultLinesInTextBox) { }
+        public ListBoxLog(MyListBox listBox) : this(listBox, DefaualtMessageFormat, DefaultLinesInTextBox) { }
 
-        public ListBoxLog(ListBox listBox, string messageFormat) : this(listBox, messageFormat, DefaultLinesInTextBox) { }
+        public ListBoxLog(MyListBox listBox, string messageFormat) : this(listBox, messageFormat, DefaultLinesInTextBox) { }
 
-        public ListBoxLog(ListBox listBox, string messageFormat, int maxLinesInListbox)
+        public ListBoxLog(MyListBox listBox, string messageFormat, int maxLinesInListbox)
         {
             this.disposed = false;
 
@@ -236,15 +254,12 @@ namespace OverloadClientTool
             canAddLogEntry = listBox.IsHandleCreated;
 
             //this.listBox.SelectionMode = SelectionMode.MultiExtended;
-            this.listBox.SelectionMode = SelectionMode.None;
-            this.listBox.Enabled = false;
 
             this.listBox.HandleCreated += OnHandleCreated;
             this.listBox.HandleDestroyed += OnHandleDestroyed;
 
             this.listBox.DrawItem += DrawItemHandler;
 
-            
             // this.listBox.KeyDown += KeyDownHandler;
 
             // MenuItem[] menuItems = new MenuItem[] { new MenuItem("Copy", new EventHandler(CopyMenuOnClickHandler)) };
@@ -253,6 +268,10 @@ namespace OverloadClientTool
             // this.listBox.ContextMenu.Popup += new EventHandler(CopyMenuPopupHandler);
 
             this.listBox.DrawMode = DrawMode.OwnerDrawFixed;
+
+            this.listBox.SelectionMode = SelectionMode.One;
+            this.listBox.Enabled = true;
+
         }
 
         public void Log(string message) { Log(Level.Debug, message); }

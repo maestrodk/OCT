@@ -42,7 +42,6 @@
             this.ExitButton = new System.Windows.Forms.Button();
             this.MapUpdateButton = new System.Windows.Forms.Button();
             this.SelectDark = new System.Windows.Forms.CheckBox();
-            this.ActivityLogListBox = new System.Windows.Forms.ListBox();
             this.UseEmbeddedOlproxy = new System.Windows.Forms.CheckBox();
             this.OverloadGroupBox = new System.Windows.Forms.GroupBox();
             this.OverloadRunning = new System.Windows.Forms.PictureBox();
@@ -51,11 +50,14 @@
             this.UpdatingMaps = new System.Windows.Forms.PictureBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.OptionsGroupBox = new System.Windows.Forms.GroupBox();
-            this.AutoUpdateMapsCheckBox = new System.Windows.Forms.CheckBox();
             this.UseDLCLocationCheckBox = new System.Windows.Forms.CheckBox();
             this.UseOlproxyCheckBox = new System.Windows.Forms.CheckBox();
             this.UseOlmodCheckBox = new System.Windows.Forms.CheckBox();
+            this.AutoUpdateMapsCheckBox = new System.Windows.Forms.CheckBox();
             this.LoggingGroupBox = new System.Windows.Forms.GroupBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.ActivityListView = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ActionsGroupBox = new System.Windows.Forms.GroupBox();
             this.CreateDesktopShortcuts = new System.Windows.Forms.Button();
             this.OverloadClientToolNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -67,6 +69,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).BeginInit();
             this.OptionsGroupBox.SuspendLayout();
             this.LoggingGroupBox.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.ActionsGroupBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -85,9 +88,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(10, 24);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(168, 13);
+            this.label2.Size = new System.Drawing.Size(182, 13);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Path to Overload.exe / Olmod.exe";
+            this.label2.Text = "Path to Overload installation directory";
             // 
             // OverloadExecutable
             // 
@@ -122,9 +125,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(10, 24);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(99, 13);
+            this.label4.Size = new System.Drawing.Size(173, 13);
             this.label4.TabIndex = 0;
-            this.label4.Text = "Path to Olproxy.exe";
+            this.label4.Text = "Path to external Olproxy application";
             // 
             // OlproxyExecutable
             // 
@@ -152,7 +155,7 @@
             // StartButton
             // 
             this.StartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StartButton.Location = new System.Drawing.Point(12, 28);
+            this.StartButton.Location = new System.Drawing.Point(16, 31);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(65, 24);
             this.StartButton.TabIndex = 9;
@@ -162,8 +165,9 @@
             // 
             // ExitButton
             // 
+            this.ExitButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ExitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ExitButton.Location = new System.Drawing.Point(91, 28);
+            this.ExitButton.Location = new System.Drawing.Point(16, 74);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(65, 24);
             this.ExitButton.TabIndex = 9;
@@ -174,7 +178,7 @@
             // MapUpdateButton
             // 
             this.MapUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapUpdateButton.Location = new System.Drawing.Point(12, 56);
+            this.MapUpdateButton.Location = new System.Drawing.Point(181, 56);
             this.MapUpdateButton.Name = "MapUpdateButton";
             this.MapUpdateButton.Size = new System.Drawing.Size(65, 24);
             this.MapUpdateButton.TabIndex = 9;
@@ -187,7 +191,7 @@
             this.SelectDark.AutoSize = true;
             this.SelectDark.Checked = true;
             this.SelectDark.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.SelectDark.Location = new System.Drawing.Point(17, 149);
+            this.SelectDark.Location = new System.Drawing.Point(17, 121);
             this.SelectDark.Name = "SelectDark";
             this.SelectDark.Size = new System.Drawing.Size(81, 17);
             this.SelectDark.TabIndex = 5;
@@ -195,27 +199,12 @@
             this.SelectDark.UseVisualStyleBackColor = true;
             this.SelectDark.CheckedChanged += new System.EventHandler(this.SelectDark_CheckedChanged);
             // 
-            // ActivityLogListBox
-            // 
-            this.ActivityLogListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.ActivityLogListBox.Font = new System.Drawing.Font("Calibri", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ActivityLogListBox.ForeColor = System.Drawing.Color.Black;
-            this.ActivityLogListBox.FormattingEnabled = true;
-            this.ActivityLogListBox.ItemHeight = 10;
-            this.ActivityLogListBox.Location = new System.Drawing.Point(21, 28);
-            this.ActivityLogListBox.Margin = new System.Windows.Forms.Padding(2);
-            this.ActivityLogListBox.Name = "ActivityLogListBox";
-            this.ActivityLogListBox.Size = new System.Drawing.Size(392, 120);
-            this.ActivityLogListBox.TabIndex = 0;
-            this.ActivityLogListBox.TabStop = false;
-            this.ActivityLogListBox.MouseLeave += new System.EventHandler(this.ActivityLogListBox_MouseLeave);
-            // 
             // UseEmbeddedOlproxy
             // 
             this.UseEmbeddedOlproxy.AutoSize = true;
             this.UseEmbeddedOlproxy.Checked = true;
             this.UseEmbeddedOlproxy.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseEmbeddedOlproxy.Location = new System.Drawing.Point(17, 52);
+            this.UseEmbeddedOlproxy.Location = new System.Drawing.Point(17, 48);
             this.UseEmbeddedOlproxy.Name = "UseEmbeddedOlproxy";
             this.UseEmbeddedOlproxy.Size = new System.Drawing.Size(136, 17);
             this.UseEmbeddedOlproxy.TabIndex = 5;
@@ -303,7 +292,6 @@
             // 
             // OptionsGroupBox
             // 
-            this.OptionsGroupBox.Controls.Add(this.AutoUpdateMapsCheckBox);
             this.OptionsGroupBox.Controls.Add(this.UseDLCLocationCheckBox);
             this.OptionsGroupBox.Controls.Add(this.SelectDark);
             this.OptionsGroupBox.Controls.Add(this.UseOlproxyCheckBox);
@@ -311,28 +299,17 @@
             this.OptionsGroupBox.Controls.Add(this.UseEmbeddedOlproxy);
             this.OptionsGroupBox.Location = new System.Drawing.Point(444, 17);
             this.OptionsGroupBox.Name = "OptionsGroupBox";
-            this.OptionsGroupBox.Size = new System.Drawing.Size(258, 204);
+            this.OptionsGroupBox.Size = new System.Drawing.Size(258, 144);
             this.OptionsGroupBox.TabIndex = 13;
             this.OptionsGroupBox.TabStop = false;
             this.OptionsGroupBox.Text = "Options";
-            // 
-            // AutoUpdateMapsCheckBox
-            // 
-            this.AutoUpdateMapsCheckBox.AutoSize = true;
-            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(17, 126);
-            this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
-            this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(139, 17);
-            this.AutoUpdateMapsCheckBox.TabIndex = 5;
-            this.AutoUpdateMapsCheckBox.Text = "Update maps on startup";
-            this.AutoUpdateMapsCheckBox.UseVisualStyleBackColor = true;
-            this.AutoUpdateMapsCheckBox.Click += new System.EventHandler(this.AutoUpdateMaps_Click);
             // 
             // UseDLCLocationCheckBox
             // 
             this.UseDLCLocationCheckBox.AutoCheck = false;
             this.UseDLCLocationCheckBox.AutoSize = true;
             this.UseDLCLocationCheckBox.Enabled = false;
-            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(17, 100);
+            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(17, 96);
             this.UseDLCLocationCheckBox.Name = "UseDLCLocationCheckBox";
             this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(201, 17);
             this.UseDLCLocationCheckBox.TabIndex = 5;
@@ -346,7 +323,7 @@
             this.UseOlproxyCheckBox.AutoSize = true;
             this.UseOlproxyCheckBox.Checked = true;
             this.UseOlproxyCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseOlproxyCheckBox.Location = new System.Drawing.Point(17, 28);
+            this.UseOlproxyCheckBox.Location = new System.Drawing.Point(17, 27);
             this.UseOlproxyCheckBox.Name = "UseOlproxyCheckBox";
             this.UseOlproxyCheckBox.Size = new System.Drawing.Size(83, 17);
             this.UseOlproxyCheckBox.TabIndex = 5;
@@ -359,7 +336,7 @@
             this.UseOlmodCheckBox.AutoSize = true;
             this.UseOlmodCheckBox.Checked = true;
             this.UseOlmodCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseOlmodCheckBox.Location = new System.Drawing.Point(17, 75);
+            this.UseOlmodCheckBox.Location = new System.Drawing.Point(17, 71);
             this.UseOlmodCheckBox.Name = "UseOlmodCheckBox";
             this.UseOlmodCheckBox.Size = new System.Drawing.Size(78, 17);
             this.UseOlmodCheckBox.TabIndex = 5;
@@ -367,24 +344,69 @@
             this.UseOlmodCheckBox.UseVisualStyleBackColor = true;
             this.UseOlmodCheckBox.CheckedChanged += new System.EventHandler(this.UseOlmod_CheckedChanged);
             // 
+            // AutoUpdateMapsCheckBox
+            // 
+            this.AutoUpdateMapsCheckBox.AutoSize = true;
+            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(12, 61);
+            this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
+            this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(139, 17);
+            this.AutoUpdateMapsCheckBox.TabIndex = 5;
+            this.AutoUpdateMapsCheckBox.Text = "Update maps on startup";
+            this.AutoUpdateMapsCheckBox.UseVisualStyleBackColor = true;
+            this.AutoUpdateMapsCheckBox.Click += new System.EventHandler(this.AutoUpdateMaps_Click);
+            // 
             // LoggingGroupBox
             // 
-            this.LoggingGroupBox.Controls.Add(this.ActivityLogListBox);
-            this.LoggingGroupBox.Location = new System.Drawing.Point(12, 268);
+            this.LoggingGroupBox.Controls.Add(this.panel1);
+            this.LoggingGroupBox.Location = new System.Drawing.Point(18, 266);
             this.LoggingGroupBox.Name = "LoggingGroupBox";
-            this.LoggingGroupBox.Size = new System.Drawing.Size(426, 164);
+            this.LoggingGroupBox.Size = new System.Drawing.Size(564, 170);
             this.LoggingGroupBox.TabIndex = 14;
             this.LoggingGroupBox.TabStop = false;
             this.LoggingGroupBox.Text = "Activity Log";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.ActivityListView);
+            this.panel1.Location = new System.Drawing.Point(19, 19);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(531, 133);
+            this.panel1.TabIndex = 0;
+            // 
+            // ActivityListView
+            // 
+            this.ActivityListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ActivityListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.ActivityListView.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ActivityListView.FullRowSelect = true;
+            this.ActivityListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.ActivityListView.Location = new System.Drawing.Point(102, 28);
+            this.ActivityListView.Margin = new System.Windows.Forms.Padding(0);
+            this.ActivityListView.MultiSelect = false;
+            this.ActivityListView.Name = "ActivityListView";
+            this.ActivityListView.ShowGroups = false;
+            this.ActivityListView.Size = new System.Drawing.Size(299, 65);
+            this.ActivityListView.TabIndex = 0;
+            this.ActivityListView.TabStop = false;
+            this.ActivityListView.UseCompatibleStateImageBehavior = false;
+            this.ActivityListView.View = System.Windows.Forms.View.List;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Width = 500;
             // 
             // ActionsGroupBox
             // 
             this.ActionsGroupBox.Controls.Add(this.StartButton);
             this.ActionsGroupBox.Controls.Add(this.CreateDesktopShortcuts);
             this.ActionsGroupBox.Controls.Add(this.ExitButton);
-            this.ActionsGroupBox.Location = new System.Drawing.Point(444, 363);
+            this.ActionsGroupBox.Location = new System.Drawing.Point(602, 266);
             this.ActionsGroupBox.Name = "ActionsGroupBox";
-            this.ActionsGroupBox.Size = new System.Drawing.Size(258, 69);
+            this.ActionsGroupBox.Size = new System.Drawing.Size(100, 168);
             this.ActionsGroupBox.TabIndex = 15;
             this.ActionsGroupBox.TabStop = false;
             this.ActionsGroupBox.Text = "Actions";
@@ -392,7 +414,7 @@
             // CreateDesktopShortcuts
             // 
             this.CreateDesktopShortcuts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CreateDesktopShortcuts.Location = new System.Drawing.Point(170, 28);
+            this.CreateDesktopShortcuts.Location = new System.Drawing.Point(16, 117);
             this.CreateDesktopShortcuts.Name = "CreateDesktopShortcuts";
             this.CreateDesktopShortcuts.Size = new System.Drawing.Size(65, 24);
             this.CreateDesktopShortcuts.TabIndex = 9;
@@ -408,21 +430,24 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.AutoUpdateMapsCheckBox);
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.UpdatingMaps);
             this.groupBox1.Controls.Add(this.MapUpdateButton);
-            this.groupBox1.Location = new System.Drawing.Point(444, 251);
+            this.groupBox1.Location = new System.Drawing.Point(444, 167);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(258, 106);
+            this.groupBox1.Size = new System.Drawing.Size(258, 93);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Master map list URL";
             // 
             // OCTMainForm
             // 
+            this.AcceptButton = this.StartButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(720, 445);
+            this.CancelButton = this.ExitButton;
+            this.ClientSize = new System.Drawing.Size(720, 454);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.ActionsGroupBox);
             this.Controls.Add(this.LoggingGroupBox);
@@ -436,7 +461,6 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
-            this.MouseEnter += new System.EventHandler(this.Main_MouseEnter);
             this.Resize += new System.EventHandler(this.Main_Resize);
             this.OverloadGroupBox.ResumeLayout(false);
             this.OverloadGroupBox.PerformLayout();
@@ -448,6 +472,7 @@
             this.OptionsGroupBox.ResumeLayout(false);
             this.OptionsGroupBox.PerformLayout();
             this.LoggingGroupBox.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ActionsGroupBox.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -470,7 +495,6 @@
         private System.Windows.Forms.Button ExitButton;
         private System.Windows.Forms.Button MapUpdateButton;
         private System.Windows.Forms.CheckBox SelectDark;
-        private System.Windows.Forms.ListBox ActivityLogListBox;
         private System.Windows.Forms.CheckBox UseEmbeddedOlproxy;
         private System.Windows.Forms.GroupBox OverloadGroupBox;
         private System.Windows.Forms.GroupBox OlproxyGroupBox;
@@ -488,6 +512,9 @@
         private System.Windows.Forms.CheckBox AutoUpdateMapsCheckBox;
         private System.Windows.Forms.CheckBox UseOlproxyCheckBox;
         private System.Windows.Forms.CheckBox UseOlmodCheckBox;
+        private System.Windows.Forms.ListView ActivityListView;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

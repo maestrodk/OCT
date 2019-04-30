@@ -146,8 +146,9 @@ namespace OverloadClientTool
                 string olproxyFileName = Path.Combine(initPath, "olproxy.exe");
 
                 // Set Overload/Olmod path.
-                if (File.Exists(olmodFileName)) OverloadPath = olmodFileName;
-                else OverloadPath = overloadFileName;
+                //if (File.Exists(olmodFileName)) OverloadPath = olmodFileName;
+                //else OverloadPath = overloadFileName;
+                OverloadPath = overloadFileName;
 
                 // Set Olproxy path.
                 OlproxyPath = olproxyFileName;

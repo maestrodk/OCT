@@ -32,7 +32,7 @@ namespace OverloadClientTool
         Color LightTextBoxBackColor = Color.White;
 
         private bool autoStart = false;
-        private ListBoxLog listBoxLog;
+        private ListViewLogger logger = null;
 
         private OlproxyProgram olproxyTask = null;
         private Thread olproxyThread = null;
@@ -67,10 +67,10 @@ namespace OverloadClientTool
 
             // Prepare embedded OlproxyProgram instance before attempting to start thread.
             olproxyTask = new OlproxyProgram();
-            olproxyTask.SetLogger(InfoLogMessage);
+            olproxyTask.SetLogger(Info);
 
             // Set logging for map manager.
-            mapManager.SetLogger(InfoLogMessage, ErrorLogMessage);
+            mapManager.SetLogger(Info, Error);
 
             // Create properties for Olproxy thread (will be update from TextBox fields whenever Olproxy is restarted).
             olproxyConfig.Add("isServer", false);
@@ -80,24 +80,29 @@ namespace OverloadClientTool
             olproxyConfig.Add("notes", "");
             
             // Start logging (default is paused state, will be enabled when startup is complete).
-            InitLogging(ActivityLogListBox, DarkTextBoxBackColor, LightTextBoxBackColor);
-
+            logger = new ListViewLogger(ActivityListView, DarkTextBoxBackColor, LightTextBoxBackColor, DarkTheme);
+            
             // Reflect selected theme settings.
             SetTheme();
         }
 
-        private void InitLogging(ListBox listBox, Color darkBackColor, Color lightBackColor)
+        private void Info(string text)
         {
-            listBoxLog = new ListBoxLog(listBox);
-            listBoxLog.Paused = true;
+            logger?.InfoLogMessage(text);
+        }
 
-            // Make ListBoxLog aware of the selected theme setting.
-            listBoxLog.SetDarkTheme(DarkTheme, darkBackColor, lightBackColor);
+        private void Warning(string text)
+        {
+            logger?.WarningLogMessage(text);
+        }
 
-            // Start background monitor for periodic log updates.
-            Thread thread = new Thread(ActivityBackgroundMonitor);
-            thread.IsBackground = true;
-            thread.Start();
+        private void Verbose(string text)
+        {
+            logger?.VerboseLogMessage(text);
+        }
+        private void Error(string text)
+        {
+            logger?.ErrorLogMessage(text);
         }
 
         /// <summary>
@@ -185,50 +190,64 @@ namespace OverloadClientTool
             {
                 Thread.Sleep(1000);
 
-                if ((listBoxLog != null) && (!listBoxLog.Paused))
+                try
                 {
-                    string olproxyName = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
-                    string overloadName = Path.GetFileNameWithoutExtension(OverloadExecutable.Text).ToLower();
-
-                    if (UseEmbeddedOlproxy.Checked)
+                    if (logger != null)
                     {
-                        if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive))
+                        string overloadPath = Path.GetDirectoryName(OverloadExecutable.Text);
+                        string overloadExe = Path.Combine(overloadPath, "overload.exe");
+                        string olmodExe = Path.Combine(overloadPath, "olmod.exe");
+
+                        string olproxyName = "olproxy";
+                        string olmodName = "olmod";
+                        string overloadName = "overload";
+
+                        if (UseEmbeddedOlproxy.Checked)
                         {
-                            OlproxyRunning.Invoke(new Action(() => OlproxyRunning.Visible = true));
+                            if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive))
+                            {
+                                OlproxyRunning.Invoke(new Action(() => OlproxyRunning.Visible = true));
+                            }
+                            else
+                            {
+                                OlproxyRunning.Invoke(new Action(() => OlproxyRunning.Visible = false));
+                            }
                         }
                         else
                         {
-                            OlproxyRunning.Invoke(new Action(() => OlproxyRunning.Visible = false));
+                            OlproxyRunning.Invoke(new Action(() => OlproxyRunning.Visible = (GetRunningProcess(olproxyName) != null)));
+                        }
+
+                        bool overloadRunning = (GetRunningProcess(overloadName) != null);
+                        bool olmodRunning = (GetRunningProcess(olmodName) != null);
+
+                        OverloadRunning.Invoke(new Action(() => OverloadRunning.Visible = (overloadRunning || olmodRunning)));
+                    }
+
+                    if (!OlproxyRunning.Visible && !OverloadRunning.Visible)
+                    {
+                        try { StartButton.Invoke(new Action(() => StartButton.Text = "Start")); } catch { }
+                    }
+                    else
+                    {
+                        try { StartButton.Invoke(new Action(() => StartButton.Text = "Stop")); } catch { }
+                    }
+
+                    try
+                    {
+                        if (StartButton.Enabled)
+                        {
+                            StartButton.Invoke(new Action(() => StartButton.BackColor = (DarkTheme) ? DarkButtonEnabledBackColor : LightButtonEnabledBackColor));
+                            StartButton.Invoke(new Action(() => StartButton.ForeColor = (DarkTheme) ? DarkButtonEnabledForeColor : LightButtonEnabledForeColor));
+                        }
+                        else
+                        {
+                            StartButton.Invoke(new Action(() => StartButton.BackColor = (DarkTheme) ? DarkButtonDisabledBackColor : LightButtonDisabledBackColor));
+                            StartButton.Invoke(new Action(() => StartButton.ForeColor = (DarkTheme) ? DarkButtonDisabledForeColor : LightButtonDisabledForeColor));
                         }
                     }
-                    else
+                    catch
                     {
-                        OlproxyRunning.Invoke(new Action(() => OlproxyRunning.Visible = (GetRunningProcess(olproxyName) != null)));
-                    }
-
-                    OverloadRunning.Invoke(new Action(() => OverloadRunning.Visible = ((GetRunningProcess(overloadName) != null))));
-                }
-
-                if (!OlproxyRunning.Visible || !OverloadRunning.Visible)
-                {
-                    try { StartButton.Invoke(new Action(() => StartButton.Text = "Start")); } catch { }
-                }
-                else
-                {
-                    try { StartButton.Invoke(new Action(() => StartButton.Text = "Stop")); } catch { }
-                }
-
-                try
-                {
-                    if (StartButton.Enabled)
-                    {
-                        StartButton.Invoke(new Action(() => StartButton.BackColor = (DarkTheme) ? DarkButtonEnabledBackColor : LightButtonEnabledBackColor));
-                        StartButton.Invoke(new Action(() => StartButton.ForeColor = (DarkTheme) ? DarkButtonEnabledForeColor : LightButtonEnabledForeColor));
-                    }
-                    else
-                    {
-                        StartButton.Invoke(new Action(() => StartButton.BackColor = (DarkTheme) ? DarkButtonDisabledBackColor : LightButtonDisabledBackColor));
-                        StartButton.Invoke(new Action(() => StartButton.ForeColor = (DarkTheme) ? DarkButtonDisabledForeColor : LightButtonDisabledForeColor));
                     }
                 }
                 catch
@@ -296,13 +315,17 @@ namespace OverloadClientTool
 
             UpdateDLCLocation();
 
-            listBoxLog.Paused = false;                
+            // Announce ourself.
+            Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen 1234567890123456789012345678901234567890");
+            Info("Olproxy by Arne de Bruijn.");
 
-            InfoLogMessage("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen.");
-            InfoLogMessage("Olproxy by Arne de Bruijn.");
+            // Start background monitor for periodic log updates.
+            Thread thread = new Thread(ActivityBackgroundMonitor);
+            thread.IsBackground = true;
+            thread.Start();
 
-            // Auto-update maps on startup.
-            MapUpdateButton_Click(null, null);
+            // Check if we should auto-update maps on startup.
+            if (AutoUpdateMapsCheckBox.Checked) MapUpdateButton_Click(null, null);
 
             // Check for startup options.
             //OverloadClientToolNotifyIcon.Icon = Properties.Resources.OST;
@@ -334,30 +357,27 @@ namespace OverloadClientTool
         {
             UpdatingMaps.Invoke(new Action(() => UpdatingMaps.Visible = true));
 
-            VerboseLogMessage(String.Format("Checking for new/updated maps."));
+            Verbose(String.Format("Checking for new/updated maps."));
 
             if (UseDLCLocationCheckBox.Enabled && UseDLCLocationCheckBox.Checked)
             {
-                VerboseLogMessage(String.Format("Overload DLC directory used for maps."));
+                Verbose(String.Format("Overload DLC directory used for maps."));
                 mapManager.Update(null, dlcLocation);
             }
             else
             {
-                VerboseLogMessage(String.Format("Overload ProgramData directory used for maps."));
+                Verbose(String.Format("Overload ProgramData directory used for maps."));
                 mapManager.Update();
             }
 
-            VerboseLogMessage(String.Format($"Map check finished: {mapManager.Checked} maps, {mapManager.Created} created, {mapManager.Updated} updated."));
+            Verbose(String.Format($"Map check finished: {mapManager.Checked} maps, {mapManager.Created} created, {mapManager.Updated} updated."));
 
             UpdatingMaps.Invoke(new Action(() => UpdatingMaps.Visible = false));
             MapUpdateButton.Invoke(new Action(() => MapUpdateButton.Enabled = true));
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            // Prevent exception when objects are nulled/destroyed.
-            listBoxLog.Paused = true;
-
+        {          
             // Kill embedded Olproxy.
             KillOlproxyThread();
 
@@ -387,6 +407,29 @@ namespace OverloadClientTool
         {
             TestSetTextBoxColor(OverloadExecutable);
             TestSetTextBoxColor(OlproxyExecutable);
+
+            try
+            {
+                string path = Path.GetDirectoryName(OverloadExecutable.Text);
+                string olmodFileName = Path.Combine(path, "olmod.exe");
+
+                if (System.IO.File.Exists(olmodFileName)) UseOlmodCheckBox.Enabled = true;
+                else UseOlmodCheckBox.Enabled = false;
+            }
+            catch
+            {
+                UseOlmodCheckBox.Enabled = false;
+            }
+
+            try
+            {
+                if (System.IO.File.Exists(OlproxyExecutable.Text)) UseEmbeddedOlproxy.Enabled = true;
+                else UseEmbeddedOlproxy.Enabled = false;
+            }
+            catch
+            {
+                UseEmbeddedOlproxy.Enabled = false;
+            }
 
             ValidateButton(StartButton);
         }
@@ -431,6 +474,8 @@ namespace OverloadClientTool
             {
                 OverloadExecutable.Text = SelectExecutable.FileName;
                 OverloadExecutable.SelectionLength = 0;
+
+                OverloadPath = OverloadExecutable.Text;
             }
 
             Directory.SetCurrentDirectory(save);
@@ -467,18 +512,20 @@ namespace OverloadClientTool
             {
                 StopButton_Click(null, null);
                 StartButton.Text = "Start";
-                return;
             }
+            else
+            {
+                Thread startOverloadThread = new Thread(RestartOverload);
+                startOverloadThread.IsBackground = true;
+                startOverloadThread.Start();
 
-            //StartButton.Enabled = false;
-
-            Thread startOverloadThread = new Thread(RestartOverload);
-            startOverloadThread.IsBackground = true;
-            startOverloadThread.Start();
-
-            Thread startOlproxyThread = new Thread(RestartOlproxy);
-            startOlproxyThread.IsBackground = true;
-            startOlproxyThread.Start();
+                if (UseOlproxyCheckBox.Checked)
+                {
+                    Thread startOlproxyThread = new Thread(RestartOlproxy);
+                    startOlproxyThread.IsBackground = true;
+                    startOlproxyThread.Start();
+                }
+            }
         }
 
         private void StartUp(bool useOlmod, bool useOlproxy)
@@ -497,7 +544,7 @@ namespace OverloadClientTool
 
         private void RestartOlproxy()
         {
-            VerboseLogMessage("Starting up Olproxy.");
+            Verbose("Starting up Olproxy.");
 
             string name = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
             string args = OlproxyArgs.Text;
@@ -531,8 +578,16 @@ namespace OverloadClientTool
             string olproxyWorkingDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Olproxy");
             if (!Directory.Exists(olproxyWorkingDirectory)) Directory.CreateDirectory(olproxyWorkingDirectory);
 
+            if (new FileInfo(OlproxyExecutable.Text).Exists == false)
+            { 
+                MessageBox.Show("Missing Olproxy.exe!");
+                return;
+            }
+
+            // Make a copy of Olproxy.exe in the ApplicationData directoy to make sure it is using the update JSON file.            
+            // We always make the copy to ensure using the latest version.
             string olproxyExe = Path.Combine(olproxyWorkingDirectory, Path.GetFileName(OlproxyExecutable.Text));
-            if (!System.IO.File.Exists(olproxyExe)) System.IO.File.Copy(OlproxyExecutable.Text, olproxyExe);
+            System.IO.File.Copy(OlproxyExecutable.Text, olproxyExe, true);
 
             // (Re)start application..
             Process appStart = new Process();
@@ -544,9 +599,41 @@ namespace OverloadClientTool
 
         private void RestartOverload()
         {
-            VerboseLogMessage("Starting up");
+            Verbose("Starting up");
 
-            string name = Path.GetFileNameWithoutExtension(OverloadExecutable.Text).ToLower();
+            string overloadPath = Path.GetDirectoryName(OverloadExecutable.Text);
+            string overloadExe = Path.Combine(overloadPath, "overload.exe");
+            string olmodExe = Path.Combine(overloadPath, "olmod.exe");
+
+            string name = null;
+            string app = null;
+
+            if (UseOlmodCheckBox.Checked)
+            {
+                if (System.IO.File.Exists(olmodExe))
+                {
+                    name = Path.GetFileNameWithoutExtension(olmodExe);
+                    app = olmodExe;
+                }
+                else
+                {
+                    MessageBox.Show("Olmod.exe not found in Overload path!");
+                    return;
+                }
+            }
+            else
+            {
+                if (System.IO.File.Exists(overloadExe))
+                {
+                    name = Path.GetFileNameWithoutExtension(overloadExe);
+                    app = overloadExe;
+                }
+                else
+                {
+                    MessageBox.Show("Overload.exe not found in Overload path!");
+                    return;
+                }
+            }
 
             // Start application it is not already running.
             int running = 0;
@@ -562,8 +649,8 @@ namespace OverloadClientTool
 
             // (Re)start application..
             Process appStart = new Process();
-            appStart.StartInfo = new ProcessStartInfo(Path.GetFileName(OverloadExecutable.Text), OverloadArgs.Text);
-            appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(OverloadExecutable.Text);
+            appStart.StartInfo = new ProcessStartInfo(Path.GetFileName(app), OverloadArgs.Text);
+            appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(app);
             appStart.Start();
         }
 
@@ -574,7 +661,7 @@ namespace OverloadClientTool
 
             foreach (Process process in Process.GetProcesses())
             {
-                if (!process.ProcessName.ToLower().Contains("OverloadClientTool"))
+                if (!process.ProcessName.ToLower().Contains("overloadclienttool"))
                 {
                     if (process.ProcessName.ToLower().Contains(name)) return process;
                 }
@@ -586,7 +673,7 @@ namespace OverloadClientTool
         {
             foreach (Process process in Process.GetProcesses())
             {
-                if (!process.ProcessName.ToLower().Contains("OverloadClientTool"))
+                if (!process.ProcessName.ToLower().Contains("overloadclienttool"))
                 {
                     if (process.ProcessName.ToLower().Contains(name)) process.Kill();
                 }
@@ -603,54 +690,33 @@ namespace OverloadClientTool
 
         private void SelectDark_CheckedChanged(object sender, EventArgs e)
         {
-            // Must suspend log while changing theme to avoid 'discoloring' 
-            // if a background monitor fires an event at the same time.
-            if (listBoxLog != null)
-            {
-                listBoxLog.Paused = true;
-                listBoxLog.SetDarkTheme(DarkTheme = SelectDark.Checked, DarkTextBoxBackColor, LightTextBoxBackColor);
-            }
+            DarkTheme = SelectDark.Checked;
+
+            logger?.SetThemeBackgroundColors(DarkTheme, DarkTextBoxBackColor, LightTextBoxBackColor);
 
             SetTheme();
 
-            InfoLogMessage((DarkTheme) ? "Dark theme selected." : "Light theme selected.");
-
-            // Unpause logging.
-            if (listBoxLog != null) listBoxLog.Paused = false;
-        }
-
-        private void InfoLogMessage(string message)
-        {
-            if (listBoxLog != null) listBoxLog.Log(Level.Info, message);
-        }
-
-        private void VerboseLogMessage(string message)
-        {
-            if (listBoxLog != null) listBoxLog.Log(Level.Verbose, message);
-        }
-
-        private void WarningLogMessage(string message)
-        {
-            if (listBoxLog != null) listBoxLog.Log(Level.Warning, message);
-        }
-
-        private void ErrorLogMessage(string message)
-        {
-            if (listBoxLog != null) listBoxLog.Log(Level.Error, message);
+            Info((DarkTheme) ? "Dark theme selected." : "Light theme selected.");
         }
 
         private void StopButton_Click(object sender, EventArgs e)
         {
-            VerboseLogMessage("Shutting down active tasks.");
+            Verbose("Shutting down active tasks.");
 
             ValidateButton(StartButton);
 
-            Defocus();        
+            Defocus();
 
-            string olproxyName = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
-            string overloadName = Path.GetFileNameWithoutExtension(OverloadExecutable.Text).ToLower();
+            string overloadPath = Path.GetDirectoryName(OverloadExecutable.Text);
+            string overloadExe = Path.Combine(overloadPath, "overload.exe");
+            string olmodExe = Path.Combine(overloadPath, "olmod.exe");
+
+            string olproxyName = "olproxy";
+            string olmodName = "olmod";
+            string overloadName = "overload";
 
             KillRunningProcess(overloadName);
+            KillRunningProcess(olmodName);
             KillRunningProcess(olproxyName);
 
             if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive)) KillOlproxyThread();
@@ -674,7 +740,7 @@ namespace OverloadClientTool
         {
             OlproxyEmbedded = UseEmbeddedOlproxy.Checked;
 
-            InfoLogMessage((UseEmbeddedOlproxy.Checked) ? "Using embedded Olproxy." : "Using standalone Olproxy application.");
+            Info((UseEmbeddedOlproxy.Checked) ? "Using embedded Olproxy." : "Using standalone Olproxy application.");
 
             if (UseEmbeddedOlproxy.Checked == true)
             {
@@ -693,33 +759,12 @@ namespace OverloadClientTool
             else
             {
                 // Kill Olproxy task.
-                if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive))
+                if ((olproxyTask != null) && (olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive))
                 {
                     KillOlproxyThread();
                     RestartOlproxy();
                 }
             }
-        }
-
-        /// <summary>
-        /// Ünselect listbox item if mouse leaves the listbox.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ActivityLogListBox_MouseLeave(object sender, EventArgs e)
-        {
-            //ActivityLogListBox.SetSelected(0, false);
-        }
-
-        /// <summary>
-        /// Show selected listbox item if mouse (re)enters the listbox.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Main_MouseEnter(object sender, EventArgs e)
-        {
-            // For some reason this doesn't work?
-            //ActivityLogListBox.SetSelected(0, false);
         }
 
         private void Main_Resize(object sender, EventArgs e)
@@ -786,13 +831,13 @@ namespace OverloadClientTool
 
                     case DialogResult.No:
                         UseDLCLocationCheckBox.Checked = true;
-                        VerboseLogMessage(String.Format("Overload DLC directory used for maps."));
+                        Verbose(String.Format("Overload DLC directory used for maps."));
                         break;
 
                     default:
                         // TO-DO: Move existing maps.
                         UseDLCLocationCheckBox.Checked = true;
-                        VerboseLogMessage(String.Format("Overload DLC directory used for maps."));
+                        Verbose(String.Format("Overload DLC directory used for maps."));
                         MoveMaps(overloadMapLocation, dlcLocation);
                         break;
                 }
@@ -807,12 +852,12 @@ namespace OverloadClientTool
                         break;
 
                     case DialogResult.No:
-                        VerboseLogMessage(String.Format("Overload ProgramData directory used for maps."));
+                        Verbose(String.Format("Overload ProgramData directory used for maps."));
                         UseDLCLocationCheckBox.Checked = false;
                         break;
 
                     default:
-                        VerboseLogMessage(String.Format("Overload ProgramData directory used for maps."));
+                        Verbose(String.Format("Overload ProgramData directory used for maps."));
                         MoveMaps(dlcLocation, overloadMapLocation);
                         UseDLCLocationCheckBox.Checked = false;
                         break;
@@ -828,11 +873,13 @@ namespace OverloadClientTool
         private void UseOlmod_CheckedChanged(object sender, EventArgs e)
         {
             UseOlmod = UseOlmodCheckBox.Checked;
+            Info((UseOlmodCheckBox.Checked) ? "Olmod enabled." : "Olmod disabled.");
         }
 
         private void UseOlproxy_CheckedChanged(object sender, EventArgs e)
         {
             UseOlproxy = UseOlproxyCheckBox.Checked;
+            Verbose((UseOlproxyCheckBox.Checked) ? "Olproxy enabled." : "Olproxy disabled.");
         }
 
         private void AutoUpdateMaps_Click(object sender, EventArgs e)
@@ -842,6 +889,7 @@ namespace OverloadClientTool
 
         private void UseDLCLocationCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            UseDLCLocation = UseDLCLocationCheckBox.Checked;        }
+            UseDLCLocation = UseDLCLocationCheckBox.Checked;
+        }
     }
 }
