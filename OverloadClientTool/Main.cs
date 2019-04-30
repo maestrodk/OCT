@@ -316,7 +316,7 @@ namespace OverloadClientTool
             UpdateDLCLocation();
 
             // Announce ourself.
-            Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen 1234567890123456789012345678901234567890");
+            Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen");
             Info("Olproxy by Arne de Bruijn.");
 
             // Start background monitor for periodic log updates.
@@ -574,25 +574,17 @@ namespace OverloadClientTool
                 return;
             }
 
-            // Update JSON configuration file for standalone Olproxy (first check to make sure folder exists).
-            string olproxyWorkingDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Olproxy");
-            if (!Directory.Exists(olproxyWorkingDirectory)) Directory.CreateDirectory(olproxyWorkingDirectory);
-
+            // Make sure Oloroxy.exe exists.
             if (new FileInfo(OlproxyExecutable.Text).Exists == false)
             { 
                 MessageBox.Show("Missing Olproxy.exe!");
                 return;
             }
 
-            // Make a copy of Olproxy.exe in the ApplicationData directoy to make sure it is using the update JSON file.            
-            // We always make the copy to ensure using the latest version.
-            string olproxyExe = Path.Combine(olproxyWorkingDirectory, Path.GetFileName(OlproxyExecutable.Text));
-            System.IO.File.Copy(OlproxyExecutable.Text, olproxyExe, true);
-
-            // (Re)start application..
+            // Start Olproxy application.
             Process appStart = new Process();
-            appStart.StartInfo = new ProcessStartInfo(olproxyExe, OlproxyArgs.Text);
-            appStart.StartInfo.WorkingDirectory = olproxyWorkingDirectory;
+            appStart.StartInfo = new ProcessStartInfo(OlproxyExecutable.Text, OlproxyArgs.Text);
+            appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(OlproxyExecutable.Text);
             appStart.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
             appStart.Start();
         }
