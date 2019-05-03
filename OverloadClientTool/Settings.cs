@@ -30,6 +30,12 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.EmbeddedOlproxy = value; }
         }
 
+        public string OlmodPath
+        {
+            get { return Properties.Settings.Default.OlmodPath; }
+            set { Properties.Settings.Default.OlmodPath = value; }
+        }
+
         public string OverloadParameters
         {
             get { return Properties.Settings.Default.OverloadParameters; }
@@ -284,7 +290,6 @@ namespace OverloadClientTool
                 control.ForeColor = activeTextBoxColor;
             }
         }
-
  
         /// <summary>
         /// Override default enabled/disabled colors for a Button control.

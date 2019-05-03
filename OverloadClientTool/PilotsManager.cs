@@ -98,6 +98,7 @@ namespace OverloadClientTool
 
         private void PilotBackupButton_Click(object sender, EventArgs e)
         {
+            Verbose("Backing up pilots: " + BackupAllPilots());
             BackupAllPilots();
         }
 

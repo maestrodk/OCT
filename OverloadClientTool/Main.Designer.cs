@@ -85,6 +85,8 @@
             this.SearchOverloadButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.PaneOlmod = new System.Windows.Forms.Panel();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.OlmodExecutable = new System.Windows.Forms.TextBox();
             this.PaneButtonLine = new System.Windows.Forms.Panel();
             this.OverloadGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
@@ -104,6 +106,7 @@
             this.PaneOverload.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.PaneOlmod.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // OverloadExecutable
@@ -129,7 +132,7 @@
             // OlproxyExecutable
             // 
             this.OlproxyExecutable.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.OlproxyExecutable.Location = new System.Drawing.Point(17, 23);
+            this.OlproxyExecutable.Location = new System.Drawing.Point(17, 24);
             this.OlproxyExecutable.Margin = new System.Windows.Forms.Padding(2);
             this.OlproxyExecutable.Name = "OlproxyExecutable";
             this.OlproxyExecutable.Size = new System.Drawing.Size(411, 20);
@@ -140,7 +143,7 @@
             // OlproxyArgs
             // 
             this.OlproxyArgs.BackColor = System.Drawing.Color.Gray;
-            this.OlproxyArgs.Location = new System.Drawing.Point(17, 18);
+            this.OlproxyArgs.Location = new System.Drawing.Point(17, 20);
             this.OlproxyArgs.Margin = new System.Windows.Forms.Padding(2);
             this.OlproxyArgs.Name = "OlproxyArgs";
             this.OlproxyArgs.Size = new System.Drawing.Size(411, 20);
@@ -691,9 +694,9 @@
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.OlproxyArgs);
-            this.groupBox4.Location = new System.Drawing.Point(25, 171);
+            this.groupBox4.Location = new System.Drawing.Point(25, 168);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(453, 52);
+            this.groupBox4.Size = new System.Drawing.Size(453, 54);
             this.groupBox4.TabIndex = 11;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Olproxy Startup Parameters";
@@ -703,7 +706,7 @@
             this.groupBox3.Controls.Add(this.OlproxyExecutable);
             this.groupBox3.Location = new System.Drawing.Point(25, 102);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(453, 52);
+            this.groupBox3.Size = new System.Drawing.Size(453, 60);
             this.groupBox3.TabIndex = 11;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "External Olproxy Application";
@@ -768,11 +771,33 @@
             this.PaneOlmod.BackColor = System.Drawing.Color.LightSlateGray;
             this.PaneOlmod.Controls.Add(this.label2);
             this.PaneOlmod.Controls.Add(this.UseOlmodCheckBox);
+            this.PaneOlmod.Controls.Add(this.groupBox5);
             this.PaneOlmod.Location = new System.Drawing.Point(529, 393);
             this.PaneOlmod.Margin = new System.Windows.Forms.Padding(0);
             this.PaneOlmod.Name = "PaneOlmod";
             this.PaneOlmod.Size = new System.Drawing.Size(500, 336);
             this.PaneOlmod.TabIndex = 23;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.OlmodExecutable);
+            this.groupBox5.Location = new System.Drawing.Point(25, 61);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(453, 61);
+            this.groupBox5.TabIndex = 11;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Olmod Application";
+            // 
+            // OlmodExecutable
+            // 
+            this.OlmodExecutable.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.OlmodExecutable.Location = new System.Drawing.Point(17, 23);
+            this.OlmodExecutable.Margin = new System.Windows.Forms.Padding(2);
+            this.OlmodExecutable.Name = "OlmodExecutable";
+            this.OlmodExecutable.Size = new System.Drawing.Size(411, 20);
+            this.OlmodExecutable.TabIndex = 3;
+            this.OlmodExecutable.TextChanged += new System.EventHandler(this.OlmodExecutable_TextChanged);
+            this.OlmodExecutable.DoubleClick += new System.EventHandler(this.OlmodExecutable_DoubleClick);
             // 
             // PaneButtonLine
             // 
@@ -841,6 +866,8 @@
             this.groupBox2.PerformLayout();
             this.PaneOlmod.ResumeLayout(false);
             this.PaneOlmod.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -903,6 +930,8 @@
         private System.Windows.Forms.Panel PaneButtonLine;
         private System.Windows.Forms.ListBox MapsListBox;
         private System.Windows.Forms.ListBox PilotsListBox;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.TextBox OlmodExecutable;
     }
 }
 

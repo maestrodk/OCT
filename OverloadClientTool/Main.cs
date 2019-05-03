@@ -460,11 +460,11 @@ namespace OverloadClientTool
         {
             TestSetTextBoxColor(OverloadExecutable);
             TestSetTextBoxColor(OlproxyExecutable);
+            TestSetTextBoxColor(OlmodExecutable);
 
             try
             {
-                string path = Path.GetDirectoryName(OverloadExecutable.Text);
-                string olmodFileName = Path.Combine(path, "olmod.exe");
+                string olmodFileName = Path.GetDirectoryName(OlmodExecutable.Text);
 
                 if (System.IO.File.Exists(olmodFileName)) UseOlmodCheckBox.Enabled = true;
                 else UseOlmodCheckBox.Enabled = false;
@@ -653,11 +653,8 @@ namespace OverloadClientTool
             string name = null;
             string app = null;
 
-            if (AutoPilotsBackupCheckbox.Checked)
-            {
-                Verbose("Backing up pilots: " + BackupAllPilots());
-            }
-
+            if (AutoPilotsBackupCheckbox.Checked) PilotBackupButton_Click(null, null);
+            
             if (UseOlmodCheckBox.Checked)
             {
                 if (System.IO.File.Exists(olmodExe))
@@ -667,7 +664,7 @@ namespace OverloadClientTool
                 }
                 else
                 {
-                    MessageBox.Show("Olmod.exe not found in Overload path!");
+                    MessageBox.Show("Olmod.exe not found!");
                     return;
                 }
             }
@@ -882,6 +879,31 @@ namespace OverloadClientTool
         private void SearchOverloadButton_MouseHover(object sender, EventArgs e)
         {
 
+        }
+
+        private void OlmodExecutable_DoubleClick(object sender, EventArgs e)
+        {
+            OlmodExecutable.SelectionLength = 0;
+
+            string save = Directory.GetCurrentDirectory();
+
+            SelectExecutable.FileName = Path.GetFileName(OlmodExecutable.Text);
+            SelectExecutable.InitialDirectory = Path.GetDirectoryName(OlmodExecutable.Text);
+
+            DialogResult result = SelectExecutable.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                OlmodExecutable.Text = SelectExecutable.FileName;
+                OlmodExecutable.SelectionLength = 0;
+            }
+
+            Directory.SetCurrentDirectory(save);
+        }
+
+        private void OlmodExecutable_TextChanged(object sender, EventArgs e)
+        {
+            ValidateSettings();
         }
     }
 }

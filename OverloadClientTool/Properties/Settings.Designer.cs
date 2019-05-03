@@ -178,5 +178,17 @@ namespace OverloadClientTool.Properties {
                 this["AutoSavePilots"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string OlmodPath {
+            get {
+                return ((string)(this["OlmodPath"]));
+            }
+            set {
+                this["OlmodPath"] = value;
+            }
+        }
     }
 }
