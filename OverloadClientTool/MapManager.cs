@@ -1,11 +1,12 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace OverloadClientTool
@@ -136,7 +137,6 @@ namespace OverloadClientTool
             Uri uri = new Uri(map.Url);
             if (uri.Segments.Length < 2) return false;
 
-
             // Get the ZIP file name from URL.
             string mapZipName = uri.Segments[uri.Segments.Length - 1];
             if (!mapZipName.ToLower().EndsWith(".zip")) return false;
@@ -206,6 +206,316 @@ namespace OverloadClientTool
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
+        }
+    }
+
+    public partial class OCTMainForm
+    {
+        private const string HiddenMarker = "_OCT_Hidden";
+
+        internal class MapFile
+        {
+            public string FileName;
+            public string Name;
+
+            public bool InDLCFolder;
+            public bool Hidden;
+
+            public MapFile(string fileName)
+            {
+                this.FileName = fileName;
+                this.Name = Path.GetFileNameWithoutExtension(FileName);
+                this.Hidden = fileName.EndsWith(HiddenMarker);
+                this.InDLCFolder = FileName.ToUpper().Contains("\\DLC\\");
+            }
+
+            public override string ToString()
+            {
+                return Name + ((Hidden) ? " [Hidden]" : "") + ((InDLCFolder) ? " [DLC]" : "");
+            }
+
+            public void Hide()
+            {
+                if (Hidden) return;
+
+                try
+                {
+                    File.Move(FileName, FileName + HiddenMarker);
+                    FileName += HiddenMarker;
+                    Hidden = true;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+            public void Unhide()
+            {
+                if (!Hidden) return;
+
+                try
+                {
+                    File.Move(FileName, FileName.Replace(HiddenMarker, ""));
+                    FileName = FileName.Replace(HiddenMarker, "");
+                    Hidden = false;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        private List<MapFile> currentMaps = null;
+
+        BackgroundWorker mapsBackgroundWorker = null;
+
+        private object mapChangeLock = new object();
+
+        private static bool SameMap(MapFile map1, MapFile map2)
+        {
+            return (map1.InDLCFolder == map2.InDLCFolder) && (map1.Name.ToLower() == map2.Name.ToLower());
+        }
+
+        private void InitMapsListBox()
+        {
+            currentMaps = Maps;
+
+            // Init listbox.
+            foreach (MapFile mapFile in currentMaps) MapsListBox.Items.Add(mapFile);
+
+            MapHideButton.Enabled = (MapsListBox.SelectedIndex > 0);
+            MapDeleteButton.Enabled = (MapsListBox.SelectedIndex > 0);
+
+            // Begin monitoring folder.
+            mapsBackgroundWorker = new BackgroundWorker();
+            mapsBackgroundWorker.DoWork += BackgroundMapsChecker;
+            mapsBackgroundWorker.RunWorkerAsync();
+        }
+
+        private void StopMapsMonitoring()
+        {
+            if (mapsBackgroundWorker != null)
+            {
+                mapsBackgroundWorker.DoWork -= BackgroundMapsChecker;
+                mapsBackgroundWorker.Dispose();
+            }
+        }
+
+        private void BackgroundMapsChecker(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                Thread.Sleep(5000);
+
+                List<MapFile> mapsInFolder = Maps;
+
+                // See if update is required.
+                bool update = (mapsInFolder.Count != currentMaps.Count);
+                if (!update)
+                {
+                    foreach (MapFile map1 in mapsInFolder)
+                    {
+                        bool found = false;
+                        foreach (MapFile map2 in currentMaps)
+                        {
+                            if (!SameMap(map1, map2)) found = true;
+                        }
+                        if (!found) update = true;
+                    }
+                }
+
+                if (update)
+                {
+                    // Update map list and refresh listbox content.
+                    lock (mapChangeLock)
+                    {
+                        currentMaps = mapsInFolder;
+                        MapsListBox.Invoke(new Action(() => MapsListBox.Items.Clear()));
+                        MapsListBox.Invoke(new Action(() => { foreach (MapFile mapFile in currentMaps) MapsListBox.Items.Add(mapFile); }));
+                        MapsListBox.Invoke(new Action(() => MapsListBox.Invalidate()));
+                    }
+                }
+            }
+        }
+
+        private List<MapFile> Maps
+        {
+            get
+            {
+                List<MapFile> maps = new List<MapFile>();
+
+                string mapsLocation = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\Revival\Overload";
+
+                string[] list = Directory.GetFiles(mapsLocation, "*.zip*");
+                foreach (string mapFileName in list)
+                {
+                    if (mapFileName.EndsWith(HiddenMarker) || mapFileName.ToLower().EndsWith(".zip")) maps.Add(new MapFile(mapFileName));
+                }
+                
+                if (Directory.Exists(Path.GetDirectoryName(OverloadExecutable.Text)) && UseDLCLocationCheckBox.Checked)
+                {
+                    string dlcLocation = Path.Combine(Path.GetDirectoryName(OverloadExecutable.Text), "DLC");
+                    Directory.CreateDirectory(dlcLocation);
+
+                    list = Directory.GetFiles(dlcLocation, "*.zip*");
+                    foreach (string mapFileName in list)
+                    {
+                        if (mapFileName.EndsWith(HiddenMarker) || mapFileName.ToLower().EndsWith(".zip")) maps.Add(new MapFile(mapFileName));
+                    }
+                }
+
+                return maps;
+            }
+        }
+
+        private void MapOnlyExisting_CheckedChanged(object sender, EventArgs e)
+        {
+            AutoUpdateMaps = MapOnlyExisting.Checked;
+        }
+
+        private void MapDelete_Click(object sender, EventArgs e)
+        {
+            MapFile mapFile = (MapFile)MapsListBox.Items[MapsListBox.SelectedIndex];
+
+            if (MessageBox.Show(String.Format($"Delete map '{mapFile.Name}' from disk?"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                lock (mapChangeLock)
+                {
+                    try
+                    {
+                        MapsListBox.Items.Remove(mapFile);
+                        File.Delete(mapFile.FileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(String.Format($"Whoops! Cannot delete map '{mapFile.Name}': {ex.Message}"));
+                    }
+                }
+            }
+        }
+
+        private void MapsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            lock (mapChangeLock)
+            {
+                if (MapsListBox.SelectedIndex > 0)
+                {
+                    MapFile mapFile = (MapFile)MapsListBox.Items[MapsListBox.SelectedIndex];
+                    MapDeleteButton.Enabled = true;
+                    MapHideButton.Text = (mapFile.Hidden) ? "Unhide" : "Hide";
+                    MapHideButton.Enabled = true;
+                }
+                else
+                {
+                    MapDeleteButton.Enabled = false;
+                    MapHideButton.Text = "Hide";
+                    MapHideButton.Enabled = false;
+                }
+            }
+        }
+
+        private void MapHideButton_Click(object sender, EventArgs e)
+        {
+            lock (mapChangeLock)
+            {
+                // Make sure that we got a selected map.
+                if (MapsListBox.Items.Count > 0)
+                {
+                    MapFile mapFile = (MapFile)MapsListBox.Items[MapsListBox.SelectedIndex];
+                    string hideUnhide = (mapFile.Hidden) ? "unhide" : "hide";
+                    try
+                    {
+                        if (mapFile.Hidden) mapFile.Unhide();
+                        else mapFile.Hide();
+
+                        MapsListBox.Items[MapsListBox.SelectedIndex] = mapFile;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(String.Format($"Whoops! Cannot {hideUnhide} map {mapFile.Name}: {ex.Message}"));
+                    }
+                }
+            }
+        }
+
+        private void MapUpdateButton_Click(object sender, EventArgs e)
+        {
+            MapUpdateButton.Enabled = false;
+
+            // Start updating maps in a separate thread.
+            mapManagerThread = new Thread(UpdateMapThread);
+            mapManagerThread.IsBackground = true;
+            mapManagerThread.Start();
+        }
+
+        /// <summary>
+        /// Move maps from either of the two possible directorys.
+        /// </summary>
+        /// <param name="overloadMapLocation"></param>
+        /// <param name="dlcLocation"></param>
+        private void MoveMaps(string source, string destination)
+        {
+            string[] files = Directory.GetFiles(source, "*.zip");
+            foreach (string fileName in files)
+            {
+                // Exclude DLC content (only move maps).
+                bool move = true;
+                string test = Path.GetFileNameWithoutExtension(fileName).ToUpper();
+                if (!fileName.ToLower().EndsWith(".zip") || (test.Contains("DLC0") || test.Contains("DLC1"))) move = false;
+
+                if (move) System.IO.File.Move(Path.Combine(source, Path.GetFileName(fileName)), Path.Combine(destination, Path.GetFileName(fileName)));
+            }
+        }
+
+        private void UseDLCLocationCheckBox_Click(object sender, EventArgs e)
+        {
+            string overloadMapLocation = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\Revival\Overload";
+
+            if (UseDLCLocationCheckBox.Checked == false)
+            {
+                // Setting the check mark.
+                DialogResult result = MessageBox.Show("Move existing maps to the Overload DLC directory?", "Move maps?", MessageBoxButtons.YesNoCancel);
+                switch (result)
+                {
+                    case DialogResult.Cancel:
+                        break;
+
+                    case DialogResult.No:
+                        UseDLCLocationCheckBox.Checked = true;
+                        Verbose(String.Format("Overload DLC directory used for maps."));
+                        break;
+
+                    default:
+                        // TO-DO: Move existing maps.
+                        UseDLCLocationCheckBox.Checked = true;
+                        Verbose(String.Format("Overload DLC directory used for maps."));
+                        MoveMaps(overloadMapLocation, dlcLocation);
+                        break;
+                }
+            }
+            else
+            {
+                // Clearing the check mark.
+                DialogResult result = MessageBox.Show("Move existing maps to [ProgramData]\\Overload\\Revival directory?", "Move maps?", MessageBoxButtons.YesNoCancel);
+                switch (result)
+                {
+                    case DialogResult.Cancel:
+                        break;
+
+                    case DialogResult.No:
+                        Verbose(String.Format("Overload ProgramData directory used for maps."));
+                        UseDLCLocationCheckBox.Checked = false;
+                        break;
+
+                    default:
+                        Verbose(String.Format("Overload ProgramData directory used for maps."));
+                        MoveMaps(dlcLocation, overloadMapLocation);
+                        UseDLCLocationCheckBox.Checked = false;
+                        break;
+                }
+            }
         }
     }
 }

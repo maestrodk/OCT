@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using IWshRuntimeLibrary;
@@ -28,8 +29,8 @@ namespace OverloadClientTool
         Color DarkButtonDisabledForeColor = Color.FromArgb(255, 255, 255);
         Color LightButtonDisabledForeColor = Color.FromArgb(192, 192, 192);
 
-        Color DarkTextBoxBackColor = Color.FromArgb(72, 72, 72);
-        Color LightTextBoxBackColor = Color.White;
+        Color DarkControlBackColor = Color.FromArgb(72, 72, 72);
+        Color LightControlBackColor = Color.FromArgb(245, 250, 255);
 
         private bool autoStart = false;
         private ListViewLogger logger = null;
@@ -39,6 +40,8 @@ namespace OverloadClientTool
 
         private OverloadMapManager mapManager = new OverloadMapManager();
         private Thread mapManagerThread = null;
+
+        private PaneController paneController = null;
 
         // This matches MJDict defined on Olproxy.
         private Dictionary<string, object> olproxyConfig = new Dictionary<string, object>();
@@ -61,9 +64,24 @@ namespace OverloadClientTool
 
             InitializeComponent();
 
+            // Setup pane control.
+            paneController = new PaneController(this, PaneButtonLine);
+            paneController.SetupPaneButton(PaneSelectMain, PaneMain);
+            paneController.SetupPaneButton(PaneSelectMapManager, PaneMaps);
+            paneController.SetupPaneButton(PaneSelectPilots, PanePilots);
+            paneController.SetupPaneButton(PaneSelectOverload, PaneOverload);
+            paneController.SetupPaneButton(PaneSelectOlproxy, PaneOlproxy);
+            paneController.SetupPaneButton(PaneSelectOlmod, PaneOlmod);
+
             // Load user preferences.
             LoadSettings();
             ValidateSettings();
+
+            // Init pilots listbox start monitoring.
+            InitPilotsListBox();
+
+            // Init maps listbox and start monitoring.
+            InitMapsListBox();
 
             // Prepare embedded OlproxyProgram instance before attempting to start thread.
             olproxyTask = new OlproxyProgram();
@@ -80,10 +98,84 @@ namespace OverloadClientTool
             olproxyConfig.Add("notes", "");
             
             // Start logging (default is paused state, will be enabled when startup is complete).
-            logger = new ListViewLogger(ActivityListView, DarkTextBoxBackColor, LightTextBoxBackColor, DarkTheme);
+            logger = new ListViewLogger(ActivityListView, DarkControlBackColor, LightControlBackColor, DarkTheme);
             
             // Reflect selected theme settings.
             SetTheme();
+        }
+
+        private void Main_Load(object sender, EventArgs e)
+        {
+            // Focus the first pane.
+            paneController.SwitchToPane(PaneSelectMain);
+
+            // Make sure no text is selected.
+            OverloadExecutable.Focus();
+            OverloadExecutable.Select(0, 0);
+
+            // Check settings and update buttons.
+            ValidateSettings();
+
+            // Locate DLC folder.
+            UpdateDLCLocation();
+
+            // Announce ourself.
+            Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen");
+            Info("Olproxy by Arne de Bruijn.");
+
+            // Start background monitor for periodic log updates.
+            Thread thread = new Thread(ActivityBackgroundMonitor);
+            thread.IsBackground = true;
+            thread.Start();
+
+            // Check if we should auto-update maps on startup.
+            if (AutoUpdateMapsCheckBox.Checked) MapUpdateButton_Click(null, null);
+
+            // Check for startup options.
+            //OverloadClientToolNotifyIcon.Icon = Properties.Resources.OST;
+            this.ShowInTaskbar = true;
+
+            if (autoStart)
+            {
+                if (false)
+                {
+                    this.ShowInTaskbar = false;
+                    this.WindowState = FormWindowState.Minimized;
+                    OverloadClientToolNotifyIcon.Visible = true;
+                }
+                StartButton_Click(null, null);
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Normal;
+                this.ShowInTaskbar = true;
+            }
+
+            Defocus();
+        }
+
+        [DllImport("shell32.dll")]
+        static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
+
+        public static string SpecialFolderLocalLowPath
+        {
+            get
+            {
+                Guid localLowId = new Guid("A520A1A4-1780-4FF6-BD18-167343C5AF16");
+                IntPtr pszPath = IntPtr.Zero;
+
+                try
+                {
+                    int hr = SHGetKnownFolderPath(localLowId, 0, IntPtr.Zero, out pszPath);
+                    if (hr >= 0)  return Marshal.PtrToStringAuto(pszPath);
+
+                    throw Marshal.GetExceptionForHR(hr);
+                }
+                finally
+                {
+                    if (pszPath != IntPtr.Zero) Marshal.FreeCoTaskMem(pszPath);
+                }
+            }
         }
 
         private void Info(string text)
@@ -100,6 +192,7 @@ namespace OverloadClientTool
         {
             logger?.VerboseLogMessage(text);
         }
+
         private void Error(string text)
         {
             logger?.ErrorLogMessage(text);
@@ -304,52 +397,6 @@ namespace OverloadClientTool
             }
         }
 
-        private void Main_Load(object sender, EventArgs e)
-        {            
-            // Make sure no text is selected.
-            OverloadExecutable.Focus();
-            OverloadExecutable.Select(0, 0);
-
-            // Check settings and update buttons.
-            ValidateSettings();
-
-            UpdateDLCLocation();
-
-            // Announce ourself.
-            Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen");
-            Info("Olproxy by Arne de Bruijn.");
-
-            // Start background monitor for periodic log updates.
-            Thread thread = new Thread(ActivityBackgroundMonitor);
-            thread.IsBackground = true;
-            thread.Start();
-
-            // Check if we should auto-update maps on startup.
-            if (AutoUpdateMapsCheckBox.Checked) MapUpdateButton_Click(null, null);
-
-            // Check for startup options.
-            //OverloadClientToolNotifyIcon.Icon = Properties.Resources.OST;
-            this.ShowInTaskbar = true;
-
-            if (autoStart)
-            {
-                if (false)
-                {
-                    this.ShowInTaskbar = false;
-                    this.WindowState = FormWindowState.Minimized;
-                    OverloadClientToolNotifyIcon.Visible = true;
-                }
-                StartButton_Click(null, null);
-            }
-            else
-            {
-                this.WindowState = FormWindowState.Normal;
-                this.ShowInTaskbar = true;
-            }
-
-            Defocus();
-        }
-
         /// <summary>
         /// Update maps in the background.
         /// </summary>
@@ -357,7 +404,8 @@ namespace OverloadClientTool
         {
             UpdatingMaps.Invoke(new Action(() => UpdatingMaps.Visible = true));
 
-            Verbose(String.Format("Checking for new/updated maps."));
+            if (MapOnlyExisting.Checked) Verbose(String.Format("Checking for updated maps."));
+            else Verbose(String.Format("Checking for new/updated maps."));
 
             if (UseDLCLocationCheckBox.Enabled && UseDLCLocationCheckBox.Checked)
             {
@@ -370,7 +418,8 @@ namespace OverloadClientTool
                 mapManager.Update();
             }
 
-            Verbose(String.Format($"Map check finished: {mapManager.Checked} maps, {mapManager.Created} created, {mapManager.Updated} updated."));
+            if (MapOnlyExisting.Checked) Verbose(String.Format($"Map check finished: {mapManager.Checked} maps, {mapManager.Updated} updated."));
+            else Verbose(String.Format($"Map check finished: {mapManager.Checked} maps, {mapManager.Created} created, {mapManager.Updated} updated."));
 
             UpdatingMaps.Invoke(new Action(() => UpdatingMaps.Visible = false));
             MapUpdateButton.Invoke(new Action(() => MapUpdateButton.Enabled = true));
@@ -380,6 +429,10 @@ namespace OverloadClientTool
         {          
             // Kill embedded Olproxy.
             KillOlproxyThread();
+
+            // Shutdown background workers.
+            StopMapsMonitoring();
+            StopPilotsMonitoring();
 
             // Save settings for main application.
             try
@@ -600,6 +653,11 @@ namespace OverloadClientTool
             string name = null;
             string app = null;
 
+            if (AutoPilotsBackupCheckbox.Checked)
+            {
+                Verbose("Backing up pilots: " + BackupAllPilots());
+            }
+
             if (UseOlmodCheckBox.Checked)
             {
                 if (System.IO.File.Exists(olmodExe))
@@ -684,7 +742,7 @@ namespace OverloadClientTool
         {
             DarkTheme = SelectDark.Checked;
 
-            logger?.SetThemeBackgroundColors(DarkTheme, DarkTextBoxBackColor, LightTextBoxBackColor);
+            logger?.SetThemeBackgroundColors(DarkTheme, DarkControlBackColor, LightControlBackColor);
 
             SetTheme();
 
@@ -779,84 +837,6 @@ namespace OverloadClientTool
             WindowState = FormWindowState.Normal;
         }
 
-        private void MapUpdateButton_Click(object sender, EventArgs e)
-        {
-            MapUpdateButton.Enabled = false;
-
-            // Start updating maps in a separate thread.
-            mapManagerThread = new Thread(UpdateMapThread);
-            mapManagerThread.IsBackground = true;
-            mapManagerThread.Start();
-        }
-
-        /// <summary>
-        /// Move maps from either of the two possible directorys.
-        /// </summary>
-        /// <param name="overloadMapLocation"></param>
-        /// <param name="dlcLocation"></param>
-        private void MoveMaps(string source, string destination)
-        {
-            string[] files = Directory.GetFiles(source, "*.zip");
-            foreach (string fileName in files)
-            {
-                // Exclude DLC content (only move maps).
-                bool move = true;
-                string test = Path.GetFileNameWithoutExtension(fileName).ToUpper();
-                if (!fileName.ToLower().EndsWith(".zip") || (test.Contains("DLC0") || test.Contains("DLC1"))) move = false;
-
-                if (move) System.IO.File.Move(Path.Combine(source, Path.GetFileName(fileName)), Path.Combine(destination, Path.GetFileName(fileName)));
-            }
-        }
-
-        private void UseDLCLocationCheckBox_Click(object sender, EventArgs e)
-        {
-            string overloadMapLocation = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\Revival\Overload";
-
-            if (UseDLCLocationCheckBox.Checked == false)
-            {
-                // Setting the check mark.
-                DialogResult result = MessageBox.Show("Move existing maps to the Overload DLC directory?", "Move maps?", MessageBoxButtons.YesNoCancel);
-                switch (result)
-                {
-                    case DialogResult.Cancel:
-                        break;
-
-                    case DialogResult.No:
-                        UseDLCLocationCheckBox.Checked = true;
-                        Verbose(String.Format("Overload DLC directory used for maps."));
-                        break;
-
-                    default:
-                        // TO-DO: Move existing maps.
-                        UseDLCLocationCheckBox.Checked = true;
-                        Verbose(String.Format("Overload DLC directory used for maps."));
-                        MoveMaps(overloadMapLocation, dlcLocation);
-                        break;
-                }
-            }
-            else
-            {
-                // Clearing the check mark.
-                DialogResult result = MessageBox.Show("Move existing maps to [ProgramData]\\Overload\\Revival directory?", "Move maps?", MessageBoxButtons.YesNoCancel);
-                switch (result)
-                {
-                    case DialogResult.Cancel:
-                        break;
-
-                    case DialogResult.No:
-                        Verbose(String.Format("Overload ProgramData directory used for maps."));
-                        UseDLCLocationCheckBox.Checked = false;
-                        break;
-
-                    default:
-                        Verbose(String.Format("Overload ProgramData directory used for maps."));
-                        MoveMaps(dlcLocation, overloadMapLocation);
-                        UseDLCLocationCheckBox.Checked = false;
-                        break;
-                }
-            }
-        }
-
         private void CreateDesktopShortcuts_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Not yet implemented :)");
@@ -882,6 +862,26 @@ namespace OverloadClientTool
         private void UseDLCLocationCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             UseDLCLocation = UseDLCLocationCheckBox.Checked;
+        }
+
+        private void SearchOverloadButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SearchOverloadButton_MouseEnter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SearchOverloadButton_MouseLeave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SearchOverloadButton_MouseHover(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -61,7 +61,7 @@ namespace OverloadClientTool
 
                 listView.BackColor = (dark) ? darkBackColor : lightBackColor;
 
-                (listView.Parent as Panel).BackColor = (dark) ? Color.White : Color.FromArgb(128, 0, 0);
+                (listView.Parent as Panel).BackColor = (dark) ? Color.LightGray : Color.FromArgb(128, 0, 0);
 
                 DrawBorder(dark);
             }

@@ -16,6 +16,8 @@ namespace OverloadClientTool
         private Color activeTextBoxColor;
         private Color inactiveTextBoxColor;
 
+        private bool tabControlColorSetupCompleted = false;
+
         public string OverloadPath
         {
             get { return Properties.Settings.Default.OverloadPath; }
@@ -74,6 +76,12 @@ namespace OverloadClientTool
         {
             get { return Properties.Settings.Default.AutoUpdateMaps; }
             set { Properties.Settings.Default.AutoUpdateMaps = value; }
+        }
+
+        public bool AutoSavePilots
+        {
+            get { return Properties.Settings.Default.AutoSavePilots; }
+            set { Properties.Settings.Default.AutoSavePilots = value; }
         }
 
         public void SaveSettings()
@@ -166,6 +174,7 @@ namespace OverloadClientTool
             UseOlproxyCheckBox.Checked = UseOlproxy;
             AutoUpdateMapsCheckBox.Checked = AutoUpdateMaps;
             UseDLCLocationCheckBox.Checked = UseDLCLocation;
+            AutoPilotsBackupCheckbox.Checked = AutoSavePilots;
                 
             // The theme colors MUST be set BEFORE attempting to validate settings.
             // This is because ValidateSettings() checks the button colors to see if
@@ -206,8 +215,30 @@ namespace OverloadClientTool
 
             // Set the active theme (recursively).
             ApplyThemeToControl(this);
+            paneController.SetTheme(DarkTheme);
 
             ValidateSettings();
+        }
+
+        private void DrawBorder(Control control) //DrawBorder(Control control, Color color, int width)
+        {
+            Color color = (DarkTheme) ? Color.Blue : Color.White;
+            int width = 1;
+
+            ControlPaint.DrawBorder(control.CreateGraphics(),
+                control.ClientRectangle,
+                color,
+                width,
+                ButtonBorderStyle.Solid,
+                color,
+                width,
+                ButtonBorderStyle.Solid,
+                color,
+                width,
+                ButtonBorderStyle.Solid,
+                color,
+                width,
+                ButtonBorderStyle.Solid);
         }
 
         /// <summary>
@@ -216,37 +247,18 @@ namespace OverloadClientTool
         /// <param name="control"></param>
         private void ApplyThemeToControl(Control control)
         {
-            if (control.Controls.Count > 0)
-            {
-                foreach (Control child in control.Controls)
-                {
-                    ApplyThemeToControl(child);
-                }
-            }
+            if (control.Controls.Count > 0) foreach (Control child in control.Controls) ApplyThemeToControl(child);
 
             if (control is GroupBox)
             {
                 // Set group box title to blue but keep the color of its children to the theme settings.
                 control.ForeColor = (DarkTheme) ? Color.LightSkyBlue : Color.RoyalBlue;
-                foreach (Control child in control.Controls)
-                {
-                    if (SelectDark.Checked) child.ForeColor = activeTextBoxColor;
-                    else child.ForeColor = activeTextBoxColor;
-                }
-            }
-            else if ((control is TextBox) || (control is ListBox))
-            {
-                if (SelectDark.Checked)
-                {
-                    control.BackColor = Color.FromArgb(72, 72, 72); 
-                    control.ForeColor = activeTextBoxColor;
-                }
-                else
-                {
-                    control.BackColor = Color.White;
-                    control.ForeColor = activeTextBoxColor;
-                }
 
+                foreach (Control child in control.Controls) child.ForeColor = activeTextBoxColor;
+            }
+            else if ((control is TextBox) || (control is ListBox) || (control is ListView) || (control is TabPage))
+            {
+                ApplyThemeToSingleControl(control);
             }
             else if (control is CheckBox)
             {
@@ -259,6 +271,21 @@ namespace OverloadClientTool
             }
         }
 
+        private void ApplyThemeToSingleControl(Control control)
+        {
+            if (SelectDark.Checked)
+            {
+                control.BackColor = DarkControlBackColor;
+                control.ForeColor = activeTextBoxColor;
+            }
+            else
+            {
+                control.BackColor = LightControlBackColor;
+                control.ForeColor = activeTextBoxColor;
+            }
+        }
+
+ 
         /// <summary>
         /// Override default enabled/disabled colors for a Button control.
         /// </summary>

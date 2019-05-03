@@ -166,5 +166,17 @@ namespace OverloadClientTool.Properties {
                 this["UseDLCPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoSavePilots {
+            get {
+                return ((bool)(this["AutoSavePilots"]));
+            }
+            set {
+                this["AutoSavePilots"] = value;
+            }
+        }
     }
 }
