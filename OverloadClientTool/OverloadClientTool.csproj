@@ -50,6 +50,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InputBox.Designer.cs">
+      <DependentUpon>InputBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="ListViewLogger.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
@@ -67,7 +74,7 @@
     <Compile Include="Olproxy\Program.cs" />
     <Compile Include="Olproxy\xxHash.cs" />
     <Compile Include="PaneController.cs" />
-    <Compile Include="PilotsManager.cs">
+    <Compile Include="PilotManager.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Program.cs" />
@@ -75,6 +82,12 @@
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="TransparentLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <EmbeddedResource Include="InputBox.resx">
+      <DependentUpon>InputBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

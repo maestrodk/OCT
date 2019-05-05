@@ -43,6 +43,7 @@ namespace OverloadClientTool
             button.MouseHover += Pane_Hover;
             button.Click += Pane_Clicked;
 
+
             // Make first pane the active one.
             if (activeButton == null) activeButton = button;
         }
@@ -62,6 +63,7 @@ namespace OverloadClientTool
 
                     // Set inactive button colors.
                     button.BackColor = (isDarkTheme) ? Color.DimGray : Color.White;
+                    button.FlatAppearance.BorderColor = button.BackColor;
                 }
                 else
                 {
@@ -83,6 +85,7 @@ namespace OverloadClientTool
                     // Set the active button colors.
                     button.BackColor = backColor;
                     button.ForeColor = (isDarkTheme) ? Color.White : Color.Black;
+                    button.FlatAppearance.BorderColor = button.BackColor;
                 }
 
                 button.Refresh();
@@ -90,7 +93,6 @@ namespace OverloadClientTool
 
             activeButton = paneButton;         
         }
-
 
         private void Pane_Clicked(object sender, EventArgs e)
         {

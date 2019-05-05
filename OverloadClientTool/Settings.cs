@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace OverloadClientTool
 {
-    public partial class OCTMainForm
+    public partial class OCTMain
     {
         private Color activeTextBoxColor;
         private Color inactiveTextBoxColor;
@@ -95,12 +95,8 @@ namespace OverloadClientTool
             Properties.Settings.Default.Save();
         }
 
-        public void LoadSettings()
+        public void FindOverloadInstall(bool onlyOverload = false)
         {
-            // Attempt to find Overload installation path.
-            // First verify the current setting.
-            if (!String.IsNullOrEmpty(OverloadPath)) if (!File.Exists(OverloadPath)) OverloadPath = null;
-            
             if (String.IsNullOrEmpty(OverloadPath))
             {
                 string steamLocation = null;
@@ -137,7 +133,7 @@ namespace OverloadClientTool
                     using (var key = hklm.OpenSubKey(@"SOFTWARE\WOW6432Node\GOG.com\Games\1309632191"))
                     {
                         if (key != null) gogLocation = (string)key.GetValue("Path");
-                        if (!String.IsNullOrEmpty(gogLocation)) if(!File.Exists(Path.Combine(gogLocation, "overload.exe"))) gogLocation = null;
+                        if (!String.IsNullOrEmpty(gogLocation)) if (!File.Exists(Path.Combine(gogLocation, "overload.exe"))) gogLocation = null;
                     }
                 }
 
@@ -151,28 +147,44 @@ namespace OverloadClientTool
                     }
                 }
 
-                string initPath = steamLocation ?? gogLocation ?? dvdLocation;
-
+                initPath = steamLocation ?? gogLocation ?? dvdLocation;
                 if (String.IsNullOrEmpty(initPath)) initPath = "";
 
-                string olmodFileName = Path.Combine(initPath, "olmod.exe");
                 string overloadFileName = Path.Combine(initPath, "overload.exe");
                 string olproxyFileName = Path.Combine(initPath, "olproxy.exe");
 
-                // Set Overload/Olmod path.
-                //if (File.Exists(olmodFileName)) OverloadPath = olmodFileName;
-                //else OverloadPath = overloadFileName;
                 OverloadPath = overloadFileName;
 
                 // Set Olproxy path.
-                OlproxyPath = olproxyFileName;
+                if (!onlyOverload) OlproxyPath = olproxyFileName;
             }
+
+            // Set Olmod.exe path to Overload installation folder it not found.
+            if (String.IsNullOrEmpty(OlmodPath))
+            {
+                if (File.Exists(OverloadPath)) OlmodPath = Path.Combine(Path.GetDirectoryName(OverloadPath), "olmod.exe");
+                else OlmodPath = "olmod.exe";
+            }
+
+            OlmodExecutable.Text = OlmodPath;
 
             OverloadExecutable.Text = OverloadPath;
             OverloadArgs.Text = OverloadParameters;
 
             OlproxyExecutable.Text = OlproxyPath;
             OlproxyArgs.Text = OlproxyParameters;
+        }
+
+        private string initPath = "";
+
+        public void LoadSettings()
+        {
+            // Attempt to find Overload installation path.
+            // First verify the current setting.
+
+            if (String.IsNullOrEmpty(OverloadPath) || !File.Exists(OverloadPath)) OverloadPath = null;
+
+            FindOverloadInstall();
 
             UseEmbeddedOlproxy.Checked = OlproxyEmbedded;
             SelectDark.Checked = DarkTheme;
@@ -251,11 +263,11 @@ namespace OverloadClientTool
         /// Recursively set control colors based on type.
         /// </summary>
         /// <param name="control"></param>
-        private void ApplyThemeToControl(Control control)
+        public void ApplyThemeToControl(Control control)
         {
             if (control.Controls.Count > 0) foreach (Control child in control.Controls) ApplyThemeToControl(child);
 
-            if (control is GroupBox)
+            if ((control is GroupBox) || (control.Name == "StatusMessage"))
             {
                 // Set group box title to blue but keep the color of its children to the theme settings.
                 control.ForeColor = (DarkTheme) ? Color.LightSkyBlue : Color.RoyalBlue;
@@ -265,6 +277,11 @@ namespace OverloadClientTool
             else if ((control is TextBox) || (control is ListBox) || (control is ListView) || (control is TabPage))
             {
                 ApplyThemeToSingleControl(control);
+            }
+            else if (control is RichTextBox)
+            {
+                control.BackColor = (DarkTheme) ? Color.DimGray : Color.White;
+                control.ForeColor = (DarkTheme) ? Color.LightSkyBlue : Color.RoyalBlue;
             }
             else if (control is CheckBox)
             {
@@ -277,7 +294,7 @@ namespace OverloadClientTool
             }
         }
 
-        private void ApplyThemeToSingleControl(Control control)
+        public void ApplyThemeToSingleControl(Control control)
         {
             if (SelectDark.Checked)
             {

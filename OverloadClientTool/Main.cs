@@ -13,7 +13,7 @@ using olproxy;
 
 namespace OverloadClientTool
 {
-    public partial class OCTMainForm : Form
+    public partial class OCTMain : Form
     {
         private bool DebugLogging = false;
 
@@ -55,7 +55,7 @@ namespace OverloadClientTool
         // Directory for DLC.
         private string dlcLocation = null;
 
-        public OCTMainForm(string[] args)
+        public OCTMain(string[] args)
         {
             foreach (string a in args)
             {
@@ -63,6 +63,9 @@ namespace OverloadClientTool
             }
 
             InitializeComponent();
+
+            this.StartPosition = FormStartPosition.CenterScreen;
+            StatusMessage.Text = "Starting up...";
 
             // Setup pane control.
             paneController = new PaneController(this, PaneButtonLine);
@@ -121,7 +124,7 @@ namespace OverloadClientTool
 
             // Announce ourself.
             Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen");
-            Info("Olproxy by Arne de Bruijn.");
+            Info("Olproxy code by Arne de Bruijn.");
 
             // Start background monitor for periodic log updates.
             Thread thread = new Thread(ActivityBackgroundMonitor);
@@ -274,6 +277,57 @@ namespace OverloadClientTool
             }
         }
 
+        public bool IsOlproxyRunning
+        {
+            get
+            {
+                bool running = false;
+
+                try
+                {
+                    // Check Olproxy.
+                    if (UseEmbeddedOlproxy.Checked)
+                    {
+                        if ((olproxyTask.KillFlag == false) && (olproxyThread != null) && olproxyThread.IsAlive) running = true;
+                    }
+                    else
+                    {
+                        try { running = (GetRunningProcess("olproxy") != null); } catch { }
+                    }
+                }
+                catch
+                {
+                }
+
+                return running;
+            }
+        }
+
+        public bool IsOverloadRunning
+        {
+            get
+            {
+                bool running = false;
+                try { if (GetRunningProcess("overload") != null) running = true; } catch { }
+                return running;
+            }
+        }
+
+        public bool IsOverloadOrOlmodRunning
+        {
+            get { return (IsOverloadRunning || IsOlmodRunning); }
+        }
+
+        public bool IsOlmodRunning
+        {
+            get
+            {
+                bool running = false;
+                try { if (GetRunningProcess("olmod") != null) running = true; } catch { }
+                return running;
+            }
+        }
+
         /// <summary>
         /// Background logging monitor. Sets GroupBox titles to reflect running status.
         /// </summary>
@@ -281,72 +335,55 @@ namespace OverloadClientTool
         {
             while (true)
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
 
-                try
+                bool overloadRunning = IsOverloadRunning;
+                bool olproxyRunning = IsOlproxyRunning;
+                bool olmodRunning = IsOlmodRunning;
+
+                this.UIThread(delegate
                 {
-                    if (logger != null)
+                    string statusText = "Ready for some Overload action!";
+
+                    if (overloadRunning && !olproxyRunning && !olmodRunning) statusText = "Overload is running.";
+                    else if (overloadRunning && olproxyRunning && !olmodRunning) statusText = "Overload and Olproxy are running.";
+                    else if (olmodRunning && !olproxyRunning) statusText = "Overload (Olmod) is running.";
+                    else if (olmodRunning && olproxyRunning) statusText = "Overload (Olmod) and Olproxy are running.";
+                    else if (olproxyRunning) statusText = "Olproxy is running.";
+                    else
                     {
-                        string overloadPath = Path.GetDirectoryName(OverloadExecutable.Text);
-                        string overloadExe = Path.Combine(overloadPath, "overload.exe");
-                        string olmodExe = Path.Combine(overloadPath, "olmod.exe");
+                        FileInfo fiOverload = new FileInfo(OverloadExecutable.Text);
+                        FileInfo fiOlmod = new FileInfo(OverloadExecutable.Text);
 
-                        string olproxyName = "olproxy";
-                        string olmodName = "olmod";
-                        string overloadName = "overload";
-
-                        if (UseEmbeddedOlproxy.Checked)
+                        if (fiOverload.Exists == false)
                         {
-                            if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive))
-                            {
-                                OlproxyRunning.Invoke(new Action(() => OlproxyRunning.Visible = true));
-                            }
-                            else
-                            {
-                                OlproxyRunning.Invoke(new Action(() => OlproxyRunning.Visible = false));
-                            }
+                            statusText = "Cannot find Overload (check path)!";
                         }
-                        else
+                        else if (UseOlmodCheckBox.Checked && (fiOlmod.Exists == false))
                         {
-                            OlproxyRunning.Invoke(new Action(() => OlproxyRunning.Visible = (GetRunningProcess(olproxyName) != null)));
+                            statusText = "Cannot find Olmod (check path)!";
                         }
-
-                        bool overloadRunning = (GetRunningProcess(overloadName) != null);
-                        bool olmodRunning = (GetRunningProcess(olmodName) != null);
-
-                        OverloadRunning.Invoke(new Action(() => OverloadRunning.Visible = (overloadRunning || olmodRunning)));
                     }
 
-                    if (!OlproxyRunning.Visible && !OverloadRunning.Visible)
+                    StatusMessage.Text = statusText;
+
+                    OlproxyRunning.Visible = olproxyRunning;
+                    OverloadRunning.Visible = overloadRunning || olmodRunning;
+
+                    StartButton.Text = (olproxyRunning || overloadRunning || olmodRunning) ? "Stop" : "Start";
+
+                    if (StartButton.Enabled)
                     {
-                        try { StartButton.Invoke(new Action(() => StartButton.Text = "Start")); } catch { }
+                        StartButton.BackColor = (DarkTheme) ? DarkButtonEnabledBackColor : LightButtonEnabledBackColor;
+                        StartButton.ForeColor = (DarkTheme) ? DarkButtonEnabledForeColor : LightButtonEnabledForeColor;
                     }
                     else
                     {
-                        try { StartButton.Invoke(new Action(() => StartButton.Text = "Stop")); } catch { }
+                        StartButton.BackColor = (DarkTheme) ? DarkButtonDisabledBackColor : LightButtonDisabledBackColor;
+                        StartButton.ForeColor = (DarkTheme) ? DarkButtonDisabledForeColor : LightButtonDisabledForeColor;
                     }
-
-                    try
-                    {
-                        if (StartButton.Enabled)
-                        {
-                            StartButton.Invoke(new Action(() => StartButton.BackColor = (DarkTheme) ? DarkButtonEnabledBackColor : LightButtonEnabledBackColor));
-                            StartButton.Invoke(new Action(() => StartButton.ForeColor = (DarkTheme) ? DarkButtonEnabledForeColor : LightButtonEnabledForeColor));
-                        }
-                        else
-                        {
-                            StartButton.Invoke(new Action(() => StartButton.BackColor = (DarkTheme) ? DarkButtonDisabledBackColor : LightButtonDisabledBackColor));
-                            StartButton.Invoke(new Action(() => StartButton.ForeColor = (DarkTheme) ? DarkButtonDisabledForeColor : LightButtonDisabledForeColor));
-                        }
-                    }
-                    catch
-                    {
-                    }
-                }
-                catch
-                {
-                }
-            }
+                });
+           }
         }
 
         /// <summary>
@@ -462,27 +499,8 @@ namespace OverloadClientTool
             TestSetTextBoxColor(OlproxyExecutable);
             TestSetTextBoxColor(OlmodExecutable);
 
-            try
-            {
-                string olmodFileName = Path.GetDirectoryName(OlmodExecutable.Text);
-
-                if (System.IO.File.Exists(olmodFileName)) UseOlmodCheckBox.Enabled = true;
-                else UseOlmodCheckBox.Enabled = false;
-            }
-            catch
-            {
-                UseOlmodCheckBox.Enabled = false;
-            }
-
-            try
-            {
-                if (System.IO.File.Exists(OlproxyExecutable.Text)) UseEmbeddedOlproxy.Enabled = true;
-                else UseEmbeddedOlproxy.Enabled = false;
-            }
-            catch
-            {
-                UseEmbeddedOlproxy.Enabled = false;
-            }
+            UseOlmod = UseOlmodCheckBox.Checked;
+            OlproxyEmbedded = UseEmbeddedOlproxy.Checked;
 
             ValidateButton(StartButton);
         }
@@ -503,12 +521,14 @@ namespace OverloadClientTool
 
         private void OverloadExecutable_TextChanged(object sender, EventArgs e)
         {
+            OverloadPath = OverloadExecutable.Text;
             ValidateSettings();
             UpdateDLCLocation();
         }
 
         private void OlproxyExecutable_TextChanged(object sender, EventArgs e)
         {
+            OlproxyPath = OlproxyExecutable.Text;
             ValidateSettings();
         }
 
@@ -702,7 +722,7 @@ namespace OverloadClientTool
         }
 
         // Return process if instance is active otherwise return null.
-        private Process GetRunningProcess(string name)
+        public Process GetRunningProcess(string name)
         {
             if (String.IsNullOrEmpty(name)) return null;
 
@@ -863,7 +883,7 @@ namespace OverloadClientTool
 
         private void SearchOverloadButton_Click(object sender, EventArgs e)
         {
-
+            FindOverloadInstall(true);
         }
 
         private void SearchOverloadButton_MouseEnter(object sender, EventArgs e)
@@ -887,6 +907,8 @@ namespace OverloadClientTool
 
             string save = Directory.GetCurrentDirectory();
 
+            if (String.IsNullOrEmpty(OlmodExecutable.Text)) OlmodExecutable.Text = Path.Combine(Path.GetDirectoryName(OverloadExecutable.Text), "olmod.exe");
+
             SelectExecutable.FileName = Path.GetFileName(OlmodExecutable.Text);
             SelectExecutable.InitialDirectory = Path.GetDirectoryName(OlmodExecutable.Text);
 
@@ -903,6 +925,7 @@ namespace OverloadClientTool
 
         private void OlmodExecutable_TextChanged(object sender, EventArgs e)
         {
+            OlmodPath = OlmodExecutable.Text;
             ValidateSettings();
         }
     }

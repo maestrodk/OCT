@@ -16,7 +16,7 @@ namespace OverloadClientTool
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new OCTMainForm(args));
+            Application.Run(new OCTMain(args));
         }
     }
 }

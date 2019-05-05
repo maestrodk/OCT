@@ -30,6 +30,9 @@ namespace OverloadClientTool
         // URL for online map list JSON.
         private string OnlineMapListUrl =  @"https://www.overloadmaps.com/data/mp.json";
 
+        // Note! Must be same string as defined in OCTMain!
+        private const string HiddenMarker = "_OCT_Hidden";
+
         // Default (and recommended) location for local maps.
         private string ApplicationDataOverloadPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\Revival\Overload";
 
@@ -150,12 +153,15 @@ namespace OverloadClientTool
             // Create directory if it doesn't exist.
             if (!Directory.Exists(mapDirectoryPath)) Directory.CreateDirectory(mapDirectoryPath);
 
-            // Check for new map file.
-            if (File.Exists(mapZipFilePath))
+            // Don't update hidden maps.
+            if (File.Exists(mapZipFilePath + HiddenMarker)) return false;
+
+                // Check for new map file.
+                if (File.Exists(mapZipFilePath))
             {
                 // Map found - compare date and size to online version.
                 FileInfo fi = new FileInfo(mapZipFilePath);
-                if ((fi.Length == map.Size) || (fi.LastWriteTime == map.DateTime)) return false;
+                if ((fi.Length == map.Size) && (fi.LastWriteTime == map.DateTime)) return false;
             }
 
             // New map or map needs to be updated.            
@@ -209,7 +215,7 @@ namespace OverloadClientTool
         }
     }
 
-    public partial class OCTMainForm
+    public partial class OCTMain
     {
         private const string HiddenMarker = "_OCT_Hidden";
 
@@ -285,8 +291,8 @@ namespace OverloadClientTool
             // Init listbox.
             foreach (MapFile mapFile in currentMaps) MapsListBox.Items.Add(mapFile);
 
-            MapHideButton.Enabled = (MapsListBox.SelectedIndex > 0);
-            MapDeleteButton.Enabled = (MapsListBox.SelectedIndex > 0);
+            MapHideButton.Enabled = (MapsListBox.SelectedIndex >= 0);
+            MapDeleteButton.Enabled = (MapsListBox.SelectedIndex >= 0);
 
             // Begin monitoring folder.
             mapsBackgroundWorker = new BackgroundWorker();
@@ -307,36 +313,40 @@ namespace OverloadClientTool
         {
             while (true)
             {
-                Thread.Sleep(5000);
+                Thread.Sleep(1000);
 
-                List<MapFile> mapsInFolder = Maps;
-
-                // See if update is required.
-                bool update = (mapsInFolder.Count != currentMaps.Count);
-                if (!update)
+                this.UIThread(delegate
                 {
-                    foreach (MapFile map1 in mapsInFolder)
-                    {
-                        bool found = false;
-                        foreach (MapFile map2 in currentMaps)
-                        {
-                            if (!SameMap(map1, map2)) found = true;
-                        }
-                        if (!found) update = true;
-                    }
-                }
+                    CheckAndUpdateMaplist();
+                });
+            }
+        }
 
-                if (update)
+        private void CheckAndUpdateMaplist()
+        {
+            List<MapFile> mapsInFolder = Maps;
+
+            // See if update is required.
+            bool update = (mapsInFolder.Count != currentMaps.Count);
+
+            if (!update)
+            {
+                foreach (MapFile map1 in mapsInFolder)
                 {
-                    // Update map list and refresh listbox content.
-                    lock (mapChangeLock)
-                    {
-                        currentMaps = mapsInFolder;
-                        MapsListBox.Invoke(new Action(() => MapsListBox.Items.Clear()));
-                        MapsListBox.Invoke(new Action(() => { foreach (MapFile mapFile in currentMaps) MapsListBox.Items.Add(mapFile); }));
-                        MapsListBox.Invoke(new Action(() => MapsListBox.Invalidate()));
-                    }
+                    bool found = false;
+                    foreach (MapFile map2 in currentMaps) if (!SameMap(map1, map2)) found = true;
+                    update = !found;
                 }
+            }
+
+            if (update)
+            {
+                // Update map list and refresh listbox content.
+                currentMaps = mapsInFolder;
+                MapsListBox.Items.Clear();
+                foreach (MapFile mapFile in currentMaps) MapsListBox.Items.Add(mapFile);
+
+                // MapsListBox.Invalidate();
             }
         }
 
@@ -392,6 +402,9 @@ namespace OverloadClientTool
                     {
                         MessageBox.Show(String.Format($"Whoops! Cannot delete map '{mapFile.Name}': {ex.Message}"));
                     }
+
+                    MapHideButton.Enabled = (MapsListBox.SelectedIndex >= 0);
+                    MapDeleteButton.Enabled = (MapsListBox.SelectedIndex >= 0);
                 }
             }
         }
@@ -400,7 +413,7 @@ namespace OverloadClientTool
         {
             lock (mapChangeLock)
             {
-                if (MapsListBox.SelectedIndex > 0)
+                if (MapsListBox.SelectedIndex >= 0)
                 {
                     MapFile mapFile = (MapFile)MapsListBox.Items[MapsListBox.SelectedIndex];
                     MapDeleteButton.Enabled = true;
@@ -421,7 +434,7 @@ namespace OverloadClientTool
             lock (mapChangeLock)
             {
                 // Make sure that we got a selected map.
-                if (MapsListBox.Items.Count > 0)
+                if (MapsListBox.SelectedIndex >= 0)
                 {
                     MapFile mapFile = (MapFile)MapsListBox.Items[MapsListBox.SelectedIndex];
                     string hideUnhide = (mapFile.Hidden) ? "unhide" : "hide";
