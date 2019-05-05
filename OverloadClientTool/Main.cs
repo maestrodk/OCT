@@ -35,7 +35,7 @@ namespace OverloadClientTool
         private bool autoStart = false;
         private ListViewLogger logger = null;
 
-        private OlproxyProgram olproxyTask = null;
+        private olproxy.Program olproxyTask = null;
         private Thread olproxyThread = null;
 
         private OverloadMapManager mapManager = new OverloadMapManager();
@@ -87,7 +87,7 @@ namespace OverloadClientTool
             InitMapsListBox();
 
             // Prepare embedded OlproxyProgram instance before attempting to start thread.
-            olproxyTask = new OlproxyProgram();
+            olproxyTask = new olproxy.Program();
             olproxyTask.SetLogger(Info);
 
             // Set logging for map manager.

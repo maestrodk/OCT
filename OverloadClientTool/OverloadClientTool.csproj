@@ -65,6 +65,7 @@
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="MapManager.cs" />
+    <Compile Include="OlmodManager.cs" />
     <Compile Include="Olproxy\AppSettings.cs" />
     <Compile Include="Olproxy\Broadcast.cs" />
     <Compile Include="Olproxy\ConsoleSpinner.cs" />

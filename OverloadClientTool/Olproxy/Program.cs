@@ -39,7 +39,7 @@ namespace olproxy
 */
     }
 
-    class OlproxyProgram
+    class Program
     {
         private const int broadcastPort = 8000;
         private const int remotePort = 8001;
@@ -63,23 +63,26 @@ namespace olproxy
         [DllImport("libc", SetLastError = true)]
         private unsafe static extern int setsockopt(int socket, int level, int option_name, void* option_value, uint option_len);
 #endif
-        // -- Maestro change start --
+
+        // -- Maestro: Delegate for external logger and status KillFlag.
         public delegate void LogMessageDelegate(string message);
         private LogMessageDelegate logger = null;
         public bool KillFlag = false;
 
+        // Maestro: Check checks whether Olproxy standalone or embedded.
+        private bool isConsoleApplication = Console.In != StreamReader.Null;
+
+        // -- Maestro: Set delegate for external logger.
         public void SetLogger(LogMessageDelegate logger = null)
         {
             this.logger = logger;
         }
-        // -- Maestro change end  --
 
+        // Maestro: Updated to check for external/embedded execution.
         void AddMessage(string s)
         {
-            // -- Maestro change start --
-            //Console.WriteLine(DateTime.Now.ToLongTimeString() + " " + s);
-            logger?.Invoke(s);
-            // -- Maestro change end --
+            if (isConsoleApplication) Console.WriteLine(DateTime.Now.ToLongTimeString() + " " + s);
+            else logger?.Invoke(s);
             Debug.WriteLine(s);
         }
 
@@ -143,6 +146,7 @@ namespace olproxy
                 AddMessage("Found local broadcast addresses " + String.Join(", ", BroadcastEndpoints.Select(x => x.Address.ToString())));
         }
 
+        // -- Maestro: Needed this for clean shutdown when embedded to prevent socket errors when restarting.
         public void DestroySockets()
         {
             if (remoteSocket != null)
@@ -156,6 +160,7 @@ namespace olproxy
 
         void InitSockets()
         {
+            // -- Maestro make sure socket is available.
             DestroySockets();
 
             try {
@@ -439,13 +444,17 @@ namespace olproxy
 
         void MainLoop()
         {
-            // -- Maestro change start --
-            // AddMessage("olproxy " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " Ready.");
-            AddMessage("Olproxy task started.");
-            // AddMessage("Create/Join LAN Match in Overload and use server IP address as password");
-            // AddMessage("(or start Overload server)");
-            // -- Maestro change end --
-
+            // -- Maestro: Console/embedded check.
+            if (isConsoleApplication)
+            {
+                AddMessage("olproxy " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " Ready.");
+                AddMessage("Create/Join LAN Match in Overload and use server IP address as password");
+                AddMessage("(or start Overload server)");
+            }
+            else
+            {
+                AddMessage("Olproxy task started.");
+            }
 
             var taskLocal = localSocket.ReceiveAsync();
             var taskRemote = remoteSocket.ReceiveAsync();
@@ -458,10 +467,11 @@ namespace olproxy
                 tasks[0] = taskLocal;
                 tasks[1] = taskRemote;
 
-                // -- Maestro change start --
-                //var idx = Task.WaitAny(tasks, spinner.Active ? 1000 : Timeout.Infinite);
-                var idx = Task.WaitAny(tasks, 1000);
+                // -- Maestro: Instead of 'Infinite' use 1 sec to allow fast check of KillFlag.
+                // -- Maestro: NOT used to do async's so this may be done better :)
+                var idx = (isConsoleApplication) ? Task.WaitAny(tasks, spinner.Active ? 1000 : Timeout.Infinite) : Task.WaitAny(tasks, 1000);
 
+                // -- Maestro: Check if KillFlag is set from OCT/ST - if so shutdown Olproxy task.
                 if (KillFlag)
                 {
                     try
@@ -476,8 +486,7 @@ namespace olproxy
                     DestroySockets();
                     KillFlag = false;
                     return;
-                }
-                // -- Maestro change start --
+                }                
 
                 if (idx == 0) // local
                 {
@@ -501,12 +510,7 @@ namespace olproxy
 
         void LoadConfig()
         {
-            // -- Maestro change start --
-            // string configFile = "appsettings.json"
-            string configFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "appSettings.json");
-            if (!File.Exists(configFile)) configFile = "appSettings.json";
-            // -- Maestro change end --
-
+            string configFile = "appsettings.json";            
             try
             {
                 config = MiniJson.Parse(File.ReadAllText(configFile)) as MJDict;
@@ -517,6 +521,7 @@ namespace olproxy
             }
         }
 
+        // Mastro: This saves a JSON config file to a Olproxy application data folder (needed if no external Olproxy.exe is found).
         public bool SaveConfig(Dictionary<string, object> saveConfig, string alternateFileName = null)
         {
             string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Olproxy");
@@ -525,55 +530,33 @@ namespace olproxy
             string configFileName = Path.Combine(configPath, "appsettings.json");
             string jsonString = MiniJson.ToString(saveConfig);
 
-            try
-            {
-                File.WriteAllText(configFileName, jsonString);
-            }
-            catch 
-            {
-                return false;
-            }
+            try { File.WriteAllText(configFileName, jsonString); } catch { return false; }
 
-            if (!String.IsNullOrEmpty(alternateFileName))
-            {
-                // Try to also update the appsettings.json config placed in the same directory as Olproxy.exe.
-                try
-                {
-                    File.WriteAllText(alternateFileName, jsonString);
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-
+            // Optionall update the appsettings.json placed in the same directory as Olproxy.exe.
+            if (!String.IsNullOrEmpty(alternateFileName))  try { File.WriteAllText(alternateFileName, jsonString); } catch { return false; }            
 
             return true;
         }
-        // -- Maestro change end --
 
-        // -- Maestro change start --
-        // public void Run(string[] args)(
+        // -- Maestro: Added 2nd parameter initConfig to set config from OCT.
         public void Run(string[] args, Dictionary<string, object> initConfig = null)
-        // -- Maestro change end --
         {
             foreach (var arg in args)
             {
                 if (arg == "-v") debug = true;
             }
 
-            // -- Maestro change start --
-            // LoadConfig();
+            // -- Maestro: See if we should use supplied config (OST/OCT) or load from disk (standalone).
             if (initConfig == null) LoadConfig();
             else config = initConfig;
-            // -- Maestro change end --
+
             Init();
             MainLoop();
         }
 
-        static void StartOlproxy(string[] args)
+        static void OlproxyMain(string[] args)
         {
-            new OlproxyProgram().Run(args);
+            new Program().Run(args);
         }
     }
 }
