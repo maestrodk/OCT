@@ -364,7 +364,7 @@ namespace OverloadClientTool
                     if (mapFileName.EndsWith(HiddenMarker) || mapFileName.ToLower().EndsWith(".zip")) maps.Add(new MapFile(mapFileName));
                 }
                 
-                if (Directory.Exists(Path.GetDirectoryName(OverloadExecutable.Text)) && UseDLCLocationCheckBox.Checked)
+                if (ValidFileName(OverloadExecutable.Text) && UseDLCLocationCheckBox.Checked)
                 {
                     string dlcLocation = Path.Combine(Path.GetDirectoryName(OverloadExecutable.Text), "DLC");
                     Directory.CreateDirectory(dlcLocation);

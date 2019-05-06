@@ -95,58 +95,119 @@ namespace OverloadClientTool
 
         public void FindOverloadInstall(bool onlyOverload = false)
         {
-            if (String.IsNullOrEmpty(OverloadPath))
+            bool found = false;
+            try
+            {
+                found = new FileInfo(OverloadPath).Exists;
+            }
+            catch
+            {
+            }
+
+            if (!found)
             {
                 string steamLocation = null;
                 string gogLocation = null;
                 string dvdLocation = null;
 
                 // Check for a STEAM install of Overload.
-                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
-                {
-                    using (var key = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 448850"))
-                    {
-                        if (key != null)
-                        {
-                            steamLocation = (string)key.GetValue("InstallLocation");
-                            if (!File.Exists(Path.Combine(steamLocation, "overload.exe"))) steamLocation = null;
+                logger?.ErrorLogMessage(String.Format($"Checking for STEAM registry key."));
 
-                            if (String.IsNullOrEmpty(steamLocation))
+                try
+                {
+                    using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                    {
+                        using (var key = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 448850"))
+                        {
+                            if (key != null)
                             {
-                                steamLocation = (string)key.GetValue("UninstallString");
-                                if (!String.IsNullOrEmpty(steamLocation))
+                                try
                                 {
-                                    string[] parts = steamLocation.Split("\"".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                    if (parts.Length > 1) steamLocation = Path.Combine(Path.GetDirectoryName(parts[0]), @"steamapps\common\Overload");
-                                    else steamLocation = null;
+                                    steamLocation = (string)key.GetValue("InstallLocation");
+                                    string steamOverloadName = Path.Combine(steamLocation, "overload.exe");
+                                    if (!File.Exists(Path.Combine(steamLocation, "overload.exe"))) steamLocation = null;
+                                }
+                                catch
+                                {
+                                    steamLocation = null;
+                                }
+
+                                if (String.IsNullOrEmpty(steamLocation))
+                                {
+                                    try
+                                    {
+                                        steamLocation = (string)key.GetValue("UninstallString");
+                                        if (!String.IsNullOrEmpty(steamLocation))
+                                        {
+                                            string[] parts = steamLocation.Split("\"".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                            if (parts.Length > 1)
+                                            {
+                                                steamLocation = Path.Combine(Path.GetDirectoryName(parts[0]), @"steamapps\common\Overload");
+                                            }
+                                            else
+                                            {
+                                                steamLocation = null;
+                                            }
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        steamLocation = null;
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    //logger?.ErrorLogMessage(String.Format($"Exception while checking STEAM registry key: {ex.Message}"));
+                }
 
                 // Check for a GOG install of Overload.
-                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                logger?.ErrorLogMessage(String.Format($"Checking for GOG registry key."));
+
+                try
                 {
-                    using (var key = hklm.OpenSubKey(@"SOFTWARE\WOW6432Node\GOG.com\Games\1309632191"))
+                    using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
                     {
-                        if (key != null) gogLocation = (string)key.GetValue("Path");
-                        if (!String.IsNullOrEmpty(gogLocation)) if (!File.Exists(Path.Combine(gogLocation, "overload.exe"))) gogLocation = null;
+                        using (var key = hklm.OpenSubKey(@"SOFTWARE\WOW6432Node\GOG.com\Games\1309632191"))
+                        {
+                            if (key != null) gogLocation = (string)key.GetValue("Path");
+                            if (!String.IsNullOrEmpty(gogLocation)) if (!File.Exists(Path.Combine(gogLocation, "overload.exe"))) gogLocation = null;
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    //logger?.ErrorLogMessage(String.Format($"Exception while checking GOG registry key: {ex.Message}"));
                 }
 
                 // Check for a DVD install of Overload (KickStarter backer DVD).
-                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                logger?.ErrorLogMessage(String.Format($"Checking for DVD registry key."));
+                try
                 {
-                    using (var key = hklm.OpenSubKey(@"SOFTWARE\WOW6432Node\Revival Productions, LLC\Overload"))
+                    using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
                     {
-                        if (key != null) dvdLocation = (string)key.GetValue("Path");
-                        if (!String.IsNullOrEmpty(dvdLocation)) if (!File.Exists(Path.Combine(dvdLocation, "overload.exe"))) dvdLocation = null;
+                        using (var key = hklm.OpenSubKey(@"SOFTWARE\WOW6432Node\Revival Productions, LLC\Overload"))
+                        {
+                            if (key != null) dvdLocation = (string)key.GetValue("Path");
+                            if (!String.IsNullOrEmpty(dvdLocation)) if (!File.Exists(Path.Combine(dvdLocation, "overload.exe"))) dvdLocation = null;
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    //logger?.ErrorLogMessage(String.Format($"Exception while checking DVD registry key: {ex.Message}"));
                 }
 
                 initPath = steamLocation ?? gogLocation ?? dvdLocation;
-                if (String.IsNullOrEmpty(initPath)) initPath = "";
+
+                if (String.IsNullOrEmpty(initPath))
+                {
+                    logger?.ErrorLogMessage(String.Format($"Unable to autolocate Overload installation!"));
+                    initPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+                }
 
                 string overloadFileName = Path.Combine(initPath, "overload.exe");
                 string olproxyFileName = Path.Combine(initPath, "olproxy.exe");
@@ -157,12 +218,34 @@ namespace OverloadClientTool
                 if (!onlyOverload) OlproxyPath = olproxyFileName;
             }
 
-            // Set Olmod.exe path to Overload installation folder it not found.
-            if (String.IsNullOrEmpty(OlmodPath))
+            // Set Olmod.exe path to Overload installation folder if not found.
+            if (String.IsNullOrEmpty(OlmodPath) || !ValidFileName(OlmodPath))
             {
-                if (File.Exists(OverloadPath)) OlmodPath = Path.Combine(Path.GetDirectoryName(OverloadPath), "olmod.exe");
-                else OlmodPath = "olmod.exe";
+                OlmodPath = Path.Combine(initPath, "olmod.exe");
+                if (OCTMain.ValidFileName(OlmodPath)) OlmodPath = Path.Combine(Path.GetDirectoryName(OverloadPath), "olmod.exe");
             }
+            else
+            {
+                try
+                {
+                    string test = Path.Combine(Path.GetDirectoryName(OverloadPath), "olmod.exe");
+                    if (new FileInfo(test).Exists) OlmodPath = test;
+                }
+                catch
+                {
+                }
+            }
+
+            OverloadExecutable.Text = OverloadPath;
+            OlproxyExecutable.Text = OlproxyPath;
+            OlmodExecutable.Text = OlmodPath;
+        }
+
+        private string initPath = "";
+
+        public void LoadSettings()
+        {
+            if (String.IsNullOrEmpty(OverloadPath)) FindOverloadInstall();
 
             OlmodExecutable.Text = OlmodPath;
 
@@ -171,18 +254,6 @@ namespace OverloadClientTool
 
             OlproxyExecutable.Text = OlproxyPath;
             OlproxyArgs.Text = OlproxyParameters;
-        }
-
-        private string initPath = "";
-
-        public void LoadSettings()
-        {
-            // Attempt to find Overload installation path.
-            // First verify the current setting.
-
-            if (String.IsNullOrEmpty(OverloadPath) || !File.Exists(OverloadPath)) OverloadPath = null;
-
-            FindOverloadInstall();
 
             UseEmbeddedOlproxy.Checked = OlproxyEmbedded;
             SelectDark.Checked = DarkTheme;

@@ -368,38 +368,35 @@ namespace OverloadClientTool
                     else if (olproxyRunning) statusText = "Olproxy is running.";
                     else
                     {
-                        FileInfo fiOverload = new FileInfo(OverloadExecutable.Text);
-                        FileInfo fiOlmod = new FileInfo(OverloadExecutable.Text);
+                        bool foundOverload = false;
+                        bool foundOlmod = false;
 
-                        if (fiOverload.Exists == false)
+                        try { foundOverload = (ValidFileName(OverloadExecutable.Text) && new FileInfo(OverloadExecutable.Text).Exists); } catch { }
+                        try { foundOlmod = (ValidFileName(OlmodExecutable.Text) && new FileInfo(OlmodExecutable.Text).Exists); } catch { }
+
+                        if (UseOlmodCheckBox.Checked && !foundOlmod) statusText = "Cannot find Olmod (check path)!";
+                        else if (!UseOlmodCheckBox.Checked && !foundOverload) statusText = "Cannot find Overload (check path)!";
+
+                        StatusMessage.Text = statusText;
+
+                        OlproxyRunning.Visible = olproxyRunning;
+                        OverloadRunning.Visible = overloadRunning || olmodRunning;
+
+                        StartButton.Text = (olproxyRunning || overloadRunning || olmodRunning) ? "Stop" : "Start";
+
+                        if (StartButton.Enabled)
                         {
-                            statusText = "Cannot find Overload (check path)!";
+                            StartButton.BackColor = theme.ButtonEnabledBackColor;
+                            StartButton.ForeColor = theme.ButtonEnabledForeColor;
                         }
-                        else if (UseOlmodCheckBox.Checked && (fiOlmod.Exists == false))
+                        else
                         {
-                            statusText = "Cannot find Olmod (check path)!";
+                            StartButton.BackColor = theme.ButtonDisabledBackColor;
+                            StartButton.ForeColor = theme.ButtonDisabledForeColor;
                         }
-                    }
-
-                    StatusMessage.Text = statusText;
-
-                    OlproxyRunning.Visible = olproxyRunning;
-                    OverloadRunning.Visible = overloadRunning || olmodRunning;
-
-                    StartButton.Text = (olproxyRunning || overloadRunning || olmodRunning) ? "Stop" : "Start";
-
-                    if (StartButton.Enabled)
-                    {
-                        StartButton.BackColor = theme.ButtonEnabledBackColor;
-                        StartButton.ForeColor = theme.ButtonEnabledForeColor;
-                    }
-                    else
-                    {
-                        StartButton.BackColor = theme.ButtonDisabledBackColor;
-                        StartButton.ForeColor = theme.ButtonDisabledForeColor;
                     }
                 });
-           }
+            }
         }
 
         /// <summary>
@@ -895,7 +892,7 @@ namespace OverloadClientTool
 
         private void SearchOverloadButton_Click(object sender, EventArgs e)
         {
-            FindOverloadInstall(true);
+            FindOverloadInstall();
         }
 
         private void SearchOverloadButton_MouseEnter(object sender, EventArgs e)
@@ -963,6 +960,32 @@ namespace OverloadClientTool
         {
             ProcessStartInfo sInfo = new ProcessStartInfo("file:///" + pilotsBackupPath);
             Process.Start(sInfo);
+        }
+
+        public static bool ValidFileName(string path)
+        {
+            try
+            {
+                bool test = new FileInfo(path).Exists;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool ValidDirectoryName(string path)
+        {
+            try
+            {
+                bool test = new DirectoryInfo(path).Exists;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
