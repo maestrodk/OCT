@@ -1,13 +1,16 @@
-MIT License
+## Overload Client Tool License
 
-Copyright (c) 2019 Søren Michélsen
+Overload Client Tool (from here on named as 'OCT') is free for non-commercial use only.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+- The source code of OCT (except the Olproxy part, see below) is Copyright (C) Søren Michélsen 2019
+
+- This license applies to OCT v1.4 and all subsequent releases
+
+- Use/distribution of OCT binaries and/or source code is granted for NON-COMMERCIAL use only
+
+If you want to use part of the code for a commercial product then you must contact me. 
+
+Olproxy source code in OCT is covered by its own license (see https://github.com/arbruijn/olproxy for more details).
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
