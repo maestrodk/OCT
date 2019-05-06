@@ -26,14 +26,14 @@ namespace OverloadClientTool
         private object pilotChangeLock = new object();
  
         private void InitPilotsListBox()
-        { 
+        {
             // Init listbox.
             CheckAndUpdatePilots();
 
             if (!IsElevated) PilotMakeActiveButton.Visible = false;
 
-            BackColor = (DarkTheme) ? Color.DimGray : Color.White;
-            ForeColor = (DarkTheme) ? Color.LightSkyBlue : Color.RoyalBlue;
+            //BackColor = theme.BackColor;
+            //ForeColor = theme.ForeColor;
 
             // Begin monitoring folder.
             pilotsBackgroundWorker = new BackgroundWorker();
@@ -63,8 +63,8 @@ namespace OverloadClientTool
                 bool delete = (PilotsListBox.Items.Count > 1) && (PilotsListBox.SelectedIndex >= 0);     // Don't allow last pilot to be deleted.
                 bool rename = (PilotsListBox.SelectedIndex >= 0);
                 bool clone = (PilotsListBox.SelectedIndex >= 0);
-
                 bool select = (PilotsListBox.SelectedIndex >= 0);
+
                 if (select)
                 {
                     string pilotSelected = (string)PilotsListBox.Items[PilotsListBox.SelectedIndex];
@@ -101,6 +101,8 @@ namespace OverloadClientTool
                     PilotNameLabel.SelectionFont = new Font(PilotNameLabel.Font, FontStyle.Regular);
                     PilotNameLabel.AppendText(" is the active pilot.");
                 }
+
+                OCTMain.ApplyThemeToControl(PanePilots, theme);
             });
         }
 
@@ -164,13 +166,12 @@ namespace OverloadClientTool
                 return;
             }
 
-            InputBox inputBox = new InputBox("Rename pilot", String.Format($"Enter a new name for pilot '{pilotSelected}'") , pilotSelected, this, DarkTheme);
+            InputBox inputBox = new InputBox("Rename pilot", String.Format($"Enter a new name for pilot '{pilotSelected}'"), pilotSelected, this, theme);
             DialogResult result = inputBox.ShowDialog();
 
             if (result == DialogResult.OK)
             {
                 string newPilot = inputBox.Result;
-
 
                 if (newPilot.ToLower() == pilotSelected.ToLower())
                 {
@@ -269,7 +270,7 @@ namespace OverloadClientTool
         {
             string pilotSelected = (string)PilotsListBox.Items[PilotsListBox.SelectedIndex];
 
-            InputBox inputBox = new InputBox("Clone pilot", String.Format($"Enter a name for the new pilot '{pilotSelected}'"), pilotSelected, this, DarkTheme);
+            InputBox inputBox = new InputBox("Clone pilot", String.Format($"Enter a name for the new pilot '{pilotSelected}'"), pilotSelected, this, theme);
             DialogResult result = inputBox.ShowDialog();
 
             if (result == DialogResult.OK)

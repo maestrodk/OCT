@@ -16,8 +16,6 @@ namespace OverloadClientTool
         private Color activeTextBoxColor;
         private Color inactiveTextBoxColor;
 
-        private bool tabControlColorSetupCompleted = false;
-
         public string OverloadPath
         {
             get { return Properties.Settings.Default.OverloadPath; }
@@ -193,47 +191,23 @@ namespace OverloadClientTool
             AutoUpdateMapsCheckBox.Checked = AutoUpdateMaps;
             UseDLCLocationCheckBox.Checked = UseDLCLocation;
             AutoPilotsBackupCheckbox.Checked = AutoSavePilots;
-                
-            // The theme colors MUST be set BEFORE attempting to validate settings.
-            // This is because ValidateSettings() checks the button colors to see if
-            // it is safe to start any of the .exe files.
-            SetTheme();
-
-            ValidateSettings();
         }
 
-        private void SetTheme()
+        private void UpdateTheme(Theme theme)
         {
-            if (DarkTheme)
-            {
-                // Dark theme colors.
-                BackColor = Color.DimGray;
-                ForeColor = Color.LightGray;
+            this.BackColor = theme.BackColor;
+            this.ForeColor = theme.ForeColor;
 
-                activeTextBoxColor = Color.White;
-                inactiveTextBoxColor = Color.LightCoral;
+            activeTextBoxColor = theme.ForeColor;
+            inactiveTextBoxColor = theme.InvalidForeColor;
 
-                UpdatingMaps.Image = global::OverloadClientTool.Properties.Resources.arrows_light_blue_on_grey;
-                OlproxyRunning.Image = global::OverloadClientTool.Properties.Resources.arrows_light_blue_on_grey;
-                OverloadRunning.Image = global::OverloadClientTool.Properties.Resources.arrows_light_blue_on_grey;
-            }
-            else
-            {
-                // Default textbox colors.
-                BackColor = Color.White;
-                ForeColor = Color.Black;
-            
-                activeTextBoxColor =  Color.Black;
-                inactiveTextBoxColor = Color.Coral;
-
-                UpdatingMaps.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-                OlproxyRunning.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-                OverloadRunning.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-            }
+            UpdatingMaps.Image = theme.IsRunningImage;
+            OlproxyRunning.Image = theme.IsRunningImage;
+            OverloadRunning.Image = theme.IsRunningImage;
 
             // Set the active theme (recursively).
-            ApplyThemeToControl(this);
-            paneController.SetTheme(DarkTheme);
+            ApplyThemeToControl(this, theme);
+            paneController.SetTheme(theme);
 
             ValidateSettings();
         }
@@ -263,66 +237,71 @@ namespace OverloadClientTool
         /// Recursively set control colors based on type.
         /// </summary>
         /// <param name="control"></param>
-        public void ApplyThemeToControl(Control control)
+        public static void ApplyThemeToControl(Control control, Theme theme)
         {
-            if (control.Controls.Count > 0) foreach (Control child in control.Controls) ApplyThemeToControl(child);
+            if (control.Controls.Count > 0) foreach (Control child in control.Controls) ApplyThemeToControl(child, theme);
 
             if ((control is GroupBox) || (control.Name == "StatusMessage"))
             {
                 // Set group box title to blue but keep the color of its children to the theme settings.
-                control.ForeColor = (DarkTheme) ? Color.LightSkyBlue : Color.RoyalBlue;
+                control.ForeColor = theme.TextHighlightColor;
 
-                foreach (Control child in control.Controls) child.ForeColor = activeTextBoxColor;
+                foreach (Control child in control.Controls) child.ForeColor = theme.ForeColor;
             }
             else if ((control is TextBox) || (control is ListBox) || (control is ListView) || (control is TabPage))
             {
-                ApplyThemeToSingleControl(control);
+                ApplyThemeToSingleControl(control, theme);
             }
             else if (control is RichTextBox)
             {
-                control.BackColor = (DarkTheme) ? Color.DimGray : Color.White;
-                control.ForeColor = (DarkTheme) ? Color.LightSkyBlue : Color.RoyalBlue;
+                control.BackColor = theme.BackColor;
+                control.ForeColor = theme.ForeColor;
+            }
+            else if (control is LinkLabel)
+            {
+                LinkLabel link = control as LinkLabel;
+                link.BackColor = theme.BackColor;
+                link.ForeColor = theme.TextHighlightColor;
+                link.VisitedLinkColor = theme.TextHighlightColor;
+                link.LinkColor  = theme.TextHighlightColor;
+                link.ActiveLinkColor = theme.TextHighlightColor;
             }
             else if (control is CheckBox)
             {
-                control.ForeColor = ForeColor;
+                control.ForeColor = theme.ForeColor;
             }
             else if (control is Button)
             {
+                Button button = control as Button;
+                button.FlatStyle = FlatStyle.Flat;
+                button.FlatAppearance.BorderSize = 0;
+
                 // StartButton colors are controlled by ActivityBackgroundMonitor.
-                if (control != StartButton) ValidateButton(control);
+                ValidateButton(control, theme);
             }
         }
 
-        public void ApplyThemeToSingleControl(Control control)
+        public static void ApplyThemeToSingleControl(Control control, Theme theme)
         {
-            if (SelectDark.Checked)
-            {
-                control.BackColor = DarkControlBackColor;
-                control.ForeColor = activeTextBoxColor;
-            }
-            else
-            {
-                control.BackColor = LightControlBackColor;
-                control.ForeColor = activeTextBoxColor;
-            }
+            control.BackColor = theme.ControlBackColor;
+            control.ForeColor = theme.ControlForeColor;
         }
  
         /// <summary>
         /// Override default enabled/disabled colors for a Button control.
         /// </summary>
         /// <param name="control"></param>
-        public void ValidateButton(Control control)
+        public static void ValidateButton(Control control, Theme theme)
         {
             if (control.Enabled)
             {
-                control.BackColor = (DarkTheme) ? DarkButtonEnabledBackColor : LightButtonEnabledBackColor;
-                control.ForeColor = (DarkTheme) ? DarkButtonEnabledForeColor: LightButtonEnabledForeColor;
+                control.BackColor = theme.ButtonEnabledBackColor;
+                control.ForeColor = theme.ButtonEnabledForeColor;
             }
             else
             {
-                control.BackColor = (DarkTheme) ? DarkButtonDisabledBackColor : LightButtonDisabledBackColor;
-                control.ForeColor = (DarkTheme) ? DarkButtonDisabledForeColor : LightButtonDisabledForeColor;
+                control.BackColor = theme.ButtonDisabledBackColor;
+                control.ForeColor = theme.ButtonDisabledForeColor;
             }
         }
     }

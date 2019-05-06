@@ -17,32 +17,36 @@ namespace OverloadClientTool
 
         private Dictionary<Button, Panel> panels = new Dictionary<Button, Panel>();
 
-        bool isDarkTheme = false;
+        private Theme theme;
 
-        Color DarkControlBackColor = Color.FromArgb(72, 72, 72);
-        Color LightControlBackColor = Color.LightSteelBlue;
-
-        public PaneController(Form parentForm, Panel paneButtonLine)
+        public PaneController(Form parentForm, Panel paneButtonLine, Theme theme)
         {
+            this.theme = theme;
             this.parent = parentForm;
             this.paneButtonLine = paneButtonLine;
         }
 
-        public void SetTheme(bool dark)
+        public void SetTheme(Theme theme)
         {
-            isDarkTheme = dark;
+            this.theme = theme;
             SwitchToPane(activeButton);
         }
 
         public void SetupPaneButton(Button button, Panel panel)
         {
-            panels.Add(button, panel);
+            button.BackColor = theme.InactivePaneButtonBackColor;
+            button.ForeColor = theme.InactivePaneButtonForeColor;
+
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.FlatAppearance.BorderColor = button.BackColor;
 
             button.Enter += Pane_Enter;
             button.Leave += Pane_Leave;
             button.MouseHover += Pane_Hover;
             button.Click += Pane_Clicked;
 
+            panels.Add(button, panel);
 
             // Make first pane the active one.
             if (activeButton == null) activeButton = button;
@@ -62,7 +66,8 @@ namespace OverloadClientTool
                     panel.Visible = false;
 
                     // Set inactive button colors.
-                    button.BackColor = (isDarkTheme) ? Color.DimGray : Color.White;
+                    button.BackColor = theme.InactivePaneButtonBackColor;
+                    button.FlatAppearance.BorderSize = 0;
                     button.FlatAppearance.BorderColor = button.BackColor;
                 }
                 else
@@ -71,21 +76,21 @@ namespace OverloadClientTool
                     parent.ClientSize = new Size(panel.Width, panel.Height + button.Height + 1);
 
                     // Show the pane.
-                    panel.BackColor = (isDarkTheme) ? Color.DimGray : Color.White;
+                    panel.BackColor = theme.BackColor;
                     panel.Location = new Point(0, button.Height + 1);
                     panel.Visible = true;
-
-                    Color backColor = (isDarkTheme) ? Color.SteelBlue : LightControlBackColor;
 
                     // Draw a line just below buttons.
                     paneButtonLine.Location = new Point(0, button.Height);
                     paneButtonLine.Size = new Size(panel.Width, 1);
-                    paneButtonLine.BackColor = backColor;
+                    paneButtonLine.BackColor = theme.ActivePaneButtonBackColor;
 
                     // Set the active button colors.
-                    button.BackColor = backColor;
-                    button.ForeColor = (isDarkTheme) ? Color.White : Color.Black;
-                    button.FlatAppearance.BorderColor = button.BackColor;
+                    button.BackColor = theme.ActivePaneButtonBackColor;
+                    button.ForeColor = theme.ActivePaneButtonForeColor;
+                    button.FlatStyle = FlatStyle.Flat;
+                    button.FlatAppearance.BorderSize = 0;
+                    button.FlatAppearance.BorderColor = theme.ActivePaneButtonBackColor;
                 }
 
                 button.Refresh();

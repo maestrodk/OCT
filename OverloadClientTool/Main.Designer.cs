@@ -74,23 +74,27 @@
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.PanePilots = new System.Windows.Forms.Panel();
-            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
+            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
             this.PilotMakeActiveButton = new System.Windows.Forms.Button();
             this.AutoPilotsBackupCheckbox = new System.Windows.Forms.CheckBox();
             this.PaneSelectOlproxy = new System.Windows.Forms.Button();
             this.PaneSelectOlmod = new System.Windows.Forms.Button();
             this.PaneOlproxy = new System.Windows.Forms.Panel();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.PaneOverload = new System.Windows.Forms.Panel();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.SearchOverloadButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.PaneOlmod = new System.Windows.Forms.Panel();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.OlmodExecutable = new System.Windows.Forms.TextBox();
             this.PaneButtonLine = new System.Windows.Forms.Panel();
+            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.OverloadGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
@@ -183,7 +187,7 @@
             // MapUpdateButton
             // 
             this.MapUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapUpdateButton.Location = new System.Drawing.Point(416, 37);
+            this.MapUpdateButton.Location = new System.Drawing.Point(416, 227);
             this.MapUpdateButton.Name = "MapUpdateButton";
             this.MapUpdateButton.Size = new System.Drawing.Size(60, 24);
             this.MapUpdateButton.TabIndex = 9;
@@ -257,7 +261,7 @@
             // 
             this.UpdatingMaps.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.UpdatingMaps.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-            this.UpdatingMaps.Location = new System.Drawing.Point(395, 40);
+            this.UpdatingMaps.Location = new System.Drawing.Point(395, 230);
             this.UpdatingMaps.Name = "UpdatingMaps";
             this.UpdatingMaps.Size = new System.Drawing.Size(18, 18);
             this.UpdatingMaps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -448,7 +452,7 @@
             // PilotsBackupButton
             // 
             this.PilotsBackupButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PilotsBackupButton.Location = new System.Drawing.Point(393, 296);
+            this.PilotsBackupButton.Location = new System.Drawing.Point(226, 249);
             this.PilotsBackupButton.Name = "PilotsBackupButton";
             this.PilotsBackupButton.Size = new System.Drawing.Size(81, 23);
             this.PilotsBackupButton.TabIndex = 14;
@@ -612,7 +616,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(304, 210);
+            this.label3.Location = new System.Drawing.Point(304, 211);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(172, 13);
             this.label3.TabIndex = 15;
@@ -631,6 +635,7 @@
             // PanePilots
             // 
             this.PanePilots.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PanePilots.Controls.Add(this.linkLabel4);
             this.PanePilots.Controls.Add(this.PilotNameLabel);
             this.PanePilots.Controls.Add(this.PilotMakeActiveButton);
             this.PanePilots.Controls.Add(this.PilotDeleteButton);
@@ -645,17 +650,18 @@
             this.PanePilots.Size = new System.Drawing.Size(500, 336);
             this.PanePilots.TabIndex = 20;
             // 
-            // PilotNameLabel
+            // linkLabel4
             // 
-            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PilotNameLabel.Enabled = false;
-            this.PilotNameLabel.Location = new System.Drawing.Point(226, 207);
-            this.PilotNameLabel.Multiline = false;
-            this.PilotNameLabel.Name = "PilotNameLabel";
-            this.PilotNameLabel.ReadOnly = true;
-            this.PilotNameLabel.Size = new System.Drawing.Size(207, 25);
-            this.PilotNameLabel.TabIndex = 17;
-            this.PilotNameLabel.Text = "Pilot";
+            this.linkLabel4.AutoSize = true;
+            this.linkLabel4.LinkColor = System.Drawing.Color.DodgerBlue;
+            this.linkLabel4.Location = new System.Drawing.Point(223, 275);
+            this.linkLabel4.Name = "linkLabel4";
+            this.linkLabel4.Size = new System.Drawing.Size(123, 13);
+            this.linkLabel4.TabIndex = 17;
+            this.linkLabel4.TabStop = true;
+            this.linkLabel4.Text = "Open pilot backup folder";
+            this.linkLabel4.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
+            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
             // 
             // PilotMakeActiveButton
             // 
@@ -718,6 +724,7 @@
             // PaneOlproxy
             // 
             this.PaneOlproxy.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOlproxy.Controls.Add(this.linkLabel2);
             this.PaneOlproxy.Controls.Add(this.OlproxyRunning);
             this.PaneOlproxy.Controls.Add(this.UseEmbeddedOlproxy);
             this.PaneOlproxy.Controls.Add(this.UseOlproxyCheckBox);
@@ -729,10 +736,23 @@
             this.PaneOlproxy.Size = new System.Drawing.Size(500, 336);
             this.PaneOlproxy.TabIndex = 21;
             // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.LinkColor = System.Drawing.Color.DodgerBlue;
+            this.linkLabel2.Location = new System.Drawing.Point(22, 215);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(216, 13);
+            this.linkLabel2.TabIndex = 17;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "https://github.com/arbruijn/olproxy/releases";
+            this.linkLabel2.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.OlproxyArgs);
-            this.groupBox4.Location = new System.Drawing.Point(25, 168);
+            this.groupBox4.Location = new System.Drawing.Point(25, 141);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(453, 54);
             this.groupBox4.TabIndex = 11;
@@ -742,7 +762,7 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.OlproxyExecutable);
-            this.groupBox3.Location = new System.Drawing.Point(25, 102);
+            this.groupBox3.Location = new System.Drawing.Point(25, 75);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(453, 60);
             this.groupBox3.TabIndex = 11;
@@ -752,6 +772,7 @@
             // PaneOverload
             // 
             this.PaneOverload.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOverload.Controls.Add(this.linkLabel3);
             this.PaneOverload.Controls.Add(this.label1);
             this.PaneOverload.Controls.Add(this.groupBox2);
             this.PaneOverload.Controls.Add(this.OverloadGroupBox);
@@ -761,6 +782,20 @@
             this.PaneOverload.Name = "PaneOverload";
             this.PaneOverload.Size = new System.Drawing.Size(500, 336);
             this.PaneOverload.TabIndex = 22;
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.ActiveLinkColor = System.Drawing.Color.DeepSkyBlue;
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.LinkColor = System.Drawing.Color.SteelBlue;
+            this.linkLabel3.Location = new System.Drawing.Point(18, 150);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(126, 13);
+            this.linkLabel3.TabIndex = 17;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "https://playoverload.com";
+            this.linkLabel3.VisitedLinkColor = System.Drawing.Color.SteelBlue;
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
             // 
             // label1
             // 
@@ -807,6 +842,7 @@
             // PaneOlmod
             // 
             this.PaneOlmod.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOlmod.Controls.Add(this.linkLabel1);
             this.PaneOlmod.Controls.Add(this.label2);
             this.PaneOlmod.Controls.Add(this.UseOlmodCheckBox);
             this.PaneOlmod.Controls.Add(this.groupBox5);
@@ -815,6 +851,19 @@
             this.PaneOlmod.Name = "PaneOlmod";
             this.PaneOlmod.Size = new System.Drawing.Size(500, 336);
             this.PaneOlmod.TabIndex = 23;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.LinkColor = System.Drawing.Color.SteelBlue;
+            this.linkLabel1.Location = new System.Drawing.Point(27, 146);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(211, 13);
+            this.linkLabel1.TabIndex = 17;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "https://github.com/arbruijn/olmod/releases";
+            this.linkLabel1.VisitedLinkColor = System.Drawing.Color.SteelBlue;
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // groupBox5
             // 
@@ -846,9 +895,20 @@
             this.PaneButtonLine.Size = new System.Drawing.Size(395, 2);
             this.PaneButtonLine.TabIndex = 24;
             // 
+            // PilotNameLabel
+            // 
+            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.PilotNameLabel.Enabled = false;
+            this.PilotNameLabel.Location = new System.Drawing.Point(226, 207);
+            this.PilotNameLabel.Multiline = false;
+            this.PilotNameLabel.Name = "PilotNameLabel";
+            this.PilotNameLabel.ReadOnly = true;
+            this.PilotNameLabel.Size = new System.Drawing.Size(207, 25);
+            this.PilotNameLabel.TabIndex = 17;
+            this.PilotNameLabel.Text = "Pilot";
+            // 
             // OCTMain
             // 
-            this.AcceptButton = this.StartButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
@@ -973,6 +1033,10 @@
         private System.Windows.Forms.Button PilotMakeActiveButton;
         private System.Windows.Forms.Label StatusMessage;
         private TransparentLabel PilotNameLabel;
+        private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.LinkLabel linkLabel3;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel linkLabel4;
     }
 }
 

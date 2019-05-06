@@ -20,15 +20,14 @@ namespace OverloadClientTool
         private Font listViewFont = new Font("Tahoma", 8.25f, FontStyle.Regular);
 
         private ListView listView;
-        private bool isDarkTheme = false;
-
-        private Color darkBackColor;
-        private Color lightBackColor;
+        private Theme theme;
 
         private object suspendLogUpdate = new object();
 
-        public ListViewLogger(ListView listView, Color darkBackColor, Color lightBackColor, bool dark)
+        public ListViewLogger(ListView listView, Theme theme)
         {
+            this.theme = theme;
+
             listView.Scrollable = true;
             listView.View = View.Details;
             listView.HeaderStyle = ColumnHeaderStyle.None;
@@ -40,8 +39,6 @@ namespace OverloadClientTool
 
             listView.ItemSelectionChanged += ItemSelectionChanged;
             this.listView = listView;
-
-            SetThemeBackgroundColors(dark, darkBackColor, lightBackColor);
         }
 
 
@@ -51,27 +48,24 @@ namespace OverloadClientTool
             e.Item.Focused = false;
         }
 
-        public void SetThemeBackgroundColors(bool dark, Color darkBackColor, Color lightBackColor)
+        public void SetTheme(Theme theme)
         {
             lock (suspendLogUpdate)
             {
-                this.isDarkTheme = dark;
-                this.darkBackColor = darkBackColor;
-                this.lightBackColor = lightBackColor;
+                this.theme = theme;
+                
 
-                listView.BackColor = (dark) ? darkBackColor : lightBackColor;
-
-                (listView.Parent as Panel).BackColor = (dark) ? Color.LightGray : Color.FromArgb(128, 0, 0);
-
-                DrawBorder(dark);
+                (listView.Parent as Panel).BackColor = theme.BackColor;
+                DrawBorder();
             }
         }
 
-        private void DrawBorder(bool dark)
+        private void DrawBorder()
         {
-            listView.BackColor = (dark) ? darkBackColor : lightBackColor;
+            listView.BackColor = theme.ControlBackColor;
+            listView.ForeColor = theme.ControlForeColor;
 
-            if (dark)
+            if (theme.Name == "Dark")
             {
                 listView.Dock = DockStyle.None;
                 listView.Location = new Point(1, 1);
@@ -98,13 +92,13 @@ namespace OverloadClientTool
                 {
                     listView.Columns[0].Width = listView.Width - 4 - SystemInformation.VerticalScrollBarWidth;
 
-                    listView.ForeColor = (isDarkTheme) ? Color.LightGray : Color.FromArgb(32, 32, 32);
+                    listView.ForeColor = theme.ForeColor;
 
                     ListViewItem item = new ListViewItem(DateTime.Now.ToString("HH:mm:ss") + " " + text);
                     item.Font = listViewFont;
                     listView.Items.Add(item);
 
-                    DrawBorder(isDarkTheme);
+                    DrawBorder();
 
                     // Autoscroll to bottom.
                     if (listView.Items.Count > 3) listView.TopItem = listView.Items[listView.Items.Count - 3];

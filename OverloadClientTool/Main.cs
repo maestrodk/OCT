@@ -17,6 +17,13 @@ namespace OverloadClientTool
     {
         private bool DebugLogging = false;
 
+        // http://ajaxload.info/
+        // Arrows light: ffffff / 4169E1
+        // Arrows dark: 3232328 / 7CEFA
+
+        public Theme theme = Theme.GetDarkTheme;
+
+        /*
         Color DarkButtonEnabledBackColor = Color.FromArgb(128, 128, 128);
         Color LightButtonEnabledBackColor = Color.FromArgb(200, 200, 200);
 
@@ -29,8 +36,12 @@ namespace OverloadClientTool
         Color DarkButtonDisabledForeColor = Color.FromArgb(255, 255, 255);
         Color LightButtonDisabledForeColor = Color.FromArgb(192, 192, 192);
 
-        Color DarkControlBackColor = Color.FromArgb(72, 72, 72);
-        Color LightControlBackColor = Color.FromArgb(245, 250, 255);
+        Color DarkControlBackColor = Color.FromArgb(32, 32, 32);  // 0x32
+        Color LightControlBackColor = Color.FromArgb(243, 248, 255);
+
+        Color DarkBackColor = Color.FromArgb(50, 50, 50);
+        Color LightBackColor = Color.White;
+        */
 
         private bool autoStart = false;
         private ListViewLogger logger = null;
@@ -62,13 +73,15 @@ namespace OverloadClientTool
                 //if (a.ToLower().Contains("-launched")) autoStart = true;
             }
 
+            theme = Theme.GetDarkTheme;
+
             InitializeComponent();
 
             this.StartPosition = FormStartPosition.CenterScreen;
             StatusMessage.Text = "Starting up...";
 
             // Setup pane control.
-            paneController = new PaneController(this, PaneButtonLine);
+            paneController = new PaneController(this, PaneButtonLine, theme);
             paneController.SetupPaneButton(PaneSelectMain, PaneMain);
             paneController.SetupPaneButton(PaneSelectMapManager, PaneMaps);
             paneController.SetupPaneButton(PaneSelectPilots, PanePilots);
@@ -78,7 +91,6 @@ namespace OverloadClientTool
 
             // Load user preferences.
             LoadSettings();
-            ValidateSettings();
 
             // Init pilots listbox start monitoring.
             InitPilotsListBox();
@@ -99,16 +111,17 @@ namespace OverloadClientTool
             olproxyConfig.Add("trackerBaseUrl", "");
             olproxyConfig.Add("serverName", "");
             olproxyConfig.Add("notes", "");
-            
-            // Start logging (default is paused state, will be enabled when startup is complete).
-            logger = new ListViewLogger(ActivityListView, DarkControlBackColor, LightControlBackColor, DarkTheme);
-            
-            // Reflect selected theme settings.
-            SetTheme();
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
+            // The theme colors MUST be set BEFORE attempting to validate settings.
+            // This is because ValidateSettings() checks the button colors to see if
+            // it is safe to start any of the .exe files.
+            theme = (DarkTheme) ? Theme.GetDarkTheme : Theme.GetLightTheme;
+            UpdateTheme(theme);
+            ValidateSettings();
+
             // Focus the first pane.
             paneController.SwitchToPane(PaneSelectMain);
 
@@ -121,6 +134,9 @@ namespace OverloadClientTool
 
             // Locate DLC folder.
             UpdateDLCLocation();
+
+            // Start logging (default is paused state, will be enabled when startup is complete).
+            logger = new ListViewLogger(ActivityListView, theme);
 
             // Announce ourself.
             Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen");
@@ -374,13 +390,13 @@ namespace OverloadClientTool
 
                     if (StartButton.Enabled)
                     {
-                        StartButton.BackColor = (DarkTheme) ? DarkButtonEnabledBackColor : LightButtonEnabledBackColor;
-                        StartButton.ForeColor = (DarkTheme) ? DarkButtonEnabledForeColor : LightButtonEnabledForeColor;
+                        StartButton.BackColor = theme.ButtonEnabledBackColor;
+                        StartButton.ForeColor = theme.ButtonEnabledForeColor;
                     }
                     else
                     {
-                        StartButton.BackColor = (DarkTheme) ? DarkButtonDisabledBackColor : LightButtonDisabledBackColor;
-                        StartButton.ForeColor = (DarkTheme) ? DarkButtonDisabledForeColor : LightButtonDisabledForeColor;
+                        StartButton.BackColor = theme.ButtonDisabledBackColor;
+                        StartButton.ForeColor = theme.ButtonDisabledForeColor;
                     }
                 });
            }
@@ -502,7 +518,7 @@ namespace OverloadClientTool
             UseOlmod = UseOlmodCheckBox.Checked;
             OlproxyEmbedded = UseEmbeddedOlproxy.Checked;
 
-            ValidateButton(StartButton);
+            ValidateButton(StartButton, theme);
         }
 
         private void TestSetTextBoxColor(TextBox textBox)
@@ -758,10 +774,11 @@ namespace OverloadClientTool
         private void SelectDark_CheckedChanged(object sender, EventArgs e)
         {
             DarkTheme = SelectDark.Checked;
+            theme = (DarkTheme) ? Theme.GetDarkTheme : Theme.GetLightTheme;
 
-            logger?.SetThemeBackgroundColors(DarkTheme, DarkControlBackColor, LightControlBackColor);
+            logger?.SetTheme(theme);
 
-            SetTheme();
+            UpdateTheme(theme);
 
             Info((DarkTheme) ? "Dark theme selected." : "Light theme selected.");
         }
@@ -770,7 +787,7 @@ namespace OverloadClientTool
         {
             Verbose("Shutting down active tasks.");
 
-            ValidateButton(StartButton);
+            ValidateButton(StartButton, theme);
 
             Defocus();
 
@@ -854,11 +871,6 @@ namespace OverloadClientTool
             WindowState = FormWindowState.Normal;
         }
 
-        private void CreateDesktopShortcuts_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Not yet implemented :)");
-        }
-
         private void UseOlmod_CheckedChanged(object sender, EventArgs e)
         {
             UseOlmod = UseOlmodCheckBox.Checked;
@@ -927,6 +939,30 @@ namespace OverloadClientTool
         {
             OlmodPath = OlmodExecutable.Text;
             ValidateSettings();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ProcessStartInfo sInfo = new ProcessStartInfo(linkLabel1.Text);
+            Process.Start(sInfo);
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ProcessStartInfo sInfo = new ProcessStartInfo(linkLabel2.Text);
+            Process.Start(sInfo);
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ProcessStartInfo sInfo = new ProcessStartInfo(linkLabel3.Text);
+            Process.Start(sInfo);
+        }
+
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ProcessStartInfo sInfo = new ProcessStartInfo("file:///" + pilotsBackupPath);
+            Process.Start(sInfo);
         }
     }
 }
