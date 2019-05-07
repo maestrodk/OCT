@@ -68,9 +68,10 @@ namespace OverloadClientTool
 
         public void LogDebugMessage(string message)
         {
-            if (!Debugging) return ;
+            if (!Debugging) return;
 
-            try { System.IO.File.AppendAllText(debugFileName, String.Format($"{DateTime.Now.ToString("HH:mm:ss")} {message}")); } catch { }
+            message = String.IsNullOrEmpty(message) ? Environment.NewLine : message + Environment.NewLine;
+            try { System.IO.File.AppendAllText(debugFileName, String.Format($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}")); } catch { }
         }
 
         public OCTMain(string[] args, string debugFileName)
@@ -376,7 +377,7 @@ namespace OverloadClientTool
                     string statusText = "Ready for some Overload action!";
 
                     if (overloadRunning && !olproxyRunning && !olmodRunning) statusText = "Overload is running.";
-                    else if (overloadRunning && olproxyRunning && !olmodRunning) statusText = "Overload and Olproxy are running.";
+                    else if (overloadRunning && olproxyRunning && !olmodRunning) statusText = "Overload and Olproxy (external) are running.";
                     else if (olmodRunning && !olproxyRunning) statusText = "Overload (Olmod) is running.";
                     else if (olmodRunning && olproxyRunning) statusText = "Overload (Olmod) and Olproxy are running.";
                     else if (olproxyRunning) statusText = "Olproxy is running.";
@@ -390,25 +391,25 @@ namespace OverloadClientTool
 
                         if (UseOlmodCheckBox.Checked && !foundOlmod) statusText = "Cannot find Olmod (check path)!";
                         else if (!UseOlmodCheckBox.Checked && !foundOverload) statusText = "Cannot find Overload (check path)!";
-
-                        StatusMessage.Text = statusText;
-
-                        OlproxyRunning.Visible = olproxyRunning;
-                        OverloadRunning.Visible = overloadRunning || olmodRunning;
-
-                        StartButton.Text = (olproxyRunning || overloadRunning || olmodRunning) ? "Stop" : "Start";
-
-                        if (StartButton.Enabled)
-                        {
-                            StartButton.BackColor = theme.ButtonEnabledBackColor;
-                            StartButton.ForeColor = theme.ButtonEnabledForeColor;
-                        }
-                        else
-                        {
-                            StartButton.BackColor = theme.ButtonDisabledBackColor;
-                            StartButton.ForeColor = theme.ButtonDisabledForeColor;
-                        }
                     }
+
+                    OlproxyRunning.Visible = olproxyRunning;
+                    OverloadRunning.Visible = overloadRunning || olmodRunning;
+
+                    StartButton.Text = (olproxyRunning || overloadRunning || olmodRunning) ? "Stop" : "Start";
+
+                    if (StartButton.Enabled)
+                    {
+                        StartButton.BackColor = theme.ButtonEnabledBackColor;
+                        StartButton.ForeColor = theme.ButtonEnabledForeColor;
+                    }
+                    else
+                    {
+                        StartButton.BackColor = theme.ButtonDisabledBackColor;
+                        StartButton.ForeColor = theme.ButtonDisabledForeColor;
+                    }
+
+                    StatusMessage.Text = statusText;
                 });
             }
         }
