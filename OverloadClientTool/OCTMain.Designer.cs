@@ -73,9 +73,9 @@
             this.PaneMaps = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.MapRefreshButton = new System.Windows.Forms.Button();
             this.PanePilots = new System.Windows.Forms.Panel();
             this.linkLabel4 = new System.Windows.Forms.LinkLabel();
-            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.PilotMakeActiveButton = new System.Windows.Forms.Button();
             this.AutoPilotsBackupCheckbox = new System.Windows.Forms.CheckBox();
             this.PaneSelectOlproxy = new System.Windows.Forms.Button();
@@ -99,6 +99,7 @@
             this.PaneOptions = new System.Windows.Forms.Panel();
             this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
             this.EnableDebugCheckBox = new System.Windows.Forms.CheckBox();
+            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.OverloadGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
@@ -140,6 +141,7 @@
             this.OverloadArgs.Name = "OverloadArgs";
             this.OverloadArgs.Size = new System.Drawing.Size(411, 20);
             this.OverloadArgs.TabIndex = 2;
+            this.OverloadArgs.TextChanged += new System.EventHandler(this.OverloadArgs_TextChanged);
             // 
             // OlproxyExecutable
             // 
@@ -160,6 +162,7 @@
             this.OlproxyArgs.Name = "OlproxyArgs";
             this.OlproxyArgs.Size = new System.Drawing.Size(411, 20);
             this.OlproxyArgs.TabIndex = 4;
+            this.OlproxyArgs.TextChanged += new System.EventHandler(this.OlproxyArgs_TextChanged);
             // 
             // SelectExecutable
             // 
@@ -192,7 +195,7 @@
             // MapUpdateButton
             // 
             this.MapUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapUpdateButton.Location = new System.Drawing.Point(416, 227);
+            this.MapUpdateButton.Location = new System.Drawing.Point(416, 235);
             this.MapUpdateButton.Name = "MapUpdateButton";
             this.MapUpdateButton.Size = new System.Drawing.Size(60, 24);
             this.MapUpdateButton.TabIndex = 9;
@@ -266,7 +269,7 @@
             // 
             this.UpdatingMaps.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.UpdatingMaps.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-            this.UpdatingMaps.Location = new System.Drawing.Point(395, 230);
+            this.UpdatingMaps.Location = new System.Drawing.Point(395, 238);
             this.UpdatingMaps.Name = "UpdatingMaps";
             this.UpdatingMaps.Size = new System.Drawing.Size(18, 18);
             this.UpdatingMaps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -337,7 +340,7 @@
             this.UseDLCLocationCheckBox.AutoCheck = false;
             this.UseDLCLocationCheckBox.AutoSize = true;
             this.UseDLCLocationCheckBox.Enabled = false;
-            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(307, 169);
+            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(307, 179);
             this.UseDLCLocationCheckBox.Name = "UseDLCLocationCheckBox";
             this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(155, 17);
             this.UseDLCLocationCheckBox.TabIndex = 5;
@@ -349,7 +352,7 @@
             // AutoUpdateMapsCheckBox
             // 
             this.AutoUpdateMapsCheckBox.AutoSize = true;
-            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(307, 123);
+            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(307, 133);
             this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
             this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(159, 17);
             this.AutoUpdateMapsCheckBox.TabIndex = 5;
@@ -412,7 +415,7 @@
             // MapOnlyExisting
             // 
             this.MapOnlyExisting.AutoSize = true;
-            this.MapOnlyExisting.Location = new System.Drawing.Point(307, 146);
+            this.MapOnlyExisting.Location = new System.Drawing.Point(307, 156);
             this.MapOnlyExisting.Name = "MapOnlyExisting";
             this.MapOnlyExisting.Size = new System.Drawing.Size(149, 17);
             this.MapOnlyExisting.TabIndex = 5;
@@ -609,6 +612,7 @@
             this.PaneMaps.Controls.Add(this.MapOnlyExisting);
             this.PaneMaps.Controls.Add(this.groupBox1);
             this.PaneMaps.Controls.Add(this.MapHideButton);
+            this.PaneMaps.Controls.Add(this.MapRefreshButton);
             this.PaneMaps.Controls.Add(this.MapDeleteButton);
             this.PaneMaps.Controls.Add(this.InstalledMapsGroupBox);
             this.PaneMaps.Location = new System.Drawing.Point(9, 393);
@@ -620,11 +624,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(304, 211);
+            this.label3.Location = new System.Drawing.Point(304, 217);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(172, 13);
+            this.label3.Size = new System.Drawing.Size(171, 13);
             this.label3.TabIndex = 15;
-            this.label3.Text = "Use Update button to refresh maps";
+            this.label3.Text = "Update button refreshes ALL maps";
             // 
             // groupBox1
             // 
@@ -635,6 +639,19 @@
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "URL to online JSON map list";
+            // 
+            // MapRefreshButton
+            // 
+            this.MapRefreshButton.Enabled = false;
+            this.MapRefreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MapRefreshButton.Location = new System.Drawing.Point(307, 95);
+            this.MapRefreshButton.Name = "MapRefreshButton";
+            this.MapRefreshButton.Size = new System.Drawing.Size(56, 23);
+            this.MapRefreshButton.TabIndex = 14;
+            this.MapRefreshButton.Text = "Refresh";
+            this.MapRefreshButton.UseVisualStyleBackColor = true;
+            this.MapRefreshButton.Visible = false;
+            this.MapRefreshButton.Click += new System.EventHandler(this.MapRefresh_Click);
             // 
             // PanePilots
             // 
@@ -666,18 +683,6 @@
             this.linkLabel4.Text = "Open pilot backup folder";
             this.linkLabel4.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
             this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
-            // 
-            // PilotNameLabel
-            // 
-            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PilotNameLabel.Enabled = false;
-            this.PilotNameLabel.Location = new System.Drawing.Point(226, 207);
-            this.PilotNameLabel.Multiline = false;
-            this.PilotNameLabel.Name = "PilotNameLabel";
-            this.PilotNameLabel.ReadOnly = true;
-            this.PilotNameLabel.Size = new System.Drawing.Size(207, 25);
-            this.PilotNameLabel.TabIndex = 17;
-            this.PilotNameLabel.Text = "Pilot";
             // 
             // PilotMakeActiveButton
             // 
@@ -964,6 +969,18 @@
             this.EnableDebugCheckBox.UseVisualStyleBackColor = true;
             this.EnableDebugCheckBox.CheckedChanged += new System.EventHandler(this.EnableDebugCheckBox_CheckedChanged);
             // 
+            // PilotNameLabel
+            // 
+            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.PilotNameLabel.Enabled = false;
+            this.PilotNameLabel.Location = new System.Drawing.Point(226, 207);
+            this.PilotNameLabel.Multiline = false;
+            this.PilotNameLabel.Name = "PilotNameLabel";
+            this.PilotNameLabel.ReadOnly = true;
+            this.PilotNameLabel.Size = new System.Drawing.Size(207, 25);
+            this.PilotNameLabel.TabIndex = 17;
+            this.PilotNameLabel.Text = "Pilot";
+            // 
             // OCTMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1102,6 +1119,7 @@
         private System.Windows.Forms.Panel PaneOptions;
         private System.Windows.Forms.CheckBox EnableDebugCheckBox;
         private System.Windows.Forms.LinkLabel DebugFileNameLink;
+        private System.Windows.Forms.Button MapRefreshButton;
     }
 }
 

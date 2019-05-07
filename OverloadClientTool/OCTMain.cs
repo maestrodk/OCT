@@ -386,8 +386,8 @@ namespace OverloadClientTool
                         bool foundOverload = false;
                         bool foundOlmod = false;
 
-                        try { foundOverload = (ValidFileName(OverloadExecutable.Text) && new FileInfo(OverloadExecutable.Text).Exists); } catch { }
-                        try { foundOlmod = (ValidFileName(OlmodExecutable.Text) && new FileInfo(OlmodExecutable.Text).Exists); } catch { }
+                        try { foundOverload = (OverloadClientApplication.ValidFileName(OverloadExecutable.Text) && new FileInfo(OverloadExecutable.Text).Exists); } catch { }
+                        try { foundOlmod = (OverloadClientApplication.ValidFileName(OlmodExecutable.Text) && new FileInfo(OlmodExecutable.Text).Exists); } catch { }
 
                         if (UseOlmodCheckBox.Checked && !foundOlmod) statusText = "Cannot find Olmod (check path)!";
                         else if (!UseOlmodCheckBox.Checked && !foundOverload) statusText = "Cannot find Overload (check path)!";
@@ -934,12 +934,6 @@ namespace OverloadClientTool
             Directory.SetCurrentDirectory(save);
         }
 
-        private void OlmodExecutable_TextChanged(object sender, EventArgs e)
-        {
-            OlmodPath = OlmodExecutable.Text;
-            ValidateSettings();
-        }
-
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ProcessStartInfo sInfo = new ProcessStartInfo(linkLabel1.Text);
@@ -964,32 +958,6 @@ namespace OverloadClientTool
             Process.Start(sInfo);
         }
 
-        public static bool ValidFileName(string path)
-        {
-            try
-            {
-                bool test = new FileInfo(path).Exists;
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public static bool ValidDirectoryName(string path)
-        {
-            try
-            {
-                bool test = new DirectoryInfo(path).Exists;
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         private void EnableDebugCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Debugging = EnableDebugCheckBox.Checked;
@@ -1007,6 +975,22 @@ namespace OverloadClientTool
             catch
             {
             }
+        }
+
+        private void OlmodExecutable_TextChanged(object sender, EventArgs e)
+        {
+            OlmodPath = OlmodExecutable.Text;
+            ValidateSettings();
+        }
+
+        private void OlproxyArgs_TextChanged(object sender, EventArgs e)
+        {
+            OlproxyParameters = OlproxyArgs.Text;
+        }
+
+        private void OverloadArgs_TextChanged(object sender, EventArgs e)
+        {
+            OverloadParameters = OverloadArgs.Text;
         }
     }
 }

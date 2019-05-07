@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace OverloadClientTool
 {
-    internal class OverloadMap
+    public class OverloadMap
     {
         public string Url;
         public DateTime DateTime;
@@ -79,6 +79,8 @@ namespace OverloadClientTool
         {
         }
 
+        public List<OverloadMap> ManagedMaps = new List<OverloadMap>();
+
         /// <summary>
         /// Get online master map list.
         /// </summary>
@@ -100,7 +102,7 @@ namespace OverloadClientTool
             if (!String.IsNullOrEmpty(dlcMaps)) OverloadDLCPath = dlcMaps;
             if (!String.IsNullOrEmpty(applicationDataMaps)) ApplicationDataOverloadPath = applicationDataMaps;
 
-            List<OverloadMap> maps = new List<OverloadMap>();
+            ManagedMaps = new List<OverloadMap>();
 
             try
             {
@@ -113,11 +115,11 @@ namespace OverloadClientTool
                 dynamic mapList = JsonConvert.DeserializeObject(jsonMapList);
                 foreach (var map in mapList)
                 {
-                    maps.Add(new OverloadMap(baseUrl + map.url, UnixTimeStampToDateTime(Convert.ToDouble(map.mtime)), Convert.ToInt32(map.size)));
+                    ManagedMaps.Add(new OverloadMap(baseUrl + map.url, UnixTimeStampToDateTime(Convert.ToDouble(map.mtime)), Convert.ToInt32(map.size)));
                 }
 
                 // Iterate master list and download all new/updated maps.
-                for (int i = 0; i < maps.Count;  i++) UpdateMap(maps[i]);
+                for (int i = 0; i < ManagedMaps.Count;  i++) UpdateMap(ManagedMaps[i]);
             }
             catch (Exception ex)
             {
@@ -132,7 +134,7 @@ namespace OverloadClientTool
         /// </summary>
         /// <param name="map">The map to update.</param>
         /// <returns></returns>
-        private bool UpdateMap(OverloadMap map)
+        public bool UpdateMap(OverloadMap map)
         {
             if (String.IsNullOrEmpty(map.Url)) return false;
 
@@ -156,8 +158,8 @@ namespace OverloadClientTool
             // Don't update hidden maps.
             if (File.Exists(mapZipFilePath + HiddenMarker)) return false;
 
-                // Check for new map file.
-                if (File.Exists(mapZipFilePath))
+            // Check for new map file.
+            if (File.Exists(mapZipFilePath))
             {
                 // Map found - compare date and size to online version.
                 FileInfo fi = new FileInfo(mapZipFilePath);
@@ -296,6 +298,12 @@ namespace OverloadClientTool
             MapHideButton.Enabled = (MapsListBox.SelectedIndex >= 0);
             MapDeleteButton.Enabled = (MapsListBox.SelectedIndex >= 0);
 
+            if (MapsListBox.SelectedIndex >= 0)
+            {
+                MapFile mapFile = (MapFile)MapsListBox.Items[MapsListBox.SelectedIndex];
+                MapRefreshButton.Enabled = !mapFile.Hidden;
+            }
+
             // Begin monitoring folder.
             mapsBackgroundWorker = new BackgroundWorker();
             mapsBackgroundWorker.DoWork += BackgroundMapsChecker;
@@ -315,7 +323,7 @@ namespace OverloadClientTool
         {
             while (true)
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
 
                 this.UIThread(delegate
                 {
@@ -348,7 +356,8 @@ namespace OverloadClientTool
                 MapsListBox.Items.Clear();
                 foreach (MapFile mapFile in currentMaps) MapsListBox.Items.Add(mapFile);
 
-                // MapsListBox.Invalidate();
+                MapHideButton.Enabled = (MapsListBox.SelectedIndex >= 0);
+                MapDeleteButton.Enabled = (MapsListBox.SelectedIndex >= 0);
             }
         }
 
@@ -359,6 +368,7 @@ namespace OverloadClientTool
                 List<MapFile> maps = new List<MapFile>();
 
                 string mapsLocation = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\Revival\Overload";
+                Directory.CreateDirectory(mapsLocation);
 
                 string[] list = Directory.GetFiles(mapsLocation, "*.zip*");
                 foreach (string mapFileName in list)
@@ -366,7 +376,7 @@ namespace OverloadClientTool
                     if (mapFileName.EndsWith(HiddenMarker) || mapFileName.ToLower().EndsWith(".zip")) maps.Add(new MapFile(mapFileName));
                 }
                 
-                if (ValidFileName(OverloadExecutable.Text) && UseDLCLocationCheckBox.Checked)
+                if (OverloadClientApplication.ValidFileName(OverloadExecutable.Text) && UseDLCLocationCheckBox.Checked)
                 {
                     string dlcLocation = Path.Combine(Path.GetDirectoryName(OverloadExecutable.Text), "DLC");
                     Directory.CreateDirectory(dlcLocation);
@@ -407,6 +417,7 @@ namespace OverloadClientTool
 
                     MapHideButton.Enabled = (MapsListBox.SelectedIndex >= 0);
                     MapDeleteButton.Enabled = (MapsListBox.SelectedIndex >= 0);
+                    MapRefreshButton.Enabled = (MapsListBox.SelectedIndex >= 0);
                 }
             }
         }
@@ -421,12 +432,33 @@ namespace OverloadClientTool
                     MapDeleteButton.Enabled = true;
                     MapHideButton.Text = (mapFile.Hidden) ? "Unhide" : "Hide";
                     MapHideButton.Enabled = true;
+                    MapRefreshButton.Enabled = (MapHideButton.Enabled && !mapFile.Hidden);
                 }
                 else
                 {
                     MapDeleteButton.Enabled = false;
                     MapHideButton.Text = "Hide";
                     MapHideButton.Enabled = false;
+                    MapRefreshButton.Enabled = false;
+                }
+            }
+        }
+
+        private void MapRefresh_Click(object sender, EventArgs e)
+        {
+            if (MapsListBox.SelectedIndex >= 0)
+            {
+                MapFile mapFile = (MapFile)MapsListBox.Items[MapsListBox.SelectedIndex];
+                if (mapFile.Hidden)
+                {
+                    MessageBox.Show("Cannot refresh a hidden map!", "Map is hidden");
+                }
+                else
+                {
+                    OverloadMap refreshMap = null;
+                    foreach (OverloadMap map in mapManager.ManagedMaps)
+                    {
+                    }
                 }
             }
         }
@@ -440,6 +472,7 @@ namespace OverloadClientTool
                 {
                     MapFile mapFile = (MapFile)MapsListBox.Items[MapsListBox.SelectedIndex];
                     string hideUnhide = (mapFile.Hidden) ? "unhide" : "hide";
+
                     try
                     {
                         if (mapFile.Hidden) mapFile.Unhide();
@@ -451,6 +484,8 @@ namespace OverloadClientTool
                     {
                         MessageBox.Show(String.Format($"Whoops! Cannot {hideUnhide} map {mapFile.Name}: {ex.Message}"));
                     }
+
+                    MapRefreshButton.Enabled = (MapHideButton.Enabled && !mapFile.Hidden);
                 }
             }
         }

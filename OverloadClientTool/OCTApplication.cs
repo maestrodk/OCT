@@ -35,6 +35,32 @@ namespace OverloadClientTool
             }
         }
 
+        public static bool ValidFileName(string path)
+        {
+            try
+            {
+                bool test = new FileInfo(path).Exists;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool ValidDirectoryName(string path)
+        {
+            try
+            {
+                bool test = new DirectoryInfo(path).Exists;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -51,7 +77,7 @@ namespace OverloadClientTool
             // Setup debug logging.
             try
             {
-                LogDebugMessage("Enabling visual styles.", debugFileName);
+               LogDebugMessage("Enabling visual styles.", debugFileName);
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
@@ -64,6 +90,8 @@ namespace OverloadClientTool
             {
                 LogDebugMessage(String.Format($"{ex.Message} at {ex.TargetSite}"), debugFileName);
             }
-        }    
+
+            LogDebugMessage("OCT application exit.", debugFileName);
+        }
     }
 }

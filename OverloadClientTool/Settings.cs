@@ -227,10 +227,10 @@ namespace OverloadClientTool
             }
 
             // Set Olmod.exe path to Overload installation folder if not found.
-            if (String.IsNullOrEmpty(OlmodPath) || !ValidFileName(OlmodPath))
+            if (String.IsNullOrEmpty(OlmodPath) || !OverloadClientApplication.ValidFileName(OlmodPath))
             {
                 OlmodPath = Path.Combine(initPath, "olmod.exe");
-                if (OCTMain.ValidFileName(OlmodPath)) OlmodPath = Path.Combine(Path.GetDirectoryName(OverloadPath), "olmod.exe");
+                if (OverloadClientApplication.ValidFileName(OlmodPath)) OlmodPath = Path.Combine(Path.GetDirectoryName(OverloadPath), "olmod.exe");
             }
             else
             {

@@ -28,7 +28,7 @@ namespace OverloadClientTool
         private void InitPilotsListBox()
         {
             LogDebugMessage("InitPilotsListBox()");
-
+            
             // Init listbox.
             CheckAndUpdatePilots();
 
