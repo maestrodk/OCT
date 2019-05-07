@@ -264,7 +264,7 @@ namespace OverloadClientTool
             olproxyTask.Run(new string[1] { OverloadArgs.Text }, UpdateOlproxyConfig());
         }
 
-        /// <summary>
+        /// <summary> 
         /// Refresh and return Olproxy configuration object.
         /// </summary>
         /// <returns>A dictionary object matching MJDict</returns>
