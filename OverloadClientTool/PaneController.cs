@@ -21,6 +21,8 @@ namespace OverloadClientTool
 
         public PaneController(Form parentForm, Panel paneButtonLine, Theme theme)
         {
+            (parentForm as OCTMain).LogDebugMessage("PaneController.ctor()");
+
             this.theme = theme;
             this.parent = parentForm;
             this.paneButtonLine = paneButtonLine;
@@ -54,6 +56,8 @@ namespace OverloadClientTool
 
         public void SwitchToPane(Button paneButton)
         {
+            (parent as OCTMain).LogDebugMessage("PaneController.SwitchToPane()");
+
             // Deselect all except the new active button/panel.
             foreach (KeyValuePair<Button, Panel> kvp in panels)
             {

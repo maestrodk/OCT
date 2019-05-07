@@ -15,8 +15,6 @@ namespace OverloadClientTool
 {
     public partial class OCTMain : Form
     {
-        private bool DebugLogging = false;
-
         // http://ajaxload.info/
         // Arrows light: ffffff / 4169E1
         // Arrows dark: 3232328 / 7CEFA
@@ -57,7 +55,7 @@ namespace OverloadClientTool
         // This matches MJDict defined on Olproxy.
         private Dictionary<string, object> olproxyConfig = new Dictionary<string, object>();
 
-        // Shortcut link for Startup folde (if file exists the autostart is enabled).
+        // Shortcut link for Startup folde (if file exists the autostart is enabled). These are not currently created/used.
         private string shortcutFileName1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "Start Overload.lnk");
         private string shortcutFileName2 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "Start Overload with Olproxy.lnk");
         private string shortcutFileName3 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "Start Overload with Olmod.lnk");
@@ -66,8 +64,19 @@ namespace OverloadClientTool
         // Directory for DLC.
         private string dlcLocation = null;
 
-        public OCTMain(string[] args)
+        private string debugFileName = null;
+
+        public void LogDebugMessage(string message)
         {
+            if (!Debugging) return ;
+
+            try { System.IO.File.AppendAllText(debugFileName, String.Format($"{DateTime.Now.ToString("HH:mm:ss")} {message}")); } catch { }
+        }
+
+        public OCTMain(string[] args, string debugFileName)
+        {
+            this.debugFileName = debugFileName;
+
             foreach (string a in args)
             {
                 //if (a.ToLower().Contains("-launched")) autoStart = true;
@@ -88,6 +97,7 @@ namespace OverloadClientTool
             paneController.SetupPaneButton(PaneSelectOverload, PaneOverload);
             paneController.SetupPaneButton(PaneSelectOlproxy, PaneOlproxy);
             paneController.SetupPaneButton(PaneSelectOlmod, PaneOlmod);
+            paneController.SetupPaneButton(PaneSelectOptions, PaneOptions);
 
             // Load user preferences.
             LoadSettings();
@@ -115,12 +125,14 @@ namespace OverloadClientTool
 
         private void Main_Load(object sender, EventArgs e)
         {
+            LogDebugMessage("Main_Load()");
+
             // The theme colors MUST be set BEFORE attempting to validate settings.
             // This is because ValidateSettings() checks the button colors to see if
             // it is safe to start any of the .exe files.
             theme = (DarkTheme) ? Theme.GetDarkTheme : Theme.GetLightTheme;
             UpdateTheme(theme);
-            ValidateSettings();
+            //ValidateSettings();
 
             // Focus the first pane.
             paneController.SwitchToPane(PaneSelectMain);
@@ -136,11 +148,11 @@ namespace OverloadClientTool
             UpdateDLCLocation();
 
             // Start logging (default is paused state, will be enabled when startup is complete).
-            logger = new ListViewLogger(ActivityListView, theme);
+            logger = new ListViewLogger(ActivityListView, theme, this);
 
             // Announce ourself.
-            Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen");
-            Info("Olproxy code by Arne de Bruijn.");
+            Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen.");
+            Info("Olproxy 0.2.1 code by Arne de Bruijn.");
 
             // Start background monitor for periodic log updates.
             Thread thread = new Thread(ActivityBackgroundMonitor);
@@ -222,6 +234,8 @@ namespace OverloadClientTool
         /// </summary>
         private void UpdateDLCLocation()
         {
+            LogDebugMessage("UpdateDLCLocation()");
+
             try
             {
                 if (System.IO.File.Exists(OverloadExecutable.Text))
@@ -738,26 +752,13 @@ namespace OverloadClientTool
         public Process GetRunningProcess(string name)
         {
             if (String.IsNullOrEmpty(name)) return null;
-
-            foreach (Process process in Process.GetProcesses())
-            {
-                if (!process.ProcessName.ToLower().Contains("overloadclienttool"))
-                {
-                    if (process.ProcessName.ToLower().Contains(name)) return process;
-                }
-            }
+            foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) return process;
             return null;
         }
 
         private void KillRunningProcess(string name)
         {
-            foreach (Process process in Process.GetProcesses())
-            {
-                if (!process.ProcessName.ToLower().Contains("overloadclienttool"))
-                {
-                    if (process.ProcessName.ToLower().Contains(name)) process.Kill();
-                }
-            }
+            foreach (Process process in Process.GetProcesses())if (process.ProcessName.ToLower() == name.ToLower()) process.Kill();
         }
 
         // listBoxLog.Log(Level.Debug, "A debug level message");
@@ -770,7 +771,7 @@ namespace OverloadClientTool
 
         private void SelectDark_CheckedChanged(object sender, EventArgs e)
         {
-            DarkTheme = SelectDark.Checked;
+            DarkTheme = DarkThemeCheckBox.Checked;
             theme = (DarkTheme) ? Theme.GetDarkTheme : Theme.GetLightTheme;
 
             logger?.SetTheme(theme);
@@ -985,6 +986,25 @@ namespace OverloadClientTool
             catch
             {
                 return false;
+            }
+        }
+
+        private void EnableDebugCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Debugging = EnableDebugCheckBox.Checked;
+            DebugFileNameLink.Visible = EnableDebugCheckBox.Checked;
+            Info((EnableDebugCheckBox.Checked) ? "Debug logging enabled." : "Debug logging disabled.");
+        }
+
+        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                ProcessStartInfo sInfo = new ProcessStartInfo("file:///" + Path.GetDirectoryName(debugFileName));
+                Process.Start(sInfo);
+            }
+            catch
+            {
             }
         }
     }

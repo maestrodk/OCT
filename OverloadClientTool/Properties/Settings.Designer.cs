@@ -190,5 +190,17 @@ namespace OverloadClientTool.Properties {
                 this["OlmodPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DebugLogging {
+            get {
+                return ((bool)(this["DebugLogging"]));
+            }
+            set {
+                this["DebugLogging"] = value;
+            }
+        }
     }
 }

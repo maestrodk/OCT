@@ -24,8 +24,10 @@ namespace OverloadClientTool
 
         private object suspendLogUpdate = new object();
 
-        public ListViewLogger(ListView listView, Theme theme)
+        public ListViewLogger(ListView listView, Theme theme, OCTMain parentForm)
         {
+            (parentForm as OCTMain).LogDebugMessage("ListViewLogger.ctor()");
+
             this.theme = theme;
 
             listView.Scrollable = true;
@@ -40,7 +42,6 @@ namespace OverloadClientTool
             listView.ItemSelectionChanged += ItemSelectionChanged;
             this.listView = listView;
         }
-
 
         private void ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {

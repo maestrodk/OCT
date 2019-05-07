@@ -64,6 +64,12 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.UseOlproxy = value; }
         }
 
+        public static bool Debugging
+        {
+            get { return Properties.Settings.Default.DebugLogging; }
+            set { Properties.Settings.Default.DebugLogging = value; }
+        }
+
         public bool UseOlmod
         {
             get { return Properties.Settings.Default.UseOlmod; }
@@ -95,6 +101,8 @@ namespace OverloadClientTool
 
         public void FindOverloadInstall(bool onlyOverload = false)
         {
+            LogDebugMessage("FindOverloadInstall()");
+
             bool found = false;
             try
             {
@@ -245,6 +253,8 @@ namespace OverloadClientTool
 
         public void LoadSettings()
         {
+            LogDebugMessage("LoadSettings()");
+
             if (String.IsNullOrEmpty(OverloadPath)) FindOverloadInstall();
 
             OlmodExecutable.Text = OlmodPath;
@@ -256,16 +266,22 @@ namespace OverloadClientTool
             OlproxyArgs.Text = OlproxyParameters;
 
             UseEmbeddedOlproxy.Checked = OlproxyEmbedded;
-            SelectDark.Checked = DarkTheme;
+            DarkThemeCheckBox.Checked = DarkTheme;
             UseOlmodCheckBox.Checked = UseOlmod;
             UseOlproxyCheckBox.Checked = UseOlproxy;
             AutoUpdateMapsCheckBox.Checked = AutoUpdateMaps;
             UseDLCLocationCheckBox.Checked = UseDLCLocation;
             AutoPilotsBackupCheckbox.Checked = AutoSavePilots;
+
+            // Get debug setting and update debug file name info.
+            EnableDebugCheckBox.Checked = Debugging;
+            DebugFileNameLink.Visible = EnableDebugCheckBox.Checked;
         }
 
         private void UpdateTheme(Theme theme)
         {
+            LogDebugMessage("UpdateTheme()");
+
             this.BackColor = theme.BackColor;
             this.ForeColor = theme.ForeColor;
 

@@ -27,6 +27,8 @@ namespace OverloadClientTool
  
         private void InitPilotsListBox()
         {
+            LogDebugMessage("InitPilotsListBox()");
+
             // Init listbox.
             CheckAndUpdatePilots();
 
@@ -118,6 +120,9 @@ namespace OverloadClientTool
         
         private void BackgroundPilotChecker(object sender, DoWorkEventArgs e)
         {
+            List<String> s = new List<String>(10);
+            s[4] = "";
+
             int i = 0;
             while (true)
             {

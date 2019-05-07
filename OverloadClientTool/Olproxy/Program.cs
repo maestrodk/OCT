@@ -554,7 +554,7 @@ namespace olproxy
             MainLoop();
         }
 
-        static void OlproxyMain(string[] args)
+        static void Main(string[] args)
         {
             new Program().Run(args);
         }

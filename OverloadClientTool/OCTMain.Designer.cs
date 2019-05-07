@@ -37,7 +37,7 @@
             this.StartButton = new System.Windows.Forms.Button();
             this.ExitButton = new System.Windows.Forms.Button();
             this.MapUpdateButton = new System.Windows.Forms.Button();
-            this.SelectDark = new System.Windows.Forms.CheckBox();
+            this.DarkThemeCheckBox = new System.Windows.Forms.CheckBox();
             this.UseEmbeddedOlproxy = new System.Windows.Forms.CheckBox();
             this.OverloadGroupBox = new System.Windows.Forms.GroupBox();
             this.OverloadRunning = new System.Windows.Forms.PictureBox();
@@ -75,6 +75,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.PanePilots = new System.Windows.Forms.Panel();
             this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.PilotMakeActiveButton = new System.Windows.Forms.Button();
             this.AutoPilotsBackupCheckbox = new System.Windows.Forms.CheckBox();
             this.PaneSelectOlproxy = new System.Windows.Forms.Button();
@@ -94,7 +95,10 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.OlmodExecutable = new System.Windows.Forms.TextBox();
             this.PaneButtonLine = new System.Windows.Forms.Panel();
-            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
+            this.PaneSelectOptions = new System.Windows.Forms.Button();
+            this.PaneOptions = new System.Windows.Forms.Panel();
+            this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
+            this.EnableDebugCheckBox = new System.Windows.Forms.CheckBox();
             this.OverloadGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
@@ -114,6 +118,7 @@
             this.groupBox2.SuspendLayout();
             this.PaneOlmod.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.PaneOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // OverloadExecutable
@@ -195,18 +200,18 @@
             this.MapUpdateButton.UseVisualStyleBackColor = true;
             this.MapUpdateButton.Click += new System.EventHandler(this.MapUpdateButton_Click);
             // 
-            // SelectDark
+            // DarkThemeCheckBox
             // 
-            this.SelectDark.AutoSize = true;
-            this.SelectDark.Checked = true;
-            this.SelectDark.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.SelectDark.Location = new System.Drawing.Point(15, 302);
-            this.SelectDark.Name = "SelectDark";
-            this.SelectDark.Size = new System.Drawing.Size(81, 17);
-            this.SelectDark.TabIndex = 5;
-            this.SelectDark.Text = "Dark theme";
-            this.SelectDark.UseVisualStyleBackColor = true;
-            this.SelectDark.CheckedChanged += new System.EventHandler(this.SelectDark_CheckedChanged);
+            this.DarkThemeCheckBox.AutoSize = true;
+            this.DarkThemeCheckBox.Checked = true;
+            this.DarkThemeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.DarkThemeCheckBox.Location = new System.Drawing.Point(47, 32);
+            this.DarkThemeCheckBox.Name = "DarkThemeCheckBox";
+            this.DarkThemeCheckBox.Size = new System.Drawing.Size(101, 17);
+            this.DarkThemeCheckBox.TabIndex = 5;
+            this.DarkThemeCheckBox.Text = "Use dark theme";
+            this.DarkThemeCheckBox.UseVisualStyleBackColor = true;
+            this.DarkThemeCheckBox.CheckedChanged += new System.EventHandler(this.SelectDark_CheckedChanged);
             // 
             // UseEmbeddedOlproxy
             // 
@@ -235,7 +240,7 @@
             // 
             this.OverloadRunning.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.OverloadRunning.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-            this.OverloadRunning.Location = new System.Drawing.Point(102, 300);
+            this.OverloadRunning.Location = new System.Drawing.Point(17, 299);
             this.OverloadRunning.Margin = new System.Windows.Forms.Padding(3, 3, 8, 3);
             this.OverloadRunning.Name = "OverloadRunning";
             this.OverloadRunning.Size = new System.Drawing.Size(22, 21);
@@ -506,7 +511,6 @@
             // 
             this.PaneMain.BackColor = System.Drawing.Color.LightSlateGray;
             this.PaneMain.Controls.Add(this.StatusMessage);
-            this.PaneMain.Controls.Add(this.SelectDark);
             this.PaneMain.Controls.Add(this.StartButton);
             this.PaneMain.Controls.Add(this.LoggingGroupBox);
             this.PaneMain.Controls.Add(this.OverloadRunning);
@@ -520,7 +524,7 @@
             // StatusMessage
             // 
             this.StatusMessage.AutoSize = true;
-            this.StatusMessage.Location = new System.Drawing.Point(123, 303);
+            this.StatusMessage.Location = new System.Drawing.Point(38, 302);
             this.StatusMessage.Name = "StatusMessage";
             this.StatusMessage.Size = new System.Drawing.Size(101, 13);
             this.StatusMessage.TabIndex = 15;
@@ -550,7 +554,7 @@
             this.PaneSelectMapManager.FlatAppearance.BorderSize = 0;
             this.PaneSelectMapManager.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectMapManager.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectMapManager.Location = new System.Drawing.Point(51, 0);
+            this.PaneSelectMapManager.Location = new System.Drawing.Point(50, 0);
             this.PaneSelectMapManager.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectMapManager.Name = "PaneSelectMapManager";
             this.PaneSelectMapManager.Size = new System.Drawing.Size(54, 23);
@@ -567,7 +571,7 @@
             this.PaneSelectPilots.FlatAppearance.BorderSize = 0;
             this.PaneSelectPilots.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectPilots.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectPilots.Location = new System.Drawing.Point(105, 0);
+            this.PaneSelectPilots.Location = new System.Drawing.Point(104, 0);
             this.PaneSelectPilots.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectPilots.Name = "PaneSelectPilots";
             this.PaneSelectPilots.Size = new System.Drawing.Size(52, 23);
@@ -584,10 +588,10 @@
             this.PaneSelectOverload.FlatAppearance.BorderSize = 0;
             this.PaneSelectOverload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectOverload.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectOverload.Location = new System.Drawing.Point(157, 0);
+            this.PaneSelectOverload.Location = new System.Drawing.Point(156, 0);
             this.PaneSelectOverload.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectOverload.Name = "PaneSelectOverload";
-            this.PaneSelectOverload.Size = new System.Drawing.Size(72, 23);
+            this.PaneSelectOverload.Size = new System.Drawing.Size(68, 23);
             this.PaneSelectOverload.TabIndex = 0;
             this.PaneSelectOverload.TabStop = false;
             this.PaneSelectOverload.Text = "  Overload";
@@ -663,6 +667,18 @@
             this.linkLabel4.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
             this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
             // 
+            // PilotNameLabel
+            // 
+            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.PilotNameLabel.Enabled = false;
+            this.PilotNameLabel.Location = new System.Drawing.Point(226, 207);
+            this.PilotNameLabel.Multiline = false;
+            this.PilotNameLabel.Name = "PilotNameLabel";
+            this.PilotNameLabel.ReadOnly = true;
+            this.PilotNameLabel.Size = new System.Drawing.Size(207, 25);
+            this.PilotNameLabel.TabIndex = 17;
+            this.PilotNameLabel.Text = "Pilot";
+            // 
             // PilotMakeActiveButton
             // 
             this.PilotMakeActiveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -694,10 +710,10 @@
             this.PaneSelectOlproxy.FlatAppearance.BorderSize = 0;
             this.PaneSelectOlproxy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectOlproxy.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectOlproxy.Location = new System.Drawing.Point(229, 0);
+            this.PaneSelectOlproxy.Location = new System.Drawing.Point(224, 0);
             this.PaneSelectOlproxy.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectOlproxy.Name = "PaneSelectOlproxy";
-            this.PaneSelectOlproxy.Size = new System.Drawing.Size(57, 23);
+            this.PaneSelectOlproxy.Size = new System.Drawing.Size(61, 23);
             this.PaneSelectOlproxy.TabIndex = 0;
             this.PaneSelectOlproxy.TabStop = false;
             this.PaneSelectOlproxy.Text = "  Olproxy";
@@ -711,7 +727,7 @@
             this.PaneSelectOlmod.FlatAppearance.BorderSize = 0;
             this.PaneSelectOlmod.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectOlmod.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectOlmod.Location = new System.Drawing.Point(286, 0);
+            this.PaneSelectOlmod.Location = new System.Drawing.Point(285, 0);
             this.PaneSelectOlmod.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectOlmod.Name = "PaneSelectOlmod";
             this.PaneSelectOlmod.Size = new System.Drawing.Size(57, 23);
@@ -895,17 +911,58 @@
             this.PaneButtonLine.Size = new System.Drawing.Size(395, 2);
             this.PaneButtonLine.TabIndex = 24;
             // 
-            // PilotNameLabel
+            // PaneSelectOptions
             // 
-            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PilotNameLabel.Enabled = false;
-            this.PilotNameLabel.Location = new System.Drawing.Point(226, 207);
-            this.PilotNameLabel.Multiline = false;
-            this.PilotNameLabel.Name = "PilotNameLabel";
-            this.PilotNameLabel.ReadOnly = true;
-            this.PilotNameLabel.Size = new System.Drawing.Size(207, 25);
-            this.PilotNameLabel.TabIndex = 17;
-            this.PilotNameLabel.Text = "Pilot";
+            this.PaneSelectOptions.BackColor = System.Drawing.Color.MidnightBlue;
+            this.PaneSelectOptions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.PaneSelectOptions.FlatAppearance.BorderSize = 0;
+            this.PaneSelectOptions.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.PaneSelectOptions.ForeColor = System.Drawing.Color.White;
+            this.PaneSelectOptions.Location = new System.Drawing.Point(342, 0);
+            this.PaneSelectOptions.Margin = new System.Windows.Forms.Padding(0);
+            this.PaneSelectOptions.Name = "PaneSelectOptions";
+            this.PaneSelectOptions.Size = new System.Drawing.Size(57, 23);
+            this.PaneSelectOptions.TabIndex = 0;
+            this.PaneSelectOptions.TabStop = false;
+            this.PaneSelectOptions.Text = "  Options";
+            this.PaneSelectOptions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.PaneSelectOptions.UseVisualStyleBackColor = false;
+            // 
+            // PaneOptions
+            // 
+            this.PaneOptions.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOptions.Controls.Add(this.DebugFileNameLink);
+            this.PaneOptions.Controls.Add(this.EnableDebugCheckBox);
+            this.PaneOptions.Controls.Add(this.DarkThemeCheckBox);
+            this.PaneOptions.Location = new System.Drawing.Point(1573, 43);
+            this.PaneOptions.Margin = new System.Windows.Forms.Padding(0);
+            this.PaneOptions.Name = "PaneOptions";
+            this.PaneOptions.Size = new System.Drawing.Size(500, 336);
+            this.PaneOptions.TabIndex = 25;
+            // 
+            // DebugFileNameLink
+            // 
+            this.DebugFileNameLink.AutoSize = true;
+            this.DebugFileNameLink.Location = new System.Drawing.Point(44, 296);
+            this.DebugFileNameLink.Name = "DebugFileNameLink";
+            this.DebugFileNameLink.Size = new System.Drawing.Size(88, 13);
+            this.DebugFileNameLink.TabIndex = 17;
+            this.DebugFileNameLink.TabStop = true;
+            this.DebugFileNameLink.Text = "View debug logs.";
+            this.DebugFileNameLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
+            // 
+            // EnableDebugCheckBox
+            // 
+            this.EnableDebugCheckBox.AutoSize = true;
+            this.EnableDebugCheckBox.Checked = true;
+            this.EnableDebugCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.EnableDebugCheckBox.Location = new System.Drawing.Point(47, 55);
+            this.EnableDebugCheckBox.Name = "EnableDebugCheckBox";
+            this.EnableDebugCheckBox.Size = new System.Drawing.Size(129, 17);
+            this.EnableDebugCheckBox.TabIndex = 5;
+            this.EnableDebugCheckBox.Text = "Enable debug logging";
+            this.EnableDebugCheckBox.UseVisualStyleBackColor = true;
+            this.EnableDebugCheckBox.CheckedChanged += new System.EventHandler(this.EnableDebugCheckBox_CheckedChanged);
             // 
             // OCTMain
             // 
@@ -914,11 +971,13 @@
             this.BackColor = System.Drawing.Color.Black;
             this.CancelButton = this.ExitButton;
             this.ClientSize = new System.Drawing.Size(2107, 821);
+            this.Controls.Add(this.PaneOptions);
             this.Controls.Add(this.PaneButtonLine);
             this.Controls.Add(this.PaneOlmod);
             this.Controls.Add(this.PaneOverload);
             this.Controls.Add(this.PaneOlproxy);
             this.Controls.Add(this.PaneMaps);
+            this.Controls.Add(this.PaneSelectOptions);
             this.Controls.Add(this.PaneSelectOlmod);
             this.Controls.Add(this.PanePilots);
             this.Controls.Add(this.PaneSelectOlproxy);
@@ -966,6 +1025,8 @@
             this.PaneOlmod.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.PaneOptions.ResumeLayout(false);
+            this.PaneOptions.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -979,7 +1040,7 @@
         private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.Button ExitButton;
         private System.Windows.Forms.Button MapUpdateButton;
-        private System.Windows.Forms.CheckBox SelectDark;
+        private System.Windows.Forms.CheckBox DarkThemeCheckBox;
         private System.Windows.Forms.CheckBox UseEmbeddedOlproxy;
         private System.Windows.Forms.GroupBox OverloadGroupBox;
         private System.Windows.Forms.GroupBox InstalledMapsGroupBox;
@@ -1037,6 +1098,10 @@
         private System.Windows.Forms.LinkLabel linkLabel3;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.LinkLabel linkLabel4;
+        private System.Windows.Forms.Button PaneSelectOptions;
+        private System.Windows.Forms.Panel PaneOptions;
+        private System.Windows.Forms.CheckBox EnableDebugCheckBox;
+        private System.Windows.Forms.LinkLabel DebugFileNameLink;
     }
 }
 

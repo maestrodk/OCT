@@ -87,7 +87,7 @@ namespace OverloadClientTool
         /// <param name="applicationDataMaps">Path to local Overload application data directory.</param>
         /// <returns></returns>
         public bool Update(string mapListUrl = null, string dlcMaps = null, string applicationDataMaps = null)
-        {
+        {            
             Checked = 0;
             Created = 0;
             Updated = 0;
@@ -286,6 +286,8 @@ namespace OverloadClientTool
 
         private void InitMapsListBox()
         {
+            LogDebugMessage("InitMapsListBox()");
+
             currentMaps = Maps;
 
             // Init listbox.
