@@ -47,7 +47,7 @@ namespace OverloadClientTool
         private olproxy.Program olproxyTask = null;
         private Thread olproxyThread = null;
 
-        private OverloadMapManager mapManager = new OverloadMapManager();
+        private OverloadMapManager mapManager = null;
         private Thread mapManagerThread = null;
 
         private PaneController paneController = null;
@@ -83,10 +83,16 @@ namespace OverloadClientTool
                 //if (a.ToLower().Contains("-launched")) autoStart = true;
             }
 
+            // Init map manager.
+            mapManager = new OverloadMapManager(this);
+
+            // Set a default them (may be changed when reading settings).
             theme = Theme.GetDarkTheme;
 
+            // Initialize controls on main form.
             InitializeComponent();
 
+            // Center main form on Desktop.
             this.StartPosition = FormStartPosition.CenterScreen;
             StatusMessage.Text = "Starting up...";
 
@@ -462,41 +468,13 @@ namespace OverloadClientTool
             }
         }
 
-        /// <summary>
-        /// Update maps in the background.
-        /// </summary>
-        private void UpdateMapThread()
-        {
-            UpdatingMaps.Invoke(new Action(() => UpdatingMaps.Visible = true));
-
-            if (MapOnlyExisting.Checked) Verbose(String.Format("Checking for updated maps."));
-            else Verbose(String.Format("Checking for new/updated maps."));
-
-            if (UseDLCLocationCheckBox.Enabled && UseDLCLocationCheckBox.Checked)
-            {
-                Verbose(String.Format("Overload DLC directory used for maps."));
-                mapManager.Update(null, dlcLocation);
-            }
-            else
-            {
-                Verbose(String.Format("Overload ProgramData directory used for maps."));
-                mapManager.Update();
-            }
-
-            if (MapOnlyExisting.Checked) Verbose(String.Format($"Map check finished: {mapManager.Checked} maps, {mapManager.Updated} updated."));
-            else Verbose(String.Format($"Map check finished: {mapManager.Checked} maps, {mapManager.Created} created, {mapManager.Updated} updated."));
-
-            UpdatingMaps.Invoke(new Action(() => UpdatingMaps.Visible = false));
-            MapUpdateButton.Invoke(new Action(() => MapUpdateButton.Enabled = true));
-        }
-
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {          
             // Kill embedded Olproxy.
             KillOlproxyThread();
 
             // Shutdown background workers.
-            StopMapsMonitoring();
+            //StopMapsMonitoring();
             StopPilotsMonitoring();
 
             // Save settings for main application.
@@ -882,11 +860,6 @@ namespace OverloadClientTool
             Verbose((UseOlproxyCheckBox.Checked) ? "Olproxy enabled." : "Olproxy disabled.");
         }
 
-        private void AutoUpdateMaps_Click(object sender, EventArgs e)
-        {
-            AutoUpdateMaps = AutoUpdateMapsCheckBox.Checked;
-        }
-
         private void UseDLCLocationCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             UseDLCLocation = UseDLCLocationCheckBox.Checked;
@@ -991,6 +964,11 @@ namespace OverloadClientTool
         private void OverloadArgs_TextChanged(object sender, EventArgs e)
         {
             OverloadParameters = OverloadArgs.Text;
+        }
+
+        private void OnlineMapJsonUrl_TextChanged(object sender, EventArgs e)
+        {
+            MapListUrl = OnlineMapJsonUrl.Text;
         }
     }
 }

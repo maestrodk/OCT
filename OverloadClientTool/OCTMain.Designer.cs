@@ -43,7 +43,7 @@
             this.OverloadRunning = new System.Windows.Forms.PictureBox();
             this.OlproxyRunning = new System.Windows.Forms.PictureBox();
             this.UpdatingMaps = new System.Windows.Forms.PictureBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.OnlineMapJsonUrl = new System.Windows.Forms.TextBox();
             this.InstalledMapsGroupBox = new System.Windows.Forms.GroupBox();
             this.MapsListBox = new System.Windows.Forms.ListBox();
             this.UseOlproxyCheckBox = new System.Windows.Forms.CheckBox();
@@ -55,7 +55,7 @@
             this.ActivityListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.OverloadClientToolNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.MapOnlyExisting = new System.Windows.Forms.CheckBox();
+            this.OnlyUpdateExistingMapsCheckBox = new System.Windows.Forms.CheckBox();
             this.PilotDeleteButton = new System.Windows.Forms.Button();
             this.PilotRenameButton = new System.Windows.Forms.Button();
             this.PilotCloneButton = new System.Windows.Forms.Button();
@@ -71,7 +71,6 @@
             this.PaneSelectPilots = new System.Windows.Forms.Button();
             this.PaneSelectOverload = new System.Windows.Forms.Button();
             this.PaneMaps = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.MapRefreshButton = new System.Windows.Forms.Button();
             this.PanePilots = new System.Windows.Forms.Panel();
@@ -99,6 +98,7 @@
             this.PaneOptions = new System.Windows.Forms.Panel();
             this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
             this.EnableDebugCheckBox = new System.Windows.Forms.CheckBox();
+            this.MapsToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.OverloadGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
@@ -195,11 +195,11 @@
             // MapUpdateButton
             // 
             this.MapUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapUpdateButton.Location = new System.Drawing.Point(416, 235);
+            this.MapUpdateButton.Location = new System.Drawing.Point(334, 229);
             this.MapUpdateButton.Name = "MapUpdateButton";
-            this.MapUpdateButton.Size = new System.Drawing.Size(60, 24);
+            this.MapUpdateButton.Size = new System.Drawing.Size(87, 24);
             this.MapUpdateButton.TabIndex = 9;
-            this.MapUpdateButton.Text = "Update";
+            this.MapUpdateButton.Text = "Update all";
             this.MapUpdateButton.UseVisualStyleBackColor = true;
             this.MapUpdateButton.Click += new System.EventHandler(this.MapUpdateButton_Click);
             // 
@@ -213,6 +213,7 @@
             this.DarkThemeCheckBox.Size = new System.Drawing.Size(101, 17);
             this.DarkThemeCheckBox.TabIndex = 5;
             this.DarkThemeCheckBox.Text = "Use dark theme";
+            this.MapsToolTip.SetToolTip(this.DarkThemeCheckBox, "Switch between dark/light themes");
             this.DarkThemeCheckBox.UseVisualStyleBackColor = true;
             this.DarkThemeCheckBox.CheckedChanged += new System.EventHandler(this.SelectDark_CheckedChanged);
             // 
@@ -226,6 +227,7 @@
             this.UseEmbeddedOlproxy.Size = new System.Drawing.Size(136, 17);
             this.UseEmbeddedOlproxy.TabIndex = 5;
             this.UseEmbeddedOlproxy.Text = "Use embedded Olproxy";
+            this.MapsToolTip.SetToolTip(this.UseEmbeddedOlproxy, "Use the built-in Olproxy");
             this.UseEmbeddedOlproxy.UseVisualStyleBackColor = true;
             this.UseEmbeddedOlproxy.CheckedChanged += new System.EventHandler(this.UseEmbeddedOlproxy_CheckedChanged);
             // 
@@ -269,7 +271,7 @@
             // 
             this.UpdatingMaps.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.UpdatingMaps.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-            this.UpdatingMaps.Location = new System.Drawing.Point(395, 238);
+            this.UpdatingMaps.Location = new System.Drawing.Point(425, 232);
             this.UpdatingMaps.Name = "UpdatingMaps";
             this.UpdatingMaps.Size = new System.Drawing.Size(18, 18);
             this.UpdatingMaps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -277,24 +279,24 @@
             this.UpdatingMaps.TabStop = false;
             this.UpdatingMaps.Visible = false;
             // 
-            // textBox1
+            // OnlineMapJsonUrl
             // 
-            this.textBox1.BackColor = System.Drawing.Color.Gray;
-            this.textBox1.Location = new System.Drawing.Point(13, 20);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(1);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(428, 20);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "https://www.overloadmaps.com/data/mp.json";
-            this.textBox1.TextChanged += new System.EventHandler(this.OverloadExecutable_TextChanged);
-            this.textBox1.DoubleClick += new System.EventHandler(this.OverloadExecutable_MouseDoubleClick);
+            this.OnlineMapJsonUrl.BackColor = System.Drawing.Color.Gray;
+            this.OnlineMapJsonUrl.Location = new System.Drawing.Point(13, 20);
+            this.OnlineMapJsonUrl.Margin = new System.Windows.Forms.Padding(1);
+            this.OnlineMapJsonUrl.Name = "OnlineMapJsonUrl";
+            this.OnlineMapJsonUrl.Size = new System.Drawing.Size(428, 20);
+            this.OnlineMapJsonUrl.TabIndex = 1;
+            this.OnlineMapJsonUrl.Text = "https://www.overloadmaps.com/data/mp.json";
+            this.OnlineMapJsonUrl.TextChanged += new System.EventHandler(this.OnlineMapJsonUrl_TextChanged);
+            this.OnlineMapJsonUrl.DoubleClick += new System.EventHandler(this.OverloadExecutable_MouseDoubleClick);
             // 
             // InstalledMapsGroupBox
             // 
             this.InstalledMapsGroupBox.Controls.Add(this.MapsListBox);
             this.InstalledMapsGroupBox.Location = new System.Drawing.Point(15, 17);
             this.InstalledMapsGroupBox.Name = "InstalledMapsGroupBox";
-            this.InstalledMapsGroupBox.Size = new System.Drawing.Size(280, 236);
+            this.InstalledMapsGroupBox.Size = new System.Drawing.Size(300, 236);
             this.InstalledMapsGroupBox.TabIndex = 13;
             this.InstalledMapsGroupBox.TabStop = false;
             this.InstalledMapsGroupBox.Text = "Installed maps";
@@ -302,12 +304,14 @@
             // MapsListBox
             // 
             this.MapsListBox.BackColor = System.Drawing.Color.Gray;
+            this.MapsListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MapsListBox.FormattingEnabled = true;
             this.MapsListBox.Location = new System.Drawing.Point(15, 20);
             this.MapsListBox.Name = "MapsListBox";
-            this.MapsListBox.Size = new System.Drawing.Size(251, 199);
+            this.MapsListBox.Size = new System.Drawing.Size(270, 199);
             this.MapsListBox.TabIndex = 0;
             this.MapsListBox.SelectedIndexChanged += new System.EventHandler(this.MapsListBox_SelectedIndexChanged);
+            this.MapsListBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MapsListBox_MouseMove);
             // 
             // UseOlproxyCheckBox
             // 
@@ -319,6 +323,7 @@
             this.UseOlproxyCheckBox.Size = new System.Drawing.Size(83, 17);
             this.UseOlproxyCheckBox.TabIndex = 5;
             this.UseOlproxyCheckBox.Text = "Use Olproxy";
+            this.MapsToolTip.SetToolTip(this.UseOlproxyCheckBox, "Start Olproxy when Overload/Olmod is started");
             this.UseOlproxyCheckBox.UseVisualStyleBackColor = true;
             this.UseOlproxyCheckBox.CheckedChanged += new System.EventHandler(this.UseOlproxy_CheckedChanged);
             // 
@@ -332,6 +337,7 @@
             this.UseOlmodCheckBox.Size = new System.Drawing.Size(78, 17);
             this.UseOlmodCheckBox.TabIndex = 5;
             this.UseOlmodCheckBox.Text = "Use Olmod";
+            this.MapsToolTip.SetToolTip(this.UseOlmodCheckBox, "If checked then Olmod will be used to run Overload");
             this.UseOlmodCheckBox.UseVisualStyleBackColor = true;
             this.UseOlmodCheckBox.CheckedChanged += new System.EventHandler(this.UseOlmod_CheckedChanged);
             // 
@@ -340,11 +346,12 @@
             this.UseDLCLocationCheckBox.AutoCheck = false;
             this.UseDLCLocationCheckBox.AutoSize = true;
             this.UseDLCLocationCheckBox.Enabled = false;
-            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(307, 179);
+            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(333, 188);
             this.UseDLCLocationCheckBox.Name = "UseDLCLocationCheckBox";
-            this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(155, 17);
+            this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(115, 17);
             this.UseDLCLocationCheckBox.TabIndex = 5;
-            this.UseDLCLocationCheckBox.Text = "Use DLC directory for maps";
+            this.UseDLCLocationCheckBox.Text = "Use DLC directory ";
+            this.MapsToolTip.SetToolTip(this.UseDLCLocationCheckBox, "Save downloaded map ZIP files to Overload DLC folder");
             this.UseDLCLocationCheckBox.UseVisualStyleBackColor = true;
             this.UseDLCLocationCheckBox.CheckedChanged += new System.EventHandler(this.UseDLCLocationCheckBox_CheckedChanged);
             this.UseDLCLocationCheckBox.Click += new System.EventHandler(this.UseDLCLocationCheckBox_Click);
@@ -352,11 +359,12 @@
             // AutoUpdateMapsCheckBox
             // 
             this.AutoUpdateMapsCheckBox.AutoSize = true;
-            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(307, 133);
+            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(333, 142);
             this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
-            this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(159, 17);
+            this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(149, 17);
             this.AutoUpdateMapsCheckBox.TabIndex = 5;
-            this.AutoUpdateMapsCheckBox.Text = "Auto-update maps at startup";
+            this.AutoUpdateMapsCheckBox.Text = "Update all maps at startup";
+            this.MapsToolTip.SetToolTip(this.AutoUpdateMapsCheckBox, "Do an update of all maps at startup (may take a bit of extra time)");
             this.AutoUpdateMapsCheckBox.UseVisualStyleBackColor = true;
             this.AutoUpdateMapsCheckBox.Click += new System.EventHandler(this.AutoUpdateMaps_Click);
             // 
@@ -412,17 +420,17 @@
             this.OverloadClientToolNotifyIcon.Visible = true;
             this.OverloadClientToolNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.OverloadClientToolNotifyIcon_MouseDoubleClick);
             // 
-            // MapOnlyExisting
+            // OnlyUpdateExistingMapsCheckBox
             // 
-            this.MapOnlyExisting.AutoSize = true;
-            this.MapOnlyExisting.Location = new System.Drawing.Point(307, 156);
-            this.MapOnlyExisting.Name = "MapOnlyExisting";
-            this.MapOnlyExisting.Size = new System.Drawing.Size(149, 17);
-            this.MapOnlyExisting.TabIndex = 5;
-            this.MapOnlyExisting.Text = "Only update existing maps";
-            this.MapOnlyExisting.UseVisualStyleBackColor = true;
-            this.MapOnlyExisting.CheckedChanged += new System.EventHandler(this.MapOnlyExisting_CheckedChanged);
-            this.MapOnlyExisting.Click += new System.EventHandler(this.AutoUpdateMaps_Click);
+            this.OnlyUpdateExistingMapsCheckBox.AutoSize = true;
+            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(333, 165);
+            this.OnlyUpdateExistingMapsCheckBox.Name = "OnlyUpdateExistingMapsCheckBox";
+            this.OnlyUpdateExistingMapsCheckBox.Size = new System.Drawing.Size(149, 17);
+            this.OnlyUpdateExistingMapsCheckBox.TabIndex = 5;
+            this.OnlyUpdateExistingMapsCheckBox.Text = "Only update existing maps";
+            this.MapsToolTip.SetToolTip(this.OnlyUpdateExistingMapsCheckBox, "Only update map ZIP files already on disk");
+            this.OnlyUpdateExistingMapsCheckBox.UseVisualStyleBackColor = true;
+            this.OnlyUpdateExistingMapsCheckBox.CheckedChanged += new System.EventHandler(this.OnlyUpdateExistingMapsCheckBox_CheckedChanged);
             // 
             // PilotDeleteButton
             // 
@@ -491,9 +499,9 @@
             // MapDeleteButton
             // 
             this.MapDeleteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapDeleteButton.Location = new System.Drawing.Point(307, 66);
+            this.MapDeleteButton.Location = new System.Drawing.Point(333, 66);
             this.MapDeleteButton.Name = "MapDeleteButton";
-            this.MapDeleteButton.Size = new System.Drawing.Size(56, 23);
+            this.MapDeleteButton.Size = new System.Drawing.Size(88, 23);
             this.MapDeleteButton.TabIndex = 14;
             this.MapDeleteButton.Text = "Delete";
             this.MapDeleteButton.UseVisualStyleBackColor = true;
@@ -502,9 +510,9 @@
             // MapHideButton
             // 
             this.MapHideButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapHideButton.Location = new System.Drawing.Point(307, 37);
+            this.MapHideButton.Location = new System.Drawing.Point(333, 37);
             this.MapHideButton.Name = "MapHideButton";
-            this.MapHideButton.Size = new System.Drawing.Size(56, 23);
+            this.MapHideButton.Size = new System.Drawing.Size(88, 23);
             this.MapHideButton.TabIndex = 14;
             this.MapHideButton.Text = "Hide";
             this.MapHideButton.UseVisualStyleBackColor = true;
@@ -604,12 +612,11 @@
             // PaneMaps
             // 
             this.PaneMaps.BackColor = System.Drawing.Color.LightSlateGray;
-            this.PaneMaps.Controls.Add(this.label3);
             this.PaneMaps.Controls.Add(this.UseDLCLocationCheckBox);
             this.PaneMaps.Controls.Add(this.MapUpdateButton);
             this.PaneMaps.Controls.Add(this.AutoUpdateMapsCheckBox);
             this.PaneMaps.Controls.Add(this.UpdatingMaps);
-            this.PaneMaps.Controls.Add(this.MapOnlyExisting);
+            this.PaneMaps.Controls.Add(this.OnlyUpdateExistingMapsCheckBox);
             this.PaneMaps.Controls.Add(this.groupBox1);
             this.PaneMaps.Controls.Add(this.MapHideButton);
             this.PaneMaps.Controls.Add(this.MapRefreshButton);
@@ -621,18 +628,9 @@
             this.PaneMaps.Size = new System.Drawing.Size(500, 336);
             this.PaneMaps.TabIndex = 19;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(304, 217);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(171, 13);
-            this.label3.TabIndex = 15;
-            this.label3.Text = "Update button refreshes ALL maps";
-            // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.OnlineMapJsonUrl);
             this.groupBox1.Location = new System.Drawing.Point(15, 265);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(461, 52);
@@ -644,13 +642,12 @@
             // 
             this.MapRefreshButton.Enabled = false;
             this.MapRefreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapRefreshButton.Location = new System.Drawing.Point(307, 95);
+            this.MapRefreshButton.Location = new System.Drawing.Point(333, 95);
             this.MapRefreshButton.Name = "MapRefreshButton";
-            this.MapRefreshButton.Size = new System.Drawing.Size(56, 23);
+            this.MapRefreshButton.Size = new System.Drawing.Size(88, 23);
             this.MapRefreshButton.TabIndex = 14;
             this.MapRefreshButton.Text = "Refresh";
             this.MapRefreshButton.UseVisualStyleBackColor = true;
-            this.MapRefreshButton.Visible = false;
             this.MapRefreshButton.Click += new System.EventHandler(this.MapRefresh_Click);
             // 
             // PanePilots
@@ -705,6 +702,7 @@
             this.AutoPilotsBackupCheckbox.Size = new System.Drawing.Size(280, 17);
             this.AutoPilotsBackupCheckbox.TabIndex = 5;
             this.AutoPilotsBackupCheckbox.Text = "Do a backup of all pilots each time Overload is started";
+            this.MapsToolTip.SetToolTip(this.AutoPilotsBackupCheckbox, "Check this to save a ZIP\'ed backup of all pilots when Overload/Olmod starts");
             this.AutoPilotsBackupCheckbox.UseVisualStyleBackColor = true;
             this.AutoPilotsBackupCheckbox.CheckedChanged += new System.EventHandler(this.AutoPilotsBackupCheckbox_CheckedChanged);
             // 
@@ -856,9 +854,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(27, 304);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(298, 13);
+            this.label2.Size = new System.Drawing.Size(308, 13);
             this.label2.TabIndex = 16;
-            this.label2.Text = "Olmod.exe must be placed in the same folder as Overload.exe";
+            this.label2.Text = "IF Olmod is enabled it will use the parameters setup for Overload";
             // 
             // PaneOlmod
             // 
@@ -966,8 +964,15 @@
             this.EnableDebugCheckBox.Size = new System.Drawing.Size(129, 17);
             this.EnableDebugCheckBox.TabIndex = 5;
             this.EnableDebugCheckBox.Text = "Enable debug logging";
+            this.MapsToolTip.SetToolTip(this.EnableDebugCheckBox, "Check this to save debugging info to a text file");
             this.EnableDebugCheckBox.UseVisualStyleBackColor = true;
             this.EnableDebugCheckBox.CheckedChanged += new System.EventHandler(this.EnableDebugCheckBox_CheckedChanged);
+            // 
+            // MapsToolTip
+            // 
+            this.MapsToolTip.AutoPopDelay = 5000;
+            this.MapsToolTip.InitialDelay = 1000;
+            this.MapsToolTip.ReshowDelay = 100;
             // 
             // PilotNameLabel
             // 
@@ -1063,7 +1068,7 @@
         private System.Windows.Forms.GroupBox InstalledMapsGroupBox;
         private System.Windows.Forms.GroupBox LoggingGroupBox;
         private System.Windows.Forms.NotifyIcon OverloadClientToolNotifyIcon;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox OnlineMapJsonUrl;
         private System.Windows.Forms.CheckBox UseDLCLocationCheckBox;
         private System.Windows.Forms.PictureBox UpdatingMaps;
         private System.Windows.Forms.PictureBox OverloadRunning;
@@ -1074,7 +1079,7 @@
         private System.Windows.Forms.ListView ActivityListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.CheckBox MapOnlyExisting;
+        private System.Windows.Forms.CheckBox OnlyUpdateExistingMapsCheckBox;
         private System.Windows.Forms.Button PilotDeleteButton;
         private System.Windows.Forms.Button PilotRenameButton;
         private System.Windows.Forms.Button PilotCloneButton;
@@ -1102,7 +1107,6 @@
         private System.Windows.Forms.Panel PaneOlmod;
         private System.Windows.Forms.Button SearchOverloadButton;
         private System.Windows.Forms.CheckBox AutoPilotsBackupCheckbox;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel PaneButtonLine;
         private System.Windows.Forms.ListBox MapsListBox;
         private System.Windows.Forms.ListBox PilotsListBox;
@@ -1120,6 +1124,7 @@
         private System.Windows.Forms.CheckBox EnableDebugCheckBox;
         private System.Windows.Forms.LinkLabel DebugFileNameLink;
         private System.Windows.Forms.Button MapRefreshButton;
+        private System.Windows.Forms.ToolTip MapsToolTip;
     }
 }
 

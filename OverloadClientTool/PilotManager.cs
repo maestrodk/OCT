@@ -22,8 +22,7 @@ namespace OverloadClientTool
 
         private List<string> currentPilots = null;
 
-        BackgroundWorker pilotsBackgroundWorker = null;
-        private object pilotChangeLock = new object();
+        BackgroundWorker pilotsBackgroundWorker = null;        
  
         private void InitPilotsListBox()
         {
@@ -135,6 +134,8 @@ namespace OverloadClientTool
         {
             get
             {
+                try { Directory.CreateDirectory(pilotsPath); } catch { }
+
                 List<string> pilots = new List<string>();
                 string[] list = Directory.GetFiles(pilotsPath, "*.xconfig");
 
@@ -377,40 +378,37 @@ namespace OverloadClientTool
 
             Directory.CreateDirectory(pilotsBackupPath);
 
-            lock (pilotChangeLock)
+            using (var fileStream = new FileStream(zipName, FileMode.Create))
             {
-                using (var fileStream = new FileStream(zipName, FileMode.Create))
+                using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create, true))
                 {
-                    using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create, true))
+                    foreach (string pilot in OverloadPilots)
                     {
-                        foreach (string pilot in OverloadPilots)
+                        string xconfig = Path.Combine(pilotsPath, pilot + ".xconfig");
+                        string prefs = Path.Combine(pilotsPath, pilot + ".xprefs");
+                        string scores = Path.Combine(pilotsPath, pilot + ".xscores");
+
+                        FileInfo fiXconfig = new FileInfo(xconfig);
+                        FileInfo fiPrefs = new FileInfo(prefs);
+                        FileInfo fiScores = new FileInfo(scores);
+
+                        if (fiXconfig.Exists && fiPrefs.Exists && fiScores.Exists)
                         {
-                            string xconfig = Path.Combine(pilotsPath, pilot + ".xconfig");
-                            string prefs = Path.Combine(pilotsPath, pilot + ".xprefs");
-                            string scores = Path.Combine(pilotsPath, pilot + ".xscores");
+                            byte[] buffer = File.ReadAllBytes(xconfig);
+                            var zipArchiveEntry = archive.CreateEntry(Path.GetFileName(xconfig), CompressionLevel.Optimal);
+                            using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
 
-                            FileInfo fiXconfig = new FileInfo(xconfig);
-                            FileInfo fiPrefs = new FileInfo(prefs);
-                            FileInfo fiScores = new FileInfo(scores);
+                            buffer = File.ReadAllBytes(prefs);
+                            zipArchiveEntry = archive.CreateEntry(Path.GetFileName(prefs), CompressionLevel.Optimal);
+                            using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
 
-                            if (fiXconfig.Exists && fiPrefs.Exists && fiScores.Exists)
-                            {
-                                byte[] buffer = File.ReadAllBytes(xconfig);
-                                var zipArchiveEntry = archive.CreateEntry(Path.GetFileName(xconfig), CompressionLevel.Optimal);
-                                using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
-
-                                buffer = File.ReadAllBytes(prefs);
-                                zipArchiveEntry = archive.CreateEntry(Path.GetFileName(prefs), CompressionLevel.Optimal);
-                                using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
-
-                                buffer = File.ReadAllBytes(xconfig);
-                                zipArchiveEntry = archive.CreateEntry(Path.GetFileName(xconfig), CompressionLevel.Optimal);
-                                using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
-                            }
+                            buffer = File.ReadAllBytes(xconfig);
+                            zipArchiveEntry = archive.CreateEntry(Path.GetFileName(xconfig), CompressionLevel.Optimal);
+                            using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
                         }
-
-                        return String.Format($"{Path.GetFileName(zipName)}");
                     }
+
+                    return String.Format($"{Path.GetFileName(zipName)}");
                 }
             }
         }

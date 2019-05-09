@@ -46,6 +46,12 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.OlproxyPath = value; }
         }
 
+        public string MapListUrl
+        {
+            get { return Properties.Settings.Default.MapListUrl; }
+            set { Properties.Settings.Default.MapListUrl = value; }
+        }
+
         public string OlproxyParameters
         {
             get { return Properties.Settings.Default.OlproxyParameters; }
@@ -69,11 +75,17 @@ namespace OverloadClientTool
             get { return Properties.Settings.Default.DebugLogging; }
             set { Properties.Settings.Default.DebugLogging = value; }
         }
-
+        
         public bool UseOlmod
         {
             get { return Properties.Settings.Default.UseOlmod; }
             set { Properties.Settings.Default.UseOlmod= value; }
+        }
+
+        public bool UpdateOnlyExistingMaps
+        {
+            get { return Properties.Settings.Default.UpdateOnlyExistingMaps; }
+            set { Properties.Settings.Default.UpdateOnlyExistingMaps = value; }
         }
 
         public bool UseDLCLocation
@@ -272,6 +284,8 @@ namespace OverloadClientTool
             AutoUpdateMapsCheckBox.Checked = AutoUpdateMaps;
             UseDLCLocationCheckBox.Checked = UseDLCLocation;
             AutoPilotsBackupCheckbox.Checked = AutoSavePilots;
+            OnlyUpdateExistingMapsCheckBox.Checked = UpdateOnlyExistingMaps;
+            OnlineMapJsonUrl.Text = MapListUrl;
 
             // Get debug setting and update debug file name info.
             EnableDebugCheckBox.Checked = Debugging;

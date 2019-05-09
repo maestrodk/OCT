@@ -110,12 +110,12 @@ namespace OverloadClientTool.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://www.overloadmaps.com/data/mp.json")]
-        public string mapListUrl {
+        public string MapListUrl {
             get {
-                return ((string)(this["mapListUrl"]));
+                return ((string)(this["MapListUrl"]));
             }
             set {
-                this["mapListUrl"] = value;
+                this["MapListUrl"] = value;
             }
         }
         
@@ -200,6 +200,18 @@ namespace OverloadClientTool.Properties {
             }
             set {
                 this["DebugLogging"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UpdateOnlyExistingMaps {
+            get {
+                return ((bool)(this["UpdateOnlyExistingMaps"]));
+            }
+            set {
+                this["UpdateOnlyExistingMaps"] = value;
             }
         }
     }
