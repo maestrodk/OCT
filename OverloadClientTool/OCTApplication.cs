@@ -77,7 +77,7 @@ namespace OverloadClientTool
             // Setup debug logging.
             try
             {
-               LogDebugMessage("Enabling visual styles.", debugFileName);
+                LogDebugMessage("Enabling visual styles.", debugFileName);
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);

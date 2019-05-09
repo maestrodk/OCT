@@ -289,7 +289,6 @@ namespace OverloadClientTool
 
             // Get debug setting and update debug file name info.
             EnableDebugCheckBox.Checked = Debugging;
-            DebugFileNameLink.Visible = EnableDebugCheckBox.Checked;
         }
 
         private void UpdateTheme(Theme theme)

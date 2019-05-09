@@ -78,6 +78,11 @@ namespace OverloadClientTool
         {
             this.debugFileName = debugFileName;
 
+            if (!Debugging)
+            {
+                try { System.IO.File.Delete(debugFileName); } catch { }
+            }
+
             foreach (string a in args)
             {
                 //if (a.ToLower().Contains("-launched")) autoStart = true;
@@ -190,7 +195,7 @@ namespace OverloadClientTool
             }
 
             Defocus();
-        }
+       }
 
         [DllImport("shell32.dll")]
         static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
@@ -934,7 +939,6 @@ namespace OverloadClientTool
         private void EnableDebugCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Debugging = EnableDebugCheckBox.Checked;
-            DebugFileNameLink.Visible = EnableDebugCheckBox.Checked;
             Info((EnableDebugCheckBox.Checked) ? "Debug logging enabled." : "Debug logging disabled.");
         }
 
