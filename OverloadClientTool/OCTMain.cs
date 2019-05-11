@@ -385,6 +385,8 @@ namespace OverloadClientTool
 
                 this.UIThread(delegate
                 {
+                    OverloadLogFileCheck();
+
                     string statusText = "Ready for some Overload action!";
 
                     if (overloadRunning && !olproxyRunning && !olmodRunning) statusText = "Overload is running.";
@@ -875,16 +877,6 @@ namespace OverloadClientTool
             FindOverloadInstall();
         }
 
-        private void SearchOverloadButton_MouseEnter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SearchOverloadButton_MouseLeave(object sender, EventArgs e)
-        {
-
-        }
-
         private void OlmodExecutable_DoubleClick(object sender, EventArgs e)
         {
             OlmodExecutable.SelectionLength = 0;
@@ -1286,5 +1278,47 @@ namespace OverloadClientTool
         }
 
         #endregion
+
+        #region Overload Application Settings
+
+        private string outputLogFileName = SpecialFolderLocalLowPath + Path.DirectorySeparatorChar + "Revival" + Path.DirectorySeparatorChar + "Overload" + Path.DirectorySeparatorChar + "output_log.txt";
+
+        private void OverloadLogFileCheck()
+        {
+            try
+            {
+                OverloadLog.Visible = System.IO.File.Exists(outputLogFileName);
+            }
+            catch
+            {
+                OverloadLog.Visible = false;
+            }
+        }
+
+        private void OverloadLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                ProcessStartInfo sInfo = new ProcessStartInfo("notepad.exe", outputLogFileName);
+                Process.Start(sInfo);
+            }
+            catch
+            {
+            }
+        }
+        #endregion
+
+        private void InfoLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc.StartInfo.FileName = "mailto:mickdk2010@gmail.com?subject=Overload Client Tool";
+                proc.Start();
+            }
+            catch
+            {
+            }
+        }
     }
 }

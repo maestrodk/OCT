@@ -17,8 +17,8 @@ namespace OverloadClientTool
 {
     public partial class OCTMain
     {
-        private string pilotsPath = SpecialFolderLocalLowPath + "\\Revival\\Overload";
-        private string pilotsBackupPath = SpecialFolderLocalLowPath + "\\Revival\\Overload\\Pilot Backup";
+        private string pilotsPath = SpecialFolderLocalLowPath + Path.DirectorySeparatorChar + "Revival" + Path.DirectorySeparatorChar + "Overload";
+        private string pilotsBackupPath = SpecialFolderLocalLowPath + Path.DirectorySeparatorChar + "Revival" + Path.DirectorySeparatorChar + "Overload" + Path.DirectorySeparatorChar + "Pilot Backup";
 
         private List<string> currentPilots = null;
 

@@ -75,7 +75,6 @@
             this.MapRefreshButton = new System.Windows.Forms.Button();
             this.PanePilots = new System.Windows.Forms.Panel();
             this.OpenPilotsBackupFolder = new System.Windows.Forms.LinkLabel();
-            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.PilotMakeActiveButton = new System.Windows.Forms.Button();
             this.AutoPilotsBackupCheckbox = new System.Windows.Forms.CheckBox();
             this.PaneSelectOlproxy = new System.Windows.Forms.Button();
@@ -85,6 +84,7 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.PaneOverload = new System.Windows.Forms.Panel();
+            this.OverloadLog = new System.Windows.Forms.LinkLabel();
             this.PLayOverloadLinkLabel = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -97,9 +97,11 @@
             this.PaneButtonLine = new System.Windows.Forms.Panel();
             this.PaneSelectOptions = new System.Windows.Forms.Button();
             this.PaneOptions = new System.Windows.Forms.Panel();
+            this.MailLinkLabel = new System.Windows.Forms.LinkLabel();
             this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
             this.EnableDebugCheckBox = new System.Windows.Forms.CheckBox();
             this.MapsToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.OverloadGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
@@ -681,18 +683,6 @@
             this.OpenPilotsBackupFolder.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
             this.OpenPilotsBackupFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OpenPilotsBackupFolder_LinkClicked);
             // 
-            // PilotNameLabel
-            // 
-            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PilotNameLabel.Enabled = false;
-            this.PilotNameLabel.Location = new System.Drawing.Point(226, 207);
-            this.PilotNameLabel.Multiline = false;
-            this.PilotNameLabel.Name = "PilotNameLabel";
-            this.PilotNameLabel.ReadOnly = true;
-            this.PilotNameLabel.Size = new System.Drawing.Size(207, 25);
-            this.PilotNameLabel.TabIndex = 17;
-            this.PilotNameLabel.Text = "Pilot";
-            // 
             // PilotMakeActiveButton
             // 
             this.PilotMakeActiveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -803,6 +793,7 @@
             // PaneOverload
             // 
             this.PaneOverload.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOverload.Controls.Add(this.OverloadLog);
             this.PaneOverload.Controls.Add(this.PLayOverloadLinkLabel);
             this.PaneOverload.Controls.Add(this.label1);
             this.PaneOverload.Controls.Add(this.groupBox2);
@@ -814,12 +805,25 @@
             this.PaneOverload.Size = new System.Drawing.Size(500, 336);
             this.PaneOverload.TabIndex = 22;
             // 
+            // OverloadLog
+            // 
+            this.OverloadLog.AutoSize = true;
+            this.OverloadLog.LinkColor = System.Drawing.Color.DodgerBlue;
+            this.OverloadLog.Location = new System.Drawing.Point(18, 146);
+            this.OverloadLog.Name = "OverloadLog";
+            this.OverloadLog.Size = new System.Drawing.Size(96, 13);
+            this.OverloadLog.TabIndex = 18;
+            this.OverloadLog.TabStop = true;
+            this.OverloadLog.Text = "Open Overload log";
+            this.OverloadLog.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
+            this.OverloadLog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OverloadLog_LinkClicked);
+            // 
             // PLayOverloadLinkLabel
             // 
             this.PLayOverloadLinkLabel.ActiveLinkColor = System.Drawing.Color.DeepSkyBlue;
             this.PLayOverloadLinkLabel.AutoSize = true;
             this.PLayOverloadLinkLabel.LinkColor = System.Drawing.Color.SteelBlue;
-            this.PLayOverloadLinkLabel.Location = new System.Drawing.Point(18, 150);
+            this.PLayOverloadLinkLabel.Location = new System.Drawing.Point(18, 265);
             this.PLayOverloadLinkLabel.Name = "PLayOverloadLinkLabel";
             this.PLayOverloadLinkLabel.Size = new System.Drawing.Size(126, 13);
             this.PLayOverloadLinkLabel.TabIndex = 17;
@@ -857,8 +861,6 @@
             this.SearchOverloadButton.Text = "Search";
             this.SearchOverloadButton.UseVisualStyleBackColor = true;
             this.SearchOverloadButton.Click += new System.EventHandler(this.SearchOverloadButton_Click);
-            this.SearchOverloadButton.MouseEnter += new System.EventHandler(this.SearchOverloadButton_MouseEnter);
-            this.SearchOverloadButton.MouseLeave += new System.EventHandler(this.SearchOverloadButton_MouseLeave);
             // 
             // label2
             // 
@@ -945,6 +947,7 @@
             // PaneOptions
             // 
             this.PaneOptions.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOptions.Controls.Add(this.MailLinkLabel);
             this.PaneOptions.Controls.Add(this.DebugFileNameLink);
             this.PaneOptions.Controls.Add(this.EnableDebugCheckBox);
             this.PaneOptions.Controls.Add(this.DarkThemeCheckBox);
@@ -954,10 +957,21 @@
             this.PaneOptions.Size = new System.Drawing.Size(500, 336);
             this.PaneOptions.TabIndex = 25;
             // 
+            // MailLinkLabel
+            // 
+            this.MailLinkLabel.AutoSize = true;
+            this.MailLinkLabel.Location = new System.Drawing.Point(44, 296);
+            this.MailLinkLabel.Name = "MailLinkLabel";
+            this.MailLinkLabel.Size = new System.Drawing.Size(225, 13);
+            this.MailLinkLabel.TabIndex = 18;
+            this.MailLinkLabel.TabStop = true;
+            this.MailLinkLabel.Text = "Contact me if your have issues or suggestions!";
+            this.MailLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.InfoLinkLabel_LinkClicked);
+            // 
             // DebugFileNameLink
             // 
             this.DebugFileNameLink.AutoSize = true;
-            this.DebugFileNameLink.Location = new System.Drawing.Point(44, 296);
+            this.DebugFileNameLink.Location = new System.Drawing.Point(182, 56);
             this.DebugFileNameLink.Name = "DebugFileNameLink";
             this.DebugFileNameLink.Size = new System.Drawing.Size(88, 13);
             this.DebugFileNameLink.TabIndex = 17;
@@ -984,6 +998,18 @@
             this.MapsToolTip.AutoPopDelay = 5000;
             this.MapsToolTip.InitialDelay = 1000;
             this.MapsToolTip.ReshowDelay = 100;
+            // 
+            // PilotNameLabel
+            // 
+            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.PilotNameLabel.Enabled = false;
+            this.PilotNameLabel.Location = new System.Drawing.Point(226, 207);
+            this.PilotNameLabel.Multiline = false;
+            this.PilotNameLabel.Name = "PilotNameLabel";
+            this.PilotNameLabel.ReadOnly = true;
+            this.PilotNameLabel.Size = new System.Drawing.Size(207, 25);
+            this.PilotNameLabel.TabIndex = 17;
+            this.PilotNameLabel.Text = "Pilot";
             // 
             // OCTMain
             // 
@@ -1124,6 +1150,8 @@
         private System.Windows.Forms.LinkLabel DebugFileNameLink;
         private System.Windows.Forms.Button MapRefreshButton;
         private System.Windows.Forms.ToolTip MapsToolTip;
+        private System.Windows.Forms.LinkLabel OverloadLog;
+        private System.Windows.Forms.LinkLabel MailLinkLabel;
     }
 }
 

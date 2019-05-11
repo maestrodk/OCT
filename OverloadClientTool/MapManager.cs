@@ -55,7 +55,7 @@ namespace OverloadClientTool
         /// </summary>
         public bool InDLC
         {
-            get { return !String.IsNullOrEmpty(LocalZipFileName) && LocalZipFileName.Contains(Path.PathSeparator + "DLC" + Path.PathSeparator); }
+            get { return !String.IsNullOrEmpty(LocalZipFileName) && LocalZipFileName.Contains(Path.DirectorySeparatorChar + "DLC" + Path.DirectorySeparatorChar); }
         }
 
         /// <summary>
