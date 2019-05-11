@@ -885,11 +885,6 @@ namespace OverloadClientTool
 
         }
 
-        private void SearchOverloadButton_MouseHover(object sender, EventArgs e)
-        {
-
-        }
-
         private void OlmodExecutable_DoubleClick(object sender, EventArgs e)
         {
             OlmodExecutable.SelectionLength = 0;
@@ -912,28 +907,43 @@ namespace OverloadClientTool
             Directory.SetCurrentDirectory(save);
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void OlmodReleases_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ProcessStartInfo sInfo = new ProcessStartInfo(linkLabel1.Text);
-            Process.Start(sInfo);
+            try { Process.Start(new ProcessStartInfo(OlmodReleases.Text)); } catch { }
         }
 
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void OlproxyReleases_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ProcessStartInfo sInfo = new ProcessStartInfo(linkLabel2.Text);
-            Process.Start(sInfo);
+            try { Process.Start(new ProcessStartInfo(OlproxyReleases.Text)); } catch { }
         }
 
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        /// <summary>
+        /// Return true only if directory name is valid and exists/is created.
+        /// </summary>
+        /// <param name="directoryName">Name of directory to check/create./param>
+        /// <returns></returns>
+        private bool CheckCreateDirectory(string directoryName)
         {
-            ProcessStartInfo sInfo = new ProcessStartInfo(linkLabel3.Text);
-            Process.Start(sInfo);
+            if (!OverloadClientApplication.ValidDirectoryName(directoryName)) return false;
+            try { Directory.CreateDirectory(directoryName); } catch { }
+            try { return Directory.Exists(directoryName); } catch { return false; }
         }
 
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void PlayOverload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ProcessStartInfo sInfo = new ProcessStartInfo("file:///" + pilotsBackupPath);
-            Process.Start(sInfo);
+            try
+            {
+                ProcessStartInfo sInfo = new ProcessStartInfo(PLayOverloadLinkLabel.Text);
+                Process.Start(sInfo);
+            }
+            catch
+            {
+            }
+        }
+
+        private void OpenPilotsBackupFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (CheckCreateDirectory(pilotsBackupPath)) try { Process.Start(new ProcessStartInfo(@"file:///" + pilotsBackupPath)); } catch { MessageBox.Show("Cannot open pilots backup folder!", "Error"); }
         }
 
         private void EnableDebugCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -942,16 +952,9 @@ namespace OverloadClientTool
             Info((EnableDebugCheckBox.Checked) ? "Debug logging enabled." : "Debug logging disabled.");
         }
 
-        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void OpenDebugFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            try
-            {
-                ProcessStartInfo sInfo = new ProcessStartInfo("file:///" + Path.GetDirectoryName(debugFileName));
-                Process.Start(sInfo);
-            }
-            catch
-            {
-            }
+            if (CheckCreateDirectory(Path.GetDirectoryName(debugFileName))) try { Process.Start(new ProcessStartInfo("file:///" + Path.GetDirectoryName(debugFileName))); } catch { MessageBox.Show("Cannot open debug log folder!", "Error"); }
         }
 
         private void OlmodExecutable_TextChanged(object sender, EventArgs e)
