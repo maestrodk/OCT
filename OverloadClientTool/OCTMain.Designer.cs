@@ -648,7 +648,7 @@
             this.MapRefreshButton.TabIndex = 14;
             this.MapRefreshButton.Text = "Refresh";
             this.MapRefreshButton.UseVisualStyleBackColor = true;
-            this.MapRefreshButton.Click += new System.EventHandler(this.MapRefresh_Click);
+            this.MapRefreshButton.Click += new System.EventHandler(this.MapRefresh_ClickAsync);
             // 
             // PanePilots
             // 

@@ -15,9 +15,12 @@ using System.Timers;
 
 namespace OverloadClientTool
 {
+    /// <summary>
+    /// Overload map definition.
+    /// </summary>
     public class OverloadMap
     {
-        private const string HiddenMarker = "_OCT_Hidden";
+        private const string MapHiddenMarker = "_OCT_Hidden";
 
         public string Url;                          // Null if the map ZIP only exist locally.
         public DateTime DateTime;                   // DateTime of last online map ZIP update as defined in the online JSON map list.
@@ -31,36 +34,40 @@ namespace OverloadClientTool
             this.DateTime = dateTime;
             this.Size = size;
 
+            // Decode URL to create a displayable map ZIP name.
             mapZipName = HttpUtility.UrlDecode(mapZipName);
 
             // If Url is null then get file name only of mapZipName.
-            // Otherwise mapZipName must be online (and without any other URL components but the file name).
+            // Otherwise mapZipName must be online and the name is alread stripped from other URL path segments.
             if (String.IsNullOrEmpty(this.Url))
             {
                 this.LocalZipFileName = mapZipName;
-                this.ZipName = Path.GetFileName(mapZipName).Replace(HiddenMarker, ""); 
+                this.ZipName = Path.GetFileName(mapZipName).Replace(MapHiddenMarker, ""); 
             }
             else
             {
                 this.ZipName = mapZipName;
             }
-
-            // Unescape ZIP file name.
-
         }
 
+        /// <summary>
+        /// Is map local and found in Overload DLC folder?
+        /// </summary>
         public bool InDLC
         {
             get { return !String.IsNullOrEmpty(LocalZipFileName) && LocalZipFileName.Contains(Path.PathSeparator + "DLC" + Path.PathSeparator); }
         }
 
+        /// <summary>
+        /// Is map hidden (ends with hidden marker)?
+        /// </summary>
         public bool Hidden
         {
-            get { return !String.IsNullOrEmpty(LocalZipFileName) && LocalZipFileName.EndsWith(HiddenMarker); }
+            get { return !String.IsNullOrEmpty(LocalZipFileName) && LocalZipFileName.EndsWith(MapHiddenMarker); }
         }
 
         /// <summary>
-        /// Map ZIP file is local if a local path is defined.
+        /// Determines if map exists locally.
         /// </summary>
         public bool IsLocal
         {
@@ -86,7 +93,7 @@ namespace OverloadClientTool
 
             try
             {
-                string newLocalZipFileName = LocalZipFileName + HiddenMarker;
+                string newLocalZipFileName = LocalZipFileName + MapHiddenMarker;
                 File.Move(LocalZipFileName, newLocalZipFileName);
                 LocalZipFileName = newLocalZipFileName;
             }
@@ -102,7 +109,7 @@ namespace OverloadClientTool
 
             try
             {
-                string newLocalZipFileName = LocalZipFileName.Replace(HiddenMarker, "");
+                string newLocalZipFileName = LocalZipFileName.Replace(MapHiddenMarker, "");
                 File.Move(LocalZipFileName, newLocalZipFileName);
                 LocalZipFileName = newLocalZipFileName;                
             }
@@ -127,7 +134,11 @@ namespace OverloadClientTool
             return result.Trim();
         }
 
-        public string ToolTip
+
+        /// <summary>
+        /// On Windows this method is used for a ToolTip display when the mouse i hovering over a specific map.
+        /// </summary>
+        public string DisplayMapInfo
         {
             get
             {
@@ -150,7 +161,7 @@ namespace OverloadClientTool
         /// <returns></returns>
         public bool SameZipFileName(OverloadMap compareToMap)
         {
-            return (compareToMap.ZipName.Replace(HiddenMarker, "").ToLower() == this.ZipName.ToLower().Replace(HiddenMarker, ""));
+            return (compareToMap.ZipName.Replace(MapHiddenMarker, "").ToLower() == this.ZipName.ToLower().Replace(MapHiddenMarker, ""));
         }
 
         /// <summary>
@@ -160,7 +171,7 @@ namespace OverloadClientTool
         /// <returns></returns>
         public bool SameZipFileName(string compareToZipName)
         {
-            return (compareToZipName.Replace(HiddenMarker, "").ToLower() == this.ZipName.ToLower().Replace(HiddenMarker, ""));
+            return (compareToZipName.Replace(MapHiddenMarker, "").ToLower() == this.ZipName.ToLower().Replace(MapHiddenMarker, ""));
         }
     }
 
@@ -183,6 +194,8 @@ namespace OverloadClientTool
 
         // Delegate for sending log messages to main application.
         public delegate void LogMessageDelegate(string message);
+
+        // The loggers must be able to resolve any thread/invoke issues.
         private LogMessageDelegate logger = null;
         private LogMessageDelegate loggerError = null;
 
@@ -192,9 +205,8 @@ namespace OverloadClientTool
         public int Updated = 0;
         public int Errors = 0;
 
-        // Parent form.
-        private OCTMain parent;
-
+        public bool OnlyUpdateExistingMaps { get; set; }
+        
         // Set delegate for logging.
         public void SetLogger(LogMessageDelegate logger = null, LogMessageDelegate errorLogger = null)
         {
@@ -206,13 +218,13 @@ namespace OverloadClientTool
             }
         }
 
-        // Log an informational message.
+        /// <summary>
+        /// Send log message to parent. If parent is an UI thread then it must handle any 'Invoke' issues.
+        /// </summary>
+        /// <param name="s"></param>
         void LogMessage(string s)
         {
-            parent.UIThread(delegate
-            {
-                logger?.Invoke(s);
-            });
+            logger?.Invoke(s);
         }
 
         // Log an error message.
@@ -223,11 +235,9 @@ namespace OverloadClientTool
         }
 
         // Prevent default constructor.
-        private OverloadMapManager() { }
-
-        public OverloadMapManager(OCTMain parent)
+        public OverloadMapManager(bool onlyExistingMaps = false)
         {
-            this.parent = parent;
+            OnlyUpdateExistingMaps = onlyExistingMaps;
         }
 
         /// <summary>
@@ -463,7 +473,7 @@ namespace OverloadClientTool
                 else
                 {
                     // Only update existing maps?
-                    if (parent.UpdateOnlyExistingMaps) return false;
+                    if (OnlyUpdateExistingMaps) return false;
                 }
             }
 
@@ -609,371 +619,5 @@ namespace OverloadClientTool
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
         }
-    }
-
-    public partial class OCTMain
-    {
-        // BackgroundWorker mapsBackgroundWorker = null;
-
-        private object mapChangeLock = new object();
-
-        private static bool SameMap(OverloadMap map1, OverloadMap map2)
-        {
-            return (map1.InDLC == map2.InDLC) && (map1.ZipName.ToLower() == map2.ZipName.ToLower());
-        }
-
-        private void UpdateMapList()
-        {
-            string appPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Revival");
-            appPath = Path.Combine(appPath, "Overload");
-
-            // Construct the paths to where local maps can be stored.
-            string dlcFolder = (UseDLCLocation && OverloadClientApplication.ValidDirectoryName(OverloadPath)) ? Path.Combine(OverloadPath, "DLC") : null;
-            string appFolder = OverloadClientApplication.ValidDirectoryName(appPath) ? appPath : null;
-
-            mapManager.UpdateMapList(MapListUrl, dlcFolder, appFolder);
-        }
-
-        private void InitMapsListBox()
-        {
-            LogDebugMessage("InitMapsListBox()");
-
-            UpdateMapList();
-            UpdateListBox();
-            SetMapButtons();
-
-            // Begin monitoring folder.
-            // mapsBackgroundWorker = new BackgroundWorker();
-            // mapsBackgroundWorker.DoWork += BackgroundMapsChecker;
-            // mapsBackgroundWorker.RunWorkerAsync();
-        }
-
-        private void SetMapButtons()
-        {
-            if (MapsListBox.SelectedIndex >= 0)
-            {
-                OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[MapsListBox.SelectedIndex]).Value;
-
-                MapHideButton.Text = (map.Hidden) ? "Unhide" : "Hide";
-
-                MapHideButton.Enabled = map.IsLocal;
-                MapDeleteButton.Enabled = map.IsLocal;
-                MapHideButton.Enabled = map.IsLocal;
-                MapRefreshButton.Enabled = map.IsOnline;
-            }
-            else
-            {
-                MapDeleteButton.Enabled = false;
-                MapHideButton.Text = "Hide";
-                MapHideButton.Enabled = false;
-                MapRefreshButton.Enabled = false;
-            }
-        }
-
-        #region MaybeImplementLater
-        /****
-        private void StopMapsMonitoring()
-        {
-            if (mapsBackgroundWorker != null)
-            {
-                mapsBackgroundWorker.DoWork -= BackgroundMapsChecker;
-                mapsBackgroundWorker.Dispose();
-            }
-        }
-
-        private void BackgroundMapsChecker(object sender, DoWorkEventArgs e)
-        {
-            while (true)
-            {
-                Thread.Sleep(250);
-
-                lock (mapChangeLock)
-                {
-                    this.UIThread(delegate
-                    {
-                        CheckAndUpdateMaplist();
-
-                        MapHideButton.Enabled = (MapsListBox.SelectedIndex >= 0);
-                        MapDeleteButton.Enabled = (MapsListBox.SelectedIndex >= 0);
-                        MapRefreshButton.Enabled = (MapsListBox.SelectedIndex >= 0);
-                    });
-                }
-            }
-        }
-
-        private void CheckAndUpdateMaplist()
-        {
-            List<MapFile> mapsInFolder = LocalMapFiles;
-
-            // See if update is required.
-            bool update = (mapsInFolder.Count != currentMaps.Count);
-
-            if (!update)
-            {
-                foreach (MapFile map1 in mapsInFolder)
-                {
-                    bool found = false;
-                    foreach (MapFile map2 in currentMaps) if (!SameMap(map1, map2)) found = true;
-                    update = !found;
-                }
-            }
-
-            if (update)
-            {
-                // Update map list and refresh listbox content.
-                currentMaps = mapsInFolder;
-                MapsListBox.Items.Clear();
-                foreach (MapFile mapFile in currentMaps) MapsListBox.Items.Add(mapFile);
-
-                MapHideButton.Enabled = (MapsListBox.SelectedIndex >= 0);
-                MapDeleteButton.Enabled = (MapsListBox.SelectedIndex >= 0);
-            }
-        }
-        ******/
-        #endregion
-
-        private void MapDelete_Click(object sender, EventArgs e)
-        {
-            if (MapsListBox.SelectedIndex >= 0)
-            {
-                OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[MapsListBox.SelectedIndex]).Value;
-                if (!map.IsLocal) return;
-
-                if (MessageBox.Show(String.Format($"Delete map '{map.ZipName}' from disk?"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    lock (mapChangeLock)
-                    {
-                        try
-                        {
-                            MapsListBox.Items.Remove(map);
-                            File.Delete(map.LocalZipFileName);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(String.Format($"Whoops! Cannot delete map '{map.ZipName}': {ex.Message}"));
-                        }
-
-                        UpdateMapList();
-                        UpdateListBox();
-                    }
-                }
-            }
-        }
-
-        private void MapsListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            lock (mapChangeLock) SetMapButtons();
-        }
-
-        private void MapRefresh_Click(object sender, EventArgs e)
-        {
-            OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[MapsListBox.SelectedIndex]).Value;
-
-            if (map.Hidden)
-            {
-                MessageBox.Show("Cannot refresh a hidden map!", "Map is hidden");
-                return;
-            }
-
-            mapManager.UpdateMap(map, true);
-            UpdateListBox();
-        }
-
-        private void MapHideButton_Click(object sender, EventArgs e)
-        {
-            OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[MapsListBox.SelectedIndex]).Value;
-            if (!map.IsLocal) return;
-
-            try
-            {
-                if (map.Hidden) map.Unhide();
-                else map.Hide();
-
-                UpdateListBox();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(String.Format($"Whoops! Cannot {((map.Hidden) ? "unhide" : "hide")} map {map.ZipName}: {ex.Message}"));
-                SetMapButtons();
-            }
-        }
-
-        private void UpdateListBox(string focusName = null)
-        {
-            MapsListBox.Items.Clear();
-            MapsListBox.DisplayMember = "Value";
-            MapsListBox.ValueMember = "Value";
-
-            foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.Maps)
-            {
-                if (setMap.Value.IsLocal) MapsListBox.Items.Add(setMap);
-            }
-
-            if (!String.IsNullOrEmpty(focusName))
-            {
-                for (int i = 0; i < MapsListBox.Items.Count; i++)
-                {
-                    OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[i]).Value;
-                    if (map.SameZipFileName(focusName))
-                    {
-                        MapsListBox.SelectedIndex = i;
-                        return;
-                    }
-                }
-            }
-
-            SetMapButtons();
-        }
-
-        private void MapUpdateButton_Click(object sender, EventArgs e)
-        {
-            MapUpdateButton.Enabled = false;
-
-            // Start updating maps in a separate thread.
-            mapManagerThread = new Thread(UpdateMapThread);
-            mapManagerThread.IsBackground = true;
-            mapManagerThread.Start();
-        }
-
-        /// <summary>
-        /// Update maps in the background.
-        /// </summary>
-        private void UpdateMapThread()
-        {
-            this.UIThread(delegate
-            {
-                UpdatingMaps.Visible = true;
-                MapsListBox.Enabled = false;
-
-                MapRefreshButton.Enabled = false;
-                MapDeleteButton.Enabled = false;
-                MapHideButton.Enabled = false;
-
-                UseDLCLocationCheckBox.Enabled = false;
-                AutoUpdateMapsCheckBox.Enabled = false;
-                OnlyUpdateExistingMapsCheckBox.Enabled = false;
-
-                if (UpdateOnlyExistingMaps) Verbose(String.Format("Checking for updated maps."));
-                else Verbose(String.Format("Checking for new/updated maps."));
-
-                Verbose(String.Format("Overload " + ((UseDLCLocation) ? "DLC" : "application") + " folder used for maps."));
-            });
-
-            // UpdateAllMaps() must not touch UI elements!
-            mapManager.UpdateAllMaps(OnlineMapJsonUrl.Text);
-
-            this.UIThread(delegate
-            {
-                if (UpdateOnlyExistingMaps) Verbose(String.Format($"Map check finished: {mapManager.Checked} maps, {mapManager.Updated} updated."));
-                else Verbose(String.Format($"Map check finished: {mapManager.Checked} maps checked, {mapManager.Created} created, {mapManager.Updated} updated."));
-
-                UpdateListBox();
-
-                UpdatingMaps.Visible = false;
-                MapUpdateButton.Enabled = true;
-                MapsListBox.Enabled = true;
-
-                UseDLCLocationCheckBox.Enabled = true;
-                AutoUpdateMapsCheckBox.Enabled = true;
-                OnlyUpdateExistingMapsCheckBox.Enabled = true;
-
-                SetMapButtons();
-            });
-        }
-
-        /// <summary>
-        /// Move maps from either of the two possible directorys.
-        /// </summary>
-        /// <param name="overloadMapLocation"></param>
-        /// <param name="dlcLocation"></param>
-        private void MoveMaps(string source, string destination)
-        {
-            string[] files = Directory.GetFiles(source, "*.zip");
-            foreach (string fileName in files)
-            {
-                // Exclude DLC content (only move maps).
-                bool move = true;
-                string test = Path.GetFileNameWithoutExtension(fileName).ToUpper();
-                if (!fileName.ToLower().EndsWith(".zip") || (test.Contains("DLC0") || test.Contains("DLC1"))) move = false;
-
-                if (move) System.IO.File.Move(Path.Combine(source, Path.GetFileName(fileName)), Path.Combine(destination, Path.GetFileName(fileName)));
-            }
-        }
-
-        private void UseDLCLocationCheckBox_Click(object sender, EventArgs e)
-        {
-            string overloadMapLocation = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\Revival\Overload";
-
-            if (UseDLCLocationCheckBox.Checked == false)
-            {
-                // Setting the check mark.
-                DialogResult result = MessageBox.Show("Move existing maps to the Overload DLC directory?", "Move maps?", MessageBoxButtons.YesNoCancel);
-                switch (result)
-                {
-                    case DialogResult.Cancel:
-                        break;
-
-                    case DialogResult.No:
-                        UseDLCLocationCheckBox.Checked = true;
-                        Verbose(String.Format("Overload DLC directory used for maps."));
-                        break;
-
-                    default:
-                        // TO-DO: Move existing maps.
-                        UseDLCLocationCheckBox.Checked = true;
-                        Verbose(String.Format("Overload DLC directory used for maps."));
-                        MoveMaps(overloadMapLocation, dlcLocation);
-                        break;
-                }
-            }
-            else
-            {
-                // Clearing the check mark.
-                DialogResult result = MessageBox.Show("Move existing maps to [ProgramData]\\Overload\\Revival directory?", "Move maps?", MessageBoxButtons.YesNoCancel);
-                switch (result)
-                {
-                    case DialogResult.Cancel:
-                        break;
-
-                    case DialogResult.No:
-                        Verbose(String.Format("Overload ProgramData directory used for maps."));
-                        UseDLCLocationCheckBox.Checked = false;
-                        break;
-
-                    default:
-                        Verbose(String.Format("Overload ProgramData directory used for maps."));
-                        MoveMaps(dlcLocation, overloadMapLocation);
-                        UseDLCLocationCheckBox.Checked = false;
-                        break;
-                }
-            }
-        }
-
-        private void AutoUpdateMaps_Click(object sender, EventArgs e)
-        {
-            AutoUpdateMaps = AutoUpdateMapsCheckBox.Checked;
-        }
-
-        private void OnlyUpdateExistingMapsCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateOnlyExistingMaps = OnlyUpdateExistingMapsCheckBox.Checked;
-        }
-
-        private void MapsListBox_MouseMove(object sender, MouseEventArgs e)
-        {
-            ListBox lb = (ListBox)sender;
-            int index = lb.IndexFromPoint(e.Location);
-
-            if (index >= 0 && index < lb.Items.Count)
-            {
-                OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[index]).Value;
-                string toolTipString = map.ToolTip;
-
-                // Don't do anything tooltip text is the current tooltip .
-                if (MapsToolTip.GetToolTip(lb) != toolTipString) MapsToolTip.SetToolTip(lb, toolTipString);
-            }
-            else
-                MapsToolTip.Hide(lb);
-        }
-    }
+    }   
 }
