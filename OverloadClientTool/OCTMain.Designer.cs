@@ -75,6 +75,7 @@
             this.MapRefreshButton = new System.Windows.Forms.Button();
             this.PanePilots = new System.Windows.Forms.Panel();
             this.OpenPilotsBackupFolder = new System.Windows.Forms.LinkLabel();
+            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.PilotMakeActiveButton = new System.Windows.Forms.Button();
             this.AutoPilotsBackupCheckbox = new System.Windows.Forms.CheckBox();
             this.PaneSelectOlproxy = new System.Windows.Forms.Button();
@@ -92,6 +93,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.PaneOlmod = new System.Windows.Forms.Panel();
             this.OlmodReleases = new System.Windows.Forms.LinkLabel();
+            this.UpdateOlmod = new System.Windows.Forms.Button();
+            this.UseOlmodGameDirArg = new System.Windows.Forms.CheckBox();
+            this.AutoUpdateOlmod = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.OlmodExecutable = new System.Windows.Forms.TextBox();
             this.PaneButtonLine = new System.Windows.Forms.Panel();
@@ -101,7 +105,6 @@
             this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
             this.EnableDebugCheckBox = new System.Windows.Forms.CheckBox();
             this.MapsToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.OverloadGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
@@ -683,6 +686,18 @@
             this.OpenPilotsBackupFolder.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
             this.OpenPilotsBackupFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OpenPilotsBackupFolder_LinkClicked);
             // 
+            // PilotNameLabel
+            // 
+            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.PilotNameLabel.Enabled = false;
+            this.PilotNameLabel.Location = new System.Drawing.Point(226, 207);
+            this.PilotNameLabel.Multiline = false;
+            this.PilotNameLabel.Name = "PilotNameLabel";
+            this.PilotNameLabel.ReadOnly = true;
+            this.PilotNameLabel.Size = new System.Drawing.Size(207, 25);
+            this.PilotNameLabel.TabIndex = 17;
+            this.PilotNameLabel.Text = "Pilot";
+            // 
             // PilotMakeActiveButton
             // 
             this.PilotMakeActiveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -875,7 +890,10 @@
             // 
             this.PaneOlmod.BackColor = System.Drawing.Color.LightSlateGray;
             this.PaneOlmod.Controls.Add(this.OlmodReleases);
+            this.PaneOlmod.Controls.Add(this.UpdateOlmod);
             this.PaneOlmod.Controls.Add(this.label2);
+            this.PaneOlmod.Controls.Add(this.UseOlmodGameDirArg);
+            this.PaneOlmod.Controls.Add(this.AutoUpdateOlmod);
             this.PaneOlmod.Controls.Add(this.UseOlmodCheckBox);
             this.PaneOlmod.Controls.Add(this.groupBox5);
             this.PaneOlmod.Location = new System.Drawing.Point(529, 393);
@@ -888,7 +906,7 @@
             // 
             this.OlmodReleases.AutoSize = true;
             this.OlmodReleases.LinkColor = System.Drawing.Color.SteelBlue;
-            this.OlmodReleases.Location = new System.Drawing.Point(27, 146);
+            this.OlmodReleases.Location = new System.Drawing.Point(22, 142);
             this.OlmodReleases.Name = "OlmodReleases";
             this.OlmodReleases.Size = new System.Drawing.Size(211, 13);
             this.OlmodReleases.TabIndex = 17;
@@ -897,10 +915,50 @@
             this.OlmodReleases.VisitedLinkColor = System.Drawing.Color.SteelBlue;
             this.OlmodReleases.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OlmodReleases_LinkClicked);
             // 
+            // UpdateOlmod
+            // 
+            this.UpdateOlmod.Enabled = false;
+            this.UpdateOlmod.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UpdateOlmod.Location = new System.Drawing.Point(420, 136);
+            this.UpdateOlmod.Name = "UpdateOlmod";
+            this.UpdateOlmod.Size = new System.Drawing.Size(58, 24);
+            this.UpdateOlmod.TabIndex = 9;
+            this.UpdateOlmod.Text = "Update";
+            this.UpdateOlmod.UseVisualStyleBackColor = true;
+            this.UpdateOlmod.Click += new System.EventHandler(this.UpdateOlmod_Click);
+            // 
+            // UseOlmodGameDirArg
+            // 
+            this.UseOlmodGameDirArg.AutoSize = true;
+            this.UseOlmodGameDirArg.Checked = true;
+            this.UseOlmodGameDirArg.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UseOlmodGameDirArg.Location = new System.Drawing.Point(298, 26);
+            this.UseOlmodGameDirArg.Name = "UseOlmodGameDirArg";
+            this.UseOlmodGameDirArg.Size = new System.Drawing.Size(120, 17);
+            this.UseOlmodGameDirArg.TabIndex = 5;
+            this.UseOlmodGameDirArg.Text = "Use -gamedir option";
+            this.MapsToolTip.SetToolTip(this.UseOlmodGameDirArg, "Enable this to use Olmod \'-gamedir\' to tell Olmod where Overload is installed");
+            this.UseOlmodGameDirArg.UseVisualStyleBackColor = true;
+            this.UseOlmodGameDirArg.CheckedChanged += new System.EventHandler(this.UseGameDirArg_CheckedChanged);
+            // 
+            // AutoUpdateOlmod
+            // 
+            this.AutoUpdateOlmod.AutoSize = true;
+            this.AutoUpdateOlmod.Checked = true;
+            this.AutoUpdateOlmod.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AutoUpdateOlmod.Location = new System.Drawing.Point(149, 26);
+            this.AutoUpdateOlmod.Name = "AutoUpdateOlmod";
+            this.AutoUpdateOlmod.Size = new System.Drawing.Size(117, 17);
+            this.AutoUpdateOlmod.TabIndex = 5;
+            this.AutoUpdateOlmod.Text = "Auto-update Olmod";
+            this.MapsToolTip.SetToolTip(this.AutoUpdateOlmod, "Enable this to automatically update Olmod when OCT starts");
+            this.AutoUpdateOlmod.UseVisualStyleBackColor = true;
+            this.AutoUpdateOlmod.CheckedChanged += new System.EventHandler(this.AutoUpdateOlmod_CheckedChanged);
+            // 
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.OlmodExecutable);
-            this.groupBox5.Location = new System.Drawing.Point(25, 61);
+            this.groupBox5.Location = new System.Drawing.Point(25, 57);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(453, 61);
             this.groupBox5.TabIndex = 11;
@@ -998,18 +1056,6 @@
             this.MapsToolTip.AutoPopDelay = 5000;
             this.MapsToolTip.InitialDelay = 1000;
             this.MapsToolTip.ReshowDelay = 100;
-            // 
-            // PilotNameLabel
-            // 
-            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PilotNameLabel.Enabled = false;
-            this.PilotNameLabel.Location = new System.Drawing.Point(226, 207);
-            this.PilotNameLabel.Multiline = false;
-            this.PilotNameLabel.Name = "PilotNameLabel";
-            this.PilotNameLabel.ReadOnly = true;
-            this.PilotNameLabel.Size = new System.Drawing.Size(207, 25);
-            this.PilotNameLabel.TabIndex = 17;
-            this.PilotNameLabel.Text = "Pilot";
             // 
             // OCTMain
             // 
@@ -1152,6 +1198,9 @@
         private System.Windows.Forms.ToolTip MapsToolTip;
         private System.Windows.Forms.LinkLabel OverloadLog;
         private System.Windows.Forms.LinkLabel MailLinkLabel;
+        private System.Windows.Forms.CheckBox UseOlmodGameDirArg;
+        private System.Windows.Forms.CheckBox AutoUpdateOlmod;
+        private System.Windows.Forms.Button UpdateOlmod;
     }
 }
 

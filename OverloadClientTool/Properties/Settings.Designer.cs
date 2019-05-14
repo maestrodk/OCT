@@ -214,5 +214,29 @@ namespace OverloadClientTool.Properties {
                 this["UpdateOnlyExistingMaps"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PassGameDirToOlmod {
+            get {
+                return ((bool)(this["PassGameDirToOlmod"]));
+            }
+            set {
+                this["PassGameDirToOlmod"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoUpdateOlmod {
+            get {
+                return ((bool)(this["AutoUpdateOlmod"]));
+            }
+            set {
+                this["AutoUpdateOlmod"] = value;
+            }
+        }
     }
 }

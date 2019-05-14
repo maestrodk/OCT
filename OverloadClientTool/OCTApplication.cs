@@ -35,11 +35,12 @@ namespace OverloadClientTool
             }
         }
 
-        public static bool ValidFileName(string path)
+        public static bool ValidFileName(string path, bool mustExist = false)
         {
             try
             {
                 bool test = new FileInfo(path).Exists;
+                if (mustExist) return test;
                 return true;
             }
             catch
@@ -48,16 +49,62 @@ namespace OverloadClientTool
             }
         }
 
-        public static bool ValidDirectoryName(string path)
+        public static bool ValidDirectoryName(string path, bool mustExist = false)
         {
             try
             {
                 bool test = new DirectoryInfo(path).Exists;
+                if (mustExist) return test;
                 return true;
             }
             catch
             {
                 return false;
+            }
+        }
+
+        public static string GetFileVersion(string fileName)
+        {
+            try
+            {
+                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(fileName);
+                return fileVersionInfo.FileVersion;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static string GetFileDescription(string fileName)
+        {
+            try
+            {
+                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(fileName);
+                return fileVersionInfo.FileDescription;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static void RemoveDirectory(string path)
+        {
+            if (!ValidDirectoryName(path, true)) return;
+
+            try
+            {
+                DirectoryInfo dir = new DirectoryInfo(path);
+                foreach (FileInfo fi in dir.GetFiles()) fi.Delete();
+                foreach (DirectoryInfo di in dir.GetDirectories())
+                {
+                    RemoveDirectory(di.FullName);
+                    di.Delete();
+                }
+            }
+            catch
+            {
             }
         }
 

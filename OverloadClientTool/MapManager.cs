@@ -134,7 +134,6 @@ namespace OverloadClientTool
             return result.Trim();
         }
 
-
         /// <summary>
         /// On Windows this method is used for a ToolTip display when the mouse i hovering over a specific map.
         /// </summary>

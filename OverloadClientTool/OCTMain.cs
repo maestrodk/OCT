@@ -15,31 +15,7 @@ namespace OverloadClientTool
 {
     public partial class OCTMain : Form
     {
-        // http://ajaxload.info/
-        // Arrows light: ffffff / 4169E1
-        // Arrows dark: 3232328 / 7CEFA
-
         public Theme theme = Theme.GetDarkTheme;
-
-        /*
-        Color DarkButtonEnabledBackColor = Color.FromArgb(128, 128, 128);
-        Color LightButtonEnabledBackColor = Color.FromArgb(200, 200, 200);
-
-        Color DarkButtonEnabledForeColor = Color.FromArgb(255, 255, 255);
-        Color LightButtonEnabledForeColor = Color.FromArgb(64, 64, 64);
-
-        Color DarkButtonDisabledBackColor = Color.FromArgb(96, 96, 96);
-        Color LightButtonDisabledBackColor = Color.FromArgb(224, 224, 224);
-
-        Color DarkButtonDisabledForeColor = Color.FromArgb(255, 255, 255);
-        Color LightButtonDisabledForeColor = Color.FromArgb(192, 192, 192);
-
-        Color DarkControlBackColor = Color.FromArgb(32, 32, 32);  // 0x32
-        Color LightControlBackColor = Color.FromArgb(243, 248, 255);
-
-        Color DarkBackColor = Color.FromArgb(50, 50, 50);
-        Color LightBackColor = Color.White;
-        */
 
         private bool autoStart = false;
         private ListViewLogger logger = null;
@@ -51,6 +27,8 @@ namespace OverloadClientTool
         private Thread mapManagerThread = null;
 
         private PaneController paneController = null;
+
+        private OlmodManager olmodManager = null;
 
         // This matches MJDict defined on Olproxy.
         private Dictionary<string, object> olproxyConfig = new Dictionary<string, object>();
@@ -112,7 +90,7 @@ namespace OverloadClientTool
             paneController.SetupPaneButton(PaneSelectOptions, PaneOptions);
 
             // Load user preferences.
-            LoadSettings();            
+            LoadSettings();
 
             // Init pilots listbox start monitoring.
             InitPilotsListBox();
@@ -126,6 +104,9 @@ namespace OverloadClientTool
 
             // Set logging for map manager.
             mapManager.SetLogger(Info, Error);
+
+            // Init Olmod manager.
+            olmodManager = new OlmodManager(Info, Error);
 
             // Create properties for Olproxy thread (will be update from TextBox fields whenever Olproxy is restarted).
             olproxyConfig.Add("isServer", false);
@@ -174,6 +155,9 @@ namespace OverloadClientTool
             // Check if we should auto-update maps on startup.
             if (AutoUpdateMapsCheckBox.Checked) MapUpdateButton_Click(null, null);
 
+            // Check if we should auto-update Olmod on startup.
+            if (OlmodAutoUpdate) UpdateOlmod_Click(null, null);
+
             // Check for startup options.
             //OverloadClientToolNotifyIcon.Icon = Properties.Resources.OST;
             this.ShowInTaskbar = true;
@@ -195,7 +179,7 @@ namespace OverloadClientTool
             }
 
             Defocus();
-       }
+        }
 
         [DllImport("shell32.dll")]
         static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
@@ -210,7 +194,7 @@ namespace OverloadClientTool
                 try
                 {
                     int hr = SHGetKnownFolderPath(localLowId, 0, IntPtr.Zero, out pszPath);
-                    if (hr >= 0)  return Marshal.PtrToStringAuto(pszPath);
+                    if (hr >= 0) return Marshal.PtrToStringAuto(pszPath);
 
                     throw Marshal.GetExceptionForHR(hr);
                 }
@@ -411,6 +395,8 @@ namespace OverloadClientTool
 
                     StartButton.Text = (olproxyRunning || overloadRunning || olmodRunning) ? "Stop" : "Start";
 
+                    UpdateOlmod.Enabled = !olmodRunning;
+
                     if (StartButton.Enabled)
                     {
                         StartButton.BackColor = theme.ButtonEnabledBackColor;
@@ -476,7 +462,7 @@ namespace OverloadClientTool
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
-        {          
+        {
             // Kill embedded Olproxy.
             KillOlproxyThread();
 
@@ -511,10 +497,6 @@ namespace OverloadClientTool
             TestSetTextBoxColor(OverloadExecutable);
             TestSetTextBoxColor(OlproxyExecutable);
             TestSetTextBoxColor(OlmodExecutable);
-
-            UseOlmod = UseOlmodCheckBox.Checked;
-            OlproxyEmbedded = UseEmbeddedOlproxy.Checked;
-
             ValidateButton(StartButton, theme);
         }
 
@@ -662,7 +644,7 @@ namespace OverloadClientTool
 
             // Make sure Oloroxy.exe exists.
             if (new FileInfo(OlproxyExecutable.Text).Exists == false)
-            { 
+            {
                 MessageBox.Show("Missing Olproxy.exe!");
                 return;
             }
@@ -686,8 +668,16 @@ namespace OverloadClientTool
             string name = null;
             string app = null;
 
+            // Used if Olmod is enabled.
+            string gameDir = null;
+            if (OverloadClientApplication.ValidDirectoryName(Path.GetDirectoryName(OverloadExecutable.Text), true))
+            {
+                gameDir = "-gamedir " + Path.GetDirectoryName(OverloadExecutable.Text);
+            }
+
+
             if (AutoPilotsBackupCheckbox.Checked) PilotBackupButton_Click(null, null);
-            
+
             if (UseOlmodCheckBox.Checked)
             {
                 if (System.IO.File.Exists(olmodExe))
@@ -744,7 +734,7 @@ namespace OverloadClientTool
 
         private void KillRunningProcess(string name)
         {
-            foreach (Process process in Process.GetProcesses())if (process.ProcessName.ToLower() == name.ToLower()) process.Kill();
+            foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) process.Kill();
         }
 
         // listBoxLog.Log(Level.Debug, "A debug level message");
@@ -870,6 +860,7 @@ namespace OverloadClientTool
         private void UseDLCLocationCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             UseDLCLocation = UseDLCLocationCheckBox.Checked;
+            Info((UseOlmodCheckBox.Checked) ? "Use DLC folder for maps." : "Use Overload application folder for maps.");
         }
 
         private void SearchOverloadButton_Click(object sender, EventArgs e)
@@ -968,6 +959,19 @@ namespace OverloadClientTool
         private void OnlineMapJsonUrl_TextChanged(object sender, EventArgs e)
         {
             MapListUrl = OnlineMapJsonUrl.Text;
+        }
+
+        private void InfoLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc.StartInfo.FileName = "mailto:mickdk2010@gmail.com?subject=Overload Client Tool";
+                proc.Start();
+            }
+            catch
+            {
+            }
         }
 
         #region MapManager UI
@@ -1308,17 +1312,70 @@ namespace OverloadClientTool
         }
         #endregion
 
-        private void InfoLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void UseGameDirArg_CheckedChanged(object sender, EventArgs e)
         {
+            PassGameDirToOlmod = UseOlmodGameDirArg.Checked;
+        }
+
+        #region Olmod updating
+
+        private void UpdateOlmod_Click(object sender, EventArgs e)
+        {
+            if (IsOlmodRunning)
+            {
+                Error("Cannot update Olmod when it is running.");
+                return;
+            }
+
+            // Decide where to unpack Olmod ZIP.
+            string olmodInstallFolder = null;
+
+            if (OverloadClientApplication.ValidFileName(OlmodPath, true)) olmodInstallFolder = Path.GetDirectoryName(OlmodPath);
+            if ((olmodInstallFolder == null) && (OverloadClientApplication.ValidFileName(OverloadPath, true))) olmodInstallFolder = Path.GetDirectoryName(OverloadPath);
+
+            if (olmodInstallFolder == null)
+            {
+                Error("No valid folder found to install/update Olmod.");
+                return;
+            }
+
+            // Get latest online release info.
+            OlmodManager.OlmodRelease latest = olmodManager.GetLastestRelease;
+            if (latest == null)
+            {
+                Error("Unable to get latest Olmod release info from Github.");
+                return;
+            }
+
+            // Check if update is required. We use the ZIP date to stamp Olmod.exe
+            if (OverloadClientApplication.ValidFileName(OlmodPath, true))
+            {
+                if (new FileInfo(OlmodPath).CreationTimeUtc == latest.Created)
+                {
+                    Info("Olmod is up to date.");
+                    return;
+                }
+            }
+
+            Info("Download and installing latest Olmod release from Github.");
+
             try
             {
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                proc.StartInfo.FileName = "mailto:mickdk2010@gmail.com?subject=Overload Client Tool";
-                proc.Start();
+                olmodManager.DownloadAndInstallOlmod(latest, olmodInstallFolder);
             }
             catch
             {
             }
+            finally
+            {
+                ValidateSettings();
+            }
         }
+
+        private void AutoUpdateOlmod_CheckedChanged(object sender, EventArgs e)
+        {
+            OlmodAutoUpdate = AutoUpdateOlmod.Checked;
+        }
+        #endregion
     }
 }
