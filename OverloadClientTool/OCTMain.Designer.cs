@@ -78,6 +78,9 @@
             this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.PilotMakeActiveButton = new System.Windows.Forms.Button();
             this.AutoPilotsBackupCheckbox = new System.Windows.Forms.CheckBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.PilotXPTextBox = new System.Windows.Forms.TextBox();
+            this.PilotXPSetButton = new System.Windows.Forms.Button();
             this.PaneSelectOlproxy = new System.Windows.Forms.Button();
             this.PaneSelectOlmod = new System.Windows.Forms.Button();
             this.PaneOlproxy = new System.Windows.Forms.Panel();
@@ -118,6 +121,7 @@
             this.PaneMaps.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.PanePilots.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.PaneOlproxy.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -665,7 +669,9 @@
             this.PanePilots.Controls.Add(this.PilotDeleteButton);
             this.PanePilots.Controls.Add(this.AutoPilotsBackupCheckbox);
             this.PanePilots.Controls.Add(this.PilotsGroupBox);
+            this.PanePilots.Controls.Add(this.groupBox6);
             this.PanePilots.Controls.Add(this.PilotRenameButton);
+            this.PanePilots.Controls.Add(this.PilotXPSetButton);
             this.PanePilots.Controls.Add(this.PilotCloneButton);
             this.PanePilots.Controls.Add(this.PilotsBackupButton);
             this.PanePilots.Location = new System.Drawing.Point(1059, 43);
@@ -723,6 +729,37 @@
             this.MapsToolTip.SetToolTip(this.AutoPilotsBackupCheckbox, "Check this to save a ZIP\'ed backup of all pilots when Overload/Olmod starts");
             this.AutoPilotsBackupCheckbox.UseVisualStyleBackColor = true;
             this.AutoPilotsBackupCheckbox.CheckedChanged += new System.EventHandler(this.AutoPilotsBackupCheckbox_CheckedChanged);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.PilotXPTextBox);
+            this.groupBox6.Location = new System.Drawing.Point(362, 23);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(112, 61);
+            this.groupBox6.TabIndex = 11;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Pilot XP";
+            // 
+            // PilotXPTextBox
+            // 
+            this.PilotXPTextBox.BackColor = System.Drawing.Color.Gray;
+            this.PilotXPTextBox.Location = new System.Drawing.Point(17, 23);
+            this.PilotXPTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.PilotXPTextBox.Name = "PilotXPTextBox";
+            this.PilotXPTextBox.Size = new System.Drawing.Size(74, 20);
+            this.PilotXPTextBox.TabIndex = 3;
+            this.PilotXPTextBox.TextChanged += new System.EventHandler(this.PilotXPTextBox_TextChanged);
+            // 
+            // PilotXPSetButton
+            // 
+            this.PilotXPSetButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.PilotXPSetButton.Location = new System.Drawing.Point(411, 90);
+            this.PilotXPSetButton.Name = "PilotXPSetButton";
+            this.PilotXPSetButton.Size = new System.Drawing.Size(63, 23);
+            this.PilotXPSetButton.TabIndex = 14;
+            this.PilotXPSetButton.Text = "Set XP";
+            this.PilotXPSetButton.UseVisualStyleBackColor = true;
+            this.PilotXPSetButton.Click += new System.EventHandler(this.PilotXPSetButton_Click);
             // 
             // PaneSelectOlproxy
             // 
@@ -1118,6 +1155,8 @@
             this.groupBox1.PerformLayout();
             this.PanePilots.ResumeLayout(false);
             this.PanePilots.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.PaneOlproxy.ResumeLayout(false);
             this.PaneOlproxy.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -1216,6 +1255,9 @@
         private System.Windows.Forms.CheckBox AutoUpdateOlmod;
         private System.Windows.Forms.Button UpdateOlmod;
         private System.Windows.Forms.LinkLabel PayPalLink;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.TextBox PilotXPTextBox;
+        private System.Windows.Forms.Button PilotXPSetButton;
     }
 }
 

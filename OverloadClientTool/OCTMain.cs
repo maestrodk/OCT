@@ -1387,8 +1387,7 @@ namespace OverloadClientTool
             }
             catch
             {
-            }
-            
+            }            
         }
     }
 }

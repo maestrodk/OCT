@@ -75,7 +75,7 @@ namespace OverloadClientTool
 
                 if (IsOverloadOrOlmodRunning)
                 {
-                    // Don't allow deleting/renaming if Overload is running.
+                    // Don't allow deleting/renaming/setting XP if Overload is running.
                     delete = false;
                     rename = false;
                     select = false;
@@ -104,6 +104,8 @@ namespace OverloadClientTool
                 }
 
                 OCTMain.ApplyThemeToControl(PanePilots, theme);
+
+                ValidateSetXp();
             });
         }
 
@@ -155,6 +157,16 @@ namespace OverloadClientTool
         private void PilotsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             CheckAndUpdatePilots();
+
+            if (PilotsListBox.SelectedIndex >= 0)
+            {
+                string pilotSelected = (string)PilotsListBox.Items[PilotsListBox.SelectedIndex];
+                GetPilotXP(pilotSelected);
+            }
+            else
+            {
+                GetPilotXP(null);
+            }
         }
 
         private void PilotBackupButton_Click(object sender, EventArgs e)
@@ -456,6 +468,138 @@ namespace OverloadClientTool
                         }
                     }
                 }
+            }
+        }
+
+        private void PilotXPTextBox_TextChanged(object sender, EventArgs e)
+        {
+            ValidateSetXp();
+        }
+
+        /// <summary>
+        /// Let user adjust XP value (but only if Overload/Olmod aren't running).
+        /// </summary>
+        private void ValidateSetXp()
+        {
+            if (PilotsListBox.SelectedIndex >= 0)
+            {
+                PilotXPTextBox.Enabled = true;
+
+                // Indicate invalid value using foreground color.
+                bool ok = false;
+                try
+                {
+                    int xp = Convert.ToInt32(PilotXPTextBox.Text);
+                    if ((xp >= 0) && xp <= 99999) ok = true;
+                }
+                catch
+                {
+                }
+
+                // Set color
+                PilotXPTextBox.ForeColor = (ok) ? activeTextBoxColor: inactiveTextBoxColor;
+
+                // Enable button only if value is OK and Olmod/Overload aren't running.
+                PilotXPSetButton.Enabled = ok && !IsOverloadOrOlmodRunning;
+            }
+            else
+            {
+                // No pilot selected.
+                PilotXPTextBox.Enabled = false;
+                PilotXPSetButton.Enabled = false;
+            }
+        }
+
+        private void GetPilotXP(string pilotName)
+        {
+            if (String.IsNullOrEmpty(pilotName))
+            {
+                PilotXPTextBox.Enabled = false;
+                PilotXPSetButton.Enabled = false;
+                return;
+            }
+
+            try { Directory.CreateDirectory(pilotsPath); } catch { }
+
+            try
+            {
+                string xprefsFileName = Path.Combine(pilotsPath, pilotName + ".xprefs");
+                string xprefs = File.ReadAllText(xprefsFileName);
+                string[] xprefsList = xprefs.Split(";".ToCharArray(), StringSplitOptions.None);
+                for (int i = 0; i < xprefsList.Length; i++)
+                {
+                    if (xprefsList[i].StartsWith("PS_XP2:")) PilotXPTextBox.Text = xprefsList[i].Split(":".ToCharArray(), StringSplitOptions.None)[1];
+                }
+            }
+            catch
+            {
+                PilotXPTextBox.Text = "???";
+            }
+        }
+
+        private void SetPilotXP(string pilotName)
+        {
+            if (String.IsNullOrEmpty(pilotName))
+            {
+                PilotXPTextBox.Enabled = false;
+                PilotXPSetButton.Enabled = false;
+                return;
+            }
+
+            try
+            {
+                bool update = false;
+
+                string xprefsFileName = Path.Combine(pilotsPath, pilotName + ".xprefs");
+                string xprefs = File.ReadAllText(xprefsFileName);
+                string[] xprefsList = xprefs.Split(";".ToCharArray(), StringSplitOptions.None);
+                for (int i = 0; i < xprefsList.Length; i++)
+                {
+                    if (xprefsList[i].StartsWith("PS_XP2:"))
+                    {
+                        string[] xprefsFields = xprefsList[i].Split(":".ToCharArray(), StringSplitOptions.None);
+
+                        if (xprefsFields[1] != PilotXPTextBox.Text)
+                        {
+                            xprefsList[i] = xprefsFields[0] + ":" + PilotXPTextBox.Text + ":" + xprefsFields[2];
+                            update = true;
+                        }
+                    }
+                }
+
+                if (update)
+                {
+                    string text = "";
+                    for (int i = 0; i < xprefsList.Length; i++)
+                    {
+                        text += String.IsNullOrEmpty(text) ? "" : ";";
+                        text += xprefsList[i];
+                    }
+
+                    File.WriteAllText(xprefsFileName, text);
+                }
+
+            }
+            catch
+            {
+                MessageBox.Show($"Cannot update XP for pilot {pilotName}!", "Error");
+            }
+
+            ValidateSetXp();
+        }
+
+        private void PilotXPSetButton_Click(object sender, EventArgs e)
+        {
+            CheckAndUpdatePilots();
+
+            if (PilotsListBox.SelectedIndex >= 0)
+            {
+                string pilotSelected = (string)PilotsListBox.Items[PilotsListBox.SelectedIndex];
+                SetPilotXP(pilotSelected);
+            }
+            else
+            {
+                GetPilotXP(null);
             }
         }
     }
