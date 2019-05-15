@@ -101,6 +101,7 @@
             this.PaneButtonLine = new System.Windows.Forms.Panel();
             this.PaneSelectOptions = new System.Windows.Forms.Button();
             this.PaneOptions = new System.Windows.Forms.Panel();
+            this.PayPalLink = new System.Windows.Forms.LinkLabel();
             this.MailLinkLabel = new System.Windows.Forms.LinkLabel();
             this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
             this.EnableDebugCheckBox = new System.Windows.Forms.CheckBox();
@@ -932,7 +933,7 @@
             this.UseOlmodGameDirArg.AutoSize = true;
             this.UseOlmodGameDirArg.Checked = true;
             this.UseOlmodGameDirArg.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseOlmodGameDirArg.Location = new System.Drawing.Point(298, 26);
+            this.UseOlmodGameDirArg.Location = new System.Drawing.Point(333, 26);
             this.UseOlmodGameDirArg.Name = "UseOlmodGameDirArg";
             this.UseOlmodGameDirArg.Size = new System.Drawing.Size(120, 17);
             this.UseOlmodGameDirArg.TabIndex = 5;
@@ -946,7 +947,7 @@
             this.AutoUpdateOlmod.AutoSize = true;
             this.AutoUpdateOlmod.Checked = true;
             this.AutoUpdateOlmod.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AutoUpdateOlmod.Location = new System.Drawing.Point(149, 26);
+            this.AutoUpdateOlmod.Location = new System.Drawing.Point(165, 26);
             this.AutoUpdateOlmod.Name = "AutoUpdateOlmod";
             this.AutoUpdateOlmod.Size = new System.Drawing.Size(117, 17);
             this.AutoUpdateOlmod.TabIndex = 5;
@@ -1005,6 +1006,7 @@
             // PaneOptions
             // 
             this.PaneOptions.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOptions.Controls.Add(this.PayPalLink);
             this.PaneOptions.Controls.Add(this.MailLinkLabel);
             this.PaneOptions.Controls.Add(this.DebugFileNameLink);
             this.PaneOptions.Controls.Add(this.EnableDebugCheckBox);
@@ -1015,15 +1017,27 @@
             this.PaneOptions.Size = new System.Drawing.Size(500, 336);
             this.PaneOptions.TabIndex = 25;
             // 
+            // PayPalLink
+            // 
+            this.PayPalLink.AutoSize = true;
+            this.PayPalLink.Location = new System.Drawing.Point(44, 296);
+            this.PayPalLink.Name = "PayPalLink";
+            this.PayPalLink.Size = new System.Drawing.Size(282, 13);
+            this.PayPalLink.TabIndex = 18;
+            this.PayPalLink.TabStop = true;
+            this.PayPalLink.Text = "If you really like OCT consider buying me a cup of coffee :)";
+            this.MapsToolTip.SetToolTip(this.PayPalLink, "This is TOTALLY optional as OCT will always be free!");
+            this.PayPalLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PayPalLink_LinkClicked);
+            // 
             // MailLinkLabel
             // 
             this.MailLinkLabel.AutoSize = true;
-            this.MailLinkLabel.Location = new System.Drawing.Point(44, 296);
+            this.MailLinkLabel.Location = new System.Drawing.Point(44, 275);
             this.MailLinkLabel.Name = "MailLinkLabel";
-            this.MailLinkLabel.Size = new System.Drawing.Size(225, 13);
+            this.MailLinkLabel.Size = new System.Drawing.Size(251, 13);
             this.MailLinkLabel.TabIndex = 18;
             this.MailLinkLabel.TabStop = true;
-            this.MailLinkLabel.Text = "Contact me if your have issues or suggestions!";
+            this.MailLinkLabel.Text = "Please contact me about any issues or suggestions!";
             this.MailLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.InfoLinkLabel_LinkClicked);
             // 
             // DebugFileNameLink
@@ -1201,6 +1215,7 @@
         private System.Windows.Forms.CheckBox UseOlmodGameDirArg;
         private System.Windows.Forms.CheckBox AutoUpdateOlmod;
         private System.Windows.Forms.Button UpdateOlmod;
+        private System.Windows.Forms.LinkLabel PayPalLink;
     }
 }
 

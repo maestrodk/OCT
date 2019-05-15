@@ -583,13 +583,13 @@ namespace OverloadClientTool
             }
             else
             {
-                Thread startOverloadThread = new Thread(RestartOverload);
+                Thread startOverloadThread = new Thread(LaunchOverload);
                 startOverloadThread.IsBackground = true;
                 startOverloadThread.Start();
 
                 if (UseOlproxyCheckBox.Checked)
                 {
-                    Thread startOlproxyThread = new Thread(RestartOlproxy);
+                    Thread startOlproxyThread = new Thread(LaunchOlproxy);
                     startOlproxyThread.IsBackground = true;
                     startOlproxyThread.Start();
                 }
@@ -598,19 +598,19 @@ namespace OverloadClientTool
 
         private void StartUp(bool useOlmod, bool useOlproxy)
         {
-            Thread startOverloadThread = new Thread(RestartOverload);
+            Thread startOverloadThread = new Thread(LaunchOverload);
             startOverloadThread.IsBackground = true;
             startOverloadThread.Start();
 
             if (useOlproxy)
             {
-                Thread startOlproxyThread = new Thread(RestartOlproxy);
+                Thread startOlproxyThread = new Thread(LaunchOlproxy);
                 startOlproxyThread.IsBackground = true;
                 startOlproxyThread.Start();
             }
         }
 
-        private void RestartOlproxy()
+        private void LaunchOlproxy()
         {
             Verbose("Starting up Olproxy.");
 
@@ -657,7 +657,7 @@ namespace OverloadClientTool
             appStart.Start();
         }
 
-        private void RestartOverload()
+        private void LaunchOverload()
         {
             Verbose("Starting up");
 
@@ -668,13 +668,12 @@ namespace OverloadClientTool
             string name = null;
             string app = null;
 
-            // Used if Olmod is enabled.
-            string gameDir = null;
+            // If Olmod is enabled check if we should pass Overload install folder.
+            string gameDir = "";
             if (OverloadClientApplication.ValidDirectoryName(Path.GetDirectoryName(OverloadExecutable.Text), true))
             {
-                gameDir = "-gamedir " + Path.GetDirectoryName(OverloadExecutable.Text);
+                gameDir = "-gamedir \"" + Path.GetDirectoryName(OverloadExecutable.Text) + "\" ";
             }
-
 
             if (AutoPilotsBackupCheckbox.Checked) PilotBackupButton_Click(null, null);
 
@@ -719,7 +718,7 @@ namespace OverloadClientTool
 
             // (Re)start application..
             Process appStart = new Process();
-            appStart.StartInfo = new ProcessStartInfo(Path.GetFileName(app), OverloadArgs.Text);
+            appStart.StartInfo = new ProcessStartInfo(Path.GetFileName(app), (gameDir + OverloadArgs.Text).Trim());
             appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(app);
             appStart.Start();
         }
@@ -820,7 +819,7 @@ namespace OverloadClientTool
                 if ((olproxyTask != null) && (olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive))
                 {
                     KillOlproxyThread();
-                    RestartOlproxy();
+                    LaunchOlproxy();
                 }
             }
         }
@@ -1377,5 +1376,19 @@ namespace OverloadClientTool
             OlmodAutoUpdate = AutoUpdateOlmod.Checked;
         }
         #endregion
+
+        private void PayPalLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc.StartInfo.FileName = "https://paypal.me/SorenM";
+                proc.Start();
+            }
+            catch
+            {
+            }
+            
+        }
     }
 }
