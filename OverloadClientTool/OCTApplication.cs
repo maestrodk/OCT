@@ -137,13 +137,14 @@ namespace OverloadClientTool
             OCTRelease release = GetLastestRelease;
             if (release != null)
             {
-                string newVersion = release.Version.ToLower().Replace("v", "");
+                string newVersion = release.Version.ToLower().Replace("v.", "").Replace("v", "");
 
                 bool upgrading = false; 
                 using (var process = Process.GetCurrentProcess())
                 {
-                    string currentVersion = GetFileVersion(process.MainModule.FileName);
-
+                    string currentVersion = GetFileVersion(process.MainModule.FileName).Replace("v", "");
+                    string[] currentVersionDotSplit = currentVersion.Split(".".ToCharArray());
+                    if (currentVersionDotSplit.Length > 2) currentVersion = currentVersionDotSplit[0] + "." + currentVersionDotSplit[1] + "." + currentVersionDotSplit[2];
                     if (currentVersion != newVersion)
                     {
                         // Do the update.
