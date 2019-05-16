@@ -229,7 +229,7 @@ namespace OverloadClientTool
         // Log an error message.
         void LogErrorMessage(string s)
         {
-            errorLogger(s);
+            errorLogger?.Invoke(s);
             Debug.WriteLine(s);
         }
 
@@ -537,7 +537,7 @@ namespace OverloadClientTool
             Task.Run(async () =>
             {
                 bool hasProgresChanged = false;
-                var timer = new System.Timers.Timer(new TimeSpan(0, 0, 30).TotalMilliseconds);
+                var timer = new System.Timers.Timer(new TimeSpan(0, 0, 120).TotalMilliseconds);
                 var client = new WebClient();
 
                 void downloadHandler(object s, DownloadProgressChangedEventArgs e) => hasProgresChanged = true;

@@ -119,7 +119,6 @@ namespace OverloadClientTool
             return null;
         }
 
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -134,9 +133,13 @@ namespace OverloadClientTool
 
             LogDebugMessage("OCT application startup.", debugFileName);
 
+            LogDebugMessage("Checking for new release.", debugFileName);
+
             OCTRelease release = GetLastestRelease;
             if (release != null)
             {
+                LogDebugMessage("Got release info - checking for current vs new release info.", debugFileName);
+
                 string newVersion = release.Version.ToLower().Replace("v.", "").Replace("v", "");
 
                 bool upgrading = false; 
@@ -144,9 +147,13 @@ namespace OverloadClientTool
                 {
                     string currentVersion = GetFileVersion(process.MainModule.FileName).Replace("v", "");
                     string[] currentVersionDotSplit = currentVersion.Split(".".ToCharArray());
+
                     if (currentVersionDotSplit.Length > 2) currentVersion = currentVersionDotSplit[0] + "." + currentVersionDotSplit[1] + "." + currentVersionDotSplit[2];
+
                     if (currentVersion != newVersion)
                     {
+                        LogDebugMessage(String.Format($"New update is available - chaining to OCTUpdater.", debugFileName));
+
                         // Do the update.
                         Process appStart = new Process();
                         appStart.StartInfo = new ProcessStartInfo(Path.Combine(Path.GetDirectoryName(process.MainModule.FileName), "OCTUpdater.exe"));
@@ -155,15 +162,31 @@ namespace OverloadClientTool
 
                         // Pass current version, new version and install folder.
                         appStart.StartInfo.Arguments = String.Format($"-update {currentVersion.Replace(" ", "_")} {newVersion.Replace(" ", "_")} {Path.GetDirectoryName(process.MainModule.FileName)}");
+
+                        LogDebugMessage(String.Format($"Startiong up OCTUpdater.", debugFileName));
+
                         appStart.Start();
                     }
                 }
 
                 if (upgrading)
                 {
+                    LogDebugMessage(String.Format($"Waiting for OCTUpdater to finish.", debugFileName));
+
                     Thread.Sleep(2000);
                     while (GetRunningProcess("OCTUpdater") != null) Thread.Sleep(500);
+
+                    LogDebugMessage(String.Format($"OCTUpdater no longer running - continuing to OCT main.", debugFileName));
+
                 }
+                else
+                {
+                    LogDebugMessage(String.Format($"No update available - continuing to OCT main.", debugFileName));
+                }
+            }
+            else
+            {
+                LogDebugMessage("Could not get info on new release.", debugFileName);
             }
 
             try

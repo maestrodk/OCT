@@ -856,12 +856,6 @@ namespace OverloadClientTool
             Verbose((UseOlproxyCheckBox.Checked) ? "Olproxy enabled." : "Olproxy disabled.");
         }
 
-        private void UseDLCLocationCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            UseDLCLocation = UseDLCLocationCheckBox.Checked;
-            Info((UseOlmodCheckBox.Checked) ? "Use DLC folder for maps." : "Use Overload application folder for maps.");
-        }
-
         private void SearchOverloadButton_Click(object sender, EventArgs e)
         {
             FindOverloadInstall();
@@ -988,7 +982,7 @@ namespace OverloadClientTool
             appPath = Path.Combine(appPath, "Overload");
 
             // Construct the paths to where local maps can be stored.
-            string dlcFolder = (UseDLCLocation && OverloadClientApplication.ValidDirectoryName(OverloadPath)) ? Path.Combine(OverloadPath, "DLC") : null;
+            string dlcFolder = OverloadClientApplication.ValidDirectoryName(OverloadPath) ? Path.Combine(Path.GetDirectoryName(OverloadPath), "DLC") : null;
             string appFolder = OverloadClientApplication.ValidDirectoryName(appPath) ? appPath : null;
 
             mapManager.UpdateMapList(MapListUrl, dlcFolder, appFolder);
@@ -1000,7 +994,6 @@ namespace OverloadClientTool
 
             UpdateMapList();
             UpdateListBox();
-            SetMapButtons();
         }
 
         private void SetMapButtons()
@@ -1182,16 +1175,52 @@ namespace OverloadClientTool
         /// <param name="dlcLocation"></param>
         private void MoveMaps(string source, string destination)
         {
-            string[] files = Directory.GetFiles(source, "*.zip");
-            foreach (string fileName in files)
+            if (!CheckCreateDirectory(source) || !CheckCreateDirectory(destination))
             {
-                // Exclude DLC content (only move maps).
-                bool move = true;
-                string test = Path.GetFileNameWithoutExtension(fileName).ToUpper();
-                if (!fileName.ToLower().EndsWith(".zip") || (test.Contains("DLC0") || test.Contains("DLC1"))) move = false;
+                MessageBox.Show("Something went wrong in checking source/destination folders for map move!", "Unable to move maps");
 
-                if (move) System.IO.File.Move(Path.Combine(source, Path.GetFileName(fileName)), Path.Combine(destination, Path.GetFileName(fileName)));
+                source = String.IsNullOrEmpty(source) ? "<null>" : source;
+                destination = String.IsNullOrEmpty(destination) ? "<null>" : destination;
+
+                Error(String.Format($"Map move from {source} to {destination} failed!"));
+
             }
+            else
+            {
+                string[] files = Directory.GetFiles(source, "*.zip");
+                foreach (string fileName in files)
+                {
+                    // Exclude DLC content (only move maps).
+                    bool move = true;
+                    string test = Path.GetFileNameWithoutExtension(fileName).ToUpper();
+                    if (!fileName.ToLower().EndsWith(".zip") || (test.Contains("DLC0") || test.Contains("DLC1"))) move = false;
+
+                    if (move)
+                    {
+                        string sourceFileName = Path.Combine(source, Path.GetFileName(fileName));
+                        string destinationFileName = Path.Combine(destination, Path.GetFileName(fileName));
+
+                        try
+                        {
+                            if (System.IO.File.Exists(destinationFileName)) System.IO.File.Delete(destinationFileName);
+                            System.IO.File.Move(Path.Combine(source, Path.GetFileName(fileName)), Path.Combine(destination, Path.GetFileName(fileName)));
+                        }
+                        catch (Exception ex)
+                        {
+                            Error(String.Format($"Map move {sourceFileName} to {destinationFileName} failed!"));
+                        }
+                    }
+                }
+            }
+
+            UpdateMapList();
+            UpdateListBox();
+        }
+
+        private void UseDLCLocationCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            //UpdateMapList();
+            //UpdateListBox();
         }
 
         private void UseDLCLocationCheckBox_Click(object sender, EventArgs e)
@@ -1204,6 +1233,7 @@ namespace OverloadClientTool
                 DialogResult result = MessageBox.Show("Move existing maps to the Overload DLC directory?", "Move maps?", MessageBoxButtons.YesNoCancel);
                 switch (result)
                 {
+
                     case DialogResult.Cancel:
                         break;
 

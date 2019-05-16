@@ -733,9 +733,9 @@
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.PilotXPTextBox);
-            this.groupBox6.Location = new System.Drawing.Point(362, 23);
+            this.groupBox6.Location = new System.Drawing.Point(384, 23);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(112, 61);
+            this.groupBox6.Size = new System.Drawing.Size(90, 61);
             this.groupBox6.TabIndex = 11;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Pilot XP";
@@ -746,7 +746,7 @@
             this.PilotXPTextBox.Location = new System.Drawing.Point(17, 23);
             this.PilotXPTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.PilotXPTextBox.Name = "PilotXPTextBox";
-            this.PilotXPTextBox.Size = new System.Drawing.Size(74, 20);
+            this.PilotXPTextBox.Size = new System.Drawing.Size(54, 20);
             this.PilotXPTextBox.TabIndex = 3;
             this.PilotXPTextBox.TextChanged += new System.EventHandler(this.PilotXPTextBox_TextChanged);
             // 
