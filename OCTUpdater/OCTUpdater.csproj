@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B70D3434-4113-42DA-AD95-A166FD6DCD66}</ProjectGuid>
+    <ProjectGuid>{FCBE8C44-A668-491E-A07A-5D6E2B1295D2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>OverloadClientTool</RootNamespace>
-    <AssemblyName>OverloadClientTool</AssemblyName>
+    <RootNamespace>OCTUpdater</RootNamespace>
+    <AssemblyName>OCTUpdater</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\OverloadClientTool\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,10 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>OverloadClientTool.OverloadClientApplication</StartupObject>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>oct_logo_484_12.ico</ApplicationIcon>
+    <StartupObject>OCTUpdater.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -44,9 +41,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,48 +53,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Theme.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="InputBox.cs">
+    <Compile Include="OCTUpdateForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InputBox.Designer.cs">
-      <DependentUpon>InputBox.cs</DependentUpon>
+    <Compile Include="OCTUpdateForm.Designer.cs">
+      <DependentUpon>OCTUpdateForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ListViewLogger.cs" />
-    <Compile Include="OCTMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OCTMain.Designer.cs">
-      <DependentUpon>OCTMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MapManager.cs" />
-    <Compile Include="OlmodManager.cs" />
-    <Compile Include="Olproxy\AppSettings.cs" />
-    <Compile Include="Olproxy\Broadcast.cs" />
-    <Compile Include="Olproxy\ConsoleSpinner.cs" />
-    <Compile Include="Olproxy\MatchInfo.cs" />
-    <Compile Include="Olproxy\MiniJson.cs" />
-    <Compile Include="Olproxy\PrivateMatchData.cs" />
-    <Compile Include="Olproxy\Program.cs" />
-    <Compile Include="Olproxy\xxHash.cs" />
-    <Compile Include="PaneController.cs" />
-    <Compile Include="PilotManager.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OCTApplication.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TransparentLabel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <EmbeddedResource Include="InputBox.resx">
-      <DependentUpon>InputBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OCTMain.resx">
-      <DependentUpon>OCTMain.cs</DependentUpon>
+    <EmbeddedResource Include="OCTUpdateForm.resx">
+      <DependentUpon>OCTUpdateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -109,7 +72,6 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -124,35 +86,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="arrows blue on white.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="arrows light blue on grey.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="IWshRuntimeLibrary">
-      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="oct_logo_484_12.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="arrows blue on white 2.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="arrows light blue on grey 2.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\OCT Logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

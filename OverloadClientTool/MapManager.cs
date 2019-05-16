@@ -196,7 +196,7 @@ namespace OverloadClientTool
 
         // The loggers must be able to resolve any thread/invoke issues.
         private LogMessageDelegate logger = null;
-        private LogMessageDelegate loggerError = null;
+        private LogMessageDelegate errorLogger = null;
 
         // These are updated after each map update check.
         public int Checked = 0;
@@ -210,10 +210,10 @@ namespace OverloadClientTool
         public void SetLogger(LogMessageDelegate logger = null, LogMessageDelegate errorLogger = null)
         {
             this.logger = logger;
-            if (this.loggerError == null)
+            if (this.errorLogger == null)
             {
-                if (errorLogger == null) this.loggerError = logger;
-                else this.loggerError = errorLogger;
+                if (errorLogger == null) this.errorLogger = logger;
+                else this.errorLogger = errorLogger;
             }
         }
 
@@ -229,7 +229,7 @@ namespace OverloadClientTool
         // Log an error message.
         void LogErrorMessage(string s)
         {
-            LogMessage(s);
+            errorLogger(s);
             Debug.WriteLine(s);
         }
 

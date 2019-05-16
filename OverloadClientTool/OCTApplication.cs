@@ -1,9 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -114,6 +118,7 @@ namespace OverloadClientTool
         [STAThread]
         static void Main(string[] args)
         {
+            // Setup debug logging.
             string startDateTime = DateTime.Now.ToString("yyyy-dd-MM HH:mm:ss");
             string debugFileFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OverloadClientTool\\Debug");
             string debugFileName = Path.Combine(debugFileFolder, String.Format($"OCT_Debug_{startDateTime.Replace(":", "").Replace("-", "").Replace(" ", "_")}.txt"));
@@ -121,7 +126,29 @@ namespace OverloadClientTool
 
             LogDebugMessage("OCT application startup.", debugFileName);
 
-            // Setup debug logging.
+            OCTRelease release = GetLastestRelease;
+            if (release != null)
+            {
+                string newVersion = release.Version.ToLower().Replace("v", "");
+ 
+                using (var process = Process.GetCurrentProcess())
+                {
+                    string currentVersion = GetFileVersion(process.MainModule.FileName);
+
+                    if (currentVersion != newVersion)
+                    {
+                        // Do the update.
+                        Process appStart = new Process();
+                        appStart.StartInfo = new ProcessStartInfo(Path.Combine(Path.GetDirectoryName(process.MainModule.FileName), "OCTUpdater.exe"));
+
+                        // Pass current version, new version and install folder.
+                        appStart.StartInfo.Arguments = String.Format($"-update {currentVersion.Replace(" ", "_")} {newVersion.Replace(" ", "_")} {Path.GetDirectoryName(process.MainModule.FileName)}");
+                        appStart.Start();
+                        return;
+                    }
+                }
+            }
+
             try
             {
                 LogDebugMessage("Enabling visual styles.", debugFileName);
@@ -139,6 +166,56 @@ namespace OverloadClientTool
             }
 
             LogDebugMessage("OCT application exit.", debugFileName);
+        }
+
+        public class OCTRelease
+        {
+            public string DownloadUrl { get; set; }
+            public long Size { get; set; }
+            public DateTime Created { get; set; }
+            public string Version { get; set; }
+        }
+
+        public static OCTRelease GetLastestRelease
+        {
+            get
+            {
+                string jsonOverloadClientUrl = @"https://api.github.com/repos/maestrodk/oct/releases/latest";
+
+                try
+                {
+                    ServicePointManager.ServerCertificateValidationCallback = (Binder, certificate, chain, errors) => { return true; };
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                    string json = "";
+
+                    using (WebClient wc = new WebClient())
+                    {
+                        wc.Headers.Add("User-Agent", "Overload Client Tool - user " + WindowsIdentity.GetCurrent().Name);
+                        json = wc.DownloadString(jsonOverloadClientUrl);
+                    }
+
+                    dynamic octReleaseInfo = JsonConvert.DeserializeObject(json);
+
+                    string zipUrl = octReleaseInfo.assets[0].browser_download_url;
+                    long size = Convert.ToInt64(octReleaseInfo.assets[0].size);
+                    DateTime created = Convert.ToDateTime(octReleaseInfo.assets[0].created_at, CultureInfo.InvariantCulture);
+                    string version = octReleaseInfo.tag_name;
+
+                    OCTRelease release = new OCTRelease();
+                    release.DownloadUrl = zipUrl;
+                    release.Size = size;
+                    release.Created = created;
+                    release.Version = version;
+
+                    return release;
+                }
+                catch
+                {
+                }
+
+                return null;
+            }
         }
     }
 }
