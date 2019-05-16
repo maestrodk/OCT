@@ -178,7 +178,8 @@ namespace OCTUpdater
             string localTempFolder = Path.GetTempFileName() + "_OCT_Update";
             Directory.CreateDirectory(localTempFolder);
 
-            bool restart = false;
+            // Shutdown running OCT before copying files.
+            KillRunningProcess("OverloadClientTool");
 
             try
             {
@@ -200,9 +201,6 @@ namespace OCTUpdater
                 DirectoryInfo[] subDirs = subDirList.GetDirectories();
                 if (subDirs.Length > 0) localSourceFolder = subDirs[0].FullName;
 
-                // Shutdown running OCT before copying files.
-                KillRunningProcess("OverloadClientTool");
-
                 // Copy all files to destination, overwriting any existing files.
                 DirectoryInfo dir = new DirectoryInfo(localSourceFolder);
                 foreach (FileInfo fi in dir.GetFiles()) if (!fi.Name.ToLower().Contains("newtonsoft")) File.Copy(fi.FullName, Path.Combine(localInstallFolder, fi.Name), true);
@@ -211,11 +209,10 @@ namespace OCTUpdater
                 File.SetCreationTime(Path.Combine(localInstallFolder, "OverloadClientTool.exe"), release.Created);
                 File.SetLastWriteTime(Path.Combine(localInstallFolder, "OverloadClientTool.exe"), release.Created);
 
-                restart = true;
             }
             catch (Exception ex)
             {
-                // LogErrorMessage(String.Format($"Cannot download OCT installation ZIP file from Github: {ex.Message}"));
+                MessageBox.Show(String.Format($"Cannot download OCT installation ZIP file from Github: {ex.Message}"));
             }
             finally
             {
@@ -223,15 +220,12 @@ namespace OCTUpdater
                 if (ValidDirectoryName(localTempFolder, true)) try { RemoveDirectory(localTempFolder); } catch { }
             }
 
-            if (restart)
-            {
-                // Restart OCT.
-                Process appStart = new Process();
-                appStart.StartInfo = new ProcessStartInfo(Path.Combine(localInstallFolder, "OverloadClientTool.exe"));
-                appStart.StartInfo.WorkingDirectory = localInstallFolder;
-                appStart.Start();
-            }
-
+            // Restart OCT.
+            Process appStart = new Process();
+            appStart.StartInfo = new ProcessStartInfo(Path.Combine(localInstallFolder, "OverloadClientTool.exe"));
+            appStart.StartInfo.WorkingDirectory = localInstallFolder;
+            appStart.Start();
+            
             Close();
         }
 

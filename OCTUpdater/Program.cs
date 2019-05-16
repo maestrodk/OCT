@@ -19,7 +19,7 @@ namespace OCTUpdater
 
             string currentVersion = args[1].Replace("_", " ");
             string newVersion = args[2].Replace("_", " ");
-            string installFolder = args[2].Replace("_", " ");
+            string installFolder = args[3].Replace("_", " ");
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

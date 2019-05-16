@@ -112,6 +112,14 @@ namespace OverloadClientTool
             }
         }
 
+        public static Process GetRunningProcess(string name)
+        {
+            if (String.IsNullOrEmpty(name)) return null;
+            foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) return process;
+            return null;
+        }
+
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -130,7 +138,8 @@ namespace OverloadClientTool
             if (release != null)
             {
                 string newVersion = release.Version.ToLower().Replace("v", "");
- 
+
+                bool upgrading = false; 
                 using (var process = Process.GetCurrentProcess())
                 {
                     string currentVersion = GetFileVersion(process.MainModule.FileName);
@@ -141,11 +150,18 @@ namespace OverloadClientTool
                         Process appStart = new Process();
                         appStart.StartInfo = new ProcessStartInfo(Path.Combine(Path.GetDirectoryName(process.MainModule.FileName), "OCTUpdater.exe"));
 
+                        upgrading = true;
+
                         // Pass current version, new version and install folder.
                         appStart.StartInfo.Arguments = String.Format($"-update {currentVersion.Replace(" ", "_")} {newVersion.Replace(" ", "_")} {Path.GetDirectoryName(process.MainModule.FileName)}");
                         appStart.Start();
-                        return;
                     }
+                }
+
+                if (upgrading)
+                {
+                    Thread.Sleep(2000);
+                    while (GetRunningProcess("OCTUpdater") != null) Thread.Sleep(500);
                 }
             }
 
