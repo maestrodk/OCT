@@ -242,12 +242,14 @@ namespace OverloadClientTool
                         Directory.CreateDirectory(dlcLocation);
                     }
                     UseDLCLocationCheckBox.Enabled = true;
+                    UseDLCLocation = true;
                 }
             }
             catch
             {
                 dlcLocation = null;
                 UseDLCLocationCheckBox.Enabled = false;
+                UseDLCLocation = false;
             }
         }
 
@@ -967,13 +969,13 @@ namespace OverloadClientTool
             }
         }
 
-        #region MapManager UI
+        #region MapManager
 
         private object mapChangeLock = new object();
 
         private static bool SameMap(OverloadMap map1, OverloadMap map2)
         {
-            return (map1.InDLC == map2.InDLC) && (map1.ZipName.ToLower() == map2.ZipName.ToLower());
+            return (map1.InDLCFolder == map2.InDLCFolder) && (map1.ZipName.ToLower() == map2.ZipName.ToLower());
         }
 
         private void UpdateMapList()
@@ -1007,7 +1009,7 @@ namespace OverloadClientTool
                 MapHideButton.Enabled = map.IsLocal;
                 MapDeleteButton.Enabled = map.IsLocal;
                 MapHideButton.Enabled = map.IsLocal;
-                MapRefreshButton.Enabled = map.IsOnline;
+                MapRefreshButton.Enabled = map.IsOnline && !map.Hidden;
             }
             else
             {
@@ -1071,11 +1073,10 @@ namespace OverloadClientTool
             OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[MapsListBox.SelectedIndex]).Value;
             if (!map.IsLocal) return;
 
+            int index = MapsListBox.SelectedIndex;
             try
             {
-                if (map.Hidden) map.Unhide();
-                else map.Hide();
-
+                map.Hidden = !map.Hidden;
                 UpdateListBox();
             }
             catch (Exception ex)
@@ -1083,6 +1084,9 @@ namespace OverloadClientTool
                 MessageBox.Show(String.Format($"Whoops! Cannot {((map.Hidden) ? "unhide" : "hide")} map {map.ZipName}: {ex.Message}"));
                 SetMapButtons();
             }
+
+            OnlineMapJsonUrl.Select(0, 0);
+            MapsListBox.SetSelected(index, true);
         }
 
         private void UpdateListBox(string focusName = null)
@@ -1215,12 +1219,6 @@ namespace OverloadClientTool
 
             UpdateMapList();
             UpdateListBox();
-        }
-
-        private void UseDLCLocationCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            //UpdateMapList();
-            //UpdateListBox();
         }
 
         private void UseDLCLocationCheckBox_Click(object sender, EventArgs e)

@@ -26,8 +26,10 @@ namespace OverloadClientTool
         public DateTime DateTime;                   // DateTime of last online map ZIP update as defined in the online JSON map list.
         public int Size = 0;                        // Size of ZIP file (on disk or as defined in the online JSON map list).
         public string ZipName = null;               // ZIP file name (excluding path / URL).
-        public string LocalZipFileName = null;      // Null if the file is listed online but not found locally (may or may not end with HiddenMarker).
-        
+
+        public string LocalZipFileName = null;      // Full path to ZIP file if map exists locally in the Overload application data folder.
+        public string LocalDLCZipFileName = null;   // Full path to ZIP file if map exists locally in the Overload application data folder.
+
         public OverloadMap(string url, DateTime dateTime, int size, string mapZipName)
         {
             this.Url = url;
@@ -41,7 +43,9 @@ namespace OverloadClientTool
             // Otherwise mapZipName must be online and the name is alread stripped from other URL path segments.
             if (String.IsNullOrEmpty(this.Url))
             {
-                this.LocalZipFileName = mapZipName;
+                if (mapZipName.Contains(Path.DirectorySeparatorChar + "DLC" + Path.DirectorySeparatorChar)) this.LocalDLCZipFileName = mapZipName;
+                else this.LocalZipFileName = mapZipName;
+
                 this.ZipName = Path.GetFileName(mapZipName).Replace(MapHiddenMarker, ""); 
             }
             else
@@ -53,9 +57,17 @@ namespace OverloadClientTool
         /// <summary>
         /// Is map local and found in Overload DLC folder?
         /// </summary>
-        public bool InDLC
+        public bool InDLCFolder
         {
-            get { return !String.IsNullOrEmpty(LocalZipFileName) && LocalZipFileName.Contains(Path.DirectorySeparatorChar + "DLC" + Path.DirectorySeparatorChar); }
+            get { return !String.IsNullOrEmpty(LocalDLCZipFileName); }
+        }
+
+        /// <summary>
+        /// Is map local and found in Overload DLC folder?
+        /// </summary>
+        public bool InApplicationDataFolder
+        {
+            get { return !String.IsNullOrEmpty(LocalZipFileName); }
         }
 
         /// <summary>
@@ -63,7 +75,20 @@ namespace OverloadClientTool
         /// </summary>
         public bool Hidden
         {
-            get { return !String.IsNullOrEmpty(LocalZipFileName) && LocalZipFileName.EndsWith(MapHiddenMarker); }
+            get
+            {
+                if (!String.IsNullOrEmpty(LocalZipFileName)) return LocalZipFileName.EndsWith(MapHiddenMarker);
+                if (!String.IsNullOrEmpty(LocalDLCZipFileName)) return LocalDLCZipFileName.EndsWith(MapHiddenMarker);
+
+                // In case a local file does not exists...
+                return false;
+            }
+
+            set
+            {
+                if (value == true) Hide();
+                else Unhide();
+            }
         }
 
         /// <summary>
@@ -71,7 +96,7 @@ namespace OverloadClientTool
         /// </summary>
         public bool IsLocal
         {
-            get { return !String.IsNullOrEmpty(LocalZipFileName); }
+            get { return InDLCFolder || InApplicationDataFolder; }
         }
 
         /// <summary>
@@ -82,40 +107,55 @@ namespace OverloadClientTool
             get { return !String.IsNullOrEmpty(Url); }
         }
 
-        public bool CanBeUpdated
+        private void Hide()
         {
-            get { return IsOnline; }
-        }
-
-        public void Hide()
-        {
-            if (Hidden) return;
-
             try
             {
-                string newLocalZipFileName = LocalZipFileName + MapHiddenMarker;
-                File.Move(LocalZipFileName, newLocalZipFileName);
-                LocalZipFileName = newLocalZipFileName;
+                // The map ZIP file may exist in both the application data folder and the DLC folder.
+                // Ensure hidden state is set for both!
+
+                if (OverloadClientApplication.ValidFileName(LocalZipFileName, true) && !LocalZipFileName.EndsWith(MapHiddenMarker))
+                {
+                    string newLocalZipFileName = LocalZipFileName + MapHiddenMarker;
+                    File.Move(LocalZipFileName, newLocalZipFileName);
+                    LocalZipFileName = newLocalZipFileName;
+                }
+
+                if (OverloadClientApplication.ValidFileName(LocalDLCZipFileName, true) && !LocalDLCZipFileName.EndsWith(MapHiddenMarker))
+                {
+                    string newLocalDLCZipFileName = LocalDLCZipFileName + MapHiddenMarker;
+                    File.Move(LocalDLCZipFileName, newLocalDLCZipFileName);
+                    LocalDLCZipFileName = newLocalDLCZipFileName;
+                }
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
             }
         }
 
         public void Unhide()
         {
-            if (!Hidden) return;
-
             try
             {
-                string newLocalZipFileName = LocalZipFileName.Replace(MapHiddenMarker, "");
-                File.Move(LocalZipFileName, newLocalZipFileName);
-                LocalZipFileName = newLocalZipFileName;                
+                // The map ZIP file may exist in both the application data folder and the DLC folder.
+                // Ensure hidden state is set for both!
+
+                if (OverloadClientApplication.ValidFileName(LocalZipFileName, true) && LocalZipFileName.EndsWith(MapHiddenMarker))
+                {
+                    string newLocalZipFileName = LocalZipFileName.Replace(MapHiddenMarker, "");
+                    File.Move(LocalZipFileName, newLocalZipFileName);
+                    LocalZipFileName = newLocalZipFileName;
+                }
+
+                if (OverloadClientApplication.ValidFileName(LocalDLCZipFileName, true) && LocalDLCZipFileName.EndsWith(MapHiddenMarker))
+                {
+                    string newLocalDLCZipFileName = LocalDLCZipFileName.Replace(MapHiddenMarker, "");
+                    File.Move(LocalDLCZipFileName, newLocalDLCZipFileName);
+                    LocalDLCZipFileName = newLocalDLCZipFileName;
+                }
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
             }
         }
 
@@ -123,13 +163,13 @@ namespace OverloadClientTool
         {
             string result = ZipName;
 
-            // TO-DO: Se om result ender med HIddenMarker (burde ikke ske).
-
             if (result.ToLower().EndsWith(".zip")) result = result.Substring(0, result.Length - ".zip".Length);
 
             result += (Hidden) ? " (Hidden)" : "";
+
             //result += (IsOnline) ? " (Online)" : "";
-            //result += (IsLocal) ? " (Local)" : "";
+            //result += (InApplicationDataFolder) ? " (App)" : "";
+            //result += (InDLCFolder) ? " (DLC)" : "";
 
             return result.Trim();
         }
@@ -143,10 +183,38 @@ namespace OverloadClientTool
             {
                 string result = String.Format($"{ZipName}");
 
-                if (!String.IsNullOrEmpty(Url)) result += String.Format($" , {Size / 1024} KB");
+                if (!String.IsNullOrEmpty(Url))
+                {
+                    result += String.Format($", {Size / 1024} KB");
+                }
+                else
+                {
+                    if (InApplicationDataFolder)
+                    {
+                        try
+                        {
+                            long size = new FileInfo(LocalZipFileName).Length;
+                            result += String.Format($", {Size / 1024} KB");
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    else if (InDLCFolder)
+                    {
+                        try
+                        {
+                            long size = new FileInfo(LocalDLCZipFileName).Length;
+                            result += String.Format($", {Size / 1024} KB");
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
 
-                if (InDLC) result += String.Format($", Overload DLC folder");
-                else result += String.Format($", Overload application data folder");
+                if (InApplicationDataFolder) result += String.Format($", Application data folder");
+                if (InDLCFolder) result += String.Format($", DLC folder");
 
                 return result.Trim();
             }
@@ -176,6 +244,12 @@ namespace OverloadClientTool
 
     public class OverloadMapManager
     {
+        // Set the maximum of map downloads to be run in parallel to avoid timeout errors/overloading the map server.
+        private const int MaxSimultanousDownloads = 4;
+
+        // Timeout for download actions in seconds.
+        private const int DownloadTimeoutSeconds = 60;
+
         // URL for online map list JSON.
         private readonly string DefaultOnlineMapListUrl = @"https://www.overloadmaps.com/data/mp.json";
 
@@ -304,6 +378,9 @@ namespace OverloadClientTool
                         string mapZipName = mapUri.Segments[mapUri.Segments.Length - 1];
                         if (mapZipName.ToLower().EndsWith(".zip"))
                         {
+                            // Uppercase first char in map name.
+                            mapZipName = mapZipName.Substring(0, 1).ToUpper() + mapZipName.Substring(1);
+
                             OverloadMap newMap = new OverloadMap(baseUrl + map.url, UnixTimeStampToDateTime(Convert.ToDouble(map.mtime)), Convert.ToInt32(map.size), mapZipName);
                             newMapList.Add(mapZipName.ToLower(), newMap);
                         }
@@ -339,10 +416,16 @@ namespace OverloadClientTool
                                 {
                                     // We found a local map that matches the ZIP filename as found online.
                                     found = true;
-                                    map.Value.LocalZipFileName = fiLocalMap.FullName;
-                                    map.Value.ZipName = fiLocalMap.Name.Replace(HiddenMarker, "");
-                                }
 
+                                    // Uppercase first char in map name and remove hidden marker if present.
+                                    string mapZipName = fiLocalMap.Name;
+                                    mapZipName = mapZipName.Substring(0, 1).ToUpper() + mapZipName.Substring(1);
+                                    mapZipName = mapZipName.Replace(HiddenMarker, "");
+                                    map.Value.ZipName = mapZipName;
+
+                                    // Save full path to ZIP file in the application data folder.
+                                    map.Value.LocalZipFileName = fiLocalMap.FullName;
+                                }
                             }
 
                             if (!found) newMapList.Add(mapFileName.ToLower(), newMap);
@@ -377,8 +460,14 @@ namespace OverloadClientTool
                                 {
                                     // We found a local map that matches the ZIP filename as found online.
                                     found = true;
-                                    map.Value.LocalZipFileName = fiLocalMap.FullName;
-                                    map.Value.ZipName = fiLocalMap.Name.Replace(HiddenMarker, "");
+                                    // Uppercase first char in map name and remove hidden marker if present.
+                                    string mapZipName = fiLocalMap.Name;
+                                    mapZipName = mapZipName.Substring(0, 1).ToUpper() + mapZipName.Substring(1);
+                                    mapZipName = mapZipName.Replace(HiddenMarker, "");
+                                    map.Value.ZipName = mapZipName;
+
+                                    // Save full path to ZIP file in the DLC folder.
+                                    map.Value.LocalDLCZipFileName = fiLocalMap.FullName;
                                 }
                             }
 
@@ -420,15 +509,22 @@ namespace OverloadClientTool
             {
                 List<Task> downloadTasks = new List<Task>();
 
+                int started = 0;
                 foreach (KeyValuePair<string, OverloadMap> sortedMmap in Maps)
                 {
                     var task = UpdateMap(sortedMmap.Value);
                     downloadTasks.Add(task);
                     try { task.Start(); } catch { }
+
+                    if (++started > MaxSimultanousDownloads)
+                    {
+                        Task.WaitAll(downloadTasks.ToArray());
+                        started = 0;
+                    }
                 }
 
-                // Wait for all downloads to complete before allowing further actions.
-                Task.WaitAll(downloadTasks.ToArray());
+                // Wait for all remaining downloads to complete before allowing further actions.
+                if (started > 0) Task.WaitAll(downloadTasks.ToArray());
             }
             catch (Exception ex)
             {
@@ -537,7 +633,7 @@ namespace OverloadClientTool
             Task.Run(async () =>
             {
                 bool hasProgresChanged = false;
-                var timer = new System.Timers.Timer(new TimeSpan(0, 0, 120).TotalMilliseconds);
+                var timer = new System.Timers.Timer(new TimeSpan(0, 0, DownloadTimeoutSeconds).TotalMilliseconds);
                 var client = new WebClient();
 
                 void downloadHandler(object s, DownloadProgressChangedEventArgs e) => hasProgresChanged = true;
@@ -591,8 +687,7 @@ namespace OverloadClientTool
                 }
                 catch (Exception ex)
                 {
-                    result.Message = String.Format($"Error downloading {displayName}", ex);
-
+                    result.Message = String.Format($"Error downloading {displayName}: {ex.Message}");
                     tcs.TrySetException(ex);
                 }
                 finally

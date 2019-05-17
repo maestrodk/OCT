@@ -363,7 +363,6 @@
             this.UseDLCLocationCheckBox.Text = "Use DLC directory ";
             this.MapsToolTip.SetToolTip(this.UseDLCLocationCheckBox, "Save downloaded map ZIP files to Overload DLC folder");
             this.UseDLCLocationCheckBox.UseVisualStyleBackColor = true;
-            this.UseDLCLocationCheckBox.CheckedChanged += new System.EventHandler(this.UseDLCLocationCheckBox_CheckedChanged);
             this.UseDLCLocationCheckBox.Click += new System.EventHandler(this.UseDLCLocationCheckBox_Click);
             // 
             // AutoUpdateMapsCheckBox

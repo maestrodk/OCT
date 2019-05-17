@@ -244,7 +244,11 @@ namespace OCTUpdater
             release = GetLastestRelease;
             if (release == null) Close();
 
-            OCTNewVersion.Text = "New version available is " + release.Version;
+            string version = release.Version.ToLower().Replace("v.", "").Replace("v", "");
+            string[] currentVersionDotSplit = version.Split(".".ToCharArray());
+            if (currentVersionDotSplit.Length > 2) version = currentVersionDotSplit[0] + "." + currentVersionDotSplit[1] + "." + currentVersionDotSplit[2];
+
+            OCTNewVersion.Text = "New version available is " + version;
         }
     }
 }

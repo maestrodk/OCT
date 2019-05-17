@@ -163,9 +163,7 @@ namespace OverloadClientTool
                         // Pass current version, new version and install folder.
                         appStart.StartInfo.Arguments = String.Format($"-update {currentVersion.Replace(" ", "_")} {newVersion.Replace(" ", "_")} {Path.GetDirectoryName(process.MainModule.FileName)}");
 
-                        LogDebugMessage(String.Format($"Startiong up OCTUpdater.", debugFileName));
-
-                        appStart.Start();
+                        try { appStart.Start(); } catch { LogDebugMessage(String.Format($"Cannot start OCTUpdater!", debugFileName));  }
                     }
                 }
 
@@ -176,36 +174,33 @@ namespace OverloadClientTool
                     Thread.Sleep(2000);
                     while (GetRunningProcess("OCTUpdater") != null) Thread.Sleep(500);
 
-                    LogDebugMessage(String.Format($"OCTUpdater no longer running - continuing to OCT main.", debugFileName));
+                    LogDebugMessage(String.Format($"It seems no update took plac, continuing OCT startup.", debugFileName));
 
                 }
                 else
                 {
-                    LogDebugMessage(String.Format($"No update available - continuing to OCT main.", debugFileName));
+                    LogDebugMessage(String.Format($"No update available - continuing OCT startup.", debugFileName));
                 }
             }
             else
             {
-                LogDebugMessage("Could not get info on new release.", debugFileName);
+                LogDebugMessage("Could not get info on new OCT release (timeout or unexpected error).", debugFileName);
             }
 
             try
             {
-                LogDebugMessage("Enabling visual styles.", debugFileName);
+                LogDebugMessage("Starting OCT main UI thread.", debugFileName);
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-
-                LogDebugMessage("Starting up user interface.", debugFileName);
                 Application.Run(new OCTMain(args, debugFileName));
-                LogDebugMessage("Shutting down user interface.", debugFileName);
+
+                LogDebugMessage("OCT main exit - shutting UI thread.", debugFileName);
             }
             catch (Exception ex)
             {
-                LogDebugMessage(String.Format($"{ex.Message} at {ex.TargetSite}"), debugFileName);
+                LogDebugMessage(String.Format($"OCT exited due to an unexpected error: {ex.Message} at {ex.TargetSite}"), debugFileName);
             }
-
-            LogDebugMessage("OCT application exit.", debugFileName);
         }
 
         public class OCTRelease
