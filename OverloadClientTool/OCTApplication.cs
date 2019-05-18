@@ -36,7 +36,7 @@ namespace OverloadClientTool
             Application.SetCompatibleTextRenderingDefault(false);
 
             // Check for update.
-            UpdateCheck(debugFileName);
+            if (UpdateCheck(debugFileName)) return;
 
             try
             {
@@ -153,7 +153,7 @@ namespace OverloadClientTool
             return null;
         }
   
-        private static void UpdateCheck(string debugFileName)
+        public static bool UpdateCheck(string debugFileName, bool forceUpdate = false)
         {
             LogDebugMessage("Checking for new release.", debugFileName);
 
@@ -175,8 +175,14 @@ namespace OverloadClientTool
                     if (currentVersionSplit.Length > 3) currentVersion = currentVersionSplit[0] + "." + currentVersionSplit[1] + "." + currentVersionSplit[2];
 
                     // Check if update is available.
-                    if (!String.IsNullOrEmpty(currentVersion) && (currentVersion != newVersion)) PerformUpdate(release, currentVersion, newVersion, AppDomain.CurrentDomain.BaseDirectory);
-                    else LogDebugMessage(String.Format($"No update available - continuing OCT startup.", debugFileName));
+                    if (!String.IsNullOrEmpty(currentVersion) && (currentVersion != newVersion))
+                    {
+                        return PerformUpdate(release, currentVersion, newVersion, Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory));
+                    }
+                    else
+                    {
+                        LogDebugMessage(String.Format($"No update available - continuing OCT startup.", debugFileName));
+                    }
                 }
                 else
                 {
@@ -187,6 +193,8 @@ namespace OverloadClientTool
             {
                 LogDebugMessage(String.Format($"Unable to check/perform OCT update: {ex.Message}"), debugFileName);
             }
+
+            return false;
         }
 
         private static string VersionStringFix(string version)
@@ -202,11 +210,11 @@ namespace OverloadClientTool
             foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) process.Kill();
         }
 
-        private static void PerformUpdate(OCTRelease release, string currentVersion, string newVersion, string installFolder)
+        private static bool PerformUpdate(OCTRelease release, string currentVersion, string newVersion, string installFolder)
         {
             OCTUpdateForm updateForm = new OCTUpdateForm(release, currentVersion, newVersion, installFolder);
             updateForm.StartPosition = FormStartPosition.CenterScreen;
-            if (updateForm.ShowDialog() == DialogResult.Cancel) return;
+            if (updateForm.ShowDialog() == DialogResult.Cancel) return false;
 
             string localTempZip = Path.GetTempFileName() + "_OCT_Update.zip";
             string localTempFolder = Path.GetTempFileName() + "_OCT_Update";
@@ -233,19 +241,18 @@ namespace OverloadClientTool
                 if (subDirs.Length > 0) localSourceFolder = subDirs[0].FullName;
 
                 Process appStart = new Process();
-                appStart.StartInfo = new ProcessStartInfo(Path.Combine(localSourceFolder, "Updater.exe"), String.Format($"-installfolder \"{installFolder}\""));
+                appStart.StartInfo = new ProcessStartInfo(Path.Combine(localSourceFolder, "Updater.exe"));
+                appStart.StartInfo.Arguments = String.Format($"-installfolder \"{installFolder}\"");
+
                 appStart.StartInfo.WorkingDirectory = localSourceFolder;
                 appStart.Start();
 
+                return true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(String.Format($"Error downloading/running OCT updater from Github: {ex.Message}"));
-            }
-            finally
-            {
-                if (ValidFileName(localTempZip, true)) try { File.Delete(localTempZip); } catch { }
-                if (ValidDirectoryName(localTempFolder, true)) try { RemoveDirectory(localTempFolder); } catch { }
+                return false;
             }
         }
 
@@ -264,7 +271,7 @@ namespace OverloadClientTool
 
                     using (WebClient wc = new WebClient())
                     {
-                        wc.Headers.Add("User-Agent", "Overload Client Tool - user " + WindowsIdentity.GetCurrent().Name);
+                        wc.Headers.Add("User-Agent", "OCT - user " + WindowsIdentity.GetCurrent().Name);
                         json = wc.DownloadString(jsonOverloadClientUrl);
                     }
 
@@ -283,7 +290,7 @@ namespace OverloadClientTool
 
                     return release;
                 }
-                catch
+                catch (Exception ex)
                 {
                 }
 

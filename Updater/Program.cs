@@ -25,8 +25,9 @@ namespace Updater
                 Console.ReadKey(true);
             }
 
-            string sourceFolder = AppDomain.CurrentDomain.BaseDirectory;
+            string sourceFolder = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
             string installFolder = args[1];
+
             if (!ValidDirectoryName(sourceFolder, true) && !ValidDirectoryName(installFolder, true))
             {
                 Console.WriteLine("Either update folder or installation folder is invalid! Press a key to exit the OCT updater.");
@@ -34,23 +35,59 @@ namespace Updater
             }
 
             // Kill running OCT before continuing (but allow 1 second for OCT to shut itself down).
-            Console.WriteLine("Installing new OCT version... pleae wait!");
-            Thread.Sleep(1000);
+            Console.WriteLine("Updating Overload Client Tool - please wait!");
 
-            // Copy new files to destination, overwriting any existing files.
-            DirectoryInfo dir = new DirectoryInfo(sourceFolder);
-            foreach (FileInfo fi in dir.GetFiles())
+            Console.WriteLine();
+            Console.WriteLine(String.Format($"Source folder: {sourceFolder}"));
+            Console.WriteLine(String.Format($"Install folder: {installFolder}"));
+            Console.WriteLine();
+
+            try
             {
-                if (!fi.Name.ToLower().Contains("update")) File.Copy(fi.FullName, Path.Combine(installFolder, fi.Name), true);
+                // Allow OCT to do a graceful shutdown before continuing.
+                Thread.Sleep(500);
+
+                KillRunningProcess("OverloadClientTool");
+
+                // Copy new files to destination, overwriting any existing files.
+                DirectoryInfo dir = new DirectoryInfo(sourceFolder);
+                foreach (FileInfo fi in dir.GetFiles()) if (!fi.Name.ToLower().Contains("update")) File.Copy(fi.FullName, Path.Combine(installFolder, fi.Name), true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message} - Press a key to exit the OCT updater.");
+                Console.ReadKey(true);
+                return;
             }
 
             // Finally launch the updated OCT application.
             Console.WriteLine("New files copied - restarting OCT");
 
-            Process appStart = new Process();
-            appStart.StartInfo = new ProcessStartInfo(Path.Combine(installFolder, "OverloadClientTool.exe"),  String.Format($"-cleanup \"{sourceFolder}\""));
-            appStart.StartInfo.WorkingDirectory = installFolder;
-            appStart.Start();
+            try
+            {
+                string app = Path.Combine(installFolder, "OverloadClientTool.exe");
+                string arg = String.Format($"-cleanup \"{Path.GetDirectoryName(sourceFolder)}\"");
+                string dir = Path.GetDirectoryName(installFolder);
+
+                Console.WriteLine();
+                Console.WriteLine(String.Format($"Destination: {dir}"));
+                Console.WriteLine(String.Format($"Application: {app}"));
+                Console.WriteLine(String.Format($"Arguments: {arg}"));
+                Console.WriteLine();
+
+                Console.WriteLine($"Update completed - Press a key to exit the OCT updater and start OCT");
+                Console.ReadKey(true);
+
+                Process appStart = new Process();
+                appStart.StartInfo = new ProcessStartInfo(Path.Combine(installFolder, "OverloadClientTool.exe"), String.Format($"-cleanup \"{Path.GetDirectoryName(sourceFolder)}\""));
+                appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(installFolder);
+                appStart.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message} - Press a key to exit the OCT updater.");
+                Console.ReadKey(true);
+            }
         }
 
         private static void KillRunningProcess(string name)

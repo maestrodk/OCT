@@ -108,6 +108,8 @@
             this.MailLinkLabel = new System.Windows.Forms.LinkLabel();
             this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
             this.EnableDebugCheckBox = new System.Windows.Forms.CheckBox();
+            this.AutoUpdateCheckBox = new System.Windows.Forms.CheckBox();
+            this.ForceUpdateButton = new System.Windows.Forms.Button();
             this.MainToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.OverloadGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
@@ -1046,7 +1048,9 @@
             this.PaneOptions.Controls.Add(this.MailLinkLabel);
             this.PaneOptions.Controls.Add(this.DebugFileNameLink);
             this.PaneOptions.Controls.Add(this.EnableDebugCheckBox);
+            this.PaneOptions.Controls.Add(this.AutoUpdateCheckBox);
             this.PaneOptions.Controls.Add(this.DarkThemeCheckBox);
+            this.PaneOptions.Controls.Add(this.ForceUpdateButton);
             this.PaneOptions.Location = new System.Drawing.Point(1573, 43);
             this.PaneOptions.Margin = new System.Windows.Forms.Padding(0);
             this.PaneOptions.Name = "PaneOptions";
@@ -1100,6 +1104,30 @@
             this.MainToolTip.SetToolTip(this.EnableDebugCheckBox, "Check this to save debugging info to a text file");
             this.EnableDebugCheckBox.UseVisualStyleBackColor = true;
             this.EnableDebugCheckBox.CheckedChanged += new System.EventHandler(this.EnableDebugCheckBox_CheckedChanged);
+            // 
+            // AutoUpdateCheckBox
+            // 
+            this.AutoUpdateCheckBox.AutoSize = true;
+            this.AutoUpdateCheckBox.Checked = true;
+            this.AutoUpdateCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AutoUpdateCheckBox.Location = new System.Drawing.Point(47, 81);
+            this.AutoUpdateCheckBox.Name = "AutoUpdateCheckBox";
+            this.AutoUpdateCheckBox.Size = new System.Drawing.Size(170, 17);
+            this.AutoUpdateCheckBox.TabIndex = 5;
+            this.AutoUpdateCheckBox.Text = "Check for update upon startup";
+            this.AutoUpdateCheckBox.UseVisualStyleBackColor = true;
+            this.AutoUpdateCheckBox.CheckedChanged += new System.EventHandler(this.AutoUpdateCheckBox_CheckedChanged);
+            // 
+            // ForceUpdateButton
+            // 
+            this.ForceUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ForceUpdateButton.Location = new System.Drawing.Point(223, 77);
+            this.ForceUpdateButton.Name = "ForceUpdateButton";
+            this.ForceUpdateButton.Size = new System.Drawing.Size(82, 23);
+            this.ForceUpdateButton.TabIndex = 14;
+            this.ForceUpdateButton.Text = "Update now";
+            this.ForceUpdateButton.UseVisualStyleBackColor = true;
+            this.ForceUpdateButton.Click += new System.EventHandler(this.ForceUpdateButton_Click);
             // 
             // MainToolTip
             // 
@@ -1257,6 +1285,8 @@
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.TextBox PilotXPTextBox;
         private System.Windows.Forms.Button PilotXPSetButton;
+        private System.Windows.Forms.CheckBox AutoUpdateCheckBox;
+        private System.Windows.Forms.Button ForceUpdateButton;
     }
 }
 

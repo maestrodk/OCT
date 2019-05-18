@@ -117,6 +117,11 @@ namespace OverloadClientTool
             get { return Properties.Settings.Default.AutoSavePilots; }
             set { Properties.Settings.Default.AutoSavePilots = value; }
         }
+        public bool AutoUpdateOCT
+        {
+            get { return Properties.Settings.Default.AutoUpdateOCT; }
+            set { Properties.Settings.Default.AutoUpdateOCT = value; }
+        }
 
         public void SaveSettings()
         {
@@ -298,14 +303,14 @@ namespace OverloadClientTool
             AutoPilotsBackupCheckbox.Checked = AutoSavePilots;
             OnlyUpdateExistingMapsCheckBox.Checked = UpdateOnlyExistingMaps;
             OnlineMapJsonUrl.Text = MapListUrl;
-
+            AutoUpdateCheckBox.Checked = AutoUpdateOCT;
             UseOlmodGameDirArg.Checked = PassGameDirToOlmod;
             AutoUpdateOlmod.Checked = OlmodAutoUpdate;
 
             // Get debug setting and update debug file name info.
             EnableDebugCheckBox.Checked = Debugging;
         }
-
+        
         private void UpdateTheme(Theme theme)
         {
             LogDebugMessage("UpdateTheme()");
