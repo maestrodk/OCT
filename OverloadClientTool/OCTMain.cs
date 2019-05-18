@@ -183,7 +183,6 @@ namespace OverloadClientTool
 
         [DllImport("shell32.dll")]
         static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
-
         public static string SpecialFolderLocalLowPath
         {
             get
@@ -1211,7 +1210,7 @@ namespace OverloadClientTool
                         }
                         catch (Exception ex)
                         {
-                            Error(String.Format($"Map move {sourceFileName} to {destinationFileName} failed!"));
+                            Error(String.Format($"Map move {sourceFileName} to {destinationFileName} failed: {ex.Message}"));
                         }
                     }
                 }
@@ -1293,10 +1292,10 @@ namespace OverloadClientTool
                 string toolTipString = map.DisplayMapInfo;
 
                 // Don't do anything tooltip text is the current tooltip .
-                if (MapsToolTip.GetToolTip(lb) != toolTipString) MapsToolTip.SetToolTip(lb, toolTipString);
+                if (MainToolTip.GetToolTip(lb) != toolTipString) MainToolTip.SetToolTip(lb, toolTipString);
             }
             else
-                MapsToolTip.Hide(lb);
+                MainToolTip.Hide(lb);
         }
 
         // Log an informational message.

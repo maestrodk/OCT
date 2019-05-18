@@ -108,7 +108,7 @@
             this.MailLinkLabel = new System.Windows.Forms.LinkLabel();
             this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
             this.EnableDebugCheckBox = new System.Windows.Forms.CheckBox();
-            this.MapsToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.MainToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.OverloadGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
@@ -223,7 +223,7 @@
             this.DarkThemeCheckBox.Size = new System.Drawing.Size(101, 17);
             this.DarkThemeCheckBox.TabIndex = 5;
             this.DarkThemeCheckBox.Text = "Use dark theme";
-            this.MapsToolTip.SetToolTip(this.DarkThemeCheckBox, "Switch between dark/light themes");
+            this.MainToolTip.SetToolTip(this.DarkThemeCheckBox, "Switch between dark/light themes");
             this.DarkThemeCheckBox.UseVisualStyleBackColor = true;
             this.DarkThemeCheckBox.CheckedChanged += new System.EventHandler(this.SelectDark_CheckedChanged);
             // 
@@ -237,7 +237,7 @@
             this.UseEmbeddedOlproxy.Size = new System.Drawing.Size(136, 17);
             this.UseEmbeddedOlproxy.TabIndex = 5;
             this.UseEmbeddedOlproxy.Text = "Use embedded Olproxy";
-            this.MapsToolTip.SetToolTip(this.UseEmbeddedOlproxy, "Use the built-in Olproxy");
+            this.MainToolTip.SetToolTip(this.UseEmbeddedOlproxy, "Use the built-in Olproxy");
             this.UseEmbeddedOlproxy.UseVisualStyleBackColor = true;
             this.UseEmbeddedOlproxy.CheckedChanged += new System.EventHandler(this.UseEmbeddedOlproxy_CheckedChanged);
             // 
@@ -333,7 +333,7 @@
             this.UseOlproxyCheckBox.Size = new System.Drawing.Size(83, 17);
             this.UseOlproxyCheckBox.TabIndex = 5;
             this.UseOlproxyCheckBox.Text = "Use Olproxy";
-            this.MapsToolTip.SetToolTip(this.UseOlproxyCheckBox, "Start Olproxy when Overload/Olmod is started");
+            this.MainToolTip.SetToolTip(this.UseOlproxyCheckBox, "Start Olproxy when Overload/Olmod is started");
             this.UseOlproxyCheckBox.UseVisualStyleBackColor = true;
             this.UseOlproxyCheckBox.CheckedChanged += new System.EventHandler(this.UseOlproxy_CheckedChanged);
             // 
@@ -347,7 +347,7 @@
             this.UseOlmodCheckBox.Size = new System.Drawing.Size(78, 17);
             this.UseOlmodCheckBox.TabIndex = 5;
             this.UseOlmodCheckBox.Text = "Use Olmod";
-            this.MapsToolTip.SetToolTip(this.UseOlmodCheckBox, "If checked then Olmod will be used to run Overload");
+            this.MainToolTip.SetToolTip(this.UseOlmodCheckBox, "If checked then Olmod will be used to run Overload");
             this.UseOlmodCheckBox.UseVisualStyleBackColor = true;
             this.UseOlmodCheckBox.CheckedChanged += new System.EventHandler(this.UseOlmod_CheckedChanged);
             // 
@@ -361,7 +361,7 @@
             this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(115, 17);
             this.UseDLCLocationCheckBox.TabIndex = 5;
             this.UseDLCLocationCheckBox.Text = "Use DLC directory ";
-            this.MapsToolTip.SetToolTip(this.UseDLCLocationCheckBox, "Save downloaded map ZIP files to Overload DLC folder");
+            this.MainToolTip.SetToolTip(this.UseDLCLocationCheckBox, "Save downloaded map ZIP files to Overload DLC folder");
             this.UseDLCLocationCheckBox.UseVisualStyleBackColor = true;
             this.UseDLCLocationCheckBox.Click += new System.EventHandler(this.UseDLCLocationCheckBox_Click);
             // 
@@ -373,7 +373,7 @@
             this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(149, 17);
             this.AutoUpdateMapsCheckBox.TabIndex = 5;
             this.AutoUpdateMapsCheckBox.Text = "Update all maps at startup";
-            this.MapsToolTip.SetToolTip(this.AutoUpdateMapsCheckBox, "Do an update of all maps at startup (may take a bit of extra time)");
+            this.MainToolTip.SetToolTip(this.AutoUpdateMapsCheckBox, "Do an update of all maps at startup (may take a bit of extra time)");
             this.AutoUpdateMapsCheckBox.UseVisualStyleBackColor = true;
             this.AutoUpdateMapsCheckBox.Click += new System.EventHandler(this.AutoUpdateMaps_Click);
             // 
@@ -437,7 +437,7 @@
             this.OnlyUpdateExistingMapsCheckBox.Size = new System.Drawing.Size(149, 17);
             this.OnlyUpdateExistingMapsCheckBox.TabIndex = 5;
             this.OnlyUpdateExistingMapsCheckBox.Text = "Only update existing maps";
-            this.MapsToolTip.SetToolTip(this.OnlyUpdateExistingMapsCheckBox, "Only update map ZIP files already on disk");
+            this.MainToolTip.SetToolTip(this.OnlyUpdateExistingMapsCheckBox, "Only update map ZIP files already on disk");
             this.OnlyUpdateExistingMapsCheckBox.UseVisualStyleBackColor = true;
             this.OnlyUpdateExistingMapsCheckBox.CheckedChanged += new System.EventHandler(this.OnlyUpdateExistingMapsCheckBox_CheckedChanged);
             // 
@@ -725,7 +725,7 @@
             this.AutoPilotsBackupCheckbox.Size = new System.Drawing.Size(280, 17);
             this.AutoPilotsBackupCheckbox.TabIndex = 5;
             this.AutoPilotsBackupCheckbox.Text = "Do a backup of all pilots each time Overload is started";
-            this.MapsToolTip.SetToolTip(this.AutoPilotsBackupCheckbox, "Check this to save a ZIP\'ed backup of all pilots when Overload/Olmod starts");
+            this.MainToolTip.SetToolTip(this.AutoPilotsBackupCheckbox, "Check this to save a ZIP\'ed backup of all pilots when Overload/Olmod starts");
             this.AutoPilotsBackupCheckbox.UseVisualStyleBackColor = true;
             this.AutoPilotsBackupCheckbox.CheckedChanged += new System.EventHandler(this.AutoPilotsBackupCheckbox_CheckedChanged);
             // 
@@ -974,7 +974,7 @@
             this.UseOlmodGameDirArg.Size = new System.Drawing.Size(120, 17);
             this.UseOlmodGameDirArg.TabIndex = 5;
             this.UseOlmodGameDirArg.Text = "Use -gamedir option";
-            this.MapsToolTip.SetToolTip(this.UseOlmodGameDirArg, "Enable this to use Olmod \'-gamedir\' to tell Olmod where Overload is installed");
+            this.MainToolTip.SetToolTip(this.UseOlmodGameDirArg, "Enable this to use Olmod \'-gamedir\' to tell Olmod where Overload is installed");
             this.UseOlmodGameDirArg.UseVisualStyleBackColor = true;
             this.UseOlmodGameDirArg.CheckedChanged += new System.EventHandler(this.UseGameDirArg_CheckedChanged);
             // 
@@ -988,7 +988,7 @@
             this.AutoUpdateOlmod.Size = new System.Drawing.Size(117, 17);
             this.AutoUpdateOlmod.TabIndex = 5;
             this.AutoUpdateOlmod.Text = "Auto-update Olmod";
-            this.MapsToolTip.SetToolTip(this.AutoUpdateOlmod, "Enable this to automatically update Olmod when OCT starts");
+            this.MainToolTip.SetToolTip(this.AutoUpdateOlmod, "Enable this to automatically update Olmod when OCT starts");
             this.AutoUpdateOlmod.UseVisualStyleBackColor = true;
             this.AutoUpdateOlmod.CheckedChanged += new System.EventHandler(this.AutoUpdateOlmod_CheckedChanged);
             // 
@@ -1062,7 +1062,7 @@
             this.PayPalLink.TabIndex = 18;
             this.PayPalLink.TabStop = true;
             this.PayPalLink.Text = "If you really like OCT consider buying me a cup of coffee :)";
-            this.MapsToolTip.SetToolTip(this.PayPalLink, "This is TOTALLY optional as OCT will always be free!");
+            this.MainToolTip.SetToolTip(this.PayPalLink, "This is TOTALLY optional as OCT will always be free!");
             this.PayPalLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PayPalLink_LinkClicked);
             // 
             // MailLinkLabel
@@ -1097,15 +1097,15 @@
             this.EnableDebugCheckBox.Size = new System.Drawing.Size(129, 17);
             this.EnableDebugCheckBox.TabIndex = 5;
             this.EnableDebugCheckBox.Text = "Enable debug logging";
-            this.MapsToolTip.SetToolTip(this.EnableDebugCheckBox, "Check this to save debugging info to a text file");
+            this.MainToolTip.SetToolTip(this.EnableDebugCheckBox, "Check this to save debugging info to a text file");
             this.EnableDebugCheckBox.UseVisualStyleBackColor = true;
             this.EnableDebugCheckBox.CheckedChanged += new System.EventHandler(this.EnableDebugCheckBox_CheckedChanged);
             // 
-            // MapsToolTip
+            // MainToolTip
             // 
-            this.MapsToolTip.AutoPopDelay = 5000;
-            this.MapsToolTip.InitialDelay = 1000;
-            this.MapsToolTip.ReshowDelay = 100;
+            this.MainToolTip.AutoPopDelay = 5000;
+            this.MainToolTip.InitialDelay = 1000;
+            this.MainToolTip.ReshowDelay = 100;
             // 
             // OCTMain
             // 
@@ -1247,7 +1247,7 @@
         private System.Windows.Forms.CheckBox EnableDebugCheckBox;
         private System.Windows.Forms.LinkLabel DebugFileNameLink;
         private System.Windows.Forms.Button MapRefreshButton;
-        private System.Windows.Forms.ToolTip MapsToolTip;
+        private System.Windows.Forms.ToolTip MainToolTip;
         private System.Windows.Forms.LinkLabel OverloadLog;
         private System.Windows.Forms.LinkLabel MailLinkLabel;
         private System.Windows.Forms.CheckBox UseOlmodGameDirArg;

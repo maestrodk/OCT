@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
+using OverloadClientApplication;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -16,6 +18,38 @@ namespace OverloadClientTool
 {
     static class OverloadClientApplication
     {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main(string[] args)
+        {
+            // Setup debug logging.
+            string startDateTime = DateTime.Now.ToString("yyyy-dd-MM HH:mm:ss");
+            string debugFileFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OverloadClientTool\\Debug");
+            string debugFileName = Path.Combine(debugFileFolder, String.Format($"OCT_Debug_{startDateTime.Replace(":", "").Replace("-", "").Replace(" ", "_")}.txt"));
+            try { Directory.CreateDirectory(debugFileFolder); } catch { }
+
+            LogDebugMessage("OCT application startup.", debugFileName);
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            // Check for update.
+            UpdateCheck(debugFileName);
+
+            try
+            {
+                LogDebugMessage("Starting OCT main UI thread.", debugFileName);
+                Application.Run(new OCTMain(args, debugFileName));
+                LogDebugMessage("OCT main exit - shutting UI thread.", debugFileName);
+            }
+            catch (Exception ex)
+            {
+                LogDebugMessage(String.Format($"OCT exited due to an unexpected error: {ex.Message} at {ex.TargetSite}"), debugFileName);
+            }
+        }
+
         public static void LogDebugMessage(string message, string logFileName = null)
         {
             message = String.IsNullOrEmpty(message) ? Environment.NewLine : message + Environment.NewLine;
@@ -118,97 +152,93 @@ namespace OverloadClientTool
             foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) return process;
             return null;
         }
-
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main(string[] args)
+  
+        private static void UpdateCheck(string debugFileName)
         {
-            // Setup debug logging.
-            string startDateTime = DateTime.Now.ToString("yyyy-dd-MM HH:mm:ss");
-            string debugFileFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OverloadClientTool\\Debug");
-            string debugFileName = Path.Combine(debugFileFolder, String.Format($"OCT_Debug_{startDateTime.Replace(":", "").Replace("-", "").Replace(" ", "_")}.txt"));
-            try { Directory.CreateDirectory(debugFileFolder); } catch { }
-
-            LogDebugMessage("OCT application startup.", debugFileName);
-
             LogDebugMessage("Checking for new release.", debugFileName);
-
-            OCTRelease release = GetLastestRelease;
-            if (release != null)
-            {
-                LogDebugMessage("Got release info - checking for current vs new release info.", debugFileName);
-
-                string newVersion = release.Version.ToLower().Replace("v.", "").Replace("v", "");
-
-                bool upgrading = false; 
-                using (var process = Process.GetCurrentProcess())
-                {
-                    string currentVersion = GetFileVersion(process.MainModule.FileName).Replace("v", "");
-                    string[] currentVersionDotSplit = currentVersion.Split(".".ToCharArray());
-
-                    if (currentVersionDotSplit.Length > 2) currentVersion = currentVersionDotSplit[0] + "." + currentVersionDotSplit[1] + "." + currentVersionDotSplit[2];
-
-                    if (currentVersion != newVersion)
-                    {
-                        LogDebugMessage(String.Format($"New update is available - chaining to OCTUpdater.", debugFileName));
-
-                        // Do the update.
-                        Process appStart = new Process();
-                        appStart.StartInfo = new ProcessStartInfo(Path.Combine(Path.GetDirectoryName(process.MainModule.FileName), "OCTUpdater.exe"));
-
-                        upgrading = true;
-
-                        // Pass current version, new version and install folder.
-                        appStart.StartInfo.Arguments = String.Format($"-update {currentVersion.Replace(" ", "_")} {newVersion.Replace(" ", "_")} {Path.GetDirectoryName(process.MainModule.FileName)}");
-
-                        try { appStart.Start(); } catch { LogDebugMessage(String.Format($"Cannot start OCTUpdater!", debugFileName));  }
-                    }
-                }
-
-                if (upgrading)
-                {
-                    LogDebugMessage(String.Format($"Waiting for OCTUpdater to finish.", debugFileName));
-
-                    Thread.Sleep(2000);
-                    while (GetRunningProcess("OCTUpdater") != null) Thread.Sleep(500);
-
-                    LogDebugMessage(String.Format($"It seems no update took plac, continuing OCT startup.", debugFileName));
-
-                }
-                else
-                {
-                    LogDebugMessage(String.Format($"No update available - continuing OCT startup.", debugFileName));
-                }
-            }
-            else
-            {
-                LogDebugMessage("Could not get info on new OCT release (timeout or unexpected error).", debugFileName);
-            }
 
             try
             {
-                LogDebugMessage("Starting OCT main UI thread.", debugFileName);
+                OCTRelease release = GetLastestRelease;
+                if (release != null)
+                {
+                    LogDebugMessage("Got release info - checking for current vs new release info.", debugFileName);
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new OCTMain(args, debugFileName));
+                    // Fix version numbers so they are both in xx.yy.zz format (3 components and numbers only).
+                    string newVersion = release.Version.ToLower().Replace("v.", "").Replace("v", "");
+                    string[] newVersionSplit = newVersion.Split(".".ToCharArray());
+                    if (newVersionSplit.Length > 3) newVersion = newVersionSplit[0] + "." + newVersionSplit[1] + "." + newVersionSplit[2];
 
-                LogDebugMessage("OCT main exit - shutting UI thread.", debugFileName);
+                    string currentVersion = null;
+                    using (var process = Process.GetCurrentProcess()) currentVersion = GetFileVersion(process.MainModule.FileName);
+                    string[] currentVersionSplit = currentVersion.Split(".".ToCharArray());
+                    if (currentVersionSplit.Length > 3) currentVersion = currentVersionSplit[0] + "." + currentVersionSplit[1] + "." + currentVersionSplit[2];
+
+                    // Check if update is available.
+                    if (!String.IsNullOrEmpty(currentVersion) && (currentVersion != newVersion)) PerformUpdate(release, currentVersion, newVersion, AppDomain.CurrentDomain.BaseDirectory);
+                    else LogDebugMessage(String.Format($"No update available - continuing OCT startup.", debugFileName));
+                }
+                else
+                {
+                    LogDebugMessage("Could not get info on new OCT release (timeout or unexpected error).", debugFileName);
+                }
             }
             catch (Exception ex)
             {
-                LogDebugMessage(String.Format($"OCT exited due to an unexpected error: {ex.Message} at {ex.TargetSite}"), debugFileName);
+                LogDebugMessage(String.Format($"Unable to check/perform OCT update: {ex.Message}"), debugFileName);
             }
         }
 
-        public class OCTRelease
+        private static void KillRunningProcess(string name)
         {
-            public string DownloadUrl { get; set; }
-            public long Size { get; set; }
-            public DateTime Created { get; set; }
-            public string Version { get; set; }
+            foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) process.Kill();
+        }
+
+        private static void PerformUpdate(OCTRelease release, string currentVersion, string newVersion, string installFolder)
+        {
+            OCTUpdateForm updateForm = new OCTUpdateForm(release, currentVersion, newVersion, installFolder);
+            updateForm.StartPosition = FormStartPosition.CenterScreen;
+            if (updateForm.ShowDialog() == DialogResult.Cancel) return;
+
+            string localTempZip = Path.GetTempFileName() + "_OCT_Update.zip";
+            string localTempFolder = Path.GetTempFileName() + "_OCT_Update";
+            Directory.CreateDirectory(localTempFolder);
+
+            try
+            {
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => { return true; };
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                using (WebClient wc = new WebClient())
+                {
+                    wc.Headers.Add("User-Agent", "Overload Client Tool - user " + WindowsIdentity.GetCurrent().Name);
+                    wc.DownloadFile(release.DownloadUrl, localTempZip);
+                }
+
+                ZipFile.ExtractToDirectory(localTempZip, localTempFolder);
+
+                string localSourceFolder = localTempFolder;
+
+                // If the ZIP contains a folder then the files to copy will be inside this.
+                DirectoryInfo subDirList = new DirectoryInfo(localTempFolder);
+                DirectoryInfo[] subDirs = subDirList.GetDirectories();
+                if (subDirs.Length > 0) localSourceFolder = subDirs[0].FullName;
+
+                Process appStart = new Process();
+                appStart.StartInfo = new ProcessStartInfo(Path.Combine(localSourceFolder, "Updater.exe"), String.Format($"-installfolder \"{installFolder}\""));
+                appStart.StartInfo.WorkingDirectory = localSourceFolder;
+                appStart.Start();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Format($"Error downloading/running OCT updater from Github: {ex.Message}"));
+            }
+            finally
+            {
+                if (ValidFileName(localTempZip, true)) try { File.Delete(localTempZip); } catch { }
+                if (ValidDirectoryName(localTempFolder, true)) try { RemoveDirectory(localTempFolder); } catch { }
+            }
         }
 
         public static OCTRelease GetLastestRelease

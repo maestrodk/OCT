@@ -14,13 +14,6 @@ namespace OverloadClientTool
     {
         OCTMain parent;
 
-        private bool isDark;
-
-        Color darkPane;
-        Color lightPane;
-        Color controlDark;
-        Color controlLight;
-
         public InputBox()
         {
             InitializeComponent();

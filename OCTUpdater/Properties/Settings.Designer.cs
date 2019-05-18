@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OCTUpdater.Properties
+namespace OverloadClientApplication.Properties
 {
 
 

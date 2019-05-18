@@ -8,6 +8,8 @@ using System.Security.Principal;
 using System.Diagnostics;
 using System.IO.Compression;
 
+using OverloadClientTool;
+
 namespace OverloadClientApplication
 {
     public partial class OCTUpdateForm : Form
@@ -19,14 +21,14 @@ namespace OverloadClientApplication
         private string newVersion = null;
         private string installFolder = null;
 
-
         private OCTUpdateForm() { }
 
-        public OCTUpdateForm(string currentVersion, string newVersion, string installFolder)
+        public OCTUpdateForm(OCTRelease release, string currentVersion, string newVersion, string installFolder)
         {
             this.currentVersion = currentVersion;
             this.newVersion = newVersion;
             this.installFolder = installFolder;
+            this.release = release;
 
             InitializeComponent();
 
@@ -36,14 +38,6 @@ namespace OverloadClientApplication
 
         private const string jsonOverloadClientUrl = @"https://api.github.com/repos/maestrodk/oct/releases/latest";
         private const string jsonZipField = @"browser_download_url";
-
-        public class OCTRelease
-        {
-            public string DownloadUrl { get; set; }
-            public long Size { get; set; }
-            public DateTime Created { get; set; }
-            public string Version { get; set; }
-        }
 
         public static OCTRelease GetLastestRelease
         {
@@ -94,11 +88,7 @@ namespace OverloadClientApplication
             return null;
         }
 
-        private void KillRunningProcess(string name)
-        {
-            foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) process.Kill();
-        }
-
+  
         public bool ValidFileName(string path, bool mustExist = false)
         {
             try
@@ -172,83 +162,17 @@ namespace OverloadClientApplication
             }
         }
 
-        public void DownloadAndInstall(string localInstallFolder)
-        {
-            string localTempZip = Path.GetTempFileName() + "_OCT_Update.zip";
-            string localTempFolder = Path.GetTempFileName() + "_OCT_Update";
-            Directory.CreateDirectory(localTempFolder);
-
-            // Shutdown running OCT before copying files.
-            KillRunningProcess("OverloadClientTool");
-
-            try
-            {
-                System.Net.ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => { return true; };
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                using (WebClient wc = new WebClient())
-                {
-                    wc.Headers.Add("User-Agent", "Overload Client Tool - user " + WindowsIdentity.GetCurrent().Name);
-                    wc.DownloadFile(release.DownloadUrl, localTempZip);
-                }
-
-                ZipFile.ExtractToDirectory(localTempZip, localTempFolder);
-
-                string localSourceFolder = localTempFolder;
-
-                // If the ZIP contains a folder then the files to copy will be inside this.
-                DirectoryInfo subDirList = new DirectoryInfo(localTempFolder);
-                DirectoryInfo[] subDirs = subDirList.GetDirectories();
-                if (subDirs.Length > 0) localSourceFolder = subDirs[0].FullName;
-
-                // Copy all files to destination, overwriting any existing files.
-                DirectoryInfo dir = new DirectoryInfo(localSourceFolder);
-                foreach (FileInfo fi in dir.GetFiles()) if (!fi.Name.ToLower().Contains("newtonsoft")) File.Copy(fi.FullName, Path.Combine(localInstallFolder, fi.Name), true);
-
-                // Time stamp OverloadClientTool.exe.
-                File.SetCreationTime(Path.Combine(localInstallFolder, "OverloadClientTool.exe"), release.Created);
-                File.SetLastWriteTime(Path.Combine(localInstallFolder, "OverloadClientTool.exe"), release.Created);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(String.Format($"Cannot download OCT installation ZIP file from Github: {ex.Message}"));
-            }
-            finally
-            {
-                if (ValidFileName(localTempZip, true)) try { File.Delete(localTempZip); } catch { }
-                if (ValidDirectoryName(localTempFolder, true)) try { RemoveDirectory(localTempFolder); } catch { }
-            }
-
-            // Restart OCT.
-            Process appStart = new Process();
-            appStart.StartInfo = new ProcessStartInfo(Path.Combine(localInstallFolder, "OverloadClientTool.exe"));
-            appStart.StartInfo.WorkingDirectory = localInstallFolder;
-            appStart.Start();
-            
-            Close();
-        }
-
+ 
         private void UpgradeButton_Click(object sender, EventArgs e)
         {
-            DownloadAndInstall(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory));
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void DeclineUpgrade_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.Cancel;
             Close();
-        }
-
-        private void OCTUpdateForm_Load(object sender, EventArgs e)
-        {
-            release = GetLastestRelease;
-            if (release == null) Close();
-
-            string version = release.Version.ToLower().Replace("v.", "").Replace("v", "");
-            string[] currentVersionDotSplit = version.Split(".".ToCharArray());
-            if (currentVersionDotSplit.Length > 2) version = currentVersionDotSplit[0] + "." + currentVersionDotSplit[1] + "." + currentVersionDotSplit[2];
-
-            OCTNewVersion.Text = "New version available is " + version;
         }
     }
 }

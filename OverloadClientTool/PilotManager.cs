@@ -121,10 +121,6 @@ namespace OverloadClientTool
         
         private void BackgroundPilotChecker(object sender, DoWorkEventArgs e)
         {
-            List<String> s = new List<String>(10);
-            s[4] = "";
-
-            int i = 0;
             while (true)
             {
                 Thread.Sleep(1000);
@@ -231,7 +227,7 @@ namespace OverloadClientTool
                         try { File.Move(Path.Combine(pilotsPath, newPilot + ".xprefs"), Path.Combine(pilotsPath, pilotSelected + ".xprefs")); } catch { }
                         try { File.Move(Path.Combine(pilotsPath, newPilot + ".xscores"), Path.Combine(pilotsPath, pilotSelected + ".xscores")); } catch { }
 
-                        MessageBox.Show("Something went wrong during pilot rename (will try to rollback changes)!");
+                        MessageBox.Show($"Something went wrong during pilot rename (will try to rollback changes): {ex.Message}!");
                     }
                     finally
                     {
