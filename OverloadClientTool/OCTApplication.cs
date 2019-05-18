@@ -165,7 +165,7 @@ namespace OverloadClientTool
                     LogDebugMessage("Got release info - checking for current vs new release info.", debugFileName);
 
                     // Fix version numbers so they are both in xx.yy.zz format (3 components and numbers only).
-                    string newVersion = release.Version.ToLower().Replace("v.", "").Replace("v", "");
+                    string newVersion = VersionStringFix(release.Version);
                     string[] newVersionSplit = newVersion.Split(".".ToCharArray());
                     if (newVersionSplit.Length > 3) newVersion = newVersionSplit[0] + "." + newVersionSplit[1] + "." + newVersionSplit[2];
 
@@ -187,6 +187,14 @@ namespace OverloadClientTool
             {
                 LogDebugMessage(String.Format($"Unable to check/perform OCT update: {ex.Message}"), debugFileName);
             }
+        }
+
+        private static string VersionStringFix(string version)
+        {
+            var result = string.Empty;
+            foreach (char c in version) if ((c == '.') || (c >= '0' && c <= '9')) result += c;
+            if (result.StartsWith(".")) result = result.Substring(1);
+            return result;
         }
 
         private static void KillRunningProcess(string name)
