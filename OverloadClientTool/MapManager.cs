@@ -264,6 +264,7 @@ namespace OverloadClientTool
 
         // Optional local map location is Overload DLC (not recommended but used by some people so also supported).
         private string dlcMapFolder = null;
+        public bool SaveNewMapsToDLCFolder = false;
 
         // Delegate for sending log messages to main application.
         public delegate void LogMessageDelegate(string message);
@@ -492,7 +493,7 @@ namespace OverloadClientTool
         /// <param name="dlcMaps">Path to local Overload DLC directory.</param>
         /// <param name="applicationDataMaps">Path to local Overload application data directory.</param>
         /// <returns></returns>
-        public bool UpdateAllMaps(string mapListUrl = null, string dlcMaps = null, string applicationDataMaps = null)
+        public bool UpdateAllMaps(string mapListUrl, string dlcMaps, string applicationDataMaps)
         {
             Checked = 0;
             Created = 0;
@@ -512,7 +513,7 @@ namespace OverloadClientTool
                 int started = 0;
                 foreach (KeyValuePair<string, OverloadMap> sortedMmap in Maps)
                 {
-                    var task = UpdateMap(sortedMmap.Value);
+                    var task = UpdateMap(sortedMmap.Value, false);
                     downloadTasks.Add(task);
                     try { task.Start(); } catch { }
 
@@ -539,16 +540,28 @@ namespace OverloadClientTool
         /// </summary>
         /// <param name="map">The map to update.</param>
         /// <returns></returns>
-        public async Task<bool> UpdateMap(OverloadMap map, bool forceUpdate = false)
+        public async Task<bool> UpdateMap(OverloadMap map, bool forceUpdate)
         {
             Checked++;
 
             if (String.IsNullOrEmpty(map.Url)) return false;
 
             string mapZipName = map.ZipName;
-            string mapDirectoryPath = String.IsNullOrEmpty(dlcMapFolder) ? applicationMapFolder : dlcMapFolder;
+            string mapDirectoryPath = (String.IsNullOrEmpty(dlcMapFolder) || !SaveNewMapsToDLCFolder) ? applicationMapFolder : dlcMapFolder;
             string mapZipFilePath = WebUtility.UrlDecode(Path.Combine(mapDirectoryPath, mapZipName));
             string mapZipDisplayName = WebUtility.UrlDecode(mapZipName).Trim();
+
+            // Check if we should use existing download path.
+            if (map.InDLCFolder)
+            {
+                mapDirectoryPath = Path.GetDirectoryName(map.LocalDLCZipFileName);
+                mapZipFilePath = map.LocalDLCZipFileName;
+            }
+            else if (map.InApplicationDataFolder)
+            {
+                mapDirectoryPath = Path.GetDirectoryName(map.LocalZipFileName);
+                mapZipFilePath = map.LocalZipFileName;
+            }
 
             // Create (DLC or application data) directory if it doesn't exist.
             if (!Directory.Exists(mapDirectoryPath)) Directory.CreateDirectory(mapDirectoryPath);

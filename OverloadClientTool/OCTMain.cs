@@ -235,17 +235,16 @@ namespace OverloadClientTool
             {
                 if (System.IO.File.Exists(OverloadExecutable.Text))
                 {
-                    if (Directory.Exists(Path.GetDirectoryName(OverloadExecutable.Text)))
-                    {
-                        dlcLocation = Path.Combine(Path.GetDirectoryName(OverloadExecutable.Text), "DLC");
-                        Directory.CreateDirectory(dlcLocation);
-                    }
+                    if (Directory.Exists(Path.GetDirectoryName(OverloadExecutable.Text))) CheckCreateDirectory(Path.Combine(Path.GetDirectoryName(OverloadExecutable.Text), "DLC"));
+
+                    dlcLocation = Path.Combine(Path.GetDirectoryName(OverloadExecutable.Text), "DLC");
                     UseDLCLocationCheckBox.Enabled = true;
-                    UseDLCLocation = true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                LogDebugMessage(String.Format($""));
+
                 dlcLocation = null;
                 UseDLCLocationCheckBox.Enabled = false;
                 UseDLCLocation = false;
@@ -986,6 +985,7 @@ namespace OverloadClientTool
             string dlcFolder = OverloadClientApplication.ValidDirectoryName(OverloadPath) ? Path.Combine(Path.GetDirectoryName(OverloadPath), "DLC") : null;
             string appFolder = OverloadClientApplication.ValidDirectoryName(appPath) ? appPath : null;
 
+            mapManager.SaveNewMapsToDLCFolder = UseDLCLocation && OverloadClientApplication.ValidDirectoryName(dlcFolder, true);
             mapManager.UpdateMapList(MapListUrl, dlcFolder, appFolder);
         }
 
@@ -1062,6 +1062,9 @@ namespace OverloadClientTool
                 return;
             }
 
+            string dlcFolder = OverloadClientApplication.ValidDirectoryName(OverloadPath) ? Path.Combine(Path.GetDirectoryName(OverloadPath), "DLC") : null;
+            mapManager.SaveNewMapsToDLCFolder = UseDLCLocation && OverloadClientApplication.ValidDirectoryName(dlcFolder, true);
+
             await mapManager.UpdateMap(map, true);
 
             UpdateListBox();
@@ -1119,6 +1122,9 @@ namespace OverloadClientTool
         {
             MapUpdateButton.Enabled = false;
 
+            string dlcFolder = OverloadClientApplication.ValidDirectoryName(OverloadPath) ? Path.Combine(Path.GetDirectoryName(OverloadPath), "DLC") : null;
+            mapManager.SaveNewMapsToDLCFolder = UseDLCLocation && OverloadClientApplication.ValidDirectoryName(dlcFolder, true);
+
             // Start updating maps in a separate thread.
             mapManagerThread = new Thread(UpdateMapThread);
             mapManagerThread.IsBackground = true;
@@ -1146,11 +1152,12 @@ namespace OverloadClientTool
                 if (UpdateOnlyExistingMaps) Verbose(String.Format("Checking for updated maps."));
                 else Verbose(String.Format("Checking for new/updated maps."));
 
-                Verbose(String.Format("Overload " + ((UseDLCLocation) ? "DLC" : "application") + " folder used for maps."));
+                mapManager.SaveNewMapsToDLCFolder = (UseDLCLocation && !String.IsNullOrEmpty(dlcLocation));
+                Verbose(String.Format("Overload " + ((UseDLCLocation && !String.IsNullOrEmpty(dlcLocation)) ? "DLC" : "application") + " folder used for new maps."));
             });
 
             // UpdateAllMaps() must not touch UI elements!
-            mapManager.UpdateAllMaps(OnlineMapJsonUrl.Text);
+            mapManager.UpdateAllMaps(OnlineMapJsonUrl.Text, dlcLocation, null);
 
             this.UIThread(delegate
             {
@@ -1205,8 +1212,14 @@ namespace OverloadClientTool
 
                         try
                         {
+                            FileInfo fiSource = new FileInfo(sourceFileName);
+
                             if (System.IO.File.Exists(destinationFileName)) System.IO.File.Delete(destinationFileName);
-                            System.IO.File.Move(Path.Combine(source, Path.GetFileName(fileName)), Path.Combine(destination, Path.GetFileName(fileName)));
+                            System.IO.File.Move(sourceFileName, destinationFileName);
+
+                            // Set local files date and time.
+                            System.IO.File.SetCreationTime(destinationFileName, fiSource.CreationTime);
+                            System.IO.File.SetLastWriteTime(destinationFileName, fiSource.LastWriteTime);
                         }
                         catch (Exception ex)
                         {
@@ -1236,12 +1249,14 @@ namespace OverloadClientTool
 
                     case DialogResult.No:
                         UseDLCLocationCheckBox.Checked = true;
+                        UseDLCLocation = true;
                         Verbose(String.Format("Overload DLC directory used for maps."));
                         break;
 
                     default:
                         // TO-DO: Move existing maps.
                         UseDLCLocationCheckBox.Checked = true;
+                        UseDLCLocation = true;
                         Verbose(String.Format("Overload DLC directory used for maps."));
                         MoveMaps(overloadMapLocation, dlcLocation);
                         break;
@@ -1259,12 +1274,14 @@ namespace OverloadClientTool
                     case DialogResult.No:
                         Verbose(String.Format("Overload ProgramData directory used for maps."));
                         UseDLCLocationCheckBox.Checked = false;
+                        UseDLCLocation = false;
                         break;
 
                     default:
                         Verbose(String.Format("Overload ProgramData directory used for maps."));
                         MoveMaps(dlcLocation, overloadMapLocation);
                         UseDLCLocationCheckBox.Checked = false;
+                        UseDLCLocation = false;
                         break;
                 }
             }
@@ -1416,5 +1433,5 @@ namespace OverloadClientTool
             {
             }            
         }
-   }
+    }
 }
