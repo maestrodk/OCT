@@ -50,9 +50,14 @@ namespace Updater
 
             try
             {
-                // At this point OCT will already have saved settings and shut itself down.
+                Thread.Sleep(2000);
+
+                // At this point OCT should already have saved settings and shut itself down.
                 // But we make sure it isn't running just to be on the safe side.
                 KillRunningProcess("OverloadClientTool");
+
+                // Give Windows a little time to release file locks (issue with Newtonsoft DLL).
+                Thread.Sleep(1000);
 
                 // Copy new files to destination, overwriting any existing files.
                 DirectoryInfo dir = new DirectoryInfo(sourceFolder);
@@ -60,8 +65,10 @@ namespace Updater
                 {
                     if (!fi.Name.ToLower().Contains("update"))
                     {
-                        Console.WriteLine(String.Format($"Copying {fi.Name}"));
-                        File.Copy(fi.FullName, Path.Combine(installFolder, fi.Name), true);
+                        Console.WriteLine(String.Format($"Installing {fi.Name}"));
+
+                        if (!fi.Name.ToLower().Contains("newtonsoft")) File.Copy(fi.FullName, Path.Combine(installFolder, fi.Name), true);
+                        else try { File.Copy(fi.FullName, Path.Combine(installFolder, fi.Name), true); } catch { }
                     }
                 }
             }

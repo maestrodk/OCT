@@ -90,7 +90,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.ClientSize = new System.Drawing.Size(199, 142);
+            this.ClientSize = new System.Drawing.Size(189, 142);
+            this.ControlBox = false;
             this.Controls.Add(this.OCTCurrentVersion);
             this.Controls.Add(this.UpdateQuestion);
             this.Controls.Add(this.OCTNewVersion);
@@ -98,7 +99,9 @@
             this.Controls.Add(this.UpgradeButton);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MinimizeBox = false;
             this.Name = "OCTUpdateForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "OCT Updater";
             this.ResumeLayout(false);
             this.PerformLayout();

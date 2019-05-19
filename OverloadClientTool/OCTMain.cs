@@ -149,9 +149,6 @@ namespace OverloadClientTool
             thread.IsBackground = true;
             thread.Start();
 
-            // Check for OCT update.
-            if (AutoUpdateOCT) UpdateCheck(debugFileName, false);
-
             // Check if we should auto-update maps on startup.
             if (AutoUpdateMapsCheckBox.Checked) MapUpdateButton_Click(null, null);
 
@@ -179,6 +176,9 @@ namespace OverloadClientTool
             }
 
             Defocus();
+
+            // Check for OCT update.
+            if (AutoUpdateOCT) UpdateCheck(debugFileName, false);
         }
 
         [DllImport("shell32.dll")]
