@@ -511,15 +511,17 @@ namespace OverloadClientTool
                 List<Task> downloadTasks = new List<Task>();
 
                 int started = 0;
-                foreach (KeyValuePair<string, OverloadMap> sortedMmap in Maps)
+                foreach (KeyValuePair<string, OverloadMap> sortedMap in Maps)
                 {
-                    var task = UpdateMap(sortedMmap.Value, false);
+                    var task = UpdateMap(sortedMap.Value, false);
+
                     downloadTasks.Add(task);
                     try { task.Start(); } catch { }
 
                     if (++started > MaxSimultanousDownloads)
                     {
                         Task.WaitAll(downloadTasks.ToArray());
+                        downloadTasks = new List<Task>();
                         started = 0;
                     }
                 }
@@ -530,6 +532,14 @@ namespace OverloadClientTool
             catch (Exception ex)
             {
                 LogErrorMessage(String.Format($"Unable to update maps: {ex.Message}"));
+            }
+            finally
+            {
+                foreach (KeyValuePair<string, OverloadMap> sortedMap in Maps)
+                {
+                    //if (!OverloadClientApplication.ValidFileName(sortedMap.Value.LocalZipFileName, true)) sortedMap.Value.LocalZipFileName = null;
+                    //if (!OverloadClientApplication.ValidFileName(sortedMap.Value.LocalDLCZipFileName, true)) sortedMap.Value.LocalDLCZipFileName = null;
+                }
             }
 
             return (Errors != 0) ? false : true;
@@ -683,13 +693,15 @@ namespace OverloadClientTool
                     timer.Elapsed += timerHandler;
                     timer.Start();
 
-                    LogMessage(String.Format($"Downloading map {displayName}."));
+                    //LogMessage(String.Format($"Downloading map {displayName}."));
 
                     await client.DownloadFileTaskAsync(url, filePath);
 
                     LogMessage(String.Format($"{displayName} download complete."));
 
-                    map.LocalZipFileName = filePath;
+                    if (!filePath.Contains(Path.DirectorySeparatorChar + "DLC" + Path.DirectorySeparatorChar)) map.LocalZipFileName = filePath;
+                    else map.LocalDLCZipFileName = filePath;
+
                     map.ZipName = Path.GetFileName(filePath);
 
                     // Set local files date and time.

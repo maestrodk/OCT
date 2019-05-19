@@ -1033,7 +1033,8 @@ namespace OverloadClientTool
                         try
                         {
                             MapsListBox.Items.Remove(map);
-                            System.IO.File.Delete(map.LocalZipFileName);
+                            try { System.IO.File.Delete(map.LocalZipFileName); } catch { }
+                            try { System.IO.File.Delete(map.LocalDLCZipFileName); } catch { }
                         }
                         catch (Exception ex)
                         {
