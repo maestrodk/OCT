@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,12 +18,14 @@ namespace Updater
             {
                 Console.WriteLine("Missing install folder argument! Press a key to exit the OCT updater.");
                 Console.ReadKey(true);
+                return;
             }
 
             if (args[0].ToLower() != "-installfolder")
             {
                 Console.WriteLine("Missing -installfolder <folder>! Press a key to exit the OCT updater.");
                 Console.ReadKey(true);
+                return;
             }
 
             string sourceFolder = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
@@ -32,70 +35,72 @@ namespace Updater
             {
                 Console.WriteLine("Either update folder or installation folder is invalid! Press a key to exit the OCT updater.");
                 Console.ReadKey(true);
+                return;
             }
 
             // Kill running OCT before continuing (but allow 1 second for OCT to shut itself down).
             Console.WriteLine("Updating Overload Client Tool - please wait!");
+            Console.WriteLine();
 
-            Console.WriteLine();
-            Console.WriteLine(String.Format($"Source folder: {sourceFolder}"));
-            Console.WriteLine(String.Format($"Install folder: {installFolder}"));
-            Console.WriteLine();
+            //Console.WriteLine(String.Format($"Source folder: {sourceFolder}"));
+            //Console.WriteLine(String.Format($"Install folder: {installFolder}"));
+            //Console.WriteLine();
+
+            UnblockPath(sourceFolder);
 
             try
             {
-                // Allow OCT to do a graceful shutdown before continuing.
-                Thread.Sleep(500);
-
+                // At this point OCT will already have saved settings and shut itself down.
+                // But we make sure it isn't running just to be on the safe side.
                 KillRunningProcess("OverloadClientTool");
 
                 // Copy new files to destination, overwriting any existing files.
                 DirectoryInfo dir = new DirectoryInfo(sourceFolder);
-                foreach (FileInfo fi in dir.GetFiles()) if (!fi.Name.ToLower().Contains("update")) File.Copy(fi.FullName, Path.Combine(installFolder, fi.Name), true);
+                foreach (FileInfo fi in dir.GetFiles())
+                {
+                    if (!fi.Name.ToLower().Contains("update"))
+                    {
+                        Console.WriteLine(String.Format($"Copying {fi.Name}"));
+                        File.Copy(fi.FullName, Path.Combine(installFolder, fi.Name), true);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex.Message} - Press a key to exit the OCT updater.");
+                Console.WriteLine($"Error copying new files: {ex.Message}");
+                Console.WriteLine();
+                Console.WriteLine($"Press a key to exit the OCT updater.");
                 Console.ReadKey(true);
                 return;
             }
 
-            // Finally launch the updated OCT application.
-            Console.WriteLine("New files copied - restarting OCT");
-
+            // Launch updated OCT application.
             try
             {
-                string app = Path.Combine(installFolder, "OverloadClientTool.exe");
-                string arg = String.Format($"-cleanup \"{Path.GetDirectoryName(sourceFolder)}\"");
-                string dir = Path.GetDirectoryName(installFolder);
-
-                Console.WriteLine();
-                Console.WriteLine(String.Format($"Destination: {dir}"));
-                Console.WriteLine(String.Format($"Application: {app}"));
-                Console.WriteLine(String.Format($"Arguments: {arg}"));
-                Console.WriteLine();
-
-                Console.WriteLine($"Update completed - Press a key to exit the OCT updater and start OCT");
-                Console.ReadKey(true);
-
                 Process appStart = new Process();
-                appStart.StartInfo = new ProcessStartInfo(Path.Combine(installFolder, "OverloadClientTool.exe"), String.Format($"-cleanup \"{Path.GetDirectoryName(sourceFolder)}\""));
-                appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(installFolder);
+                appStart.StartInfo.FileName = Path.Combine(installFolder, "OverloadClientTool.exe");
+                appStart.StartInfo.Arguments = String.Format($"-cleanup \"{sourceFolder}\"");
+                appStart.StartInfo.WorkingDirectory = installFolder;
                 appStart.Start();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex.Message} - Press a key to exit the OCT updater.");
+                Console.WriteLine($"Error launching: {ex.Message}");
+                Console.WriteLine();
+                Console.WriteLine($"Press a key to exit the OCT updater.");
                 Console.ReadKey(true);
             }
         }
 
         private static void KillRunningProcess(string name)
         {
-            foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) process.Kill();
+            foreach (Process process in Process.GetProcesses())
+            {
+                if (process.ProcessName.ToLower() == name.ToLower()) process.Kill();
+            }
         }
 
-        public static bool ValidDirectoryName(string path, bool mustExist = false)
+        private static bool ValidDirectoryName(string path, bool mustExist = false)
         {
             try
             {
@@ -107,6 +112,39 @@ namespace Updater
             {
                 return false;
             }
+        }
+
+        public static Process GetRunningProcess(string name)
+        {
+            if (String.IsNullOrEmpty(name)) return null;
+            foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) return process;
+            return null;
+        }
+
+        [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DeleteFile(string name);
+
+        public static void UnblockPath(string path)
+        {
+            string[] files = System.IO.Directory.GetFiles(path);
+            string[] dirs = System.IO.Directory.GetDirectories(path);
+
+            foreach (string file in files)
+            {
+                UnblockFile(file);
+            }
+
+            foreach (string dir in dirs)
+            {
+                UnblockPath(dir);
+            }
+
+        }
+
+        public static bool UnblockFile(string fileName)
+        {
+            try { return DeleteFile(fileName + ":Zone.Identifier"); } catch { return false; }
         }
     }
 }

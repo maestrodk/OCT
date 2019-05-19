@@ -1083,12 +1083,12 @@
             // DebugFileNameLink
             // 
             this.DebugFileNameLink.AutoSize = true;
-            this.DebugFileNameLink.Location = new System.Drawing.Point(182, 56);
+            this.DebugFileNameLink.Location = new System.Drawing.Point(174, 56);
             this.DebugFileNameLink.Name = "DebugFileNameLink";
-            this.DebugFileNameLink.Size = new System.Drawing.Size(88, 13);
+            this.DebugFileNameLink.Size = new System.Drawing.Size(85, 13);
             this.DebugFileNameLink.TabIndex = 17;
             this.DebugFileNameLink.TabStop = true;
-            this.DebugFileNameLink.Text = "View debug logs.";
+            this.DebugFileNameLink.Text = "View debug logs";
             this.DebugFileNameLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OpenDebugFolder_LinkClicked);
             // 
             // EnableDebugCheckBox
@@ -1121,9 +1121,9 @@
             // ForceUpdateButton
             // 
             this.ForceUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ForceUpdateButton.Location = new System.Drawing.Point(223, 77);
+            this.ForceUpdateButton.Location = new System.Drawing.Point(219, 77);
             this.ForceUpdateButton.Name = "ForceUpdateButton";
-            this.ForceUpdateButton.Size = new System.Drawing.Size(82, 23);
+            this.ForceUpdateButton.Size = new System.Drawing.Size(76, 23);
             this.ForceUpdateButton.TabIndex = 14;
             this.ForceUpdateButton.Text = "Update now";
             this.ForceUpdateButton.UseVisualStyleBackColor = true;

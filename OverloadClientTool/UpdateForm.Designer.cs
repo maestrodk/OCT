@@ -30,15 +30,15 @@
         {
             this.UpgradeButton = new System.Windows.Forms.Button();
             this.OCTNewVersion = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.SkipUpdateButton = new System.Windows.Forms.Button();
+            this.UpdateQuestion = new System.Windows.Forms.Label();
             this.OCTCurrentVersion = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // UpgradeButton
             // 
             this.UpgradeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UpgradeButton.Location = new System.Drawing.Point(25, 99);
+            this.UpgradeButton.Location = new System.Drawing.Point(24, 103);
             this.UpgradeButton.Name = "UpgradeButton";
             this.UpgradeButton.Size = new System.Drawing.Size(57, 23);
             this.UpgradeButton.TabIndex = 0;
@@ -49,57 +49,57 @@
             // OCTNewVersion
             // 
             this.OCTNewVersion.AutoSize = true;
-            this.OCTNewVersion.Location = new System.Drawing.Point(22, 38);
+            this.OCTNewVersion.Location = new System.Drawing.Point(22, 42);
             this.OCTNewVersion.Name = "OCTNewVersion";
-            this.OCTNewVersion.Size = new System.Drawing.Size(66, 13);
+            this.OCTNewVersion.Size = new System.Drawing.Size(74, 13);
             this.OCTNewVersion.TabIndex = 1;
-            this.OCTNewVersion.Text = "New version";
+            this.OCTNewVersion.Text = "Online version";
             // 
-            // button1
+            // SkipUpdateButton
             // 
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(102, 99);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(57, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Not now";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.DeclineUpgrade_Click);
+            this.SkipUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SkipUpdateButton.Location = new System.Drawing.Point(102, 103);
+            this.SkipUpdateButton.Name = "SkipUpdateButton";
+            this.SkipUpdateButton.Size = new System.Drawing.Size(57, 23);
+            this.SkipUpdateButton.TabIndex = 1;
+            this.SkipUpdateButton.Text = "Not now";
+            this.SkipUpdateButton.UseVisualStyleBackColor = true;
+            this.SkipUpdateButton.Click += new System.EventHandler(this.DeclineUpgrade_Click);
             // 
-            // label2
+            // UpdateQuestion
             // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.SkyBlue;
-            this.label2.Location = new System.Drawing.Point(21, 73);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(144, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Upgrade to the new version?";
+            this.UpdateQuestion.AutoSize = true;
+            this.UpdateQuestion.ForeColor = System.Drawing.Color.SkyBlue;
+            this.UpdateQuestion.Location = new System.Drawing.Point(21, 74);
+            this.UpdateQuestion.Name = "UpdateQuestion";
+            this.UpdateQuestion.Size = new System.Drawing.Size(144, 13);
+            this.UpdateQuestion.TabIndex = 1;
+            this.UpdateQuestion.Text = "Upgrade to the new version?";
             // 
             // OCTCurrentVersion
             // 
             this.OCTCurrentVersion.AutoSize = true;
-            this.OCTCurrentVersion.Location = new System.Drawing.Point(22, 18);
+            this.OCTCurrentVersion.Location = new System.Drawing.Point(22, 21);
             this.OCTCurrentVersion.Name = "OCTCurrentVersion";
-            this.OCTCurrentVersion.Size = new System.Drawing.Size(78, 13);
+            this.OCTCurrentVersion.Size = new System.Drawing.Size(83, 13);
             this.OCTCurrentVersion.TabIndex = 1;
-            this.OCTCurrentVersion.Text = "Current version";
+            this.OCTCurrentVersion.Text = "Installed version";
             // 
             // OCTUpdateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.ClientSize = new System.Drawing.Size(193, 142);
+            this.ClientSize = new System.Drawing.Size(199, 142);
             this.Controls.Add(this.OCTCurrentVersion);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.UpdateQuestion);
             this.Controls.Add(this.OCTNewVersion);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.SkipUpdateButton);
             this.Controls.Add(this.UpgradeButton);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "OCTUpdateForm";
-            this.Text = "OCT update is available!";
+            this.Text = "OCT Updater";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -109,8 +109,8 @@
 
         private System.Windows.Forms.Button UpgradeButton;
         private System.Windows.Forms.Label OCTNewVersion;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button SkipUpdateButton;
+        private System.Windows.Forms.Label UpdateQuestion;
         private System.Windows.Forms.Label OCTCurrentVersion;
     }
 }

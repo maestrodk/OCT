@@ -35,8 +35,12 @@ namespace OverloadClientTool
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Check for update.
-            if (UpdateCheck(debugFileName)) return;
+            if ((args.Length > 1) && (args[0].ToLower() == "-cleanup"))
+            {
+                LogDebugMessage("Removing installation files in " + args[1], debugFileName);
+                RemoveInstallDirectory(args[1], debugFileName);
+                LogDebugMessage("Finished cleanup.", debugFileName);
+            }
 
             try
             {
@@ -146,156 +150,51 @@ namespace OverloadClientTool
             }
         }
 
+        public static void RemoveInstallDirectory(string path, string debugFileName)
+        {
+            if (!ValidDirectoryName(path, true)) return;
+
+            try
+            {
+                while (Directory.GetParent(path).Name.ToLower().Contains("oct_update")) path = Directory.GetParent(path).FullName;
+
+                try
+                {
+                    DirectoryInfo dir = new DirectoryInfo(path);
+                    foreach (FileInfo fi in dir.GetFiles()) fi.Delete();
+                    foreach (DirectoryInfo di in dir.GetDirectories())
+                    {
+                        RemoveDirectory(di.FullName);
+                        di.Delete();
+                    }
+
+                    try { Directory.Delete(path); } catch { }
+
+                }
+                catch (Exception ex)
+                {
+                    LogDebugMessage(String.Format($"Cannot cleanup install folder: {ex.Message}"), debugFileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogDebugMessage(String.Format($"Cannot cleanup install folder: {ex.Message}"), debugFileName);
+            }
+        }
+
         public static Process GetRunningProcess(string name)
         {
             if (String.IsNullOrEmpty(name)) return null;
             foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) return process;
             return null;
         }
-  
-        public static bool UpdateCheck(string debugFileName, bool forceUpdate = false)
-        {
-            LogDebugMessage("Checking for new release.", debugFileName);
 
-            try
-            {
-                OCTRelease release = GetLastestRelease;
-                if (release != null)
-                {
-                    LogDebugMessage("Got release info - checking for current vs new release info.", debugFileName);
-
-                    // Fix version numbers so they are both in xx.yy.zz format (3 components and numbers only).
-                    string newVersion = VersionStringFix(release.Version);
-                    string[] newVersionSplit = newVersion.Split(".".ToCharArray());
-                    if (newVersionSplit.Length > 3) newVersion = newVersionSplit[0] + "." + newVersionSplit[1] + "." + newVersionSplit[2];
-
-                    string currentVersion = null;
-                    using (var process = Process.GetCurrentProcess()) currentVersion = GetFileVersion(process.MainModule.FileName);
-                    string[] currentVersionSplit = currentVersion.Split(".".ToCharArray());
-                    if (currentVersionSplit.Length > 3) currentVersion = currentVersionSplit[0] + "." + currentVersionSplit[1] + "." + currentVersionSplit[2];
-
-                    // Check if update is available.
-                    if (!String.IsNullOrEmpty(currentVersion) && (currentVersion != newVersion))
-                    {
-                        return PerformUpdate(release, currentVersion, newVersion, Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory));
-                    }
-                    else
-                    {
-                        LogDebugMessage(String.Format($"No update available - continuing OCT startup.", debugFileName));
-                    }
-                }
-                else
-                {
-                    LogDebugMessage("Could not get info on new OCT release (timeout or unexpected error).", debugFileName);
-                }
-            }
-            catch (Exception ex)
-            {
-                LogDebugMessage(String.Format($"Unable to check/perform OCT update: {ex.Message}"), debugFileName);
-            }
-
-            return false;
-        }
-
-        private static string VersionStringFix(string version)
+        public static string VersionStringFix(string version)
         {
             var result = string.Empty;
             foreach (char c in version) if ((c == '.') || (c >= '0' && c <= '9')) result += c;
             if (result.StartsWith(".")) result = result.Substring(1);
             return result;
-        }
-
-        private static void KillRunningProcess(string name)
-        {
-            foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) process.Kill();
-        }
-
-        private static bool PerformUpdate(OCTRelease release, string currentVersion, string newVersion, string installFolder)
-        {
-            OCTUpdateForm updateForm = new OCTUpdateForm(release, currentVersion, newVersion, installFolder);
-            updateForm.StartPosition = FormStartPosition.CenterScreen;
-            if (updateForm.ShowDialog() == DialogResult.Cancel) return false;
-
-            string localTempZip = Path.GetTempFileName() + "_OCT_Update.zip";
-            string localTempFolder = Path.GetTempFileName() + "_OCT_Update";
-            Directory.CreateDirectory(localTempFolder);
-
-            try
-            {
-                System.Net.ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => { return true; };
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                using (WebClient wc = new WebClient())
-                {
-                    wc.Headers.Add("User-Agent", "Overload Client Tool - user " + WindowsIdentity.GetCurrent().Name);
-                    wc.DownloadFile(release.DownloadUrl, localTempZip);
-                }
-
-                ZipFile.ExtractToDirectory(localTempZip, localTempFolder);
-
-                string localSourceFolder = localTempFolder;
-
-                // If the ZIP contains a folder then the files to copy will be inside this.
-                DirectoryInfo subDirList = new DirectoryInfo(localTempFolder);
-                DirectoryInfo[] subDirs = subDirList.GetDirectories();
-                if (subDirs.Length > 0) localSourceFolder = subDirs[0].FullName;
-
-                Process appStart = new Process();
-                appStart.StartInfo = new ProcessStartInfo(Path.Combine(localSourceFolder, "Updater.exe"));
-                appStart.StartInfo.Arguments = String.Format($"-installfolder \"{installFolder}\"");
-
-                appStart.StartInfo.WorkingDirectory = localSourceFolder;
-                appStart.Start();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(String.Format($"Error downloading/running OCT updater from Github: {ex.Message}"));
-                return false;
-            }
-        }
-
-        public static OCTRelease GetLastestRelease
-        {
-            get
-            {
-                string jsonOverloadClientUrl = @"https://api.github.com/repos/maestrodk/oct/releases/latest";
-
-                try
-                {
-                    ServicePointManager.ServerCertificateValidationCallback = (Binder, certificate, chain, errors) => { return true; };
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                    string json = "";
-
-                    using (WebClient wc = new WebClient())
-                    {
-                        wc.Headers.Add("User-Agent", "OCT - user " + WindowsIdentity.GetCurrent().Name);
-                        json = wc.DownloadString(jsonOverloadClientUrl);
-                    }
-
-                    dynamic octReleaseInfo = JsonConvert.DeserializeObject(json);
-
-                    string zipUrl = octReleaseInfo.assets[0].browser_download_url;
-                    long size = Convert.ToInt64(octReleaseInfo.assets[0].size);
-                    DateTime created = Convert.ToDateTime(octReleaseInfo.assets[0].created_at, CultureInfo.InvariantCulture);
-                    string version = octReleaseInfo.tag_name;
-
-                    OCTRelease release = new OCTRelease();
-                    release.DownloadUrl = zipUrl;
-                    release.Size = size;
-                    release.Created = created;
-                    release.Version = version;
-
-                    return release;
-                }
-                catch (Exception ex)
-                {
-                }
-
-                return null;
-            }
         }
     }
 }

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using IWshRuntimeLibrary;
-
-using olproxy;
 
 namespace OverloadClientTool
 {
@@ -152,6 +149,9 @@ namespace OverloadClientTool
             thread.IsBackground = true;
             thread.Start();
 
+            // Check for OCT update.
+            if (AutoUpdateOCT) UpdateCheck(debugFileName, false);
+
             // Check if we should auto-update maps on startup.
             if (AutoUpdateMapsCheckBox.Checked) MapUpdateButton_Click(null, null);
 
@@ -159,7 +159,7 @@ namespace OverloadClientTool
             if (OlmodAutoUpdate) UpdateOlmod_Click(null, null);
 
             // Check for startup options.
-            //OverloadClientToolNotifyIcon.Icon = Properties.Resources.OST;
+            // OverloadClientToolNotifyIcon.Icon = Properties.Resources.OST;
             this.ShowInTaskbar = true;
 
             if (autoStart)
@@ -478,7 +478,7 @@ namespace OverloadClientTool
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error! Unable to save general settings: {ex.Message}");
+                MessageBox.Show($"Unable to save settings: {ex.Message}", "Error");
             }
 
             try
@@ -489,7 +489,7 @@ namespace OverloadClientTool
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error! Unable to save Olpropxy settings: {ex.Message}");
+                MessageBox.Show($"Unable to save Olpropxy settings: {ex.Message}", "Error");
             }
         }
 
@@ -1416,17 +1416,5 @@ namespace OverloadClientTool
             {
             }            
         }
-
-        private void AutoUpdateCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            AutoUpdateOCT = AutoUpdateCheckBox.Checked;
-
-        }
-
-        private void ForceUpdateButton_Click(object sender, EventArgs e)
-        {
-            SaveSettings();
-            if (OverloadClientApplication.UpdateCheck(debugFileName, true)) this.Close();
-        }
-    }
+   }
 }
