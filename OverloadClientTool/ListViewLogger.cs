@@ -24,10 +24,13 @@ namespace OverloadClientTool
 
         private object suspendLogUpdate = new object();
 
+        private OCTMain parentForm;
+
         public ListViewLogger(ListView listView, Theme theme, OCTMain parentForm)
         {
             (parentForm as OCTMain).LogDebugMessage("ListViewLogger.ctor()");
 
+            this.parentForm = parentForm;
             this.theme = theme;
 
             listView.Scrollable = true;
@@ -38,6 +41,9 @@ namespace OverloadClientTool
 
             // This disables the horizontal scroll bar.
             listView.Columns[0].Width = listView.Width - 4 - SystemInformation.VerticalScrollBarWidth;
+
+            // Show item tooltips.
+            listView.ShowItemToolTips = true;
 
             listView.ItemSelectionChanged += ItemSelectionChanged;
             this.listView = listView;
@@ -82,29 +88,22 @@ namespace OverloadClientTool
         {
             if ((listView == null) || (text == null)) return;
 
-            if (listView.InvokeRequired)
+            parentForm.UIThread(delegate
             {
-                listView.BeginInvoke(new Action(delegate { LogText(level, text); }));
-                return;
-            }
-            else
-            {
-                lock (suspendLogUpdate)
-                {
-                    listView.Columns[0].Width = listView.Width - 4 - SystemInformation.VerticalScrollBarWidth;
+                //listView.Columns[0].Width = listView.Width - 4 - SystemInformation.VerticalScrollBarWidth;
 
-                    listView.ForeColor = theme.ForeColor;
+                listView.ForeColor = theme.ForeColor;
+                string prefixedText = DateTime.Now.ToString("HH:mm:ss") + " " + text;
+                ListViewItem item = new ListViewItem(prefixedText);
+                item.Font = listViewFont;
+                item.ToolTipText = text;
+                listView.Items.Add(item);
 
-                    ListViewItem item = new ListViewItem(DateTime.Now.ToString("HH:mm:ss") + " " + text);
-                    item.Font = listViewFont;
-                    listView.Items.Add(item);
+                DrawBorder();
 
-                    DrawBorder();
-
-                    // Autoscroll to bottom.
-                    if (listView.Items.Count > 3) listView.TopItem = listView.Items[listView.Items.Count - 3];
-                }
-            }
+                // Autoscroll to bottom.
+                if (listView.Items.Count > 3) listView.TopItem = listView.Items[listView.Items.Count - 3];
+            });
         }
 
         public void InfoLogMessage(string text)

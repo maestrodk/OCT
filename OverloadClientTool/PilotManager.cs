@@ -89,18 +89,22 @@ namespace OverloadClientTool
                 PilotMakeActiveButton.Enabled = select;
 
                 // Set current pilot name.
-                string test = CurrentPilot;
-                if (String.IsNullOrEmpty(test))
+                string testPilotName = CurrentPilot;
+                if (String.IsNullOrEmpty(testPilotName))
                 {
                     PilotNameLabel.Text = "";
                 }
                 else
                 {
-                    PilotNameLabel.Text = "";
-                    PilotNameLabel.SelectionFont = new Font(PilotNameLabel.Font, FontStyle.Bold);
-                    PilotNameLabel.AppendText(test);
-                    PilotNameLabel.SelectionFont = new Font(PilotNameLabel.Font, FontStyle.Regular);
-                    PilotNameLabel.AppendText(" is the active pilot.");
+                    string activeText = " is the active pilot.";
+                    if (PilotNameLabel.Text != (testPilotName + activeText))
+                    {
+                        PilotNameLabel.Text = "";
+                        PilotNameLabel.SelectionFont = new Font(PilotNameLabel.Font, FontStyle.Bold);
+                        PilotNameLabel.AppendText(testPilotName);
+                        PilotNameLabel.SelectionFont = new Font(PilotNameLabel.Font, FontStyle.Regular);
+                        PilotNameLabel.AppendText(activeText);
+                    }
                 }
 
                 OCTMain.ApplyThemeToControl(PanePilots, theme);
