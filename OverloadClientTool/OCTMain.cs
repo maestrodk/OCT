@@ -142,7 +142,7 @@ namespace OverloadClientTool
 
             // Announce ourself.
             Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen.");
-            Info("Olproxy 0.2.1 code by Arne de Bruijn.");
+            Info("Olproxy 0.3.0 by Arne de Bruijn.");
 
             // Start background monitor for periodic log updates.
             Thread thread = new Thread(ActivityBackgroundMonitor);
@@ -154,6 +154,9 @@ namespace OverloadClientTool
 
             // Check if we should auto-update Olmod on startup.
             if (OlmodAutoUpdate) UpdateOlmod_Click(null, null);
+
+            if (OverloadClientApplication.ValidFileName(OlmodPath, true)) Info($"{OlmodVersionInfo}");
+            else Info("Olmod not foundo.");
 
             // Check for startup options.
             // OverloadClientToolNotifyIcon.Icon = Properties.Resources.OST;
@@ -1367,7 +1370,7 @@ namespace OverloadClientTool
         {
             if (IsOlmodRunning)
             {
-                Error("Cannot update Olmod when it is running.");
+                Error("Cannot update Olmod when it is running!");
                 return;
             }
 
@@ -1392,16 +1395,13 @@ namespace OverloadClientTool
             }
 
             // Check if update is required. We use the ZIP date to stamp Olmod.exe
-            if (OverloadClientApplication.ValidFileName(OlmodPath, true))
+            if ((OverloadClientApplication.ValidFileName(OlmodPath, true)) && (new FileInfo(OlmodPath).CreationTimeUtc == latest.Created))
             {
-                if (new FileInfo(OlmodPath).CreationTimeUtc == latest.Created)
-                {
-                    Info("Olmod is up to date.");
-                    return;
-                }
+                if (sender != null) Info("Already using the latest Olmod version.");
+                return;
             }
 
-            Info("Download and installing latest Olmod release from Github.");
+            Info("Installing latest Olmod release from Github.");
 
             try
             {
@@ -1413,6 +1413,16 @@ namespace OverloadClientTool
             finally
             {
                 ValidateSettings();
+            }
+        }
+
+        private string OlmodVersionInfo
+        {
+            get
+            {
+                string olmodVersion = OverloadClientApplication.GetFileVersion(OlmodPath);
+                olmodVersion = OverloadClientApplication.VersionStringFix(olmodVersion);
+                return String.Format($"Olmod {olmodVersion} by Arne de Bruijn.");
             }
         }
 

@@ -192,8 +192,14 @@ namespace OverloadClientTool
         public static string VersionStringFix(string version)
         {
             var result = string.Empty;
+
             foreach (char c in version) if ((c == '.') || (c >= '0' && c <= '9')) result += c;
+
             if (result.StartsWith(".")) result = result.Substring(1);
+
+            string[] parts = result.Split(".".ToCharArray());
+            if ((parts.Length > 3) && result.EndsWith(".0")) result = result.Substring(0, result.Length - 2);
+
             return result;
         }
     }

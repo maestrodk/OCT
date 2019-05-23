@@ -148,11 +148,11 @@ namespace OverloadClientTool
                 File.SetCreationTime(Path.Combine(localInstallFolder, "olmod.exe"), release.Created);
                 File.SetLastWriteTime(Path.Combine(localInstallFolder, "olmod.exe"), release.Created);
 
-                LogMessage(String.Format($"Olmod has been updated to release {release.Version}"));
+                LogMessage(String.Format($"Olmod has been updated."));
             }
             catch (Exception ex)
             {
-                LogErrorMessage(String.Format($"Cannot download Olmod ZIP file from Github: {ex.Message}"));
+                LogErrorMessage(String.Format($"Cannot download/install Olmod: {ex.Message}"));
             }
             finally
             {
