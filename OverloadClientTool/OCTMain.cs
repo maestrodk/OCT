@@ -184,6 +184,37 @@ namespace OverloadClientTool
             if (AutoUpdateOCT) UpdateCheck(debugFileName, false);
         }
 
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Kill embedded Olproxy.
+            StartStopOlproxyButton_Click(null, null);
+
+            // Shutdown background workers.
+            //StopMapsMonitoring();
+            StopPilotsMonitoring();
+
+            // Save settings for main application.
+            try
+            {
+                SaveSettings();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to save settings: {ex.Message}", "Error");
+            }
+
+            try
+            {
+                // Update config then save as json for standalone Olproxy.
+                string alterateFileName = Path.Combine(OlproxyExecutable.Text, "appsettings.json");
+                olproxyTask.SaveConfig(UpdateOlproxyConfig(), alterateFileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to save Olpropxy settings: {ex.Message}", "Error");
+            }
+        }
+
         [DllImport("shell32.dll")]
         static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
         public static string SpecialFolderLocalLowPath
@@ -393,22 +424,23 @@ namespace OverloadClientTool
                         else if (!UseOlmodCheckBox.Checked && !foundOverload) statusText = "Cannot find Overload (check path)!";
                     }
 
-                    OlproxyRunning.Visible = olproxyRunning;
                     OverloadRunning.Visible = overloadRunning || olmodRunning;
+                    OlproxyRunning.Visible = olproxyRunning;
 
-                    StartButton.Text = (olproxyRunning || overloadRunning || olmodRunning) ? "Stop" : "Start";
+                    StartStopButton.Text = (overloadRunning || olmodRunning) ? "Stop" : "Start";
+                    StartStopOlproxyButton.Text = (olproxyRunning) ? "Stop" : "Start";
 
                     UpdateOlmod.Enabled = !olmodRunning;
 
-                    if (StartButton.Enabled)
+                    if (StartStopButton.Enabled)
                     {
-                        StartButton.BackColor = theme.ButtonEnabledBackColor;
-                        StartButton.ForeColor = theme.ButtonEnabledForeColor;
+                        StartStopButton.BackColor = theme.ButtonEnabledBackColor;
+                        StartStopButton.ForeColor = theme.ButtonEnabledForeColor;
                     }
                     else
                     {
-                        StartButton.BackColor = theme.ButtonDisabledBackColor;
-                        StartButton.ForeColor = theme.ButtonDisabledForeColor;
+                        StartStopButton.BackColor = theme.ButtonDisabledBackColor;
+                        StartStopButton.ForeColor = theme.ButtonDisabledForeColor;
                     }
 
                     StatusMessage.Text = statusText;
@@ -464,43 +496,12 @@ namespace OverloadClientTool
             }
         }
 
-        private void Main_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            // Kill embedded Olproxy.
-            KillOlproxyThread();
-
-            // Shutdown background workers.
-            //StopMapsMonitoring();
-            StopPilotsMonitoring();
-
-            // Save settings for main application.
-            try
-            {
-                SaveSettings();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Unable to save settings: {ex.Message}", "Error");
-            }
-
-            try
-            {
-                // Update config then save as json for standalone Olproxy.
-                string alterateFileName = Path.Combine(OlproxyExecutable.Text, "appsettings.json");
-                olproxyTask.SaveConfig(UpdateOlproxyConfig(), alterateFileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Unable to save Olpropxy settings: {ex.Message}", "Error");
-            }
-        }
-
         private void ValidateSettings()
         {
             TestSetTextBoxColor(OverloadExecutable);
             TestSetTextBoxColor(OlproxyExecutable);
             TestSetTextBoxColor(OlmodExecutable);
-            ValidateButton(StartButton, theme);
+            ValidateButton(StartStopButton, theme);
         }
 
         private void TestSetTextBoxColor(TextBox textBox)
@@ -579,10 +580,10 @@ namespace OverloadClientTool
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            if (StartButton.Text == "Stop")
+            if (StartStopButton.Text == "Stop")
             {
                 StopButton_Click(null, null);
-                StartButton.Text = "Start";
+                StartStopButton.Text = "Start";
             }
             else
             {
@@ -763,23 +764,14 @@ namespace OverloadClientTool
         {
             Verbose("Shutting down active tasks.");
 
-            ValidateButton(StartButton, theme);
+            ValidateButton(StartStopButton, theme);
 
             Defocus();
 
-            string overloadPath = Path.GetDirectoryName(OverloadExecutable.Text);
-            string overloadExe = Path.Combine(overloadPath, "overload.exe");
-            string olmodExe = Path.Combine(overloadPath, "olmod.exe");
+            KillRunningProcess("overload");
+            KillRunningProcess("olmod");
 
-            string olproxyName = "olproxy";
-            string olmodName = "olmod";
-            string overloadName = "overload";
-
-            KillRunningProcess(overloadName);
-            KillRunningProcess(olmodName);
-            KillRunningProcess(olproxyName);
-
-            if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive)) KillOlproxyThread();
+            StartStopOlproxyButton_Click(null, null);
         }
 
         /// <summary>
@@ -856,7 +848,9 @@ namespace OverloadClientTool
         private void UseOlproxy_CheckedChanged(object sender, EventArgs e)
         {
             UseOlproxy = UseOlproxyCheckBox.Checked;
+            StartStopOlproxyButton.Visible = UseOlproxy;
             Verbose((UseOlproxyCheckBox.Checked) ? "Olproxy enabled." : "Olproxy disabled.");
+            if (!UseOlproxy) StartStopOlproxyButton_Click(null, null);
         }
 
         private void SearchOverloadButton_Click(object sender, EventArgs e)
@@ -1443,6 +1437,31 @@ namespace OverloadClientTool
             catch
             {
             }            
+        }
+
+        private void StartStopOlproxyButton_Click(object sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                // Only launch Olproxy if OCT isn't shutting down.
+                if (!IsOlproxyRunning)
+                {
+                    LaunchOlproxy();
+                    return;
+                }
+            }
+
+            // Either we are shutting down or user wants to shut down Olproxy.
+            if (IsOlproxyRunning)
+            {
+                Verbose("Shutting down Olproxy.");
+
+                // ValidateButton(StartButton, theme);
+                // Defocus();
+
+                KillRunningProcess("olproxy");
+                if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive)) KillOlproxyThread();
+            }
         }
     }
 }

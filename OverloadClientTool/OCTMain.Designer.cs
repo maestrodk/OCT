@@ -34,7 +34,7 @@
             this.OlproxyExecutable = new System.Windows.Forms.TextBox();
             this.OlproxyArgs = new System.Windows.Forms.TextBox();
             this.SelectExecutable = new System.Windows.Forms.OpenFileDialog();
-            this.StartButton = new System.Windows.Forms.Button();
+            this.StartStopButton = new System.Windows.Forms.Button();
             this.ExitButton = new System.Windows.Forms.Button();
             this.MapUpdateButton = new System.Windows.Forms.Button();
             this.DarkThemeCheckBox = new System.Windows.Forms.CheckBox();
@@ -85,6 +85,7 @@
             this.PaneSelectOlmod = new System.Windows.Forms.Button();
             this.PaneOlproxy = new System.Windows.Forms.Panel();
             this.OlproxyReleases = new System.Windows.Forms.LinkLabel();
+            this.StartStopOlproxyButton = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.PaneOverload = new System.Windows.Forms.Panel();
@@ -183,14 +184,14 @@
             // 
             // StartButton
             // 
-            this.StartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StartButton.Location = new System.Drawing.Point(354, 296);
-            this.StartButton.Name = "StartButton";
-            this.StartButton.Size = new System.Drawing.Size(56, 24);
-            this.StartButton.TabIndex = 9;
-            this.StartButton.Text = "Start";
-            this.StartButton.UseVisualStyleBackColor = true;
-            this.StartButton.Click += new System.EventHandler(this.StartButton_Click);
+            this.StartStopButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StartStopButton.Location = new System.Drawing.Point(354, 296);
+            this.StartStopButton.Name = "StartButton";
+            this.StartStopButton.Size = new System.Drawing.Size(56, 24);
+            this.StartStopButton.TabIndex = 9;
+            this.StartStopButton.Text = "Start";
+            this.StartStopButton.UseVisualStyleBackColor = true;
+            this.StartStopButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // ExitButton
             // 
@@ -270,7 +271,7 @@
             // 
             this.OlproxyRunning.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.OlproxyRunning.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-            this.OlproxyRunning.Location = new System.Drawing.Point(103, 21);
+            this.OlproxyRunning.Location = new System.Drawing.Point(85, 298);
             this.OlproxyRunning.Margin = new System.Windows.Forms.Padding(3, 3, 8, 3);
             this.OlproxyRunning.Name = "OlproxyRunning";
             this.OlproxyRunning.Size = new System.Drawing.Size(22, 21);
@@ -533,7 +534,7 @@
             // 
             this.PaneMain.BackColor = System.Drawing.Color.LightSlateGray;
             this.PaneMain.Controls.Add(this.StatusMessage);
-            this.PaneMain.Controls.Add(this.StartButton);
+            this.PaneMain.Controls.Add(this.StartStopButton);
             this.PaneMain.Controls.Add(this.LoggingGroupBox);
             this.PaneMain.Controls.Add(this.OverloadRunning);
             this.PaneMain.Controls.Add(this.ExitButton);
@@ -800,6 +801,7 @@
             // 
             this.PaneOlproxy.BackColor = System.Drawing.Color.LightSlateGray;
             this.PaneOlproxy.Controls.Add(this.OlproxyReleases);
+            this.PaneOlproxy.Controls.Add(this.StartStopOlproxyButton);
             this.PaneOlproxy.Controls.Add(this.OlproxyRunning);
             this.PaneOlproxy.Controls.Add(this.UseEmbeddedOlproxy);
             this.PaneOlproxy.Controls.Add(this.UseOlproxyCheckBox);
@@ -823,6 +825,17 @@
             this.OlproxyReleases.Text = "https://github.com/arbruijn/olproxy/releases";
             this.OlproxyReleases.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
             this.OlproxyReleases.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OlproxyReleases_LinkClicked);
+            // 
+            // StartStopOlproxyButton
+            // 
+            this.StartStopOlproxyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StartStopOlproxyButton.Location = new System.Drawing.Point(25, 296);
+            this.StartStopOlproxyButton.Name = "StartStopOlproxyButton";
+            this.StartStopOlproxyButton.Size = new System.Drawing.Size(56, 24);
+            this.StartStopOlproxyButton.TabIndex = 9;
+            this.StartStopOlproxyButton.Text = "Start";
+            this.StartStopOlproxyButton.UseVisualStyleBackColor = true;
+            this.StartStopOlproxyButton.Click += new System.EventHandler(this.StartStopOlproxyButton_Click);
             // 
             // groupBox4
             // 
@@ -1210,7 +1223,7 @@
         private System.Windows.Forms.TextBox OlproxyExecutable;
         private System.Windows.Forms.TextBox OlproxyArgs;
         private System.Windows.Forms.OpenFileDialog SelectExecutable;
-        private System.Windows.Forms.Button StartButton;
+        private System.Windows.Forms.Button StartStopButton;
         private System.Windows.Forms.Button ExitButton;
         private System.Windows.Forms.Button MapUpdateButton;
         private System.Windows.Forms.CheckBox DarkThemeCheckBox;
@@ -1287,6 +1300,7 @@
         private System.Windows.Forms.Button PilotXPSetButton;
         private System.Windows.Forms.CheckBox AutoUpdateCheckBox;
         private System.Windows.Forms.Button ForceUpdateButton;
+        private System.Windows.Forms.Button StartStopOlproxyButton;
     }
 }
 
