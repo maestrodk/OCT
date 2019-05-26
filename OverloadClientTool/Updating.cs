@@ -70,20 +70,20 @@ namespace OverloadClientTool
         {
             try
             {
-                OverloadClientApplication.LogDebugMessage("Checking for new OCT release.", debugFileName);
+                OverloadClientToolApplication.LogDebugMessage("Checking for new release.", debugFileName);
 
                 OCTRelease release = GetLastestRelease;
                 if (release != null)
                 {
-                    OverloadClientApplication.LogDebugMessage("Got release info - checking version.", debugFileName);
+                    OverloadClientToolApplication.LogDebugMessage("Checking release version.", debugFileName);
 
                     // Fix version numbers so they are both in xx.yy.zz format (3 components and numbers only).
-                    string newVersion = OverloadClientApplication.VersionStringFix(release.Version);
+                    string newVersion = OverloadClientToolApplication.VersionStringFix(release.Version);
                     string[] newVersionSplit = newVersion.Split(".".ToCharArray());
                     if (newVersionSplit.Length > 3) newVersion = newVersionSplit[0] + "." + newVersionSplit[1] + "." + newVersionSplit[2];
 
                     string currentVersion = null;
-                    using (var process = Process.GetCurrentProcess()) currentVersion = OverloadClientApplication.GetFileVersion(process.MainModule.FileName);
+                    using (var process = Process.GetCurrentProcess()) currentVersion = OverloadClientToolApplication.GetFileVersion(process.MainModule.FileName);
                     string[] currentVersionSplit = currentVersion.Split(".".ToCharArray());
                     if (currentVersionSplit.Length > 3) currentVersion = currentVersionSplit[0] + "." + currentVersionSplit[1] + "." + currentVersionSplit[2];
 
@@ -94,17 +94,17 @@ namespace OverloadClientTool
                     }
                     else
                     {
-                        OverloadClientApplication.LogDebugMessage(String.Format($"No update available - continuing OCT startup.", debugFileName));
+                        OverloadClientToolApplication.LogDebugMessage(String.Format($"No update available - continuing startup.", debugFileName));
                     }
                 }
                 else
                 {
-                    OverloadClientApplication.LogDebugMessage("Unable to get OCT release info.", debugFileName);
+                    OverloadClientToolApplication.LogDebugMessage("Unable to get release info.", debugFileName);
                 }
             }
             catch (Exception ex)
             {
-                OverloadClientApplication.LogDebugMessage(String.Format($"Unable to check/perform OCT update: {ex.Message}"), debugFileName);
+                OverloadClientToolApplication.LogDebugMessage(String.Format($"Unable to check/perform update: {ex.Message}"), debugFileName);
             }
         }
 
@@ -128,7 +128,7 @@ namespace OverloadClientTool
 
                 using (WebClient wc = new WebClient())
                 {
-                    wc.Headers.Add("User-Agent", "Overload Client Tool - user " + WindowsIdentity.GetCurrent().Name);
+                    wc.Headers.Add("User-Agent", "OCT - user " + WindowsIdentity.GetCurrent().Name);
                     wc.DownloadFile(release.DownloadUrl, localTempZip);
                 }
 
@@ -143,8 +143,8 @@ namespace OverloadClientTool
                 if (subDirs.Length > 0) localSourceFolder = subDirs[0].FullName;
 
                 Process appStart = new Process();
-                appStart.StartInfo = new ProcessStartInfo(Path.Combine(localSourceFolder, "Updater.exe"));
-                appStart.StartInfo.Arguments = String.Format($"-installfolder \"{installFolder}\"");
+                appStart.StartInfo = new ProcessStartInfo(Path.Combine(localSourceFolder, "OverloadClientTool.exe"));
+                appStart.StartInfo.Arguments = String.Format($"-install \"{installFolder}\"");
                 appStart.StartInfo.WorkingDirectory = localSourceFolder;
 
                 // Do graceful shutdown before launching the updater.
@@ -156,7 +156,7 @@ namespace OverloadClientTool
             }
             catch (Exception ex)
             {
-                MessageBox.Show(String.Format($"Unable to update OCT: {ex.Message}", "Error"));
+                MessageBox.Show(String.Format($"Unable to update application: {ex.Message}", "Error"));
             }
         }
     }

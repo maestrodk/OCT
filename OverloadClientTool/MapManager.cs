@@ -114,14 +114,14 @@ namespace OverloadClientTool
                 // The map ZIP file may exist in both the application data folder and the DLC folder.
                 // Ensure hidden state is set for both!
 
-                if (OverloadClientApplication.ValidFileName(LocalZipFileName, true) && !LocalZipFileName.EndsWith(MapHiddenMarker))
+                if (OverloadClientToolApplication.ValidFileName(LocalZipFileName, true) && !LocalZipFileName.EndsWith(MapHiddenMarker))
                 {
                     string newLocalZipFileName = LocalZipFileName + MapHiddenMarker;
                     File.Move(LocalZipFileName, newLocalZipFileName);
                     LocalZipFileName = newLocalZipFileName;
                 }
 
-                if (OverloadClientApplication.ValidFileName(LocalDLCZipFileName, true) && !LocalDLCZipFileName.EndsWith(MapHiddenMarker))
+                if (OverloadClientToolApplication.ValidFileName(LocalDLCZipFileName, true) && !LocalDLCZipFileName.EndsWith(MapHiddenMarker))
                 {
                     string newLocalDLCZipFileName = LocalDLCZipFileName + MapHiddenMarker;
                     File.Move(LocalDLCZipFileName, newLocalDLCZipFileName);
@@ -140,14 +140,14 @@ namespace OverloadClientTool
                 // The map ZIP file may exist in both the application data folder and the DLC folder.
                 // Ensure hidden state is set for both!
 
-                if (OverloadClientApplication.ValidFileName(LocalZipFileName, true) && LocalZipFileName.EndsWith(MapHiddenMarker))
+                if (OverloadClientToolApplication.ValidFileName(LocalZipFileName, true) && LocalZipFileName.EndsWith(MapHiddenMarker))
                 {
                     string newLocalZipFileName = LocalZipFileName.Replace(MapHiddenMarker, "");
                     File.Move(LocalZipFileName, newLocalZipFileName);
                     LocalZipFileName = newLocalZipFileName;
                 }
 
-                if (OverloadClientApplication.ValidFileName(LocalDLCZipFileName, true) && LocalDLCZipFileName.EndsWith(MapHiddenMarker))
+                if (OverloadClientToolApplication.ValidFileName(LocalDLCZipFileName, true) && LocalDLCZipFileName.EndsWith(MapHiddenMarker))
                 {
                     string newLocalDLCZipFileName = LocalDLCZipFileName.Replace(MapHiddenMarker, "");
                     File.Move(LocalDLCZipFileName, newLocalDLCZipFileName);
@@ -330,7 +330,7 @@ namespace OverloadClientTool
             {
                 dlcMapFolder = dlcMaps;
 
-                if (!OverloadClientApplication.ValidDirectoryName(dlcMapFolder))
+                if (!OverloadClientToolApplication.ValidDirectoryName(dlcMapFolder))
                 {
                     LogErrorMessage("DLC directory name is invalid!");
                     return;
@@ -341,7 +341,7 @@ namespace OverloadClientTool
             {
                 applicationMapFolder = applicationMaps;
 
-                if (!OverloadClientApplication.ValidDirectoryName(applicationMapFolder))
+                if (!OverloadClientToolApplication.ValidDirectoryName(applicationMapFolder))
                 {
                     LogErrorMessage("Application data directory name is invalid!");
                     return;
@@ -394,7 +394,7 @@ namespace OverloadClientTool
             }
 
             // Now add any local maps or update info if existing local map file exists.
-            if (OverloadClientApplication.ValidDirectoryName(applicationMapFolder))
+            if (OverloadClientToolApplication.ValidDirectoryName(applicationMapFolder))
             {
                 try
                 {
@@ -439,7 +439,7 @@ namespace OverloadClientTool
                 }
             }
 
-            if (OverloadClientApplication.ValidDirectoryName(dlcMapFolder))
+            if (OverloadClientToolApplication.ValidDirectoryName(dlcMapFolder))
             {
                 try
                 {
@@ -580,7 +580,7 @@ namespace OverloadClientTool
             if (File.Exists(mapZipFilePath + HiddenMarker)) return false;
 
             // Check for new map file.
-            if (!forceUpdate && OverloadClientApplication.ValidFileName(mapZipFilePath))
+            if (!forceUpdate && OverloadClientToolApplication.ValidFileName(mapZipFilePath))
             {
                 if (File.Exists(mapZipFilePath))
                 {

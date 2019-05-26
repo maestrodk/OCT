@@ -17,24 +17,20 @@ namespace OverloadClientTool
         private bool autoStart = false;
         private ListViewLogger logger = null;
 
+        // This matches MJDict defined on Olproxy.
+        private Dictionary<string, object> olproxyConfig = new Dictionary<string, object>();
+
         private olproxy.Program olproxyTask = null;
         private Thread olproxyThread = null;
+
+        private OlmodManager olmodManager = null;
 
         private OverloadMapManager mapManager = null;
         private Thread mapManagerThread = null;
 
         private PaneController paneController = null;
 
-        private OlmodManager olmodManager = null;
-
-        // This matches MJDict defined on Olproxy.
-        private Dictionary<string, object> olproxyConfig = new Dictionary<string, object>();
-
-        // Shortcut link for Startup folde (if file exists the autostart is enabled). These are not currently created/used.
-        private string shortcutFileName1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "Start Overload.lnk");
-        private string shortcutFileName2 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "Start Overload with Olproxy.lnk");
-        private string shortcutFileName3 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "Start Overload with Olmod.lnk");
-        private string shortcutFileName4 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "Start Overload with Olproxy and Olmod.lnk");
+        private DisplaySettings displaySettings = new DisplaySettings();
 
         // Directory for DLC.
         private string dlcLocation = null;
@@ -155,7 +151,7 @@ namespace OverloadClientTool
             // Check if we should auto-update Olmod on startup.
             if (OlmodAutoUpdate) UpdateOlmod_Click(null, null);
 
-            if (OverloadClientApplication.ValidFileName(OlmodPath, true)) Info($"{OlmodVersionInfo}");
+            if (OverloadClientToolApplication.ValidFileName(OlmodPath, true)) Info($"{OlmodVersionInfo}");
             else Info("Olmod not foundo.");
 
             // Check for startup options.
@@ -417,8 +413,8 @@ namespace OverloadClientTool
                         bool foundOverload = false;
                         bool foundOlmod = false;
 
-                        try { foundOverload = (OverloadClientApplication.ValidFileName(OverloadExecutable.Text) && new FileInfo(OverloadExecutable.Text).Exists); } catch { }
-                        try { foundOlmod = (OverloadClientApplication.ValidFileName(OlmodExecutable.Text) && new FileInfo(OlmodExecutable.Text).Exists); } catch { }
+                        try { foundOverload = (OverloadClientToolApplication.ValidFileName(OverloadExecutable.Text) && new FileInfo(OverloadExecutable.Text).Exists); } catch { }
+                        try { foundOlmod = (OverloadClientToolApplication.ValidFileName(OlmodExecutable.Text) && new FileInfo(OlmodExecutable.Text).Exists); } catch { }
 
                         if (UseOlmodCheckBox.Checked && !foundOlmod) statusText = "Cannot find Olmod (check path)!";
                         else if (!UseOlmodCheckBox.Checked && !foundOverload) statusText = "Cannot find Overload (check path)!";
@@ -445,54 +441,6 @@ namespace OverloadClientTool
 
                     StatusMessage.Text = statusText;
                 });
-            }
-        }
-
-        /// <summary>
-        /// Creates or deletes shortcut link to startup OST.
-        /// </summary>
-        /// <param name="create"></param>
-        /// <returns></returns>
-        private bool SetAutoStartup(bool create)
-        {
-            if (create)
-            {
-                try
-                {
-                    string appname = Assembly.GetExecutingAssembly().FullName.Remove(Assembly.GetExecutingAssembly().FullName.IndexOf(","));
-                    string shortcutTarget = System.IO.Path.Combine(Application.StartupPath, appname + ".exe");
-
-                    WshShell myShell = new WshShell();
-                    WshShortcut myShortcut = (WshShortcut)myShell.CreateShortcut(shortcutFileName1);
-
-                    myShortcut.TargetPath = shortcutTarget;                 // Shortcut to OverloadClientTool.exe.
-                    myShortcut.IconLocation = shortcutTarget + ",0";        // Use default application icon.
-                    myShortcut.WorkingDirectory = Application.StartupPath;  // Working directory.
-                    myShortcut.Arguments = "-launched";                     // Parameters sent to OverloadClientTool.exe.
-                    myShortcut.Save();                                      // Create shortcut.
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Unable to create autostart shortcut: {ex.Message}");
-                }
-
-                return false;
-            }
-            else
-            {
-                try
-                {
-                    if (System.IO.File.Exists(shortcutFileName1)) System.IO.File.Delete(shortcutFileName1);
-                    else return false;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Unable to remove autostart shortcut: {ex.Message}");
-                }
-
-                return true;
             }
         }
 
@@ -674,7 +622,7 @@ namespace OverloadClientTool
 
             // If Olmod is enabled check if we should pass Overload install folder.
             string gameDir = "";
-            if (OverloadClientApplication.ValidDirectoryName(Path.GetDirectoryName(OverloadExecutable.Text), true))
+            if (OverloadClientToolApplication.ValidDirectoryName(Path.GetDirectoryName(OverloadExecutable.Text), true))
             {
                 gameDir = "-gamedir \"" + Path.GetDirectoryName(OverloadExecutable.Text) + "\" ";
             }
@@ -897,7 +845,7 @@ namespace OverloadClientTool
         /// <returns></returns>
         private bool CheckCreateDirectory(string directoryName)
         {
-            if (!OverloadClientApplication.ValidDirectoryName(directoryName)) return false;
+            if (!OverloadClientToolApplication.ValidDirectoryName(directoryName)) return false;
             try { Directory.CreateDirectory(directoryName); } catch { }
             try { return Directory.Exists(directoryName); } catch { return false; }
         }
@@ -979,10 +927,10 @@ namespace OverloadClientTool
             appPath = Path.Combine(appPath, "Overload");
 
             // Construct the paths to where local maps can be stored.
-            string dlcFolder = OverloadClientApplication.ValidDirectoryName(OverloadPath) ? Path.Combine(Path.GetDirectoryName(OverloadPath), "DLC") : null;
-            string appFolder = OverloadClientApplication.ValidDirectoryName(appPath) ? appPath : null;
+            string dlcFolder = OverloadClientToolApplication.ValidDirectoryName(OverloadPath) ? Path.Combine(Path.GetDirectoryName(OverloadPath), "DLC") : null;
+            string appFolder = OverloadClientToolApplication.ValidDirectoryName(appPath) ? appPath : null;
 
-            mapManager.SaveNewMapsToDLCFolder = UseDLCLocation && OverloadClientApplication.ValidDirectoryName(dlcFolder, true);
+            mapManager.SaveNewMapsToDLCFolder = UseDLCLocation && OverloadClientToolApplication.ValidDirectoryName(dlcFolder, true);
             mapManager.UpdateMapList(MapListUrl, dlcFolder, appFolder);
         }
 
@@ -1060,8 +1008,8 @@ namespace OverloadClientTool
                 return;
             }
 
-            string dlcFolder = OverloadClientApplication.ValidDirectoryName(OverloadPath) ? Path.Combine(Path.GetDirectoryName(OverloadPath), "DLC") : null;
-            mapManager.SaveNewMapsToDLCFolder = UseDLCLocation && OverloadClientApplication.ValidDirectoryName(dlcFolder, true);
+            string dlcFolder = OverloadClientToolApplication.ValidDirectoryName(OverloadPath) ? Path.Combine(Path.GetDirectoryName(OverloadPath), "DLC") : null;
+            mapManager.SaveNewMapsToDLCFolder = UseDLCLocation && OverloadClientToolApplication.ValidDirectoryName(dlcFolder, true);
 
             await mapManager.UpdateMap(map, true);
 
@@ -1120,8 +1068,8 @@ namespace OverloadClientTool
         {
             MapUpdateButton.Enabled = false;
 
-            string dlcFolder = OverloadClientApplication.ValidDirectoryName(OverloadPath) ? Path.Combine(Path.GetDirectoryName(OverloadPath), "DLC") : null;
-            mapManager.SaveNewMapsToDLCFolder = UseDLCLocation && OverloadClientApplication.ValidDirectoryName(dlcFolder, true);
+            string dlcFolder = OverloadClientToolApplication.ValidDirectoryName(OverloadPath) ? Path.Combine(Path.GetDirectoryName(OverloadPath), "DLC") : null;
+            mapManager.SaveNewMapsToDLCFolder = UseDLCLocation && OverloadClientToolApplication.ValidDirectoryName(dlcFolder, true);
 
             // Start updating maps in a separate thread.
             mapManagerThread = new Thread(UpdateMapThread);
@@ -1371,8 +1319,8 @@ namespace OverloadClientTool
             // Decide where to unpack Olmod ZIP.
             string olmodInstallFolder = null;
 
-            if (OverloadClientApplication.ValidFileName(OlmodPath, true)) olmodInstallFolder = Path.GetDirectoryName(OlmodPath);
-            if ((olmodInstallFolder == null) && (OverloadClientApplication.ValidFileName(OverloadPath, true))) olmodInstallFolder = Path.GetDirectoryName(OverloadPath);
+            if (OverloadClientToolApplication.ValidFileName(OlmodPath, true)) olmodInstallFolder = Path.GetDirectoryName(OlmodPath);
+            if ((olmodInstallFolder == null) && (OverloadClientToolApplication.ValidFileName(OverloadPath, true))) olmodInstallFolder = Path.GetDirectoryName(OverloadPath);
 
             if (olmodInstallFolder == null)
             {
@@ -1389,7 +1337,7 @@ namespace OverloadClientTool
             }
 
             // Check if update is required. We use the ZIP date to stamp Olmod.exe
-            if ((OverloadClientApplication.ValidFileName(OlmodPath, true)) && (new FileInfo(OlmodPath).CreationTimeUtc == latest.Created))
+            if ((OverloadClientToolApplication.ValidFileName(OlmodPath, true)) && (new FileInfo(OlmodPath).CreationTimeUtc == latest.Created))
             {
                 if (sender != null) Info("Already using the latest Olmod version.");
                 return;
@@ -1414,8 +1362,8 @@ namespace OverloadClientTool
         {
             get
             {
-                string olmodVersion = OverloadClientApplication.GetFileVersion(OlmodPath);
-                olmodVersion = OverloadClientApplication.VersionStringFix(olmodVersion);
+                string olmodVersion = OverloadClientToolApplication.GetFileVersion(OlmodPath);
+                olmodVersion = OverloadClientToolApplication.VersionStringFix(olmodVersion);
                 return String.Format($"Olmod {olmodVersion} by Arne de Bruijn.");
             }
         }

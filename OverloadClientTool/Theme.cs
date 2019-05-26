@@ -122,7 +122,7 @@ namespace OverloadClientTool
                 theme.InactivePaneButtonBackColor = Color.FromArgb(50, 50, 50);
                 theme.InactivePaneButtonForeColor = Color.White;
 
-                theme.IsRunningImage = global::OverloadClientTool.Properties.Resources.arrows_light_blue_on_grey_2;
+                theme.IsRunningImage = Properties.Resources.arrows_light_blue_on_grey_2;
 
                 return theme;
             }
@@ -161,7 +161,7 @@ namespace OverloadClientTool
                 theme.InactivePaneButtonBackColor = Color.White;
                 theme.InactivePaneButtonForeColor = Color.Black;
 
-                theme.IsRunningImage = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
+                theme.IsRunningImage = Properties.Resources.arrows_blue_on_white;
 
                 return theme;
             }

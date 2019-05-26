@@ -156,8 +156,8 @@ namespace OverloadClientTool
             }
             finally
             {
-                if (OverloadClientApplication.ValidFileName(localTempZip, true)) try { File.Delete(localTempZip); } catch { }
-                if (OverloadClientApplication.ValidDirectoryName(localTempFolder, true)) try {OverloadClientApplication.RemoveDirectory(localTempFolder); } catch { }
+                if (OverloadClientToolApplication.ValidFileName(localTempZip, true)) try { File.Delete(localTempZip); } catch { }
+                if (OverloadClientToolApplication.ValidDirectoryName(localTempFolder, true)) try {OverloadClientToolApplication.RemoveDirectory(localTempFolder); } catch { }
             }
         }
     }

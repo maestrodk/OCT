@@ -250,5 +250,17 @@ namespace OverloadClientTool.Properties {
                 this["AutoUpdateOCT"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NotUsed {
+            get {
+                return ((string)(this["NotUsed"]));
+            }
+            set {
+                this["NotUsed"] = value;
+            }
+        }
     }
 }

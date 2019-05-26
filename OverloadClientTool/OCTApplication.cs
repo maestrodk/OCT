@@ -1,29 +1,41 @@
-﻿using Newtonsoft.Json;
-using OverloadClientApplication;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Security.Principal;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace OverloadClientTool
 {
-    static class OverloadClientApplication
-    {
+    static class OverloadClientToolApplication
+    {    
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main(string[] args)
         {
+            // To embed a dll in a compiled exe:
+            // 1 - Change the properties of the dll in References so that Copy Local=false
+            // 2 - Add the dll file to the project as an additional file not just a reference
+            // 3 - Change the properties of the file so that Build Action=Embedded Resource
+            // 4 - Paste this code before Application.Run in the main exe
+            AppDomain.CurrentDomain.AssemblyResolve += (Object sender, ResolveEventArgs resolveArgs) =>
+            {
+                String thisExe = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+                System.Reflection.AssemblyName embeddedAssembly = new System.Reflection.AssemblyName(resolveArgs.Name);
+                String resourceName = thisExe + "." + embeddedAssembly.Name + ".dll";
+
+                using (var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                {
+                    Byte[] assemblyData = new Byte[stream.Length];
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+                    return System.Reflection.Assembly.Load(assemblyData);
+                }
+            };
+
             // Setup debug logging.
             string startDateTime = DateTime.Now.ToString("yyyy-dd-MM HH:mm:ss");
             string debugFileFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OverloadClientTool\\Debug");
@@ -34,6 +46,13 @@ namespace OverloadClientTool
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            if ((args.Length > 1) && (args[0].ToLower() == "-install"))
+            {
+                LogDebugMessage("Install to " + args[1], debugFileName);
+                Install.InstallTo(args[1], debugFileName);
+                LogDebugMessage("Finished install.", debugFileName);
+            }
 
             if ((args.Length > 1) && (args[0].ToLower() == "-cleanup"))
             {
@@ -77,11 +96,11 @@ namespace OverloadClientTool
             }
         }
 
-        public static bool ValidFileName(string path, bool mustExist = false)
+        public static bool ValidFileName(string fileName, bool mustExist = false)
         {
             try
             {
-                bool test = new FileInfo(path).Exists;
+                bool test = new FileInfo(fileName).Exists;
                 if (mustExist) return test;
                 return true;
             }
@@ -91,11 +110,11 @@ namespace OverloadClientTool
             }
         }
 
-        public static bool ValidDirectoryName(string path, bool mustExist = false)
+        public static bool ValidDirectoryName(string folderName, bool mustExist = false)
         {
             try
             {
-                bool test = new DirectoryInfo(path).Exists;
+                bool test = new DirectoryInfo(folderName).Exists;
                 if (mustExist) return test;
                 return true;
             }
@@ -111,19 +130,6 @@ namespace OverloadClientTool
             {
                 FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(fileName);
                 return fileVersionInfo.FileVersion;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public static string GetFileDescription(string fileName)
-        {
-            try
-            {
-                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(fileName);
-                return fileVersionInfo.FileDescription;
             }
             catch
             {
@@ -180,13 +186,6 @@ namespace OverloadClientTool
             {
                 LogDebugMessage(String.Format($"Cannot cleanup install folder: {ex.Message}"), debugFileName);
             }
-        }
-
-        public static Process GetRunningProcess(string name)
-        {
-            if (String.IsNullOrEmpty(name)) return null;
-            foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) return process;
-            return null;
         }
 
         public static string VersionStringFix(string version)
