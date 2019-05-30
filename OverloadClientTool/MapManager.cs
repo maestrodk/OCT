@@ -262,9 +262,9 @@ namespace OverloadClientTool
         // URL for online map list JSON.
         private readonly string DefaultOnlineMapListUrl = @"https://www.overloadmaps.com/data/mp.json";
 
-        // List of maps found online.
-        public SortedList<string, OverloadMap> Maps = new SortedList<string, OverloadMap>();
-
+        // List of maps found online + local maps.
+        public SortedList<string, OverloadMap> SortedMaps = new SortedList<string, OverloadMap>();
+        
         // Note! MUST be same string as defined in OCTMain!
         private const string HiddenMarker = "_OCT_Hidden";
 
@@ -449,6 +449,9 @@ namespace OverloadClientTool
                                     newMap.Hide();
                                 }
 
+                                if (mapKey.ToLower().EndsWith(HiddenMarker)) mapKey = mapKey.Substring(0, mapKey.Length - HiddenMarker.Length);
+                                if (mapKey.ToLower().EndsWith(".zip")) mapKey = mapKey.Substring(0, mapKey.Length - ".zip".Length);
+
                                 newMapList.Add(mapKey, newMap);
                             }
                         }
@@ -506,6 +509,9 @@ namespace OverloadClientTool
                                     newMap.Hide();
                                 }
 
+                                if (mapKey.ToLower().EndsWith(HiddenMarker)) mapKey = mapKey.Substring(0, mapKey.Length - HiddenMarker.Length);
+                                if (mapKey.ToLower().EndsWith(".zip")) mapKey = mapKey.Substring(0, mapKey.Length - ".zip".Length);
+
                                 newMapList.Add(mapKey, newMap);
                             }
                         }
@@ -518,7 +524,7 @@ namespace OverloadClientTool
             }
 
             // Update maps.
-            Maps = newMapList;
+            SortedMaps = newMapList;
         }
 
         /// <summary>
@@ -539,14 +545,14 @@ namespace OverloadClientTool
             UpdateMapList(mapListUrl, dlcMaps, Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\Revival\Overload");
 
             // Should never happen but the online list could be offline/empty for some reason.
-            if (Maps.Count == 0) return false;
+            if (SortedMaps.Count == 0) return false;
 
             try
             {
                 List<Task> downloadTasks = new List<Task>();
 
                 int started = 0;
-                foreach (KeyValuePair<string, OverloadMap> sortedMap in Maps)
+                foreach (KeyValuePair<string, OverloadMap> sortedMap in SortedMaps)
                 {
                     var task = UpdateMap(sortedMap.Value, false);
 
@@ -570,7 +576,7 @@ namespace OverloadClientTool
             }
             finally
             {
-                foreach (KeyValuePair<string, OverloadMap> sortedMap in Maps)
+                foreach (KeyValuePair<string, OverloadMap> sortedMap in SortedMaps)
                 {
                     //if (!OverloadClientApplication.ValidFileName(sortedMap.Value.LocalZipFileName, true)) sortedMap.Value.LocalZipFileName = null;
                     //if (!OverloadClientApplication.ValidFileName(sortedMap.Value.LocalDLCZipFileName, true)) sortedMap.Value.LocalDLCZipFileName = null;

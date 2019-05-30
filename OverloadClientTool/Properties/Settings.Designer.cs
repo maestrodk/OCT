@@ -262,5 +262,17 @@ namespace OverloadClientTool.Properties {
                 this["HideNonOfficialMaps"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Dark Gray")]
+        public string ActiveThemeName {
+            get {
+                return ((string)(this["ActiveThemeName"]));
+            }
+            set {
+                this["ActiveThemeName"] = value;
+            }
+        }
     }
 }

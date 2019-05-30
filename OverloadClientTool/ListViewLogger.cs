@@ -17,7 +17,7 @@ namespace OverloadClientTool
             Error = 3
         };
 
-        private Font listViewFont = new Font("Tahoma", 8.25f, FontStyle.Regular);
+        private Font listViewFont = new Font("Calibri", 9f, FontStyle.Regular);
 
         private ListView listView;
         private Theme theme;
@@ -60,7 +60,6 @@ namespace OverloadClientTool
             lock (suspendLogUpdate)
             {
                 this.theme = theme;
-                
 
                 (listView.Parent as Panel).BackColor = theme.BackColor;
                 DrawBorder();
@@ -69,10 +68,10 @@ namespace OverloadClientTool
 
         private void DrawBorder()
         {
-            listView.BackColor = theme.ControlBackColor;
+            listView.BackColor = theme.ActivePaneButtonBackColor;
             listView.ForeColor = theme.ControlForeColor;
 
-            if (theme.Name == "Dark")
+            if (theme.Name == "Dark2")
             {
                 listView.Dock = DockStyle.None;
                 listView.Location = new Point(1, 1);

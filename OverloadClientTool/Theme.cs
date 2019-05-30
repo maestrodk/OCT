@@ -18,6 +18,11 @@ namespace OverloadClientTool
         /// <summary>
         /// Default background color for a control.
         /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Default background color for a control.
+        /// </summary>
         public Color ControlBackColor { get; set; }
 
         /// <summary>
@@ -86,14 +91,25 @@ namespace OverloadClientTool
         public Color TextHighlightColor { get; set; }
 
         /// <summary>
-        /// Color of frames in ListBox, TextBox, RichTextBox etc.
-        /// </summary>
-        //public Color FrameColor { get; set; }
-
-        /// <summary>
         /// The image shown for active tasks/applications.
         /// </summary>
         public Image IsRunningImage;
+
+        public static string[] AvailableThemes
+        {
+            get
+            {
+                return new string[] { "Black", "Dark Gray", "Dark Blue", "Light" };
+            }
+        }
+
+        public static Theme GetThemeByName(string name)
+        {
+            if (name == "Black") return GetDarkTheme;
+            if (name == "Dark Gray") return GetDarkGrayTheme;
+            if (name == "Dark Blue") return GetDarkBlueTheme;
+            return GetLightTheme;
+        }
 
         /// <summary>
         /// Returns a dark theme color set.
@@ -104,7 +120,90 @@ namespace OverloadClientTool
             {
                 Theme theme = new Theme();
 
-                theme.Name = "Dark";
+                theme.Name = "Black";
+                theme.Description = "A black theme with a few gray elements.";
+
+                theme.ButtonEnabledBackColor = Color.FromArgb(32, 32, 32);
+                theme.ButtonDisabledBackColor = Color.FromArgb(32, 32, 32);
+
+                theme.ButtonEnabledForeColor = Color.FromArgb(192, 192, 192);
+                theme.ButtonDisabledForeColor = Color.FromArgb(160, 160, 160);
+ 
+                theme.ControlBackColor = Color.FromArgb(16, 16, 16);
+                theme.ControlForeColor = Color.Gray;
+
+                theme.TextHighlightColor = Color.White;
+                theme.InvalidForeColor = Color.LightCoral;
+
+                theme.BackColor = Color.FromArgb(0, 0, 0);
+                theme.ForeColor = Color.LightGray;
+
+                theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
+                theme.ActivePaneButtonForeColor = Color.FromArgb(192, 192, 192);
+
+                theme.InactivePaneButtonBackColor = theme.BackColor;
+                theme.InactivePaneButtonForeColor = Color.FromArgb(192, 192, 192);
+
+                theme.IsRunningImage = Properties.Resources.arrows_light_blue_on_grey_2;
+
+                return theme;
+            }
+        }
+
+        /// <summary>
+        /// Returns a dark theme color set.
+        /// </summary>
+        public static Theme GetDarkBlueTheme
+        {
+            get
+            {
+                Theme theme = new Theme();
+
+                theme.Name = "Dark Blue";
+                theme.Description = "A dark theme with some blue/gray elements.";
+
+                theme.ButtonEnabledBackColor = Color.FromArgb(128, 128, 128);
+                theme.ButtonEnabledForeColor = Color.FromArgb(255, 255, 255);
+                theme.ButtonDisabledBackColor = Color.FromArgb(96, 96, 96);
+                theme.ButtonDisabledForeColor = Color.FromArgb(255, 255, 255);
+
+                // Try some alternate background button colors.
+                theme.ButtonEnabledBackColor = Color.SteelBlue;
+                theme.ButtonDisabledBackColor = Color.SteelBlue;
+
+                theme.ControlBackColor = Color.FromArgb(32, 32, 32);
+                theme.ControlForeColor = Color.LightGray;
+
+                theme.TextHighlightColor = Color.SteelBlue;
+
+                theme.InvalidForeColor = Color.LightCoral;
+
+                theme.BackColor = Color.FromArgb(50, 50, 50);
+                theme.ForeColor = Color.LightGray;
+
+                theme.ActivePaneButtonBackColor = Color.SteelBlue;
+                theme.ActivePaneButtonForeColor = Color.White;
+
+                theme.InactivePaneButtonBackColor = Color.FromArgb(50, 50, 50);
+                theme.InactivePaneButtonForeColor = Color.White;
+
+                theme.IsRunningImage = Properties.Resources.arrows_light_blue_on_grey_2;
+
+                return theme;
+            }
+        }
+
+        /// <summary>
+        /// Returns a dark theme color set.
+        /// </summary>
+        public static Theme GetDarkGrayTheme
+        {
+            get
+            {
+                Theme theme = new Theme();
+
+                theme.Name = "Dark Gray";
+                theme.Description = "A dark theme with some gray elements.";
 
                 theme.ButtonEnabledBackColor = Color.FromArgb(128, 128, 128);
                 theme.ButtonEnabledForeColor = Color.FromArgb(255, 255, 255);
@@ -120,9 +219,8 @@ namespace OverloadClientTool
 
                 theme.BackColor = Color.FromArgb(50, 50, 50);
                 theme.ForeColor = Color.LightGray;
-                //theme.FrameColor = Color.DarkGray;
 
-                theme.ActivePaneButtonBackColor = Color.SteelBlue;
+                theme.ActivePaneButtonBackColor = Color.DarkGray;
                 theme.ActivePaneButtonForeColor = Color.White;
 
                 theme.InactivePaneButtonBackColor = Color.FromArgb(50, 50, 50);
@@ -144,6 +242,7 @@ namespace OverloadClientTool
                 Theme theme = new Theme();
 
                 theme.Name = "Light";
+                theme.Description = "A light theme with hints of blue.";
 
                 theme.ButtonEnabledBackColor = Color.FromArgb(200, 200, 200);
                 theme.ButtonEnabledForeColor = Color.FromArgb(64, 64, 64);
@@ -160,8 +259,7 @@ namespace OverloadClientTool
 
                 theme.BackColor = Color.White;
                 theme.ForeColor = Color.FromArgb(50, 50, 50);
-                //theme.FrameColor = Color.DarkBlue;
-
+ 
                 theme.ActivePaneButtonBackColor = Color.LightSteelBlue;
                 theme.ActivePaneButtonForeColor = Color.Black;
 

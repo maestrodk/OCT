@@ -60,6 +60,12 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.OlproxyParameters = value; }
         }
 
+        public string ActiveThemeName
+        {
+            get { return Properties.Settings.Default.ActiveThemeName; }
+            set { Properties.Settings.Default.ActiveThemeName = value; }
+        }
+
         public bool OlmodAutoUpdate
         {
             get { return Properties.Settings.Default.AutoUpdateOlmod; }
@@ -119,6 +125,7 @@ namespace OverloadClientTool
             get { return Properties.Settings.Default.AutoSavePilots; }
             set { Properties.Settings.Default.AutoSavePilots = value; }
         }
+
         public bool AutoUpdateOCT
         {
             get { return Properties.Settings.Default.AutoUpdateOCT; }
@@ -297,7 +304,6 @@ namespace OverloadClientTool
             OlproxyArgs.Text = OlproxyParameters;
 
             UseEmbeddedOlproxy.Checked = OlproxyEmbedded;
-            DarkThemeCheckBox.Checked = DarkTheme;
             UseOlmodCheckBox.Checked = UseOlmod;
             UseOlproxyCheckBox.Checked = UseOlproxy;
             AutoUpdateMapsCheckBox.Checked = AutoUpdateMaps;
@@ -309,6 +315,10 @@ namespace OverloadClientTool
             UseOlmodGameDirArg.Checked = PassGameDirToOlmod;
             AutoUpdateOlmod.Checked = OlmodAutoUpdate;
             HideUnofficialMapsCheckBox.Checked = HideNonOfficialMaps;
+
+            // Check for change to new theme selection.
+            if (String.IsNullOrEmpty(ActiveThemeName)) ActiveThemeName = "Dark Gray";
+            theme = Theme.GetThemeByName(ActiveThemeName);
 
             // Get debug setting and update debug file name info.
             EnableDebugCheckBox.Checked = Debugging;
@@ -371,6 +381,13 @@ namespace OverloadClientTool
 
                 foreach (Control child in control.Controls) child.ForeColor = theme.ForeColor;
             }
+            else if ((control.Name == "PilotsPanel") || (control.Name == "MapsPanel") || (control.Name == "ActiveThemePanel"))
+            {
+                // These panels only contain one child control: A listbox.
+                // Set size and position of the listbox-
+                Panel panel = control as Panel;
+                panel.BackColor = theme.ActivePaneButtonBackColor;
+            }
             else if ((control is TextBox) || (control is ListBox) || (control is ListView) || (control is TabPage))
             {
                 ApplyThemeToSingleControl(control, theme);
@@ -388,6 +405,12 @@ namespace OverloadClientTool
                 link.VisitedLinkColor = theme.TextHighlightColor;
                 link.LinkColor  = theme.TextHighlightColor;
                 link.ActiveLinkColor = theme.TextHighlightColor;
+            }
+            else if (control is Label)
+            {
+                Label link = control as Label;
+                link.BackColor = theme.BackColor;
+                link.ForeColor = theme.TextHighlightColor;
             }
             else if (control is CheckBox)
             {
@@ -408,8 +431,7 @@ namespace OverloadClientTool
         {
             control.BackColor = theme.ControlBackColor;
             control.ForeColor = theme.ControlForeColor;
-            //if ((control is TextBox) || (control is ListBox) || (control is ListView) || (control is TabPage)) control.
-        }
+       }
  
         /// <summary>
         /// Override default enabled/disabled colors for a Button control.

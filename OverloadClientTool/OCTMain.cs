@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -13,7 +14,8 @@ namespace OverloadClientTool
 {
     public partial class OCTMain : Form
     {
-        public Theme theme = Theme.GetDarkTheme;
+        // Set a default them (might change when reading settings).
+        public Theme theme = Theme.GetDarkGrayTheme;
 
         private bool autoStart = false;
         private ListViewLogger logger = null;
@@ -63,9 +65,6 @@ namespace OverloadClientTool
             // Init map manager.
             mapManager = new OverloadMapManager(UpdateOnlyExistingMaps);
 
-            // Set a default them (may be changed when reading settings).
-            theme = Theme.GetDarkTheme;
-
             // Initialize controls on main form.
             InitializeComponent();
 
@@ -85,6 +84,18 @@ namespace OverloadClientTool
 
             // Load user preferences.
             LoadSettings();
+
+            // Init theme listbox.
+            AvailableThemesListBox.Items.Clear();
+            AvailableThemesListBox.Items.AddRange(Theme.AvailableThemes);
+
+            for (int i = 0; i < AvailableThemesListBox.Items.Count; i++)
+            {
+                if ((String)AvailableThemesListBox.Items[i] == theme.Name)
+                {
+                    AvailableThemesListBox.SelectedIndex = i;
+                }
+            }
 
             // Init pilots listbox start monitoring.
             InitPilotsListBox();
@@ -114,19 +125,18 @@ namespace OverloadClientTool
         {
             LogDebugMessage("Main_Load()");
 
-            // The theme colors MUST be set BEFORE attempting to validate settings.
-            // This is because ValidateSettings() checks the button colors to see if
-            // it is safe to start any of the .exe files.
-            theme = (DarkTheme) ? Theme.GetDarkTheme : Theme.GetLightTheme;
+            // Set controls colors according to the selected theme.
             UpdateTheme(theme);
-
-            //ValidateSettings();
-
+           
             // Focus the first pane.
             paneController.SwitchToPane(PaneSelectMain);
 
             // Make sure no text is selected.
             Unfocus();
+
+            // Fix tooltip.
+            //MainToolTip.OwnerDraw = true;
+            //MainToolTip.Draw += new DrawToolTipEventHandler(MainToolTip_Draw);
 
             // Check settings and update buttons.
             ValidateSettings();
@@ -180,7 +190,6 @@ namespace OverloadClientTool
             // Check for OCT update.
             if (AutoUpdateOCT) UpdateCheck(debugFileName, false);
         }
-
 
         /// <summary>
         /// A little hack to make sure no control has focus.
@@ -712,18 +721,6 @@ namespace OverloadClientTool
         // listBoxLog.Log(Level.Critical, "A critical level message");
         // listBoxLog.Paused = !listBoxLog.Paused;
 
-        private void SelectDark_CheckedChanged(object sender, EventArgs e)
-        {
-            DarkTheme = DarkThemeCheckBox.Checked;
-            theme = (DarkTheme) ? Theme.GetDarkTheme : Theme.GetLightTheme;
-
-            logger?.SetTheme(theme);
-
-            UpdateTheme(theme);
-
-            Info((DarkTheme) ? "Dark theme selected." : "Light theme selected.");
-        }
-
         private void StopButton_Click(object sender, EventArgs e)
         {
             Verbose("Shutting down active tasks.");
@@ -1056,17 +1053,15 @@ namespace OverloadClientTool
         private void UpdateMapListBox(string focusName = null)
         {
             MapsListBox.Items.Clear();
-            MapsListBox.DisplayMember = "Value";
-            MapsListBox.ValueMember = "Value";
 
             bool anyHidden = false;
 
-            foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.Maps)
+            foreach (KeyValuePair<string, OverloadMap> map in mapManager.SortedMaps)
             {
-                if (setMap.Value.IsLocal)
+                if (map.Value.IsLocal)
                 {
-                    MapsListBox.Items.Add(setMap);
-                    if (setMap.Value.Hidden) anyHidden = true;
+                    MapsListBox.Items.Add(map.Value);
+                    if (map.Value.Hidden) anyHidden = true;
                 }
             }
 
@@ -1276,14 +1271,17 @@ namespace OverloadClientTool
 
             if (index >= 0 && index < lb.Items.Count)
             {
-                OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[index]).Value;
+                //OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[index]).Value;
+                OverloadMap map = (OverloadMap)MapsListBox.Items[index];
                 string toolTipString = map.DisplayMapInfo;
 
                 // Don't do anything tooltip text is the current tooltip .
                 if (MainToolTip.GetToolTip(lb) != toolTipString) MainToolTip.SetToolTip(lb, toolTipString);
             }
             else
+            {
                 MainToolTip.Hide(lb);
+            }
         }
 
         private void HideUnofficialMapsCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1294,7 +1292,7 @@ namespace OverloadClientTool
 
         private void MapUnhideAllButton_Click(object sender, EventArgs e)
         {
-            foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.Maps)
+            foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.SortedMaps)
             {
                 if (setMap.Value.Hidden) setMap.Value.Hidden = false;
             }
@@ -1448,6 +1446,142 @@ namespace OverloadClientTool
         private void PilotXPTextBox_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void AvailableThemes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (AvailableThemesListBox.SelectedIndex >= 0)
+            {
+                string newThemeName = (string)AvailableThemesListBox.Items[AvailableThemesListBox.SelectedIndex];
+
+                theme = Theme.GetThemeByName(newThemeName);
+                ActiveThemeName = newThemeName;
+
+                UpdateTheme(theme);
+                ThemeDescriptionLabel.Text = theme.Description;
+
+                AvailableThemesListBox.Invalidate();
+            }
+        }
+
+        // 1. Set the property DrawMode to DrawMode.OwnerDrawFixed.
+        // 2. Overreide DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.Template_DrawItem);
+        private void Template_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            // Only created here to allow the code to compile without warnings!
+            ListBox listBox1 = new ListBox();
+
+            if (e.Index < 0) return;
+
+            // If the item state is selected them change the back color.
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+                e = new DrawItemEventArgs(e.Graphics,
+                                          e.Font,
+                                          e.Bounds,
+                                          e.Index,
+                                          e.State ^ DrawItemState.Selected,
+                                          e.ForeColor,
+                                          theme.ActivePaneButtonBackColor);
+
+            // Draw the background of the ListBox control for each item.
+            e.DrawBackground();
+
+            // Draw the current item text
+            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.ForeColor), e.Bounds, StringFormat.GenericDefault);
+            
+            // If the ListBox has focus, draw a focus rectangle around the selected item.
+            e.DrawFocusRectangle();
+        }
+
+        private void AvailableThemesListBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0) return;
+
+            // If the item state is selected them change the back color.
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+            {
+                e = new DrawItemEventArgs(e.Graphics,
+                                          e.Font,
+                                          e.Bounds,
+                                          e.Index,
+                                          e.State ^ DrawItemState.Selected,
+                                          e.ForeColor,
+                                          theme.ActivePaneButtonBackColor);
+            }
+
+            // Draw the background of the ListBox control for each item.
+            e.DrawBackground();
+
+            // Draw the current item text
+            e.Graphics.DrawString(AvailableThemesListBox.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.ForeColor), e.Bounds, StringFormat.GenericDefault);
+
+            // If the ListBox has focus, draw a focus rectangle around the selected item.
+            e.DrawFocusRectangle();
+        }
+
+        private void PilotsListBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0) return;
+
+            // If the item state is selected them change the back color.
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+            {
+                e = new DrawItemEventArgs(e.Graphics,
+                                          e.Font,
+                                          e.Bounds,
+                                          e.Index,
+                                          e.State ^ DrawItemState.Selected,
+                                          e.ForeColor,
+                                          theme.ActivePaneButtonBackColor);
+            }
+
+            // Draw the background of the ListBox control for each item.
+            e.DrawBackground();
+
+            // Draw the current item text
+            e.Graphics.DrawString(PilotsListBox.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.ForeColor), e.Bounds, StringFormat.GenericDefault);
+
+            // If the ListBox has focus, draw a focus rectangle around the selected item.
+            e.DrawFocusRectangle();
+        }
+
+        private void MapsListBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0) return;
+
+            // If the item state is selected them change the back color.
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+            {
+                e = new DrawItemEventArgs(e.Graphics,
+                                          e.Font,
+                                          e.Bounds,
+                                          e.Index,
+                                          e.State ^ DrawItemState.Selected,
+                                          e.ForeColor,
+                                          theme.ActivePaneButtonBackColor);
+            }
+
+            // Draw the background of the ListBox control for each item.
+            e.DrawBackground();
+
+            // Draw the current item text
+            e.Graphics.DrawString(MapsListBox.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.ForeColor), e.Bounds, StringFormat.GenericDefault);
+
+            // If the ListBox has focus, draw a focus rectangle around the selected item.
+            e.DrawFocusRectangle();
+        }
+
+        private void MainToolTip_Draw(object sender, DrawToolTipEventArgs e)
+        {
+            Font f = new Font("Calibri", 8.0f);
+            e.DrawBackground();
+            e.DrawBorder();            
+            e.Graphics.DrawString(e.ToolTipText, f, Brushes.Black, new PointF(2, 2));
+        }
+
+        private void MainToolTip_Popup(object sender, PopupEventArgs e)
+        {
+            e.ToolTipSize = TextRenderer.MeasureText(MainToolTip.GetToolTip(e.AssociatedControl), new Font("Calibri", 8.0f));
         }
     }
 }

@@ -37,21 +37,17 @@
             this.StartStopButton = new System.Windows.Forms.Button();
             this.ExitButton = new System.Windows.Forms.Button();
             this.MapUpdateButton = new System.Windows.Forms.Button();
-            this.DarkThemeCheckBox = new System.Windows.Forms.CheckBox();
             this.UseEmbeddedOlproxy = new System.Windows.Forms.CheckBox();
-            this.OverloadGroupBox = new System.Windows.Forms.GroupBox();
             this.OverloadRunning = new System.Windows.Forms.PictureBox();
             this.OlproxyRunning = new System.Windows.Forms.PictureBox();
             this.UpdatingMaps = new System.Windows.Forms.PictureBox();
             this.OnlineMapJsonUrl = new System.Windows.Forms.TextBox();
-            this.InstalledMapsGroupBox = new System.Windows.Forms.GroupBox();
             this.MapsListBox = new System.Windows.Forms.ListBox();
             this.UseOlproxyCheckBox = new System.Windows.Forms.CheckBox();
             this.UseOlmodCheckBox = new System.Windows.Forms.CheckBox();
             this.UseDLCLocationCheckBox = new System.Windows.Forms.CheckBox();
             this.AutoUpdateMapsCheckBox = new System.Windows.Forms.CheckBox();
-            this.LoggingGroupBox = new System.Windows.Forms.GroupBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.ActivityLogPanel = new System.Windows.Forms.Panel();
             this.ActivityListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.OverloadClientToolNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -60,52 +56,70 @@
             this.PilotRenameButton = new System.Windows.Forms.Button();
             this.PilotCloneButton = new System.Windows.Forms.Button();
             this.PilotsBackupButton = new System.Windows.Forms.Button();
-            this.PilotsGroupBox = new System.Windows.Forms.GroupBox();
             this.PilotsListBox = new System.Windows.Forms.ListBox();
             this.MapDeleteButton = new System.Windows.Forms.Button();
             this.MapHideButton = new System.Windows.Forms.Button();
             this.PaneMain = new System.Windows.Forms.Panel();
+            this.panel11 = new System.Windows.Forms.Panel();
+            this.label12 = new System.Windows.Forms.Label();
             this.StatusMessage = new System.Windows.Forms.Label();
             this.PaneSelectMain = new System.Windows.Forms.Button();
             this.PaneSelectMapManager = new System.Windows.Forms.Button();
             this.PaneSelectPilots = new System.Windows.Forms.Button();
             this.PaneSelectOverload = new System.Windows.Forms.Button();
             this.PaneMaps = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.MapsPanel = new System.Windows.Forms.Panel();
             this.HideUnofficialMapsCheckBox = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.MapUnhideAllButton = new System.Windows.Forms.Button();
             this.MapRefreshButton = new System.Windows.Forms.Button();
             this.PanePilots = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.PilotXPTextBox = new System.Windows.Forms.TextBox();
+            this.PilotsPanel = new System.Windows.Forms.Panel();
             this.OpenPilotsBackupFolder = new System.Windows.Forms.LinkLabel();
+            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.PilotMakeActiveButton = new System.Windows.Forms.Button();
             this.AutoPilotsBackupCheckbox = new System.Windows.Forms.CheckBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.PilotXPTextBox = new System.Windows.Forms.TextBox();
             this.PilotXPSetButton = new System.Windows.Forms.Button();
             this.PaneSelectOlproxy = new System.Windows.Forms.Button();
             this.PaneSelectOlmod = new System.Windows.Forms.Button();
             this.PaneOlproxy = new System.Windows.Forms.Panel();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.label11 = new System.Windows.Forms.Label();
             this.OlproxyReleases = new System.Windows.Forms.LinkLabel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label10 = new System.Windows.Forms.Label();
             this.StartStopOlproxyButton = new System.Windows.Forms.Button();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.PaneOverload = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
             this.OverloadLog = new System.Windows.Forms.LinkLabel();
             this.PLayOverloadLinkLabel = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.SearchOverloadButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.PaneOlmod = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.OlmodExecutable = new System.Windows.Forms.TextBox();
             this.OlmodReleases = new System.Windows.Forms.LinkLabel();
             this.UpdateOlmod = new System.Windows.Forms.Button();
             this.UseOlmodGameDirArg = new System.Windows.Forms.CheckBox();
             this.AutoUpdateOlmod = new System.Windows.Forms.CheckBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.OlmodExecutable = new System.Windows.Forms.TextBox();
             this.PaneButtonLine = new System.Windows.Forms.Panel();
             this.PaneSelectOptions = new System.Windows.Forms.Button();
             this.PaneOptions = new System.Windows.Forms.Panel();
+            this.ThemeDescriptionLabel = new System.Windows.Forms.Label();
+            this.ActiveThemePanel = new System.Windows.Forms.Panel();
+            this.AvailableThemesListBox = new System.Windows.Forms.ListBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.PayPalLink = new System.Windows.Forms.LinkLabel();
             this.MailLinkLabel = new System.Windows.Forms.LinkLabel();
             this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
@@ -113,38 +127,38 @@
             this.AutoUpdateCheckBox = new System.Windows.Forms.CheckBox();
             this.ForceUpdateButton = new System.Windows.Forms.Button();
             this.MainToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
-            this.OverloadGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).BeginInit();
-            this.InstalledMapsGroupBox.SuspendLayout();
-            this.LoggingGroupBox.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.PilotsGroupBox.SuspendLayout();
+            this.ActivityLogPanel.SuspendLayout();
             this.PaneMain.SuspendLayout();
+            this.panel11.SuspendLayout();
             this.PaneMaps.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.panel7.SuspendLayout();
+            this.MapsPanel.SuspendLayout();
             this.PanePilots.SuspendLayout();
-            this.groupBox6.SuspendLayout();
+            this.panel9.SuspendLayout();
+            this.PilotsPanel.SuspendLayout();
             this.PaneOlproxy.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.panel10.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.PaneOverload.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.PaneOlmod.SuspendLayout();
-            this.groupBox5.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.PaneOptions.SuspendLayout();
+            this.ActiveThemePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // OverloadExecutable
             // 
             this.OverloadExecutable.BackColor = System.Drawing.Color.Gray;
             this.OverloadExecutable.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OverloadExecutable.Location = new System.Drawing.Point(9, 16);
+            this.OverloadExecutable.Location = new System.Drawing.Point(10, 19);
             this.OverloadExecutable.Margin = new System.Windows.Forms.Padding(1);
             this.OverloadExecutable.Name = "OverloadExecutable";
-            this.OverloadExecutable.Size = new System.Drawing.Size(464, 20);
+            this.OverloadExecutable.Size = new System.Drawing.Size(465, 20);
             this.OverloadExecutable.TabIndex = 1;
             this.OverloadExecutable.TextChanged += new System.EventHandler(this.OverloadExecutable_TextChanged);
             this.OverloadExecutable.DoubleClick += new System.EventHandler(this.OverloadExecutable_MouseDoubleClick);
@@ -153,10 +167,10 @@
             // 
             this.OverloadArgs.BackColor = System.Drawing.Color.Gray;
             this.OverloadArgs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OverloadArgs.Location = new System.Drawing.Point(9, 16);
+            this.OverloadArgs.Location = new System.Drawing.Point(10, 20);
             this.OverloadArgs.Margin = new System.Windows.Forms.Padding(2);
             this.OverloadArgs.Name = "OverloadArgs";
-            this.OverloadArgs.Size = new System.Drawing.Size(464, 20);
+            this.OverloadArgs.Size = new System.Drawing.Size(465, 20);
             this.OverloadArgs.TabIndex = 2;
             this.OverloadArgs.TextChanged += new System.EventHandler(this.OverloadArgs_TextChanged);
             // 
@@ -164,10 +178,10 @@
             // 
             this.OlproxyExecutable.BackColor = System.Drawing.Color.Gray;
             this.OlproxyExecutable.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OlproxyExecutable.Location = new System.Drawing.Point(11, 16);
+            this.OlproxyExecutable.Location = new System.Drawing.Point(6, 17);
             this.OlproxyExecutable.Margin = new System.Windows.Forms.Padding(4);
             this.OlproxyExecutable.Name = "OlproxyExecutable";
-            this.OlproxyExecutable.Size = new System.Drawing.Size(474, 20);
+            this.OlproxyExecutable.Size = new System.Drawing.Size(446, 20);
             this.OlproxyExecutable.TabIndex = 3;
             this.OlproxyExecutable.TextChanged += new System.EventHandler(this.OlproxyExecutable_TextChanged);
             this.OlproxyExecutable.DoubleClick += new System.EventHandler(this.OlproxyExecutable_DoubleClick);
@@ -176,10 +190,10 @@
             // 
             this.OlproxyArgs.BackColor = System.Drawing.Color.Gray;
             this.OlproxyArgs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OlproxyArgs.Location = new System.Drawing.Point(11, 16);
+            this.OlproxyArgs.Location = new System.Drawing.Point(6, 17);
             this.OlproxyArgs.Margin = new System.Windows.Forms.Padding(2);
             this.OlproxyArgs.Name = "OlproxyArgs";
-            this.OlproxyArgs.Size = new System.Drawing.Size(474, 20);
+            this.OlproxyArgs.Size = new System.Drawing.Size(446, 20);
             this.OlproxyArgs.TabIndex = 4;
             this.OlproxyArgs.TextChanged += new System.EventHandler(this.OlproxyArgs_TextChanged);
             // 
@@ -191,7 +205,7 @@
             // StartStopButton
             // 
             this.StartStopButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StartStopButton.Location = new System.Drawing.Point(405, 297);
+            this.StartStopButton.Location = new System.Drawing.Point(388, 297);
             this.StartStopButton.Name = "StartStopButton";
             this.StartStopButton.Size = new System.Drawing.Size(56, 24);
             this.StartStopButton.TabIndex = 9;
@@ -203,7 +217,7 @@
             // 
             this.ExitButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ExitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ExitButton.Location = new System.Drawing.Point(467, 297);
+            this.ExitButton.Location = new System.Drawing.Point(450, 297);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(60, 24);
             this.ExitButton.TabIndex = 9;
@@ -214,7 +228,7 @@
             // MapUpdateButton
             // 
             this.MapUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapUpdateButton.Location = new System.Drawing.Point(421, 282);
+            this.MapUpdateButton.Location = new System.Drawing.Point(284, 288);
             this.MapUpdateButton.Name = "MapUpdateButton";
             this.MapUpdateButton.Size = new System.Drawing.Size(106, 24);
             this.MapUpdateButton.TabIndex = 9;
@@ -222,26 +236,12 @@
             this.MapUpdateButton.UseVisualStyleBackColor = true;
             this.MapUpdateButton.Click += new System.EventHandler(this.MapUpdateButton_Click);
             // 
-            // DarkThemeCheckBox
-            // 
-            this.DarkThemeCheckBox.AutoSize = true;
-            this.DarkThemeCheckBox.Checked = true;
-            this.DarkThemeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.DarkThemeCheckBox.Location = new System.Drawing.Point(47, 32);
-            this.DarkThemeCheckBox.Name = "DarkThemeCheckBox";
-            this.DarkThemeCheckBox.Size = new System.Drawing.Size(101, 17);
-            this.DarkThemeCheckBox.TabIndex = 5;
-            this.DarkThemeCheckBox.Text = "Use dark theme";
-            this.MainToolTip.SetToolTip(this.DarkThemeCheckBox, "Switch between dark/light themes");
-            this.DarkThemeCheckBox.UseVisualStyleBackColor = true;
-            this.DarkThemeCheckBox.CheckedChanged += new System.EventHandler(this.SelectDark_CheckedChanged);
-            // 
             // UseEmbeddedOlproxy
             // 
             this.UseEmbeddedOlproxy.AutoSize = true;
             this.UseEmbeddedOlproxy.Checked = true;
             this.UseEmbeddedOlproxy.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseEmbeddedOlproxy.Location = new System.Drawing.Point(146, 23);
+            this.UseEmbeddedOlproxy.Location = new System.Drawing.Point(127, 13);
             this.UseEmbeddedOlproxy.Name = "UseEmbeddedOlproxy";
             this.UseEmbeddedOlproxy.Size = new System.Drawing.Size(136, 17);
             this.UseEmbeddedOlproxy.TabIndex = 5;
@@ -249,16 +249,6 @@
             this.MainToolTip.SetToolTip(this.UseEmbeddedOlproxy, "Use the built-in Olproxy");
             this.UseEmbeddedOlproxy.UseVisualStyleBackColor = true;
             this.UseEmbeddedOlproxy.CheckedChanged += new System.EventHandler(this.UseEmbeddedOlproxy_CheckedChanged);
-            // 
-            // OverloadGroupBox
-            // 
-            this.OverloadGroupBox.Controls.Add(this.OverloadExecutable);
-            this.OverloadGroupBox.Location = new System.Drawing.Point(21, 17);
-            this.OverloadGroupBox.Name = "OverloadGroupBox";
-            this.OverloadGroupBox.Size = new System.Drawing.Size(480, 45);
-            this.OverloadGroupBox.TabIndex = 11;
-            this.OverloadGroupBox.TabStop = false;
-            this.OverloadGroupBox.Text = "Overload Application";
             // 
             // OverloadRunning
             // 
@@ -277,7 +267,7 @@
             // 
             this.OlproxyRunning.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.OlproxyRunning.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-            this.OlproxyRunning.Location = new System.Drawing.Point(85, 298);
+            this.OlproxyRunning.Location = new System.Drawing.Point(74, 297);
             this.OlproxyRunning.Margin = new System.Windows.Forms.Padding(3, 3, 8, 3);
             this.OlproxyRunning.Name = "OlproxyRunning";
             this.OlproxyRunning.Size = new System.Drawing.Size(22, 21);
@@ -290,7 +280,7 @@
             // 
             this.UpdatingMaps.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.UpdatingMaps.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-            this.UpdatingMaps.Location = new System.Drawing.Point(399, 285);
+            this.UpdatingMaps.Location = new System.Drawing.Point(394, 292);
             this.UpdatingMaps.Name = "UpdatingMaps";
             this.UpdatingMaps.Size = new System.Drawing.Size(18, 18);
             this.UpdatingMaps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -302,35 +292,27 @@
             // 
             this.OnlineMapJsonUrl.BackColor = System.Drawing.Color.Gray;
             this.OnlineMapJsonUrl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OnlineMapJsonUrl.Location = new System.Drawing.Point(9, 17);
+            this.OnlineMapJsonUrl.Location = new System.Drawing.Point(7, 19);
             this.OnlineMapJsonUrl.Margin = new System.Windows.Forms.Padding(1);
             this.OnlineMapJsonUrl.Name = "OnlineMapJsonUrl";
-            this.OnlineMapJsonUrl.Size = new System.Drawing.Size(255, 20);
+            this.OnlineMapJsonUrl.Size = new System.Drawing.Size(252, 20);
             this.OnlineMapJsonUrl.TabIndex = 1;
             this.OnlineMapJsonUrl.Text = "https://www.overloadmaps.com/data/mp.json";
             this.OnlineMapJsonUrl.TextChanged += new System.EventHandler(this.OnlineMapJsonUrl_TextChanged);
             this.OnlineMapJsonUrl.DoubleClick += new System.EventHandler(this.OverloadExecutable_MouseDoubleClick);
             // 
-            // InstalledMapsGroupBox
-            // 
-            this.InstalledMapsGroupBox.Controls.Add(this.MapsListBox);
-            this.InstalledMapsGroupBox.Location = new System.Drawing.Point(15, 17);
-            this.InstalledMapsGroupBox.Name = "InstalledMapsGroupBox";
-            this.InstalledMapsGroupBox.Size = new System.Drawing.Size(271, 235);
-            this.InstalledMapsGroupBox.TabIndex = 13;
-            this.InstalledMapsGroupBox.TabStop = false;
-            this.InstalledMapsGroupBox.Text = "Installed maps";
-            // 
             // MapsListBox
             // 
             this.MapsListBox.BackColor = System.Drawing.Color.Gray;
-            this.MapsListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.MapsListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.MapsListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.MapsListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MapsListBox.FormattingEnabled = true;
-            this.MapsListBox.Location = new System.Drawing.Point(8, 16);
+            this.MapsListBox.Location = new System.Drawing.Point(1, 1);
             this.MapsListBox.Name = "MapsListBox";
-            this.MapsListBox.Size = new System.Drawing.Size(254, 210);
+            this.MapsListBox.Size = new System.Drawing.Size(263, 234);
             this.MapsListBox.TabIndex = 0;
+            this.MapsListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.MapsListBox_DrawItem);
             this.MapsListBox.SelectedIndexChanged += new System.EventHandler(this.MapsListBox_SelectedIndexChanged);
             this.MapsListBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MapsListBox_MouseMove);
             // 
@@ -339,7 +321,7 @@
             this.UseOlproxyCheckBox.AutoSize = true;
             this.UseOlproxyCheckBox.Checked = true;
             this.UseOlproxyCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseOlproxyCheckBox.Location = new System.Drawing.Point(25, 23);
+            this.UseOlproxyCheckBox.Location = new System.Drawing.Point(12, 12);
             this.UseOlproxyCheckBox.Name = "UseOlproxyCheckBox";
             this.UseOlproxyCheckBox.Size = new System.Drawing.Size(83, 17);
             this.UseOlproxyCheckBox.TabIndex = 5;
@@ -367,11 +349,11 @@
             this.UseDLCLocationCheckBox.AutoCheck = false;
             this.UseDLCLocationCheckBox.AutoSize = true;
             this.UseDLCLocationCheckBox.Enabled = false;
-            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(307, 215);
+            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(295, 213);
             this.UseDLCLocationCheckBox.Name = "UseDLCLocationCheckBox";
-            this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(216, 17);
+            this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(202, 17);
             this.UseDLCLocationCheckBox.TabIndex = 5;
-            this.UseDLCLocationCheckBox.Text = "Use DLC directory for downloaded maps";
+            this.UseDLCLocationCheckBox.Text = "Use DLC folder for downloaded maps";
             this.MainToolTip.SetToolTip(this.UseDLCLocationCheckBox, "Save downloaded map ZIP files to Overload DLC folder");
             this.UseDLCLocationCheckBox.UseVisualStyleBackColor = true;
             this.UseDLCLocationCheckBox.Click += new System.EventHandler(this.UseDLCLocationCheckBox_Click);
@@ -379,7 +361,7 @@
             // AutoUpdateMapsCheckBox
             // 
             this.AutoUpdateMapsCheckBox.AutoSize = true;
-            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(307, 146);
+            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(295, 144);
             this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
             this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(149, 17);
             this.AutoUpdateMapsCheckBox.TabIndex = 5;
@@ -388,27 +370,16 @@
             this.AutoUpdateMapsCheckBox.UseVisualStyleBackColor = true;
             this.AutoUpdateMapsCheckBox.Click += new System.EventHandler(this.AutoUpdateMaps_Click);
             // 
-            // LoggingGroupBox
+            // ActivityLogPanel
             // 
-            this.LoggingGroupBox.Controls.Add(this.panel1);
-            this.LoggingGroupBox.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.LoggingGroupBox.Location = new System.Drawing.Point(15, 13);
-            this.LoggingGroupBox.Name = "LoggingGroupBox";
-            this.LoggingGroupBox.Size = new System.Drawing.Size(512, 275);
-            this.LoggingGroupBox.TabIndex = 14;
-            this.LoggingGroupBox.TabStop = false;
-            this.LoggingGroupBox.Text = "Activity Log";
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.DimGray;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.ActivityListView);
-            this.panel1.Location = new System.Drawing.Point(7, 17);
-            this.panel1.Margin = new System.Windows.Forms.Padding(0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(494, 248);
-            this.panel1.TabIndex = 0;
+            this.ActivityLogPanel.BackColor = System.Drawing.Color.DimGray;
+            this.ActivityLogPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ActivityLogPanel.Controls.Add(this.ActivityListView);
+            this.ActivityLogPanel.Location = new System.Drawing.Point(8, 17);
+            this.ActivityLogPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.ActivityLogPanel.Name = "ActivityLogPanel";
+            this.ActivityLogPanel.Size = new System.Drawing.Size(499, 267);
+            this.ActivityLogPanel.TabIndex = 0;
             // 
             // ActivityListView
             // 
@@ -419,12 +390,12 @@
             this.ActivityListView.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ActivityListView.FullRowSelect = true;
             this.ActivityListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.ActivityListView.Location = new System.Drawing.Point(13, 13);
+            this.ActivityListView.Location = new System.Drawing.Point(16, 10);
             this.ActivityListView.Margin = new System.Windows.Forms.Padding(0);
             this.ActivityListView.MultiSelect = false;
             this.ActivityListView.Name = "ActivityListView";
             this.ActivityListView.ShowGroups = false;
-            this.ActivityListView.Size = new System.Drawing.Size(443, 209);
+            this.ActivityListView.Size = new System.Drawing.Size(461, 219);
             this.ActivityListView.TabIndex = 0;
             this.ActivityListView.TabStop = false;
             this.ActivityListView.UseCompatibleStateImageBehavior = false;
@@ -443,7 +414,7 @@
             // OnlyUpdateExistingMapsCheckBox
             // 
             this.OnlyUpdateExistingMapsCheckBox.AutoSize = true;
-            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(307, 169);
+            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(295, 167);
             this.OnlyUpdateExistingMapsCheckBox.Name = "OnlyUpdateExistingMapsCheckBox";
             this.OnlyUpdateExistingMapsCheckBox.Size = new System.Drawing.Size(149, 17);
             this.OnlyUpdateExistingMapsCheckBox.TabIndex = 5;
@@ -455,9 +426,9 @@
             // PilotDeleteButton
             // 
             this.PilotDeleteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PilotDeleteButton.Location = new System.Drawing.Point(226, 99);
+            this.PilotDeleteButton.Location = new System.Drawing.Point(220, 82);
             this.PilotDeleteButton.Name = "PilotDeleteButton";
-            this.PilotDeleteButton.Size = new System.Drawing.Size(63, 23);
+            this.PilotDeleteButton.Size = new System.Drawing.Size(81, 23);
             this.PilotDeleteButton.TabIndex = 14;
             this.PilotDeleteButton.Text = "Delete";
             this.PilotDeleteButton.UseVisualStyleBackColor = true;
@@ -466,9 +437,9 @@
             // PilotRenameButton
             // 
             this.PilotRenameButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PilotRenameButton.Location = new System.Drawing.Point(226, 70);
+            this.PilotRenameButton.Location = new System.Drawing.Point(220, 53);
             this.PilotRenameButton.Name = "PilotRenameButton";
-            this.PilotRenameButton.Size = new System.Drawing.Size(63, 23);
+            this.PilotRenameButton.Size = new System.Drawing.Size(81, 23);
             this.PilotRenameButton.TabIndex = 14;
             this.PilotRenameButton.Text = "Rename";
             this.PilotRenameButton.UseVisualStyleBackColor = true;
@@ -477,9 +448,9 @@
             // PilotCloneButton
             // 
             this.PilotCloneButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PilotCloneButton.Location = new System.Drawing.Point(226, 41);
+            this.PilotCloneButton.Location = new System.Drawing.Point(220, 24);
             this.PilotCloneButton.Name = "PilotCloneButton";
-            this.PilotCloneButton.Size = new System.Drawing.Size(63, 23);
+            this.PilotCloneButton.Size = new System.Drawing.Size(81, 23);
             this.PilotCloneButton.TabIndex = 14;
             this.PilotCloneButton.Text = "Clone";
             this.PilotCloneButton.UseVisualStyleBackColor = true;
@@ -488,39 +459,31 @@
             // PilotsBackupButton
             // 
             this.PilotsBackupButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PilotsBackupButton.Location = new System.Drawing.Point(226, 181);
+            this.PilotsBackupButton.Location = new System.Drawing.Point(220, 208);
             this.PilotsBackupButton.Name = "PilotsBackupButton";
-            this.PilotsBackupButton.Size = new System.Drawing.Size(86, 23);
+            this.PilotsBackupButton.Size = new System.Drawing.Size(81, 23);
             this.PilotsBackupButton.TabIndex = 14;
             this.PilotsBackupButton.Text = "Backup pilots";
             this.PilotsBackupButton.UseVisualStyleBackColor = true;
             this.PilotsBackupButton.Click += new System.EventHandler(this.PilotBackupButton_Click);
             // 
-            // PilotsGroupBox
-            // 
-            this.PilotsGroupBox.Controls.Add(this.PilotsListBox);
-            this.PilotsGroupBox.Location = new System.Drawing.Point(21, 22);
-            this.PilotsGroupBox.Name = "PilotsGroupBox";
-            this.PilotsGroupBox.Size = new System.Drawing.Size(181, 238);
-            this.PilotsGroupBox.TabIndex = 13;
-            this.PilotsGroupBox.TabStop = false;
-            this.PilotsGroupBox.Text = "Pilots";
-            // 
             // PilotsListBox
             // 
             this.PilotsListBox.BackColor = System.Drawing.Color.Gray;
-            this.PilotsListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PilotsListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.PilotsListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.PilotsListBox.FormattingEnabled = true;
-            this.PilotsListBox.Location = new System.Drawing.Point(9, 15);
+            this.PilotsListBox.Location = new System.Drawing.Point(1, 1);
             this.PilotsListBox.Name = "PilotsListBox";
-            this.PilotsListBox.Size = new System.Drawing.Size(162, 210);
+            this.PilotsListBox.Size = new System.Drawing.Size(191, 182);
             this.PilotsListBox.TabIndex = 0;
+            this.PilotsListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.PilotsListBox_DrawItem);
             this.PilotsListBox.SelectedIndexChanged += new System.EventHandler(this.PilotsListBox_SelectedIndexChanged);
             // 
             // MapDeleteButton
             // 
             this.MapDeleteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapDeleteButton.Location = new System.Drawing.Point(308, 55);
+            this.MapDeleteButton.Location = new System.Drawing.Point(295, 54);
             this.MapDeleteButton.Name = "MapDeleteButton";
             this.MapDeleteButton.Size = new System.Drawing.Size(65, 23);
             this.MapDeleteButton.TabIndex = 14;
@@ -531,7 +494,7 @@
             // MapHideButton
             // 
             this.MapHideButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapHideButton.Location = new System.Drawing.Point(308, 26);
+            this.MapHideButton.Location = new System.Drawing.Point(295, 25);
             this.MapHideButton.Name = "MapHideButton";
             this.MapHideButton.Size = new System.Drawing.Size(65, 23);
             this.MapHideButton.TabIndex = 14;
@@ -542,16 +505,34 @@
             // PaneMain
             // 
             this.PaneMain.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneMain.Controls.Add(this.panel11);
             this.PaneMain.Controls.Add(this.StatusMessage);
             this.PaneMain.Controls.Add(this.StartStopButton);
-            this.PaneMain.Controls.Add(this.LoggingGroupBox);
             this.PaneMain.Controls.Add(this.OverloadRunning);
             this.PaneMain.Controls.Add(this.ExitButton);
             this.PaneMain.Location = new System.Drawing.Point(9, 43);
             this.PaneMain.Margin = new System.Windows.Forms.Padding(0);
             this.PaneMain.Name = "PaneMain";
-            this.PaneMain.Size = new System.Drawing.Size(555, 336);
+            this.PaneMain.Size = new System.Drawing.Size(530, 336);
             this.PaneMain.TabIndex = 18;
+            // 
+            // panel11
+            // 
+            this.panel11.Controls.Add(this.label12);
+            this.panel11.Controls.Add(this.ActivityLogPanel);
+            this.panel11.Location = new System.Drawing.Point(3, 5);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(524, 288);
+            this.panel11.TabIndex = 16;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(5, 2);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(62, 13);
+            this.label12.TabIndex = 3;
+            this.label12.Text = "Activity Log";
             // 
             // StatusMessage
             // 
@@ -633,28 +614,65 @@
             // PaneMaps
             // 
             this.PaneMaps.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneMaps.Controls.Add(this.label6);
+            this.PaneMaps.Controls.Add(this.panel7);
+            this.PaneMaps.Controls.Add(this.MapsPanel);
             this.PaneMaps.Controls.Add(this.HideUnofficialMapsCheckBox);
             this.PaneMaps.Controls.Add(this.UseDLCLocationCheckBox);
             this.PaneMaps.Controls.Add(this.MapUpdateButton);
             this.PaneMaps.Controls.Add(this.AutoUpdateMapsCheckBox);
             this.PaneMaps.Controls.Add(this.UpdatingMaps);
             this.PaneMaps.Controls.Add(this.OnlyUpdateExistingMapsCheckBox);
-            this.PaneMaps.Controls.Add(this.groupBox1);
             this.PaneMaps.Controls.Add(this.MapUnhideAllButton);
             this.PaneMaps.Controls.Add(this.MapHideButton);
             this.PaneMaps.Controls.Add(this.MapRefreshButton);
             this.PaneMaps.Controls.Add(this.MapDeleteButton);
-            this.PaneMaps.Controls.Add(this.InstalledMapsGroupBox);
             this.PaneMaps.Location = new System.Drawing.Point(9, 393);
             this.PaneMaps.Margin = new System.Windows.Forms.Padding(0);
             this.PaneMaps.Name = "PaneMaps";
-            this.PaneMaps.Size = new System.Drawing.Size(555, 336);
+            this.PaneMaps.Size = new System.Drawing.Size(530, 336);
             this.PaneMaps.TabIndex = 19;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(13, 11);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(74, 13);
+            this.label6.TabIndex = 3;
+            this.label6.Text = "Installed maps";
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.label7);
+            this.panel7.Controls.Add(this.OnlineMapJsonUrl);
+            this.panel7.Location = new System.Drawing.Point(17, 270);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(264, 47);
+            this.panel7.TabIndex = 18;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 5);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(141, 13);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "URL to online JSON map list";
+            // 
+            // MapsPanel
+            // 
+            this.MapsPanel.BackColor = System.Drawing.Color.Blue;
+            this.MapsPanel.Controls.Add(this.MapsListBox);
+            this.MapsPanel.Location = new System.Drawing.Point(16, 25);
+            this.MapsPanel.Name = "MapsPanel";
+            this.MapsPanel.Size = new System.Drawing.Size(265, 236);
+            this.MapsPanel.TabIndex = 19;
             // 
             // HideUnofficialMapsCheckBox
             // 
             this.HideUnofficialMapsCheckBox.AutoSize = true;
-            this.HideUnofficialMapsCheckBox.Location = new System.Drawing.Point(307, 192);
+            this.HideUnofficialMapsCheckBox.Location = new System.Drawing.Point(295, 190);
             this.HideUnofficialMapsCheckBox.Name = "HideUnofficialMapsCheckBox";
             this.HideUnofficialMapsCheckBox.Size = new System.Drawing.Size(214, 17);
             this.HideUnofficialMapsCheckBox.TabIndex = 5;
@@ -663,20 +681,10 @@
             this.HideUnofficialMapsCheckBox.UseVisualStyleBackColor = true;
             this.HideUnofficialMapsCheckBox.CheckedChanged += new System.EventHandler(this.HideUnofficialMapsCheckBox_CheckedChanged);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.OnlineMapJsonUrl);
-            this.groupBox1.Location = new System.Drawing.Point(15, 265);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(270, 47);
-            this.groupBox1.TabIndex = 15;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "URL to online JSON map list";
-            // 
             // MapUnhideAllButton
             // 
             this.MapUnhideAllButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapUnhideAllButton.Location = new System.Drawing.Point(382, 26);
+            this.MapUnhideAllButton.Location = new System.Drawing.Point(372, 25);
             this.MapUnhideAllButton.Name = "MapUnhideAllButton";
             this.MapUnhideAllButton.Size = new System.Drawing.Size(65, 23);
             this.MapUnhideAllButton.TabIndex = 14;
@@ -688,7 +696,7 @@
             // 
             this.MapRefreshButton.Enabled = false;
             this.MapRefreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapRefreshButton.Location = new System.Drawing.Point(308, 84);
+            this.MapRefreshButton.Location = new System.Drawing.Point(295, 83);
             this.MapRefreshButton.Name = "MapRefreshButton";
             this.MapRefreshButton.Size = new System.Drawing.Size(65, 23);
             this.MapRefreshButton.TabIndex = 14;
@@ -699,13 +707,14 @@
             // PanePilots
             // 
             this.PanePilots.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PanePilots.Controls.Add(this.label8);
+            this.PanePilots.Controls.Add(this.panel9);
+            this.PanePilots.Controls.Add(this.PilotsPanel);
             this.PanePilots.Controls.Add(this.OpenPilotsBackupFolder);
             this.PanePilots.Controls.Add(this.PilotNameLabel);
             this.PanePilots.Controls.Add(this.PilotMakeActiveButton);
             this.PanePilots.Controls.Add(this.PilotDeleteButton);
             this.PanePilots.Controls.Add(this.AutoPilotsBackupCheckbox);
-            this.PanePilots.Controls.Add(this.PilotsGroupBox);
-            this.PanePilots.Controls.Add(this.groupBox6);
             this.PanePilots.Controls.Add(this.PilotRenameButton);
             this.PanePilots.Controls.Add(this.PilotXPSetButton);
             this.PanePilots.Controls.Add(this.PilotCloneButton);
@@ -713,14 +722,62 @@
             this.PanePilots.Location = new System.Drawing.Point(1155, 43);
             this.PanePilots.Margin = new System.Windows.Forms.Padding(0);
             this.PanePilots.Name = "PanePilots";
-            this.PanePilots.Size = new System.Drawing.Size(555, 336);
+            this.PanePilots.Size = new System.Drawing.Size(530, 336);
             this.PanePilots.TabIndex = 20;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(19, 10);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(78, 13);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "Overload Pilots";
+            // 
+            // panel9
+            // 
+            this.panel9.Controls.Add(this.label9);
+            this.panel9.Controls.Add(this.PilotXPTextBox);
+            this.panel9.Location = new System.Drawing.Point(357, 13);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(89, 39);
+            this.panel9.TabIndex = 18;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(3, 1);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(44, 13);
+            this.label9.TabIndex = 3;
+            this.label9.Text = "Pilot XP";
+            // 
+            // PilotXPTextBox
+            // 
+            this.PilotXPTextBox.BackColor = System.Drawing.Color.Gray;
+            this.PilotXPTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PilotXPTextBox.Location = new System.Drawing.Point(6, 17);
+            this.PilotXPTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.PilotXPTextBox.Name = "PilotXPTextBox";
+            this.PilotXPTextBox.Size = new System.Drawing.Size(81, 20);
+            this.PilotXPTextBox.TabIndex = 3;
+            this.MainToolTip.SetToolTip(this.PilotXPTextBox, "Enter a value from 0 .. 9999999");
+            this.PilotXPTextBox.TextChanged += new System.EventHandler(this.PilotXPTextBox_TextChanged);
+            // 
+            // PilotsPanel
+            // 
+            this.PilotsPanel.BackColor = System.Drawing.Color.Blue;
+            this.PilotsPanel.Controls.Add(this.PilotsListBox);
+            this.PilotsPanel.Location = new System.Drawing.Point(19, 25);
+            this.PilotsPanel.Name = "PilotsPanel";
+            this.PilotsPanel.Size = new System.Drawing.Size(193, 184);
+            this.PilotsPanel.TabIndex = 18;
             // 
             // OpenPilotsBackupFolder
             // 
             this.OpenPilotsBackupFolder.AutoSize = true;
-            this.OpenPilotsBackupFolder.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.OpenPilotsBackupFolder.Location = new System.Drawing.Point(223, 207);
+            this.OpenPilotsBackupFolder.LinkColor = System.Drawing.Color.Blue;
+            this.OpenPilotsBackupFolder.Location = new System.Drawing.Point(220, 234);
             this.OpenPilotsBackupFolder.Name = "OpenPilotsBackupFolder";
             this.OpenPilotsBackupFolder.Size = new System.Drawing.Size(123, 13);
             this.OpenPilotsBackupFolder.TabIndex = 17;
@@ -729,12 +786,24 @@
             this.OpenPilotsBackupFolder.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
             this.OpenPilotsBackupFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OpenPilotsBackupFolder_LinkClicked);
             // 
+            // PilotNameLabel
+            // 
+            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.PilotNameLabel.Enabled = false;
+            this.PilotNameLabel.Location = new System.Drawing.Point(22, 255);
+            this.PilotNameLabel.Multiline = false;
+            this.PilotNameLabel.Name = "PilotNameLabel";
+            this.PilotNameLabel.ReadOnly = true;
+            this.PilotNameLabel.Size = new System.Drawing.Size(471, 17);
+            this.PilotNameLabel.TabIndex = 17;
+            this.PilotNameLabel.Text = "Pilot";
+            // 
             // PilotMakeActiveButton
             // 
             this.PilotMakeActiveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PilotMakeActiveButton.Location = new System.Drawing.Point(226, 128);
+            this.PilotMakeActiveButton.Location = new System.Drawing.Point(220, 111);
             this.PilotMakeActiveButton.Name = "PilotMakeActiveButton";
-            this.PilotMakeActiveButton.Size = new System.Drawing.Size(63, 23);
+            this.PilotMakeActiveButton.Size = new System.Drawing.Size(81, 23);
             this.PilotMakeActiveButton.TabIndex = 14;
             this.PilotMakeActiveButton.Text = "Select";
             this.PilotMakeActiveButton.UseVisualStyleBackColor = true;
@@ -743,7 +812,7 @@
             // AutoPilotsBackupCheckbox
             // 
             this.AutoPilotsBackupCheckbox.AutoSize = true;
-            this.AutoPilotsBackupCheckbox.Location = new System.Drawing.Point(21, 302);
+            this.AutoPilotsBackupCheckbox.Location = new System.Drawing.Point(22, 301);
             this.AutoPilotsBackupCheckbox.Name = "AutoPilotsBackupCheckbox";
             this.AutoPilotsBackupCheckbox.Size = new System.Drawing.Size(280, 17);
             this.AutoPilotsBackupCheckbox.TabIndex = 5;
@@ -752,34 +821,12 @@
             this.AutoPilotsBackupCheckbox.UseVisualStyleBackColor = true;
             this.AutoPilotsBackupCheckbox.CheckedChanged += new System.EventHandler(this.AutoPilotsBackupCheckbox_CheckedChanged);
             // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.PilotXPTextBox);
-            this.groupBox6.Location = new System.Drawing.Point(439, 32);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(89, 45);
-            this.groupBox6.TabIndex = 11;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Pilot XP";
-            // 
-            // PilotXPTextBox
-            // 
-            this.PilotXPTextBox.BackColor = System.Drawing.Color.Gray;
-            this.PilotXPTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PilotXPTextBox.Location = new System.Drawing.Point(9, 16);
-            this.PilotXPTextBox.Margin = new System.Windows.Forms.Padding(2);
-            this.PilotXPTextBox.Name = "PilotXPTextBox";
-            this.PilotXPTextBox.Size = new System.Drawing.Size(72, 20);
-            this.PilotXPTextBox.TabIndex = 3;
-            this.MainToolTip.SetToolTip(this.PilotXPTextBox, "Enter a value from 0 .. 9999999");
-            this.PilotXPTextBox.TextChanged += new System.EventHandler(this.PilotXPTextBox_TextChanged);
-            // 
             // PilotXPSetButton
             // 
             this.PilotXPSetButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PilotXPSetButton.Location = new System.Drawing.Point(474, 85);
+            this.PilotXPSetButton.Location = new System.Drawing.Point(449, 28);
             this.PilotXPSetButton.Name = "PilotXPSetButton";
-            this.PilotXPSetButton.Size = new System.Drawing.Size(52, 23);
+            this.PilotXPSetButton.Size = new System.Drawing.Size(62, 24);
             this.PilotXPSetButton.TabIndex = 14;
             this.PilotXPSetButton.Text = "Set XP";
             this.PilotXPSetButton.UseVisualStyleBackColor = true;
@@ -822,24 +869,42 @@
             // PaneOlproxy
             // 
             this.PaneOlproxy.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOlproxy.Controls.Add(this.panel10);
             this.PaneOlproxy.Controls.Add(this.OlproxyReleases);
+            this.PaneOlproxy.Controls.Add(this.panel2);
             this.PaneOlproxy.Controls.Add(this.StartStopOlproxyButton);
             this.PaneOlproxy.Controls.Add(this.OlproxyRunning);
             this.PaneOlproxy.Controls.Add(this.UseEmbeddedOlproxy);
             this.PaneOlproxy.Controls.Add(this.UseOlproxyCheckBox);
-            this.PaneOlproxy.Controls.Add(this.groupBox4);
-            this.PaneOlproxy.Controls.Add(this.groupBox3);
             this.PaneOlproxy.Location = new System.Drawing.Point(585, 43);
             this.PaneOlproxy.Margin = new System.Windows.Forms.Padding(0);
             this.PaneOlproxy.Name = "PaneOlproxy";
-            this.PaneOlproxy.Size = new System.Drawing.Size(555, 336);
+            this.PaneOlproxy.Size = new System.Drawing.Size(530, 336);
             this.PaneOlproxy.TabIndex = 21;
+            // 
+            // panel10
+            // 
+            this.panel10.Controls.Add(this.OlproxyArgs);
+            this.panel10.Controls.Add(this.label11);
+            this.panel10.Location = new System.Drawing.Point(8, 94);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(467, 43);
+            this.panel10.TabIndex = 18;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 2);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(135, 13);
+            this.label11.TabIndex = 3;
+            this.label11.Text = "Olproxy Startup Parameters";
             // 
             // OlproxyReleases
             // 
             this.OlproxyReleases.AutoSize = true;
-            this.OlproxyReleases.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.OlproxyReleases.Location = new System.Drawing.Point(22, 215);
+            this.OlproxyReleases.LinkColor = System.Drawing.Color.Blue;
+            this.OlproxyReleases.Location = new System.Drawing.Point(11, 208);
             this.OlproxyReleases.Name = "OlproxyReleases";
             this.OlproxyReleases.Size = new System.Drawing.Size(216, 13);
             this.OlproxyReleases.TabIndex = 17;
@@ -848,10 +913,28 @@
             this.OlproxyReleases.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
             this.OlproxyReleases.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OlproxyReleases_LinkClicked);
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.OlproxyExecutable);
+            this.panel2.Controls.Add(this.label10);
+            this.panel2.Location = new System.Drawing.Point(8, 40);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(467, 43);
+            this.panel2.TabIndex = 18;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(3, 2);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(138, 13);
+            this.label10.TabIndex = 3;
+            this.label10.Text = "External Olproxy Application";
+            // 
             // StartStopOlproxyButton
             // 
             this.StartStopOlproxyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StartStopOlproxyButton.Location = new System.Drawing.Point(25, 296);
+            this.StartStopOlproxyButton.Location = new System.Drawing.Point(14, 295);
             this.StartStopOlproxyButton.Name = "StartStopOlproxyButton";
             this.StartStopOlproxyButton.Size = new System.Drawing.Size(56, 24);
             this.StartStopOlproxyButton.TabIndex = 9;
@@ -859,46 +942,62 @@
             this.StartStopOlproxyButton.UseVisualStyleBackColor = true;
             this.StartStopOlproxyButton.Click += new System.EventHandler(this.StartStopOlproxyButton_Click);
             // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.OlproxyArgs);
-            this.groupBox4.Location = new System.Drawing.Point(25, 125);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(492, 46);
-            this.groupBox4.TabIndex = 11;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Olproxy Startup Parameters";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.OlproxyExecutable);
-            this.groupBox3.Location = new System.Drawing.Point(25, 59);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(492, 45);
-            this.groupBox3.TabIndex = 11;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "External Olproxy Application";
-            // 
             // PaneOverload
             // 
             this.PaneOverload.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOverload.Controls.Add(this.panel4);
+            this.PaneOverload.Controls.Add(this.panel3);
             this.PaneOverload.Controls.Add(this.OverloadLog);
             this.PaneOverload.Controls.Add(this.PLayOverloadLinkLabel);
             this.PaneOverload.Controls.Add(this.label1);
-            this.PaneOverload.Controls.Add(this.groupBox2);
-            this.PaneOverload.Controls.Add(this.OverloadGroupBox);
             this.PaneOverload.Controls.Add(this.SearchOverloadButton);
             this.PaneOverload.Location = new System.Drawing.Point(1155, 393);
             this.PaneOverload.Margin = new System.Windows.Forms.Padding(0);
             this.PaneOverload.Name = "PaneOverload";
-            this.PaneOverload.Size = new System.Drawing.Size(555, 336);
+            this.PaneOverload.Size = new System.Drawing.Size(530, 336);
             this.PaneOverload.TabIndex = 22;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.label4);
+            this.panel4.Controls.Add(this.OverloadExecutable);
+            this.panel4.Location = new System.Drawing.Point(12, 11);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(486, 47);
+            this.panel4.TabIndex = 19;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 5);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(105, 13);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Overload Application";
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.label3);
+            this.panel3.Controls.Add(this.OverloadArgs);
+            this.panel3.Location = new System.Drawing.Point(12, 66);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(486, 50);
+            this.panel3.TabIndex = 18;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 5);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(143, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Overload Startup Parameters";
             // 
             // OverloadLog
             // 
             this.OverloadLog.AutoSize = true;
-            this.OverloadLog.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.OverloadLog.Location = new System.Drawing.Point(18, 146);
+            this.OverloadLog.LinkColor = System.Drawing.Color.Blue;
+            this.OverloadLog.Location = new System.Drawing.Point(19, 171);
             this.OverloadLog.Name = "OverloadLog";
             this.OverloadLog.Size = new System.Drawing.Size(96, 13);
             this.OverloadLog.TabIndex = 18;
@@ -911,8 +1010,8 @@
             // 
             this.PLayOverloadLinkLabel.ActiveLinkColor = System.Drawing.Color.DeepSkyBlue;
             this.PLayOverloadLinkLabel.AutoSize = true;
-            this.PLayOverloadLinkLabel.LinkColor = System.Drawing.Color.SteelBlue;
-            this.PLayOverloadLinkLabel.Location = new System.Drawing.Point(18, 265);
+            this.PLayOverloadLinkLabel.LinkColor = System.Drawing.Color.Blue;
+            this.PLayOverloadLinkLabel.Location = new System.Drawing.Point(19, 144);
             this.PLayOverloadLinkLabel.Name = "PLayOverloadLinkLabel";
             this.PLayOverloadLinkLabel.Size = new System.Drawing.Size(126, 13);
             this.PLayOverloadLinkLabel.TabIndex = 17;
@@ -924,26 +1023,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(102, 299);
+            this.label1.Location = new System.Drawing.Point(103, 299);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(331, 13);
             this.label1.TabIndex = 15;
             this.label1.Text = "Use the Search button to automatically find your Overload installation";
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.OverloadArgs);
-            this.groupBox2.Location = new System.Drawing.Point(21, 75);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(480, 45);
-            this.groupBox2.TabIndex = 11;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Overload Startup Parameters";
-            // 
             // SearchOverloadButton
             // 
             this.SearchOverloadButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SearchOverloadButton.Location = new System.Drawing.Point(21, 294);
+            this.SearchOverloadButton.Location = new System.Drawing.Point(22, 294);
             this.SearchOverloadButton.Name = "SearchOverloadButton";
             this.SearchOverloadButton.Size = new System.Drawing.Size(75, 23);
             this.SearchOverloadButton.TabIndex = 14;
@@ -963,23 +1052,53 @@
             // PaneOlmod
             // 
             this.PaneOlmod.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOlmod.Controls.Add(this.panel5);
             this.PaneOlmod.Controls.Add(this.OlmodReleases);
             this.PaneOlmod.Controls.Add(this.UpdateOlmod);
             this.PaneOlmod.Controls.Add(this.label2);
             this.PaneOlmod.Controls.Add(this.UseOlmodGameDirArg);
             this.PaneOlmod.Controls.Add(this.AutoUpdateOlmod);
             this.PaneOlmod.Controls.Add(this.UseOlmodCheckBox);
-            this.PaneOlmod.Controls.Add(this.groupBox5);
             this.PaneOlmod.Location = new System.Drawing.Point(585, 393);
             this.PaneOlmod.Margin = new System.Windows.Forms.Padding(0);
             this.PaneOlmod.Name = "PaneOlmod";
-            this.PaneOlmod.Size = new System.Drawing.Size(555, 336);
+            this.PaneOlmod.Size = new System.Drawing.Size(530, 336);
             this.PaneOlmod.TabIndex = 23;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.label5);
+            this.panel5.Controls.Add(this.OlmodExecutable);
+            this.panel5.Location = new System.Drawing.Point(25, 47);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(478, 51);
+            this.panel5.TabIndex = 18;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 8);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(92, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Olmod Application";
+            // 
+            // OlmodExecutable
+            // 
+            this.OlmodExecutable.BackColor = System.Drawing.Color.Gray;
+            this.OlmodExecutable.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.OlmodExecutable.Location = new System.Drawing.Point(11, 23);
+            this.OlmodExecutable.Margin = new System.Windows.Forms.Padding(2);
+            this.OlmodExecutable.Name = "OlmodExecutable";
+            this.OlmodExecutable.Size = new System.Drawing.Size(457, 20);
+            this.OlmodExecutable.TabIndex = 3;
+            this.OlmodExecutable.TextChanged += new System.EventHandler(this.OlmodExecutable_TextChanged);
+            this.OlmodExecutable.DoubleClick += new System.EventHandler(this.OlmodExecutable_DoubleClick);
             // 
             // OlmodReleases
             // 
             this.OlmodReleases.AutoSize = true;
-            this.OlmodReleases.LinkColor = System.Drawing.Color.SteelBlue;
+            this.OlmodReleases.LinkColor = System.Drawing.Color.Blue;
             this.OlmodReleases.Location = new System.Drawing.Point(22, 121);
             this.OlmodReleases.Name = "OlmodReleases";
             this.OlmodReleases.Size = new System.Drawing.Size(211, 13);
@@ -993,7 +1112,7 @@
             // 
             this.UpdateOlmod.Enabled = false;
             this.UpdateOlmod.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UpdateOlmod.Location = new System.Drawing.Point(408, 115);
+            this.UpdateOlmod.Location = new System.Drawing.Point(384, 104);
             this.UpdateOlmod.Name = "UpdateOlmod";
             this.UpdateOlmod.Size = new System.Drawing.Size(109, 24);
             this.UpdateOlmod.TabIndex = 9;
@@ -1029,28 +1148,6 @@
             this.AutoUpdateOlmod.UseVisualStyleBackColor = true;
             this.AutoUpdateOlmod.CheckedChanged += new System.EventHandler(this.AutoUpdateOlmod_CheckedChanged);
             // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.OlmodExecutable);
-            this.groupBox5.Location = new System.Drawing.Point(25, 57);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(493, 44);
-            this.groupBox5.TabIndex = 11;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Olmod Application";
-            // 
-            // OlmodExecutable
-            // 
-            this.OlmodExecutable.BackColor = System.Drawing.Color.Gray;
-            this.OlmodExecutable.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OlmodExecutable.Location = new System.Drawing.Point(11, 15);
-            this.OlmodExecutable.Margin = new System.Windows.Forms.Padding(2);
-            this.OlmodExecutable.Name = "OlmodExecutable";
-            this.OlmodExecutable.Size = new System.Drawing.Size(474, 20);
-            this.OlmodExecutable.TabIndex = 3;
-            this.OlmodExecutable.TextChanged += new System.EventHandler(this.OlmodExecutable_TextChanged);
-            this.OlmodExecutable.DoubleClick += new System.EventHandler(this.OlmodExecutable_DoubleClick);
-            // 
             // PaneButtonLine
             // 
             this.PaneButtonLine.BackColor = System.Drawing.Color.MediumBlue;
@@ -1080,23 +1177,67 @@
             // PaneOptions
             // 
             this.PaneOptions.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOptions.Controls.Add(this.ThemeDescriptionLabel);
+            this.PaneOptions.Controls.Add(this.ActiveThemePanel);
+            this.PaneOptions.Controls.Add(this.label13);
             this.PaneOptions.Controls.Add(this.PayPalLink);
             this.PaneOptions.Controls.Add(this.MailLinkLabel);
             this.PaneOptions.Controls.Add(this.DebugFileNameLink);
             this.PaneOptions.Controls.Add(this.EnableDebugCheckBox);
             this.PaneOptions.Controls.Add(this.AutoUpdateCheckBox);
-            this.PaneOptions.Controls.Add(this.DarkThemeCheckBox);
             this.PaneOptions.Controls.Add(this.ForceUpdateButton);
             this.PaneOptions.Location = new System.Drawing.Point(1732, 43);
             this.PaneOptions.Margin = new System.Windows.Forms.Padding(0);
             this.PaneOptions.Name = "PaneOptions";
-            this.PaneOptions.Size = new System.Drawing.Size(555, 336);
+            this.PaneOptions.Size = new System.Drawing.Size(530, 336);
             this.PaneOptions.TabIndex = 25;
+            // 
+            // ThemeDescriptionLabel
+            // 
+            this.ThemeDescriptionLabel.AutoSize = true;
+            this.ThemeDescriptionLabel.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.ThemeDescriptionLabel.Location = new System.Drawing.Point(20, 191);
+            this.ThemeDescriptionLabel.Name = "ThemeDescriptionLabel";
+            this.ThemeDescriptionLabel.Size = new System.Drawing.Size(144, 13);
+            this.ThemeDescriptionLabel.TabIndex = 20;
+            this.ThemeDescriptionLabel.Text = "Theme description goes here";
+            // 
+            // ActiveThemePanel
+            // 
+            this.ActiveThemePanel.BackColor = System.Drawing.Color.Blue;
+            this.ActiveThemePanel.Controls.Add(this.AvailableThemesListBox);
+            this.ActiveThemePanel.Location = new System.Drawing.Point(12, 25);
+            this.ActiveThemePanel.Name = "ActiveThemePanel";
+            this.ActiveThemePanel.Size = new System.Drawing.Size(176, 158);
+            this.ActiveThemePanel.TabIndex = 19;
+            // 
+            // AvailableThemesListBox
+            // 
+            this.AvailableThemesListBox.BackColor = System.Drawing.Color.Gray;
+            this.AvailableThemesListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.AvailableThemesListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.AvailableThemesListBox.FormattingEnabled = true;
+            this.AvailableThemesListBox.Location = new System.Drawing.Point(1, 1);
+            this.AvailableThemesListBox.Margin = new System.Windows.Forms.Padding(1);
+            this.AvailableThemesListBox.Name = "AvailableThemesListBox";
+            this.AvailableThemesListBox.Size = new System.Drawing.Size(174, 156);
+            this.AvailableThemesListBox.TabIndex = 19;
+            this.AvailableThemesListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.AvailableThemesListBox_DrawItem);
+            this.AvailableThemesListBox.SelectedIndexChanged += new System.EventHandler(this.AvailableThemes_SelectedIndexChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(9, 11);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(73, 13);
+            this.label13.TabIndex = 3;
+            this.label13.Text = "Active Theme";
             // 
             // PayPalLink
             // 
             this.PayPalLink.AutoSize = true;
-            this.PayPalLink.Location = new System.Drawing.Point(44, 296);
+            this.PayPalLink.Location = new System.Drawing.Point(20, 296);
             this.PayPalLink.Name = "PayPalLink";
             this.PayPalLink.Size = new System.Drawing.Size(282, 13);
             this.PayPalLink.TabIndex = 18;
@@ -1108,7 +1249,7 @@
             // MailLinkLabel
             // 
             this.MailLinkLabel.AutoSize = true;
-            this.MailLinkLabel.Location = new System.Drawing.Point(44, 275);
+            this.MailLinkLabel.Location = new System.Drawing.Point(20, 275);
             this.MailLinkLabel.Name = "MailLinkLabel";
             this.MailLinkLabel.Size = new System.Drawing.Size(251, 13);
             this.MailLinkLabel.TabIndex = 18;
@@ -1119,7 +1260,7 @@
             // DebugFileNameLink
             // 
             this.DebugFileNameLink.AutoSize = true;
-            this.DebugFileNameLink.Location = new System.Drawing.Point(174, 56);
+            this.DebugFileNameLink.Location = new System.Drawing.Point(338, 95);
             this.DebugFileNameLink.Name = "DebugFileNameLink";
             this.DebugFileNameLink.Size = new System.Drawing.Size(85, 13);
             this.DebugFileNameLink.TabIndex = 17;
@@ -1132,7 +1273,7 @@
             this.EnableDebugCheckBox.AutoSize = true;
             this.EnableDebugCheckBox.Checked = true;
             this.EnableDebugCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.EnableDebugCheckBox.Location = new System.Drawing.Point(47, 55);
+            this.EnableDebugCheckBox.Location = new System.Drawing.Point(341, 75);
             this.EnableDebugCheckBox.Name = "EnableDebugCheckBox";
             this.EnableDebugCheckBox.Size = new System.Drawing.Size(129, 17);
             this.EnableDebugCheckBox.TabIndex = 5;
@@ -1146,7 +1287,7 @@
             this.AutoUpdateCheckBox.AutoSize = true;
             this.AutoUpdateCheckBox.Checked = true;
             this.AutoUpdateCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AutoUpdateCheckBox.Location = new System.Drawing.Point(47, 81);
+            this.AutoUpdateCheckBox.Location = new System.Drawing.Point(341, 13);
             this.AutoUpdateCheckBox.Name = "AutoUpdateCheckBox";
             this.AutoUpdateCheckBox.Size = new System.Drawing.Size(170, 17);
             this.AutoUpdateCheckBox.TabIndex = 5;
@@ -1157,7 +1298,7 @@
             // ForceUpdateButton
             // 
             this.ForceUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ForceUpdateButton.Location = new System.Drawing.Point(219, 77);
+            this.ForceUpdateButton.Location = new System.Drawing.Point(341, 32);
             this.ForceUpdateButton.Name = "ForceUpdateButton";
             this.ForceUpdateButton.Size = new System.Drawing.Size(76, 23);
             this.ForceUpdateButton.TabIndex = 14;
@@ -1170,18 +1311,6 @@
             this.MainToolTip.AutoPopDelay = 5000;
             this.MainToolTip.InitialDelay = 1000;
             this.MainToolTip.ReshowDelay = 100;
-            // 
-            // PilotNameLabel
-            // 
-            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PilotNameLabel.Enabled = false;
-            this.PilotNameLabel.Location = new System.Drawing.Point(21, 271);
-            this.PilotNameLabel.Multiline = false;
-            this.PilotNameLabel.Name = "PilotNameLabel";
-            this.PilotNameLabel.ReadOnly = true;
-            this.PilotNameLabel.Size = new System.Drawing.Size(325, 17);
-            this.PilotNameLabel.TabIndex = 17;
-            this.PilotNameLabel.Text = "Pilot";
             // 
             // OCTMain
             // 
@@ -1213,41 +1342,43 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.Resize += new System.EventHandler(this.Main_Resize);
-            this.OverloadGroupBox.ResumeLayout(false);
-            this.OverloadGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).EndInit();
-            this.InstalledMapsGroupBox.ResumeLayout(false);
-            this.LoggingGroupBox.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.PilotsGroupBox.ResumeLayout(false);
+            this.ActivityLogPanel.ResumeLayout(false);
             this.PaneMain.ResumeLayout(false);
             this.PaneMain.PerformLayout();
+            this.panel11.ResumeLayout(false);
+            this.panel11.PerformLayout();
             this.PaneMaps.ResumeLayout(false);
             this.PaneMaps.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            this.MapsPanel.ResumeLayout(false);
             this.PanePilots.ResumeLayout(false);
             this.PanePilots.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
+            this.panel9.ResumeLayout(false);
+            this.panel9.PerformLayout();
+            this.PilotsPanel.ResumeLayout(false);
             this.PaneOlproxy.ResumeLayout(false);
             this.PaneOlproxy.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.panel10.ResumeLayout(false);
+            this.panel10.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.PaneOverload.ResumeLayout(false);
             this.PaneOverload.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.PaneOlmod.ResumeLayout(false);
             this.PaneOlmod.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.PaneOptions.ResumeLayout(false);
             this.PaneOptions.PerformLayout();
+            this.ActiveThemePanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1261,11 +1392,7 @@
         private System.Windows.Forms.Button StartStopButton;
         private System.Windows.Forms.Button ExitButton;
         private System.Windows.Forms.Button MapUpdateButton;
-        private System.Windows.Forms.CheckBox DarkThemeCheckBox;
         private System.Windows.Forms.CheckBox UseEmbeddedOlproxy;
-        private System.Windows.Forms.GroupBox OverloadGroupBox;
-        private System.Windows.Forms.GroupBox InstalledMapsGroupBox;
-        private System.Windows.Forms.GroupBox LoggingGroupBox;
         private System.Windows.Forms.NotifyIcon OverloadClientToolNotifyIcon;
         private System.Windows.Forms.TextBox OnlineMapJsonUrl;
         private System.Windows.Forms.CheckBox UseDLCLocationCheckBox;
@@ -1277,13 +1404,12 @@
         private System.Windows.Forms.CheckBox UseOlmodCheckBox;
         private System.Windows.Forms.ListView ActivityListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel ActivityLogPanel;
         private System.Windows.Forms.CheckBox OnlyUpdateExistingMapsCheckBox;
         private System.Windows.Forms.Button PilotDeleteButton;
         private System.Windows.Forms.Button PilotRenameButton;
         private System.Windows.Forms.Button PilotCloneButton;
         private System.Windows.Forms.Button PilotsBackupButton;
-        private System.Windows.Forms.GroupBox PilotsGroupBox;
         private System.Windows.Forms.Button MapDeleteButton;
         private System.Windows.Forms.Button MapHideButton;
         private System.Windows.Forms.Panel PaneMain;
@@ -1292,16 +1418,12 @@
         private System.Windows.Forms.Button PaneSelectPilots;
         private System.Windows.Forms.Button PaneSelectOverload;
         private System.Windows.Forms.Panel PaneMaps;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Panel PanePilots;
         private System.Windows.Forms.Button PaneSelectOlproxy;
         private System.Windows.Forms.Button PaneSelectOlmod;
         private System.Windows.Forms.Panel PaneOlproxy;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Panel PaneOverload;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel PaneOlmod;
         private System.Windows.Forms.Button SearchOverloadButton;
@@ -1309,7 +1431,6 @@
         private System.Windows.Forms.Panel PaneButtonLine;
         private System.Windows.Forms.ListBox MapsListBox;
         private System.Windows.Forms.ListBox PilotsListBox;
-        private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.TextBox OlmodExecutable;
         private System.Windows.Forms.Button PilotMakeActiveButton;
         private System.Windows.Forms.Label StatusMessage;
@@ -1330,7 +1451,6 @@
         private System.Windows.Forms.CheckBox AutoUpdateOlmod;
         private System.Windows.Forms.Button UpdateOlmod;
         private System.Windows.Forms.LinkLabel PayPalLink;
-        private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.TextBox PilotXPTextBox;
         private System.Windows.Forms.Button PilotXPSetButton;
         private System.Windows.Forms.CheckBox AutoUpdateCheckBox;
@@ -1338,6 +1458,30 @@
         private System.Windows.Forms.Button StartStopOlproxyButton;
         private System.Windows.Forms.CheckBox HideUnofficialMapsCheckBox;
         private System.Windows.Forms.Button MapUnhideAllButton;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Panel MapsPanel;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Panel PilotsPanel;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Panel panel11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Panel ActiveThemePanel;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.ListBox AvailableThemesListBox;
+        private System.Windows.Forms.Label ThemeDescriptionLabel;
     }
 }
 

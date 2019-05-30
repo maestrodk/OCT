@@ -62,5 +62,8 @@
     <Setting Name="HideNonOfficialMaps" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="ActiveThemeName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Dark Gray</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
