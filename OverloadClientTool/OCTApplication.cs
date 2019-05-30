@@ -47,11 +47,10 @@ namespace OverloadClientTool
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            if ((args.Length > 1) && (args[0].ToLower() == "-install"))
+            if ((args.Length > 1) && args[0].ToLower().StartsWith("-install"))
             {
-                LogDebugMessage("Install to " + args[1], debugFileName);
                 Install.InstallTo(args[1], debugFileName);
-                LogDebugMessage("Finished install.", debugFileName);
+                return;
             }
 
             if ((args.Length > 1) && (args[0].ToLower() == "-cleanup"))

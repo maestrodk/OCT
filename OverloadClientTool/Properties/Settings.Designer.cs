@@ -253,13 +253,13 @@ namespace OverloadClientTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string NotUsed {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HideNonOfficialMaps {
             get {
-                return ((string)(this["NotUsed"]));
+                return ((bool)(this["HideNonOfficialMaps"]));
             }
             set {
-                this["NotUsed"] = value;
+                this["HideNonOfficialMaps"] = value;
             }
         }
     }

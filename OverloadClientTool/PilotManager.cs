@@ -471,11 +471,6 @@ namespace OverloadClientTool
             }
         }
 
-        private void PilotXPTextBox_TextChanged(object sender, EventArgs e)
-        {
-            ValidateSetXp();
-        }
-
         /// <summary>
         /// Let user adjust XP value (but only if Overload/Olmod aren't running).
         /// </summary>
@@ -490,7 +485,7 @@ namespace OverloadClientTool
                 try
                 {
                     int xp = Convert.ToInt32(PilotXPTextBox.Text);
-                    if ((xp >= 0) && xp <= 99999) ok = true;
+                    if ((xp >= 0) && xp <= 9999999) ok = true;
                 }
                 catch
                 {

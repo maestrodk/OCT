@@ -86,6 +86,11 @@ namespace OverloadClientTool
         public Color TextHighlightColor { get; set; }
 
         /// <summary>
+        /// Color of frames in ListBox, TextBox, RichTextBox etc.
+        /// </summary>
+        //public Color FrameColor { get; set; }
+
+        /// <summary>
         /// The image shown for active tasks/applications.
         /// </summary>
         public Image IsRunningImage;
@@ -115,6 +120,7 @@ namespace OverloadClientTool
 
                 theme.BackColor = Color.FromArgb(50, 50, 50);
                 theme.ForeColor = Color.LightGray;
+                //theme.FrameColor = Color.DarkGray;
 
                 theme.ActivePaneButtonBackColor = Color.SteelBlue;
                 theme.ActivePaneButtonForeColor = Color.White;
@@ -154,6 +160,7 @@ namespace OverloadClientTool
 
                 theme.BackColor = Color.White;
                 theme.ForeColor = Color.FromArgb(50, 50, 50);
+                //theme.FrameColor = Color.DarkBlue;
 
                 theme.ActivePaneButtonBackColor = Color.LightSteelBlue;
                 theme.ActivePaneButtonForeColor = Color.Black;

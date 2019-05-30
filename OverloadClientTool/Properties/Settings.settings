@@ -59,8 +59,8 @@
     <Setting Name="AutoUpdateOCT" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="NotUsed" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="HideNonOfficialMaps" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

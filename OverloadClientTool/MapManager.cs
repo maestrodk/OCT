@@ -12,6 +12,7 @@ using System.Web;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Timers;
+using System.IO.Compression;
 
 namespace OverloadClientTool
 {
@@ -46,7 +47,7 @@ namespace OverloadClientTool
                 if (mapZipName.Contains(Path.DirectorySeparatorChar + "DLC" + Path.DirectorySeparatorChar)) this.LocalDLCZipFileName = mapZipName;
                 else this.LocalZipFileName = mapZipName;
 
-                this.ZipName = Path.GetFileName(mapZipName).Replace(MapHiddenMarker, ""); 
+                this.ZipName = Path.GetFileName(mapZipName).Replace(MapHiddenMarker, "");
             }
             else
             {
@@ -107,7 +108,7 @@ namespace OverloadClientTool
             get { return !String.IsNullOrEmpty(Url); }
         }
 
-        private void Hide()
+        public void Hide()
         {
             try
             {
@@ -228,7 +229,14 @@ namespace OverloadClientTool
         /// <returns></returns>
         public bool SameZipFileName(OverloadMap compareToMap)
         {
-            return (compareToMap.ZipName.Replace(MapHiddenMarker, "").ToLower() == this.ZipName.ToLower().Replace(MapHiddenMarker, ""));
+            return compareToMap.ZipName.Replace(MapHiddenMarker, "").ToLower() == this.ZipName.ToLower().Replace(MapHiddenMarker, "");
+        }
+
+        public bool SameZipFileName(string zipFileName)
+        {
+            if (!OverloadClientToolApplication.ValidFileName(zipFileName, true)) return false;
+            zipFileName = Path.GetFileName(zipFileName);
+            return zipFileName.Replace(MapHiddenMarker, "").ToLower() == this.ZipName.ToLower().Replace(MapHiddenMarker, "");
         }
 
         /// <summary>
@@ -236,9 +244,10 @@ namespace OverloadClientTool
         /// </summary>
         /// <param name="compareToZipName"></param>
         /// <returns></returns>
-        public bool SameZipFileName(string compareToZipName)
+        public static bool ContainsMultiplayerMap(string zipFileName)
         {
-            return (compareToZipName.Replace(MapHiddenMarker, "").ToLower() == this.ZipName.ToLower().Replace(MapHiddenMarker, ""));
+            using (ZipArchive zip = ZipFile.Open(zipFileName, ZipArchiveMode.Read)) foreach (ZipArchiveEntry entry in zip.Entries) if (entry.Name.ToLower().EndsWith(".mp")) return true;
+            return false;
         }
     }
 
@@ -256,7 +265,7 @@ namespace OverloadClientTool
         // List of maps found online.
         public SortedList<string, OverloadMap> Maps = new SortedList<string, OverloadMap>();
 
-        // Note! Must be same string as defined in OCTMain!
+        // Note! MUST be same string as defined in OCTMain!
         private const string HiddenMarker = "_OCT_Hidden";
 
         // Default (and recommended) location for local maps.
@@ -280,7 +289,8 @@ namespace OverloadClientTool
         public int Errors = 0;
 
         public bool OnlyUpdateExistingMaps { get; set; }
-        
+        public bool HideUnOfficialMaps { get; set; }
+
         // Set delegate for logging.
         public void SetLogger(LogMessageDelegate logger = null, LogMessageDelegate errorLogger = null)
         {
@@ -381,7 +391,6 @@ namespace OverloadClientTool
                         {
                             // Uppercase first char in map name.
                             mapZipName = mapZipName.Substring(0, 1).ToUpper() + mapZipName.Substring(1);
-
                             OverloadMap newMap = new OverloadMap(baseUrl + map.url, UnixTimeStampToDateTime(Convert.ToDouble(map.mtime)), Convert.ToInt32(map.size), mapZipName);
                             newMapList.Add(mapZipName.ToLower(), newMap);
                         }
@@ -429,7 +438,19 @@ namespace OverloadClientTool
                                 }
                             }
 
-                            if (!found) newMapList.Add(mapFileName.ToLower(), newMap);
+                            if (!found)
+                            {
+                                // See if we should hide MP maps if not included in the official map list.
+                                if (HideUnOfficialMaps && OverloadMap.ContainsMultiplayerMap(mapFileName) && !newMap.Hidden)
+                                {
+                                    string zipName = newMap.ZipName;
+                                    if (zipName.ToLower().EndsWith(".zip")) zipName = zipName.Substring(0, zipName.Length - ".zip".Length);
+                                    LogMessage($"Hidding {zipName} as it is not in the official MP map list.");
+                                    newMap.Hide();
+                                }
+
+                                newMapList.Add(mapKey, newMap);
+                            }
                         }
                     }
                 }
@@ -451,6 +472,7 @@ namespace OverloadClientTool
                         if (mapFileName.EndsWith(HiddenMarker) || mapFileName.ToLower().EndsWith(".zip"))
                         {
                             string mapKey = Path.GetFileName(mapFileName).ToLower();
+
                             FileInfo fiLocalMap = new FileInfo(mapFileName);
                             OverloadMap newMap = new OverloadMap(null, UnixTimeStampToDateTime(0), Convert.ToInt32(fiLocalMap.Length), mapFileName);
 
@@ -461,6 +483,7 @@ namespace OverloadClientTool
                                 {
                                     // We found a local map that matches the ZIP filename as found online.
                                     found = true;
+
                                     // Uppercase first char in map name and remove hidden marker if present.
                                     string mapZipName = fiLocalMap.Name;
                                     mapZipName = mapZipName.Substring(0, 1).ToUpper() + mapZipName.Substring(1);
@@ -472,7 +495,19 @@ namespace OverloadClientTool
                                 }
                             }
 
-                            if (!found) newMapList.Add(mapFileName.ToLower(), newMap);
+                            if (!found)
+                            {
+                                // See if we should hide MP maps if not included in the official map list.
+                                if (HideUnOfficialMaps && OverloadMap.ContainsMultiplayerMap(mapFileName) && !newMap.Hidden)
+                                {
+                                    string zipName = newMap.ZipName;
+                                    if (zipName.ToLower().EndsWith(".zip")) zipName = zipName.Substring(0, zipName.Length - ".zip".Length);
+                                    LogMessage($"Hidding {zipName} as it is not in the official MP map list.");
+                                    newMap.Hide();
+                                }
+
+                                newMapList.Add(mapKey, newMap);
+                            }
                         }
                     }
                 }
@@ -623,7 +658,7 @@ namespace OverloadClientTool
 
                 LogErrorMessage(String.Format($"Error downloading {mapZipDisplayName}: {ex.Message}"));
                 return false;
-            }        
+            }
         }
 
         internal class DownloadResult
@@ -738,5 +773,6 @@ namespace OverloadClientTool
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
         }
-    }   
+    }
+
 }

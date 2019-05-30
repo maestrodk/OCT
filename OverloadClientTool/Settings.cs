@@ -17,6 +17,13 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.OverloadPath = value; }
         }
 
+        public bool HideNonOfficialMaps
+        {
+            get { return Properties.Settings.Default.HideNonOfficialMaps; }
+            set { Properties.Settings.Default.HideNonOfficialMaps = value; }
+        }
+
+        
         public bool OlproxyEmbedded
         {
             get { return Properties.Settings.Default.EmbeddedOlproxy; }
@@ -301,6 +308,7 @@ namespace OverloadClientTool
             AutoUpdateCheckBox.Checked = AutoUpdateOCT;
             UseOlmodGameDirArg.Checked = PassGameDirToOlmod;
             AutoUpdateOlmod.Checked = OlmodAutoUpdate;
+            HideUnofficialMapsCheckBox.Checked = HideNonOfficialMaps;
 
             // Get debug setting and update debug file name info.
             EnableDebugCheckBox.Checked = Debugging;
@@ -400,6 +408,7 @@ namespace OverloadClientTool
         {
             control.BackColor = theme.ControlBackColor;
             control.ForeColor = theme.ControlForeColor;
+            //if ((control is TextBox) || (control is ListBox) || (control is ListView) || (control is TabPage)) control.
         }
  
         /// <summary>

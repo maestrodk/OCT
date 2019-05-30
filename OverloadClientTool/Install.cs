@@ -27,6 +27,8 @@ namespace OverloadClientTool
                 return;
             }
 
+            OverloadClientToolApplication.LogDebugMessage("Starting install.", debugFileName);
+
             OverloadClientToolApplication.LogDebugMessage($"Copying new files.", debugFileName);
 
             try
@@ -98,6 +100,8 @@ namespace OverloadClientTool
                 return;
             }
 
+            OverloadClientToolApplication.LogDebugMessage("Finished install.", debugFileName);
+
             // Launch updated application.
             try
             {
@@ -107,6 +111,8 @@ namespace OverloadClientTool
                 appStart.StartInfo.FileName = Path.Combine(installFolder, applicationName + ".exe");
                 appStart.StartInfo.Arguments = String.Format($"-cleanup \"{sourceFolder}\"");
                 appStart.StartInfo.WorkingDirectory = installFolder;
+
+
                 appStart.Start();
             }
             catch (Exception ex)

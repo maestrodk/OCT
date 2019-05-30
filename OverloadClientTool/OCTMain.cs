@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using IWshRuntimeLibrary;
+using static OverloadClientTool.OverloadMap;
 
 namespace OverloadClientTool
 {
@@ -118,14 +119,14 @@ namespace OverloadClientTool
             // it is safe to start any of the .exe files.
             theme = (DarkTheme) ? Theme.GetDarkTheme : Theme.GetLightTheme;
             UpdateTheme(theme);
+
             //ValidateSettings();
 
             // Focus the first pane.
             paneController.SwitchToPane(PaneSelectMain);
 
             // Make sure no text is selected.
-            OverloadExecutable.Focus();
-            OverloadExecutable.Select(0, 0);
+            Unfocus();
 
             // Check settings and update buttons.
             ValidateSettings();
@@ -180,6 +181,20 @@ namespace OverloadClientTool
             if (AutoUpdateOCT) UpdateCheck(debugFileName, false);
         }
 
+
+        /// <summary>
+        /// A little hack to make sure no control has focus.
+        /// </summary>
+        private void Unfocus()
+        {
+            OverloadExecutable.Focus();
+            OverloadExecutable.Select(0, 0);
+
+            OnlineMapJsonUrl.Focus();
+            OnlineMapJsonUrl.Select(0, 0);
+
+            Defocus();
+        }
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Kill embedded Olproxy.
@@ -213,6 +228,7 @@ namespace OverloadClientTool
 
         [DllImport("shell32.dll")]
         static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
+
         public static string SpecialFolderLocalLowPath
         {
             get
@@ -248,7 +264,7 @@ namespace OverloadClientTool
         {
             logger?.VerboseLogMessage(text);
         }
-
+   
         private void Error(string text)
         {
             logger?.ErrorLogMessage(text);
@@ -939,7 +955,7 @@ namespace OverloadClientTool
             LogDebugMessage("InitMapsListBox()");
 
             UpdateMapList();
-            UpdateListBox();
+            UpdateMapListBox();
         }
 
         private void SetMapButtons()
@@ -987,7 +1003,7 @@ namespace OverloadClientTool
                         }
 
                         UpdateMapList();
-                        UpdateListBox();
+                        UpdateMapListBox();
                     }
                 }
             }
@@ -1013,7 +1029,7 @@ namespace OverloadClientTool
 
             await mapManager.UpdateMap(map, true);
 
-            UpdateListBox();
+            UpdateMapListBox();
         }
 
         private void MapHideButton_Click(object sender, EventArgs e)
@@ -1025,7 +1041,7 @@ namespace OverloadClientTool
             try
             {
                 map.Hidden = !map.Hidden;
-                UpdateListBox();
+                UpdateMapListBox();
             }
             catch (Exception ex)
             {
@@ -1037,15 +1053,21 @@ namespace OverloadClientTool
             MapsListBox.SetSelected(index, true);
         }
 
-        private void UpdateListBox(string focusName = null)
+        private void UpdateMapListBox(string focusName = null)
         {
             MapsListBox.Items.Clear();
             MapsListBox.DisplayMember = "Value";
             MapsListBox.ValueMember = "Value";
 
+            bool anyHidden = false;
+
             foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.Maps)
             {
-                if (setMap.Value.IsLocal) MapsListBox.Items.Add(setMap);
+                if (setMap.Value.IsLocal)
+                {
+                    MapsListBox.Items.Add(setMap);
+                    if (setMap.Value.Hidden) anyHidden = true;
+                }
             }
 
             if (!String.IsNullOrEmpty(focusName))
@@ -1060,6 +1082,9 @@ namespace OverloadClientTool
                     }
                 }
             }
+
+            MapUnhideAllButton.Enabled = anyHidden;
+            ApplyThemeToControl(MapUnhideAllButton, theme);
 
             SetMapButtons();
         }
@@ -1110,7 +1135,7 @@ namespace OverloadClientTool
                 if (UpdateOnlyExistingMaps) Verbose(String.Format($"Map check finished: {mapManager.Checked} maps, {mapManager.Updated} updated."));
                 else Verbose(String.Format($"Map check finished: {mapManager.Checked} maps checked, {mapManager.Created} created, {mapManager.Updated} updated."));
 
-                UpdateListBox();
+                UpdateMapListBox();
 
                 UpdatingMaps.Visible = false;
                 MapUpdateButton.Enabled = true;
@@ -1176,7 +1201,7 @@ namespace OverloadClientTool
             }
 
             UpdateMapList();
-            UpdateListBox();
+            UpdateMapListBox();
         }
 
         private void UseDLCLocationCheckBox_Click(object sender, EventArgs e)
@@ -1261,13 +1286,21 @@ namespace OverloadClientTool
                 MainToolTip.Hide(lb);
         }
 
-        // Log an informational message.
-        private void LogMessage(string s)
+        private void HideUnofficialMapsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            this.UIThread(delegate
+            HideNonOfficialMaps = HideUnofficialMapsCheckBox.Checked;
+            mapManager.HideUnOfficialMaps = HideNonOfficialMaps;
+        }
+
+        private void MapUnhideAllButton_Click(object sender, EventArgs e)
+        {
+            foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.Maps)
             {
-                LogMessage(s);
-            });
+                if (setMap.Value.Hidden) setMap.Value.Hidden = false;
+            }
+
+            UpdateMapListBox();
+            Unfocus();
         }
 
         #endregion
@@ -1410,6 +1443,11 @@ namespace OverloadClientTool
                 KillRunningProcess("olproxy");
                 if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive)) KillOlproxyThread();
             }
+        }
+
+        private void PilotXPTextBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
