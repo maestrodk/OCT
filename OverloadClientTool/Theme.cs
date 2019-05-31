@@ -13,7 +13,6 @@ namespace OverloadClientTool
     // 
     //
 
-
     public class Theme
     {
         /// <summary>
@@ -105,7 +104,7 @@ namespace OverloadClientTool
         {
             get
             {
-                return new string[] { "Black", "Dark Gray", "Dark Blue", "Light", "Brown" };
+                return new string[] { "Black", "Dark Gray", "Dark Blue", "Light", "Brown", "Green", "Orange" };
             }
         }
 
@@ -114,7 +113,9 @@ namespace OverloadClientTool
             if (name == "Black") return GetBlackTheme;
             if (name == "Dark Gray") return GetDarkGrayTheme;
             if (name == "Dark Blue") return GetDarkBlueTheme;
+            if (name == "Green") return GetGreenTheme;
             if (name == "Brown") return GetBrownTheme;
+            if (name == "Orange") return GetOrangeTheme;
             return GetLightTheme;
         }
 
@@ -150,7 +151,7 @@ namespace OverloadClientTool
 
                 // Pane background and labels.
                 theme.PanelBackColor = Color.FromArgb(0, 0, 0);
-                theme.PanelForeColor = Color.FromArgb(192, 192, 192);
+                theme.PanelForeColor = theme.ButtonEnabledForeColor;
 
                 theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
                 theme.ActivePaneButtonForeColor = theme.ButtonEnabledForeColor;
@@ -316,6 +317,80 @@ namespace OverloadClientTool
                 theme.InactivePaneButtonForeColor = Color.FromArgb(224, 224, 192);
 
                 theme.IsRunningImage = Properties.Resources.arrows_yellow_on_brown_402010_C0A020;
+
+                return theme;
+            }
+        }
+
+        public static Theme GetGreenTheme
+        {
+            get
+            {
+                Theme theme = new Theme();
+
+                theme.Name = "Green";
+                theme.Description = "A green theme resembling Overload green menus.";
+
+                theme.ButtonEnabledBackColor = Color.FromArgb(64, 160, 16);
+                theme.ButtonEnabledForeColor = Color.Black;// Color.FromArgb(64, 224, 64);
+
+                theme.ButtonDisabledBackColor = Color.FromArgb(32, 96, 24);
+                theme.ButtonDisabledForeColor = Color.FromArgb(128, 128, 128);
+
+                theme.InputBackColor = Color.FromArgb(16, 32, 8);
+                theme.InputForeColor = Color.FromArgb(96, 224, 96);
+
+                theme.TextHighlightColor = Color.FromArgb(192, 224, 128);
+
+                theme.InvalidForeColor = Color.Coral;
+
+                theme.PanelBackColor = Color.FromArgb(0, 16, 0);
+                theme.PanelForeColor = Color.FromArgb(128, 255, 128);
+
+                theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
+                theme.ActivePaneButtonForeColor = theme.ButtonEnabledForeColor;
+
+                theme.InactivePaneButtonBackColor = theme.PanelBackColor;
+                theme.InactivePaneButtonForeColor = theme.InputForeColor;
+
+                theme.IsRunningImage = Properties.Resources.arrows_green_on_dark_green_001000_4CC013;
+
+                return theme;
+            }
+        }
+
+        public static Theme GetOrangeTheme
+        {
+            get
+            {
+                Theme theme = new Theme();
+
+                theme.Name = "Orange";
+                theme.Description = "A orange theme resembling Overload orange menus.";
+
+                theme.ButtonEnabledBackColor = Color.FromArgb(224, 160, 16);
+                theme.ButtonEnabledForeColor = Color.Black;
+
+                theme.ButtonDisabledBackColor = Color.FromArgb(64, 64, 24);
+                theme.ButtonDisabledForeColor = Color.FromArgb(255, 80, 32);
+
+                theme.InputBackColor = Color.FromArgb(24, 16, 8);
+                theme.InputForeColor = Color.FromArgb(160, 96, 32);
+
+                theme.TextHighlightColor = Color.FromArgb(255, 160, 160);
+
+                theme.InvalidForeColor = Color.Coral;
+
+                theme.PanelBackColor = Color.FromArgb(16, 16, 0);
+                theme.PanelForeColor = theme.InputForeColor;
+
+                theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
+                theme.ActivePaneButtonForeColor = theme.ButtonEnabledForeColor;
+
+                theme.InactivePaneButtonBackColor = theme.PanelBackColor;
+                theme.InactivePaneButtonForeColor = theme.InputForeColor;
+
+                theme.IsRunningImage = Properties.Resources.arrows_orange_on_dark_brown_101000_FFC013;
 
                 return theme;
             }

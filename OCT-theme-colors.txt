@@ -1,0 +1,40 @@
+// OCT Theme colors
+
+Name = "Black";
+Description = "A black theme with a few gray elements.";
+
+// Enabled button.
+ButtonEnabledBackColor = Color.FromArgb(64, 64, 64);
+ButtonEnabledForeColor = Color.FromArgb(192, 192, 192);
+
+// Disabled button.
+ButtonDisabledBackColor = Color.FromArgb(64, 64, 64);
+
+// Currently not working as Windows overrides a disabled controls ForeColor.
+// May change in the future should I care to do a custom button control :)
+ButtonDisabledForeColor = Color.FromArgb(160, 160, 160); 
+ 
+// Textbox and listboxes.
+InputBackColor = Color.FromArgb(16, 16, 16);
+InputForeColor = Color.LightGray;
+
+// Textbox invalid value.
+InvalidForeColor = Color.LightCoral;
+
+// Links and status messages.
+TextHighlightColor = Color.FromArgb(224, 224, 224);
+
+// Panel/tab colors.
+PanelBackColor = Color.FromArgb(0, 0, 0);
+PanelForeColor = ButtonEnabledForeColor;
+
+// This should (but don't have to) match the Button colors.
+ActivePaneButtonBackColor = ButtonEnabledBackColor;
+ActivePaneButtonForeColor = ButtonEnabledForeColor;
+
+// For a clean look inactive pane buttons should match the panel/tab backcolor.
+InactivePaneButtonBackColor = PanelBackColor;
+InactivePaneButtonForeColor = Color.FromArgb(192, 192, 192);
+
+// Each theme also have an animated icon to show 'running' state.
+// This must be created manually.

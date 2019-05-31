@@ -62,6 +62,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomCheckBox.Designer.cs">
+      <DependentUpon>CustomCheckBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Install.cs" />
     <Compile Include="OCTRelease.cs" />
     <Compile Include="Resolution.cs" />
@@ -130,9 +136,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="App2.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -171,6 +174,8 @@
     <None Include="arrows blue on dark gray 181818 46782B4.gif" />
     <None Include="arrows white on gray 181818 D3D3D3.gif" />
     <None Include="arrows white on black 000000 D3D3D3.gif" />
+    <None Include="arrows orange on dark brown 101000 FFC013.gif" />
+    <None Include="arrows green on dark green 001000 4CC013.gif" />
     <Content Include="oct_logo_484_12.ico" />
   </ItemGroup>
   <ItemGroup>

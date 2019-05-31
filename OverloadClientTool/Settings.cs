@@ -356,7 +356,7 @@ namespace OverloadClientTool
         {
             if (control.Controls.Count > 0) foreach (Control child in control.Controls) ApplyThemeToControl(child, theme);
 
-            if ((control is GroupBox) || (control.Name == "StatusMessage"))
+            if ((control is GroupBox) || (control.Name == "StatusMessage") || (control.Name == "PilotNameLabel")) 
             {
                 // Set group box title to blue but keep the color of its children to the theme settings.
                 control.ForeColor = theme.TextHighlightColor;
@@ -370,6 +370,11 @@ namespace OverloadClientTool
                 control.BackColor = theme.TextHighlightColor;
             }
             else if ((control is TextBox) || (control is RichTextBox) || (control is ListBox) || (control is ListView) || (control is TabPage))
+            {
+                control.BackColor = theme.InputBackColor;
+                control.ForeColor = theme.InputForeColor;
+            }
+            else if ((control is ListBox) || (control is ListView) || (control is TabPage))
             {
                 control.BackColor = theme.InputBackColor;
                 control.ForeColor = theme.InputForeColor;
@@ -388,10 +393,25 @@ namespace OverloadClientTool
                 control.BackColor = theme.PanelBackColor;
                 control.ForeColor = theme.TextHighlightColor;
             }
+            else if (control is CustomCheckBox)
+            {
+                CustomCheckBox checkBox = control as CustomCheckBox;
+
+                checkBox.BackColor = theme.PanelBackColor;
+                checkBox.ForeColor = theme.PanelForeColor;
+
+                checkBox.CheckBackColor = theme.InputBackColor;
+                checkBox.CheckForeColor = theme.TextHighlightColor;
+
+                // Easy fix for text location.
+                if (!checkBox.Text.StartsWith(" ")) checkBox.Text = " " + checkBox.Text;
+            }
             else if (control is CheckBox)
             {
-                control.BackColor = theme.PanelBackColor;
-                control.ForeColor = theme.InputForeColor;
+                CheckBox checkBox = control as CheckBox;
+                checkBox.BackColor = theme.InputBackColor;
+                checkBox.ForeColor = theme.InactivePaneButtonBackColor;
+                // checkBox.FlatAppearance.CheckedBackColor = Color.White; // No effect?
             }
             else if (control is Button)
             {
@@ -419,6 +439,8 @@ namespace OverloadClientTool
                 button.BackColor = theme.ButtonDisabledBackColor;
                 button.ForeColor = theme.ButtonDisabledForeColor;
             }
+
+            button.FlatAppearance.BorderColor = button.BackColor;
         }
     }
 }

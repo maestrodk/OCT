@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -1505,7 +1506,7 @@ namespace OverloadClientTool
         private void AvailableThemesListBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0) return;
-
+    
             // If the item state is selected them change the back color.
             if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
             {
@@ -1516,7 +1517,7 @@ namespace OverloadClientTool
                                           e.State ^ DrawItemState.Selected,
                                           e.ForeColor,
                                           theme.ActivePaneButtonBackColor);
-            }
+            }          
 
             // Draw the background of the ListBox control for each item.
             e.DrawBackground();
@@ -1591,6 +1592,16 @@ namespace OverloadClientTool
         private void MainToolTip_Popup(object sender, PopupEventArgs e)
         {
             e.ToolTipSize = TextRenderer.MeasureText(MainToolTip.GetToolTip(e.AssociatedControl), new Font("Calibri", 8.0f));
+        }
+
+        private void CustomCheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CustomCheckBox1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

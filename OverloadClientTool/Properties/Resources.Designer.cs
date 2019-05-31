@@ -103,6 +103,16 @@ namespace OverloadClientTool.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap arrows_green_on_dark_green_001000_4CC013 {
+            get {
+                object obj = ResourceManager.GetObject("arrows_green_on_dark_green_001000_4CC013", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap arrows_light_blue_on_grey {
             get {
                 object obj = ResourceManager.GetObject("arrows_light_blue_on_grey", resourceCulture);
@@ -116,6 +126,16 @@ namespace OverloadClientTool.Properties {
         internal static System.Drawing.Bitmap arrows_light_blue_on_grey_2 {
             get {
                 object obj = ResourceManager.GetObject("arrows_light_blue_on_grey_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap arrows_orange_on_dark_brown_101000_FFC013 {
+            get {
+                object obj = ResourceManager.GetObject("arrows_orange_on_dark_brown_101000_FFC013", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
