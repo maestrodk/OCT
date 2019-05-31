@@ -328,10 +328,10 @@ namespace OverloadClientTool
         {
             LogDebugMessage("UpdateTheme()");
 
-            this.BackColor = theme.BackColor;
-            this.ForeColor = theme.ForeColor;
+            this.BackColor = theme.PanelBackColor;
+            this.ForeColor = theme.PanelForeColor;
 
-            activeTextBoxColor = theme.ForeColor;
+            activeTextBoxColor = theme.PanelForeColor;
             inactiveTextBoxColor = theme.InvalidForeColor;
 
             UpdatingMaps.Image = theme.IsRunningImage;
@@ -340,30 +340,12 @@ namespace OverloadClientTool
 
             // Set the active theme (recursively).
             ApplyThemeToControl(this, theme);
+
+            // Apply theme to specific controls.
             paneController.SetTheme(theme);
+            logger?.SetTheme(theme);
 
             ValidateSettings();
-        }
-
-        private void DrawBorder(Control control) //DrawBorder(Control control, Color color, int width)
-        {
-            Color color = (DarkTheme) ? Color.Blue : Color.White;
-            int width = 1;
-
-            ControlPaint.DrawBorder(control.CreateGraphics(),
-                control.ClientRectangle,
-                color,
-                width,
-                ButtonBorderStyle.Solid,
-                color,
-                width,
-                ButtonBorderStyle.Solid,
-                color,
-                width,
-                ButtonBorderStyle.Solid,
-                color,
-                width,
-                ButtonBorderStyle.Solid);
         }
 
         /// <summary>
@@ -379,28 +361,23 @@ namespace OverloadClientTool
                 // Set group box title to blue but keep the color of its children to the theme settings.
                 control.ForeColor = theme.TextHighlightColor;
 
-                foreach (Control child in control.Controls) child.ForeColor = theme.ForeColor;
+                foreach (Control child in control.Controls) child.ForeColor = theme.PanelForeColor;
             }
-            else if ((control.Name == "PilotsPanel") || (control.Name == "MapsPanel") || (control.Name == "ActiveThemePanel"))
+            else if ((control.Name == "PilotsPanel") || (control.Name == "MapsPanel") || (control.Name == "ActiveThemePanel") || (control.Name == "ActivityLogPanel"))
             {
-                // These panels only contain one child control: A listbox.
-                // Set size and position of the listbox-
-                Panel panel = control as Panel;
-                panel.BackColor = theme.ActivePaneButtonBackColor;
+                // These panels contain a single listbox child control.
+                // The panel is used to create a border around them.
+                control.BackColor = theme.TextHighlightColor;
             }
-            else if ((control is TextBox) || (control is ListBox) || (control is ListView) || (control is TabPage))
+            else if ((control is TextBox) || (control is RichTextBox) || (control is ListBox) || (control is ListView) || (control is TabPage))
             {
-                ApplyThemeToSingleControl(control, theme);
-            }
-            else if (control is RichTextBox)
-            {
-                control.BackColor = theme.BackColor;
-                control.ForeColor = theme.ForeColor;
+                control.BackColor = theme.InputBackColor;
+                control.ForeColor = theme.InputForeColor;
             }
             else if (control is LinkLabel)
             {
                 LinkLabel link = control as LinkLabel;
-                link.BackColor = theme.BackColor;
+                link.BackColor = theme.PanelBackColor;
                 link.ForeColor = theme.TextHighlightColor;
                 link.VisitedLinkColor = theme.TextHighlightColor;
                 link.LinkColor  = theme.TextHighlightColor;
@@ -408,46 +385,39 @@ namespace OverloadClientTool
             }
             else if (control is Label)
             {
-                Label link = control as Label;
-                link.BackColor = theme.BackColor;
-                link.ForeColor = theme.TextHighlightColor;
+                control.BackColor = theme.PanelBackColor;
+                control.ForeColor = theme.TextHighlightColor;
             }
             else if (control is CheckBox)
             {
-                control.ForeColor = theme.ForeColor;
+                control.BackColor = theme.PanelBackColor;
+                control.ForeColor = theme.InputForeColor;
             }
             else if (control is Button)
             {
                 Button button = control as Button;
-                button.FlatStyle = FlatStyle.Flat;
-                button.FlatAppearance.BorderSize = 0;
-
-                // StartButton colors are controlled by ActivityBackgroundMonitor.
-                ValidateButton(control, theme);
+                ValidateButton(button, theme);
             }
         }
-
-        public static void ApplyThemeToSingleControl(Control control, Theme theme)
-        {
-            control.BackColor = theme.ControlBackColor;
-            control.ForeColor = theme.ControlForeColor;
-       }
  
         /// <summary>
         /// Override default enabled/disabled colors for a Button control.
         /// </summary>
         /// <param name="control"></param>
-        public static void ValidateButton(Control control, Theme theme)
+        public static void ValidateButton(Button button, Theme theme)
         {
-            if (control.Enabled)
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+
+            if (button.Enabled)
             {
-                control.BackColor = theme.ButtonEnabledBackColor;
-                control.ForeColor = theme.ButtonEnabledForeColor;
+                button.BackColor = theme.ButtonEnabledBackColor;
+                button.ForeColor = theme.ButtonEnabledForeColor;
             }
             else
             {
-                control.BackColor = theme.ButtonDisabledBackColor;
-                control.ForeColor = theme.ButtonDisabledForeColor;
+                button.BackColor = theme.ButtonDisabledBackColor;
+                button.ForeColor = theme.ButtonDisabledForeColor;
             }
         }
     }

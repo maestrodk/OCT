@@ -372,7 +372,7 @@
             // 
             // ActivityLogPanel
             // 
-            this.ActivityLogPanel.BackColor = System.Drawing.Color.DimGray;
+            this.ActivityLogPanel.BackColor = System.Drawing.Color.Blue;
             this.ActivityLogPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ActivityLogPanel.Controls.Add(this.ActivityListView);
             this.ActivityLogPanel.Location = new System.Drawing.Point(8, 17);
@@ -390,12 +390,12 @@
             this.ActivityListView.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ActivityListView.FullRowSelect = true;
             this.ActivityListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.ActivityListView.Location = new System.Drawing.Point(16, 10);
+            this.ActivityListView.Location = new System.Drawing.Point(1, 1);
             this.ActivityListView.Margin = new System.Windows.Forms.Padding(0);
             this.ActivityListView.MultiSelect = false;
             this.ActivityListView.Name = "ActivityListView";
             this.ActivityListView.ShowGroups = false;
-            this.ActivityListView.Size = new System.Drawing.Size(461, 219);
+            this.ActivityListView.Size = new System.Drawing.Size(495, 263);
             this.ActivityListView.TabIndex = 0;
             this.ActivityListView.TabStop = false;
             this.ActivityListView.UseCompatibleStateImageBehavior = false;

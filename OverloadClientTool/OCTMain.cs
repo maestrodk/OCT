@@ -125,6 +125,9 @@ namespace OverloadClientTool
         {
             LogDebugMessage("Main_Load()");
 
+            // Start logging (default is paused state, will be enabled when startup is complete).
+            logger = new ListViewLogger(ActivityListView, theme, this);
+
             // Set controls colors according to the selected theme.
             UpdateTheme(theme);
            
@@ -133,19 +136,13 @@ namespace OverloadClientTool
 
             // Make sure no text is selected.
             Unfocus();
-
-            // Fix tooltip.
-            //MainToolTip.OwnerDraw = true;
-            //MainToolTip.Draw += new DrawToolTipEventHandler(MainToolTip_Draw);
-
+              
             // Check settings and update buttons.
             ValidateSettings();
 
             // Locate DLC folder.
             UpdateDLCLocation();
 
-            // Start logging (default is paused state, will be enabled when startup is complete).
-            logger = new ListViewLogger(ActivityListView, theme, this);
 
             // Announce ourself.
             Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen.");
@@ -462,6 +459,17 @@ namespace OverloadClientTool
                     {
                         StartStopButton.BackColor = theme.ButtonDisabledBackColor;
                         StartStopButton.ForeColor = theme.ButtonDisabledForeColor;
+                    }
+
+                    if (UpdateOlmod.Enabled)
+                    {
+                        UpdateOlmod.BackColor = theme.ButtonEnabledBackColor;
+                        UpdateOlmod.ForeColor = theme.ButtonEnabledForeColor;
+                    }
+                    else
+                    {
+                        UpdateOlmod.BackColor = theme.ButtonDisabledBackColor;
+                        UpdateOlmod.ForeColor = theme.ButtonDisabledForeColor;
                     }
 
                     StatusMessage.Text = statusText;
@@ -959,7 +967,7 @@ namespace OverloadClientTool
         {
             if (MapsListBox.SelectedIndex >= 0)
             {
-                OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[MapsListBox.SelectedIndex]).Value;
+                OverloadMap map = (OverloadMap)MapsListBox.Items[MapsListBox.SelectedIndex];
 
                 MapHideButton.Text = (map.Hidden) ? "Unhide" : "Hide";
 
@@ -975,13 +983,15 @@ namespace OverloadClientTool
                 MapHideButton.Enabled = false;
                 MapRefreshButton.Enabled = false;
             }
+
+            ApplyThemeToControl(PaneMaps, theme);
         }
 
         private void MapDelete_Click(object sender, EventArgs e)
         {
             if (MapsListBox.SelectedIndex >= 0)
             {
-                OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[MapsListBox.SelectedIndex]).Value;
+                OverloadMap map = (OverloadMap)MapsListBox.Items[MapsListBox.SelectedIndex];
                 if (!map.IsLocal) return;
 
                 if (MessageBox.Show(String.Format($"Delete map '{map.ZipName}' from disk?"), "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -1013,7 +1023,7 @@ namespace OverloadClientTool
 
         private async void MapRefresh_ClickAsync(object sender, EventArgs e)
         {
-            OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[MapsListBox.SelectedIndex]).Value;
+            OverloadMap map = (OverloadMap)MapsListBox.Items[MapsListBox.SelectedIndex];
 
             if (map.Hidden)
             {
@@ -1031,7 +1041,7 @@ namespace OverloadClientTool
 
         private void MapHideButton_Click(object sender, EventArgs e)
         {
-            OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[MapsListBox.SelectedIndex]).Value;
+            OverloadMap map = (OverloadMap)MapsListBox.Items[MapsListBox.SelectedIndex];
             if (!map.IsLocal) return;
 
             int index = MapsListBox.SelectedIndex;
@@ -1271,7 +1281,6 @@ namespace OverloadClientTool
 
             if (index >= 0 && index < lb.Items.Count)
             {
-                //OverloadMap map = ((KeyValuePair<string, OverloadMap>)MapsListBox.Items[index]).Value;
                 OverloadMap map = (OverloadMap)MapsListBox.Items[index];
                 string toolTipString = map.DisplayMapInfo;
 
@@ -1487,7 +1496,7 @@ namespace OverloadClientTool
             e.DrawBackground();
 
             // Draw the current item text
-            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.ForeColor), e.Bounds, StringFormat.GenericDefault);
+            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.PanelForeColor), e.Bounds, StringFormat.GenericDefault);
             
             // If the ListBox has focus, draw a focus rectangle around the selected item.
             e.DrawFocusRectangle();
@@ -1513,7 +1522,7 @@ namespace OverloadClientTool
             e.DrawBackground();
 
             // Draw the current item text
-            e.Graphics.DrawString(AvailableThemesListBox.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.ForeColor), e.Bounds, StringFormat.GenericDefault);
+            e.Graphics.DrawString(AvailableThemesListBox.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.PanelForeColor), e.Bounds, StringFormat.GenericDefault);
 
             // If the ListBox has focus, draw a focus rectangle around the selected item.
             e.DrawFocusRectangle();
@@ -1539,7 +1548,7 @@ namespace OverloadClientTool
             e.DrawBackground();
 
             // Draw the current item text
-            e.Graphics.DrawString(PilotsListBox.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.ForeColor), e.Bounds, StringFormat.GenericDefault);
+            e.Graphics.DrawString(PilotsListBox.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.PanelForeColor), e.Bounds, StringFormat.GenericDefault);
 
             // If the ListBox has focus, draw a focus rectangle around the selected item.
             e.DrawFocusRectangle();
@@ -1565,7 +1574,7 @@ namespace OverloadClientTool
             e.DrawBackground();
 
             // Draw the current item text
-            e.Graphics.DrawString(MapsListBox.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.ForeColor), e.Bounds, StringFormat.GenericDefault);
+            e.Graphics.DrawString(MapsListBox.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.PanelForeColor), e.Bounds, StringFormat.GenericDefault);
 
             // If the ListBox has focus, draw a focus rectangle around the selected item.
             e.DrawFocusRectangle();

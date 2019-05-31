@@ -166,6 +166,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Newtonsoft.Json.dll" />
+    <None Include="arrows blue on black 000000 07CEFA.gif" />
+    <None Include="arrows yellow on brown 402010 C0A020.gif" />
+    <None Include="arrows blue on dark gray 181818 46782B4.gif" />
+    <None Include="arrows white on gray 181818 D3D3D3.gif" />
+    <None Include="arrows white on black 000000 D3D3D3.gif" />
     <Content Include="oct_logo_484_12.ico" />
   </ItemGroup>
   <ItemGroup>

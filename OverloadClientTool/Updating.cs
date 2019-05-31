@@ -113,6 +113,9 @@ namespace OverloadClientTool
             OCTUpdateForm updateForm = new OCTUpdateForm(release, currentVersion, newVersion, installFolder);
 
             ApplyThemeToControl(updateForm, theme);
+
+            updateForm.BackColor = theme.InactivePaneButtonBackColor;
+
             updateForm.StartPosition = FormStartPosition.CenterParent;
 
             if (updateForm.ShowDialog() == DialogResult.Cancel) return;

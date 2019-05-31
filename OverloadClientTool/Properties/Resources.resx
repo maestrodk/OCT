@@ -118,6 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="arrows_blue_on_black_000000_07CEFA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\arrows blue on black 000000 07CEFA.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrows_blue_on_dark_gray_181818_46782B4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\arrows blue on dark gray 181818 46782B4.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="arrows_blue_on_white" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\arrows blue on white.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -129,5 +135,14 @@
   </data>
   <data name="arrows_light_blue_on_grey_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\arrows light blue on grey 2.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrows_white_on_black_000000_D3D3D3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\arrows white on black 000000 D3D3D3.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrows_white_on_gray_181818_D3D3D3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\arrows white on gray 181818 D3D3D3.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrows_yellow_on_brown_402010_C0A020" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\arrows yellow on brown 402010 C0A020.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

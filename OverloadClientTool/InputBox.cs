@@ -25,11 +25,11 @@ namespace OverloadClientTool
 
             this.parent = parent;
 
-            this.BackColor = theme.BackColor;
-            this.ForeColor = theme.ForeColor;
+            this.BackColor = theme.PanelBackColor;
+            this.ForeColor = theme.PanelForeColor;
 
-            InputData.BackColor = theme.ControlBackColor;
-            InputData.ForeColor = theme.ControlForeColor;                     
+            InputData.BackColor = theme.InputBackColor;
+            InputData.ForeColor = theme.InputForeColor;                     
 
             DialogResult = DialogResult.Cancel;
             StartPosition = FormStartPosition.CenterParent;

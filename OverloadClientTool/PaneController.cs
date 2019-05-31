@@ -10,7 +10,7 @@ namespace OverloadClientTool
 {
     public class PaneController
     {
-        private Form parent;
+        private OCTMain parent;
         private Panel paneButtonLine;
 
         private Button activeButton = null;
@@ -21,16 +21,50 @@ namespace OverloadClientTool
 
         public PaneController(Form parentForm, Panel paneButtonLine, Theme theme)
         {
-            (parentForm as OCTMain).LogDebugMessage("PaneController.ctor()");
-
+            this.parent = (parentForm as OCTMain);
+            this.parent.LogDebugMessage("PaneController.ctor()");
             this.theme = theme;
-            this.parent = parentForm;
             this.paneButtonLine = paneButtonLine;
         }
 
         public void SetTheme(Theme theme)
         {
             this.theme = theme;
+
+            foreach (KeyValuePair<Button, Panel> kvp in panels)
+            {
+                Button button = kvp.Key;
+                Panel panel = kvp.Value;
+
+                // Set the position and size of OCTMain form (allow room for line just beneath panel buttons).
+                panel.Location = new Point(0, button.Height + 1);
+                parent.ClientSize = new Size(panel.Width, panel.Height + button.Height + 1);
+
+                // Apply colors to them.
+                OCTMain.ApplyThemeToControl(panel, theme);
+
+                // Need to set this here to override default backcolor as all other
+                // panels use ActivePaneButtonBackColor to draw borders around the listbox controls.
+                panel.BackColor = theme.PanelBackColor;
+                
+                // Draw line beneath buttons using same color as the active button.
+                paneButtonLine.Location = new Point(0, button.Height);
+                paneButtonLine.Size = new Size(panel.Width, 1);
+                paneButtonLine.BackColor = theme.ActivePaneButtonBackColor;
+
+                // Set button colors.
+                if (kvp.Key == activeButton)
+                {
+                    kvp.Key.BackColor = theme.ActivePaneButtonBackColor;
+                    kvp.Key.ForeColor = theme.ActivePaneButtonForeColor;
+                }
+                else
+                {
+                    kvp.Key.BackColor = theme.InactivePaneButtonBackColor;
+                    kvp.Key.ForeColor = theme.InactivePaneButtonForeColor;
+                }
+            }
+
             SwitchToPane(activeButton);
         }
 
@@ -41,7 +75,6 @@ namespace OverloadClientTool
 
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
-            button.FlatAppearance.BorderColor = button.BackColor;
 
             button.Enter += Pane_Enter;
             button.Leave += Pane_Leave;
@@ -56,7 +89,7 @@ namespace OverloadClientTool
 
         public void SwitchToPane(Button paneButton)
         {
-            (parent as OCTMain).LogDebugMessage("PaneController.SwitchToPane()");
+            parent.LogDebugMessage("PaneController.SwitchToPane()");
 
             // Deselect all except the new active button/panel.
             foreach (KeyValuePair<Button, Panel> kvp in panels)
@@ -64,40 +97,26 @@ namespace OverloadClientTool
                 Panel panel = kvp.Value;
                 Button button = kvp.Key;
 
-                if (paneButton != button)
+                 if (paneButton != button)
                 {
                     // Deselect pane.
                     panel.Visible = false;
 
                     // Set inactive button colors.
                     button.BackColor = theme.InactivePaneButtonBackColor;
-                    button.FlatAppearance.BorderSize = 0;
-                    button.FlatAppearance.BorderColor = button.BackColor;
+                    button.ForeColor = theme.InactivePaneButtonForeColor;
                 }
                 else
                 {
-                    // Set the size of parent (allow room for top button line).
-                    parent.ClientSize = new Size(panel.Width, panel.Height + button.Height + 1);
-
-                    // Show the pane.
-                    panel.BackColor = theme.BackColor;
-                    panel.Location = new Point(0, button.Height + 1);
+                    // Select the pane.
                     panel.Visible = true;
-
-                    // Draw a line just below buttons.
-                    paneButtonLine.Location = new Point(0, button.Height);
-                    paneButtonLine.Size = new Size(panel.Width, 1);
-                    paneButtonLine.BackColor = theme.ActivePaneButtonBackColor;
 
                     // Set the active button colors.
                     button.BackColor = theme.ActivePaneButtonBackColor;
-                    button.ForeColor = theme.ActivePaneButtonForeColor;
-                    button.FlatStyle = FlatStyle.Flat;
-                    button.FlatAppearance.BorderSize = 0;
-                    button.FlatAppearance.BorderColor = theme.ActivePaneButtonBackColor;
+                    button.ForeColor = theme.ActivePaneButtonForeColor;                   
                 }
 
-                button.Refresh();
+                //button.Refresh();
             }
 
             activeButton = paneButton;         

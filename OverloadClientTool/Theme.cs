@@ -5,8 +5,14 @@ namespace OverloadClientTool
 {
     // http://ajaxload.info/
     //
-    // Circling arrows for light theme: 0x4169E1 / 0xFFFFFF. 
-    // Circling arrows for dark theme: 0x7CEFA / 0x3232328.
+    // Circling arrows for light theme: 0x4169E1 / 0xFFFFFF. ??
+    // Circling arrows for dark theme:  0x07CEFA / 0x323232.
+    //
+    // Color.SteelBlue == 0x4682B4
+    //
+    // 
+    //
+
 
     public class Theme
     {
@@ -23,12 +29,12 @@ namespace OverloadClientTool
         /// <summary>
         /// Default background color for a control.
         /// </summary>
-        public Color ControlBackColor { get; set; }
+        public Color InputBackColor { get; set; }
 
         /// <summary>
         /// Default text color for a control.
         /// </summary>
-        public Color ControlForeColor { get; set; }
+        public Color InputForeColor { get; set; }
 
         /// <summary>
         /// Background color for a enabled button.
@@ -73,12 +79,12 @@ namespace OverloadClientTool
         /// <summary>
         /// Background color for forms, panels and group boxes.
         /// </summary>
-        public Color BackColor { get; set; }
+        public Color PanelBackColor { get; set; }
 
         /// <summary>
         /// Text color for forms, panels and group boxes.
         /// </summary>
-        public Color ForeColor { get; set; }
+        public Color PanelForeColor { get; set; }
 
         /// <summary>
         /// Text color for invalid data in a TextBox/RichTextBox.
@@ -99,22 +105,23 @@ namespace OverloadClientTool
         {
             get
             {
-                return new string[] { "Black", "Dark Gray", "Dark Blue", "Light" };
+                return new string[] { "Black", "Dark Gray", "Dark Blue", "Light", "Brown" };
             }
         }
 
         public static Theme GetThemeByName(string name)
         {
-            if (name == "Black") return GetDarkTheme;
+            if (name == "Black") return GetBlackTheme;
             if (name == "Dark Gray") return GetDarkGrayTheme;
             if (name == "Dark Blue") return GetDarkBlueTheme;
+            if (name == "Brown") return GetBrownTheme;
             return GetLightTheme;
         }
 
         /// <summary>
         /// Returns a dark theme color set.
         /// </summary>
-        public static Theme GetDarkTheme
+        public static Theme GetBlackTheme
         {
             get
             {
@@ -123,28 +130,35 @@ namespace OverloadClientTool
                 theme.Name = "Black";
                 theme.Description = "A black theme with a few gray elements.";
 
-                theme.ButtonEnabledBackColor = Color.FromArgb(32, 32, 32);
-                theme.ButtonDisabledBackColor = Color.FromArgb(32, 32, 32);
-
+                // Enabled button.
+                theme.ButtonEnabledBackColor = Color.FromArgb(64, 64, 64);
                 theme.ButtonEnabledForeColor = Color.FromArgb(192, 192, 192);
-                theme.ButtonDisabledForeColor = Color.FromArgb(160, 160, 160);
- 
-                theme.ControlBackColor = Color.FromArgb(16, 16, 16);
-                theme.ControlForeColor = Color.Gray;
 
-                theme.TextHighlightColor = Color.White;
+                // Disabled button.
+                theme.ButtonDisabledBackColor = Color.FromArgb(64, 64, 64);
+                theme.ButtonDisabledForeColor = Color.FromArgb(160, 160, 160);  // This doesn't work as Windows overrides a disabled control forecolor.
+ 
+                // Textbox and listboxes.
+                theme.InputBackColor = Color.FromArgb(16, 16, 16);
+                theme.InputForeColor = Color.LightGray;
+
+                // Indicate invalid value in textbox.
                 theme.InvalidForeColor = Color.LightCoral;
 
-                theme.BackColor = Color.FromArgb(0, 0, 0);
-                theme.ForeColor = Color.LightGray;
+                // Links.
+                theme.TextHighlightColor = Color.FromArgb(224, 224, 224);
+
+                // Pane background and labels.
+                theme.PanelBackColor = Color.FromArgb(0, 0, 0);
+                theme.PanelForeColor = Color.FromArgb(192, 192, 192);
 
                 theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
-                theme.ActivePaneButtonForeColor = Color.FromArgb(192, 192, 192);
+                theme.ActivePaneButtonForeColor = theme.ButtonEnabledForeColor;
 
-                theme.InactivePaneButtonBackColor = theme.BackColor;
+                theme.InactivePaneButtonBackColor = theme.PanelBackColor;
                 theme.InactivePaneButtonForeColor = Color.FromArgb(192, 192, 192);
 
-                theme.IsRunningImage = Properties.Resources.arrows_light_blue_on_grey_2;
+                theme.IsRunningImage = Properties.Resources.arrows_white_on_black_000000_D3D3D3;
 
                 return theme;
             }
@@ -162,32 +176,29 @@ namespace OverloadClientTool
                 theme.Name = "Dark Blue";
                 theme.Description = "A dark theme with some blue/gray elements.";
 
-                theme.ButtonEnabledBackColor = Color.FromArgb(128, 128, 128);
+                theme.ButtonEnabledBackColor = Color.SteelBlue;
                 theme.ButtonEnabledForeColor = Color.FromArgb(255, 255, 255);
+
                 theme.ButtonDisabledBackColor = Color.FromArgb(96, 96, 96);
                 theme.ButtonDisabledForeColor = Color.FromArgb(255, 255, 255);
 
-                // Try some alternate background button colors.
-                theme.ButtonEnabledBackColor = Color.SteelBlue;
-                theme.ButtonDisabledBackColor = Color.SteelBlue;
+                theme.InputBackColor = Color.FromArgb(32, 32, 32);
+                theme.InputForeColor = Color.LightGray; // 0xD3D3D3
 
-                theme.ControlBackColor = Color.FromArgb(32, 32, 32);
-                theme.ControlForeColor = Color.LightGray;
-
-                theme.TextHighlightColor = Color.SteelBlue;
+                theme.TextHighlightColor = Color.SteelBlue; // 0x4682B4
 
                 theme.InvalidForeColor = Color.LightCoral;
 
-                theme.BackColor = Color.FromArgb(50, 50, 50);
-                theme.ForeColor = Color.LightGray;
+                theme.PanelBackColor = Color.FromArgb(24, 24, 24);
+                theme.PanelForeColor = theme.InputForeColor;
 
-                theme.ActivePaneButtonBackColor = Color.SteelBlue;
+                theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
                 theme.ActivePaneButtonForeColor = Color.White;
 
-                theme.InactivePaneButtonBackColor = Color.FromArgb(50, 50, 50);
+                theme.InactivePaneButtonBackColor = theme.PanelBackColor;
                 theme.InactivePaneButtonForeColor = Color.White;
 
-                theme.IsRunningImage = Properties.Resources.arrows_light_blue_on_grey_2;
+                theme.IsRunningImage = Properties.Resources.arrows_blue_on_dark_gray_181818_46782B4;
 
                 return theme;
             }
@@ -205,28 +216,29 @@ namespace OverloadClientTool
                 theme.Name = "Dark Gray";
                 theme.Description = "A dark theme with some gray elements.";
 
-                theme.ButtonEnabledBackColor = Color.FromArgb(128, 128, 128);
-                theme.ButtonEnabledForeColor = Color.FromArgb(255, 255, 255);
+                theme.ButtonEnabledBackColor = Color.FromArgb(64, 64, 64);
+                theme.ButtonEnabledForeColor = Color.FromArgb(192, 192, 192);
+
                 theme.ButtonDisabledBackColor = Color.FromArgb(96, 96, 96);
                 theme.ButtonDisabledForeColor = Color.FromArgb(255, 255, 255);
 
-                theme.ControlBackColor = Color.FromArgb(32, 32, 32);
-                theme.ControlForeColor = Color.LightGray;
+                theme.InputBackColor = Color.FromArgb(32, 32, 32);
+                theme.InputForeColor = Color.FromArgb(0xC0, 0xC0, 0xC0);
 
-                theme.TextHighlightColor = Color.SteelBlue;
+                theme.TextHighlightColor = Color.LightGray;
 
                 theme.InvalidForeColor = Color.LightCoral;
 
-                theme.BackColor = Color.FromArgb(50, 50, 50);
-                theme.ForeColor = Color.LightGray;
+                theme.PanelBackColor = Color.FromArgb(24, 24, 24);
+                theme.PanelForeColor = theme.InputForeColor;
 
-                theme.ActivePaneButtonBackColor = Color.DarkGray;
+                theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
                 theme.ActivePaneButtonForeColor = Color.White;
 
-                theme.InactivePaneButtonBackColor = Color.FromArgb(50, 50, 50);
+                theme.InactivePaneButtonBackColor = theme.PanelBackColor;
                 theme.InactivePaneButtonForeColor = Color.White;
 
-                theme.IsRunningImage = Properties.Resources.arrows_light_blue_on_grey_2;
+                theme.IsRunningImage = Properties.Resources.arrows_white_on_gray_181818_D3D3D3;
 
                 return theme;
             }
@@ -250,15 +262,15 @@ namespace OverloadClientTool
                 theme.ButtonDisabledBackColor = Color.FromArgb(224, 224, 224);
                 theme.ButtonDisabledForeColor = Color.FromArgb(192, 192, 192);
 
-                theme.ControlBackColor = Color.FromArgb(243, 248, 255);
-                theme.ControlForeColor = Color.FromArgb(50, 50, 50);
+                theme.InputBackColor = Color.FromArgb(243, 248, 255);
+                theme.InputForeColor = Color.FromArgb(50, 50, 50);
 
                 theme.TextHighlightColor = Color.SteelBlue;
 
                 theme.InvalidForeColor = Color.Coral;
 
-                theme.BackColor = Color.White;
-                theme.ForeColor = Color.FromArgb(50, 50, 50);
+                theme.PanelBackColor = Color.White;
+                theme.PanelForeColor = Color.FromArgb(50, 50, 50);
  
                 theme.ActivePaneButtonBackColor = Color.LightSteelBlue;
                 theme.ActivePaneButtonForeColor = Color.Black;
@@ -271,5 +283,43 @@ namespace OverloadClientTool
                 return theme;
             }
         }
+
+        public static Theme GetBrownTheme
+        {
+            get
+            {
+                Theme theme = new Theme();
+
+                theme.Name = "Brown";
+                theme.Description = "A brown theme with some yellow thrown in.";
+
+                theme.ButtonEnabledBackColor = Color.FromArgb(192, 160, 32);
+                theme.ButtonEnabledForeColor = Color.Black; //Color.FromArgb(224, 224, 192);
+
+                theme.ButtonDisabledBackColor = Color.FromArgb(64, 64, 8);
+                theme.ButtonDisabledForeColor = Color.FromArgb(224, 224, 192);
+
+                theme.InputBackColor = Color.FromArgb(32, 32, 32);
+                theme.InputForeColor = Color.FromArgb(0xD0, 0xE0, 0xA0);
+
+                theme.TextHighlightColor = Color.FromArgb(208, 208, 160);
+
+                theme.InvalidForeColor = Color.Coral;
+
+                theme.PanelBackColor = Color.FromArgb(64, 32, 16);
+                theme.PanelForeColor = Color.FromArgb(224, 224, 192);
+
+                theme.ActivePaneButtonBackColor = Color.FromArgb(192, 160, 32);
+                theme.ActivePaneButtonForeColor = Color.Black;
+
+                theme.InactivePaneButtonBackColor = theme.PanelBackColor;
+                theme.InactivePaneButtonForeColor = Color.FromArgb(224, 224, 192);
+
+                theme.IsRunningImage = Properties.Resources.arrows_yellow_on_brown_402010_C0A020;
+
+                return theme;
+            }
+        }
+
     }
 }

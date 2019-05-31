@@ -19,7 +19,7 @@ namespace OverloadClientTool.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -63,6 +63,26 @@ namespace OverloadClientTool.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap arrows_blue_on_black_000000_07CEFA {
+            get {
+                object obj = ResourceManager.GetObject("arrows_blue_on_black_000000_07CEFA", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap arrows_blue_on_dark_gray_181818_46782B4 {
+            get {
+                object obj = ResourceManager.GetObject("arrows_blue_on_dark_gray_181818_46782B4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap arrows_blue_on_white {
             get {
                 object obj = ResourceManager.GetObject("arrows_blue_on_white", resourceCulture);
@@ -96,6 +116,36 @@ namespace OverloadClientTool.Properties {
         internal static System.Drawing.Bitmap arrows_light_blue_on_grey_2 {
             get {
                 object obj = ResourceManager.GetObject("arrows_light_blue_on_grey_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap arrows_white_on_black_000000_D3D3D3 {
+            get {
+                object obj = ResourceManager.GetObject("arrows_white_on_black_000000_D3D3D3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap arrows_white_on_gray_181818_D3D3D3 {
+            get {
+                object obj = ResourceManager.GetObject("arrows_white_on_gray_181818_D3D3D3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap arrows_yellow_on_brown_402010_C0A020 {
+            get {
+                object obj = ResourceManager.GetObject("arrows_yellow_on_brown_402010_C0A020", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
