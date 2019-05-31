@@ -1593,15 +1593,5 @@ namespace OverloadClientTool
         {
             e.ToolTipSize = TextRenderer.MeasureText(MainToolTip.GetToolTip(e.AssociatedControl), new Font("Calibri", 8.0f));
         }
-
-        private void CustomCheckBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void CustomCheckBox1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
     }
 }

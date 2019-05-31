@@ -378,11 +378,6 @@ namespace OverloadClientTool
             CheckAndUpdatePilots();
         }
 
-        private void AutoPilotsBackupCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            AutoSavePilots = AutoPilotsBackupCheckbox.Checked;
-        }
-
         private string BackupAllPilots()
         {
             string timeStamp = DateTime.Now.ToString("yyyy:MM:dd_HH:mm:ss").Replace(":", "");
@@ -596,6 +591,11 @@ namespace OverloadClientTool
             {
                 GetPilotXP(null);
             }
+        }
+
+        private void AutoPilotsBackupCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            AutoSavePilots = AutoPilotsBackupCheckbox.Checked;
         }
     }
 }

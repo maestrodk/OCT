@@ -37,21 +37,16 @@
             this.StartStopButton = new System.Windows.Forms.Button();
             this.ExitButton = new System.Windows.Forms.Button();
             this.MapUpdateButton = new System.Windows.Forms.Button();
-            this.UseEmbeddedOlproxy = new System.Windows.Forms.CheckBox();
+            this.UseEmbeddedOlproxy = new OverloadClientTool.CustomCheckBox();
             this.OverloadRunning = new System.Windows.Forms.PictureBox();
             this.OlproxyRunning = new System.Windows.Forms.PictureBox();
             this.UpdatingMaps = new System.Windows.Forms.PictureBox();
             this.OnlineMapJsonUrl = new System.Windows.Forms.TextBox();
             this.MapsListBox = new System.Windows.Forms.ListBox();
-            this.UseOlproxyCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.UseOlmodCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.UseDLCLocationCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.AutoUpdateMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.ActivityLogPanel = new System.Windows.Forms.Panel();
             this.ActivityListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.OverloadClientToolNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.OnlyUpdateExistingMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.PilotDeleteButton = new System.Windows.Forms.Button();
             this.PilotRenameButton = new System.Windows.Forms.Button();
             this.PilotCloneButton = new System.Windows.Forms.Button();
@@ -73,6 +68,9 @@
             this.label7 = new System.Windows.Forms.Label();
             this.MapsPanel = new System.Windows.Forms.Panel();
             this.HideUnofficialMapsCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.UseDLCLocationCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.AutoUpdateMapsCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.OnlyUpdateExistingMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.MapUnhideAllButton = new System.Windows.Forms.Button();
             this.MapRefreshButton = new System.Windows.Forms.Button();
             this.PanePilots = new System.Windows.Forms.Panel();
@@ -95,6 +93,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.StartStopOlproxyButton = new System.Windows.Forms.Button();
+            this.UseOlproxyCheckBox = new OverloadClientTool.CustomCheckBox();
             this.PaneOverload = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
@@ -112,7 +111,8 @@
             this.OlmodReleases = new System.Windows.Forms.LinkLabel();
             this.UpdateOlmod = new System.Windows.Forms.Button();
             this.UseOlmodGameDirArg = new OverloadClientTool.CustomCheckBox();
-            this.AutoUpdateOlmod = new System.Windows.Forms.CheckBox();
+            this.AutoUpdateOlmod = new OverloadClientTool.CustomCheckBox();
+            this.UseOlmodCheckBox = new OverloadClientTool.CustomCheckBox();
             this.PaneButtonLine = new System.Windows.Forms.Panel();
             this.PaneSelectOptions = new System.Windows.Forms.Button();
             this.PaneOptions = new System.Windows.Forms.Panel();
@@ -239,12 +239,14 @@
             // UseEmbeddedOlproxy
             // 
             this.UseEmbeddedOlproxy.AutoSize = true;
+            this.UseEmbeddedOlproxy.CheckBackColor = System.Drawing.Color.Gray;
             this.UseEmbeddedOlproxy.Checked = true;
+            this.UseEmbeddedOlproxy.CheckForeColor = System.Drawing.Color.Red;
             this.UseEmbeddedOlproxy.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseEmbeddedOlproxy.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.UseEmbeddedOlproxy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.UseEmbeddedOlproxy.Location = new System.Drawing.Point(127, 13);
             this.UseEmbeddedOlproxy.Name = "UseEmbeddedOlproxy";
-            this.UseEmbeddedOlproxy.Size = new System.Drawing.Size(134, 17);
+            this.UseEmbeddedOlproxy.Size = new System.Drawing.Size(133, 17);
             this.UseEmbeddedOlproxy.TabIndex = 5;
             this.UseEmbeddedOlproxy.Text = "Use embedded Olproxy";
             this.MainToolTip.SetToolTip(this.UseEmbeddedOlproxy, "Use the built-in Olproxy");
@@ -317,72 +319,6 @@
             this.MapsListBox.SelectedIndexChanged += new System.EventHandler(this.MapsListBox_SelectedIndexChanged);
             this.MapsListBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MapsListBox_MouseMove);
             // 
-            // UseOlproxyCheckBox
-            // 
-            this.UseOlproxyCheckBox.AutoSize = true;
-            this.UseOlproxyCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.UseOlproxyCheckBox.Checked = true;
-            this.UseOlproxyCheckBox.CheckForeColor = System.Drawing.Color.Red;
-            this.UseOlproxyCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseOlproxyCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.UseOlproxyCheckBox.Location = new System.Drawing.Point(12, 12);
-            this.UseOlproxyCheckBox.Name = "UseOlproxyCheckBox";
-            this.UseOlproxyCheckBox.Size = new System.Drawing.Size(81, 17);
-            this.UseOlproxyCheckBox.TabIndex = 5;
-            this.UseOlproxyCheckBox.Text = "Use Olproxy";
-            this.MainToolTip.SetToolTip(this.UseOlproxyCheckBox, "Start Olproxy when Overload/Olmod is started");
-            this.UseOlproxyCheckBox.UseVisualStyleBackColor = true;
-            this.UseOlproxyCheckBox.CheckedChanged += new System.EventHandler(this.UseOlproxy_CheckedChanged);
-            // 
-            // UseOlmodCheckBox
-            // 
-            this.UseOlmodCheckBox.AutoSize = true;
-            this.UseOlmodCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.UseOlmodCheckBox.Checked = true;
-            this.UseOlmodCheckBox.CheckForeColor = System.Drawing.Color.Red;
-            this.UseOlmodCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseOlmodCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.UseOlmodCheckBox.Location = new System.Drawing.Point(25, 17);
-            this.UseOlmodCheckBox.Name = "UseOlmodCheckBox";
-            this.UseOlmodCheckBox.Size = new System.Drawing.Size(76, 17);
-            this.UseOlmodCheckBox.TabIndex = 5;
-            this.UseOlmodCheckBox.Text = "Use Olmod";
-            this.MainToolTip.SetToolTip(this.UseOlmodCheckBox, "If checked then Olmod will be used to run Overload");
-            this.UseOlmodCheckBox.UseVisualStyleBackColor = true;
-            this.UseOlmodCheckBox.CheckedChanged += new System.EventHandler(this.UseOlmod_CheckedChanged);
-            // 
-            // UseDLCLocationCheckBox
-            // 
-            this.UseDLCLocationCheckBox.AutoCheck = false;
-            this.UseDLCLocationCheckBox.AutoSize = true;
-            this.UseDLCLocationCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.UseDLCLocationCheckBox.CheckForeColor = System.Drawing.Color.Red;
-            this.UseDLCLocationCheckBox.Enabled = false;
-            this.UseDLCLocationCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(295, 213);
-            this.UseDLCLocationCheckBox.Name = "UseDLCLocationCheckBox";
-            this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(200, 17);
-            this.UseDLCLocationCheckBox.TabIndex = 5;
-            this.UseDLCLocationCheckBox.Text = "Use DLC folder for downloaded maps";
-            this.MainToolTip.SetToolTip(this.UseDLCLocationCheckBox, "Save downloaded map ZIP files to Overload DLC folder");
-            this.UseDLCLocationCheckBox.UseVisualStyleBackColor = true;
-            this.UseDLCLocationCheckBox.Click += new System.EventHandler(this.UseDLCLocationCheckBox_Click);
-            // 
-            // AutoUpdateMapsCheckBox
-            // 
-            this.AutoUpdateMapsCheckBox.AutoSize = true;
-            this.AutoUpdateMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.AutoUpdateMapsCheckBox.CheckForeColor = System.Drawing.Color.Red;
-            this.AutoUpdateMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(295, 144);
-            this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
-            this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(147, 17);
-            this.AutoUpdateMapsCheckBox.TabIndex = 5;
-            this.AutoUpdateMapsCheckBox.Text = "Update all maps at startup";
-            this.MainToolTip.SetToolTip(this.AutoUpdateMapsCheckBox, "Do an update of all maps at startup (may take a bit of extra time)");
-            this.AutoUpdateMapsCheckBox.UseVisualStyleBackColor = true;
-            this.AutoUpdateMapsCheckBox.Click += new System.EventHandler(this.AutoUpdateMaps_Click);
-            // 
             // ActivityLogPanel
             // 
             this.ActivityLogPanel.BackColor = System.Drawing.Color.Blue;
@@ -423,21 +359,6 @@
             this.OverloadClientToolNotifyIcon.Text = "Overload Server Tool";
             this.OverloadClientToolNotifyIcon.Visible = true;
             this.OverloadClientToolNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.OverloadClientToolNotifyIcon_MouseDoubleClick);
-            // 
-            // OnlyUpdateExistingMapsCheckBox
-            // 
-            this.OnlyUpdateExistingMapsCheckBox.AutoSize = true;
-            this.OnlyUpdateExistingMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.OnlyUpdateExistingMapsCheckBox.CheckForeColor = System.Drawing.Color.Red;
-            this.OnlyUpdateExistingMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(295, 167);
-            this.OnlyUpdateExistingMapsCheckBox.Name = "OnlyUpdateExistingMapsCheckBox";
-            this.OnlyUpdateExistingMapsCheckBox.Size = new System.Drawing.Size(147, 17);
-            this.OnlyUpdateExistingMapsCheckBox.TabIndex = 5;
-            this.OnlyUpdateExistingMapsCheckBox.Text = "Only update existing maps";
-            this.MainToolTip.SetToolTip(this.OnlyUpdateExistingMapsCheckBox, "Only update map ZIP files already on disk");
-            this.OnlyUpdateExistingMapsCheckBox.UseVisualStyleBackColor = true;
-            this.OnlyUpdateExistingMapsCheckBox.CheckedChanged += new System.EventHandler(this.OnlyUpdateExistingMapsCheckBox_CheckedChanged);
             // 
             // PilotDeleteButton
             // 
@@ -690,15 +611,62 @@
             this.HideUnofficialMapsCheckBox.AutoSize = true;
             this.HideUnofficialMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
             this.HideUnofficialMapsCheckBox.CheckForeColor = System.Drawing.Color.Red;
-            this.HideUnofficialMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.HideUnofficialMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.HideUnofficialMapsCheckBox.Location = new System.Drawing.Point(295, 190);
             this.HideUnofficialMapsCheckBox.Name = "HideUnofficialMapsCheckBox";
-            this.HideUnofficialMapsCheckBox.Size = new System.Drawing.Size(212, 17);
+            this.HideUnofficialMapsCheckBox.Size = new System.Drawing.Size(211, 17);
             this.HideUnofficialMapsCheckBox.TabIndex = 5;
             this.HideUnofficialMapsCheckBox.Text = "When updating hide unofficial MP maps";
             this.MainToolTip.SetToolTip(this.HideUnofficialMapsCheckBox, "Select this to hide MP maps that are not in the official map list");
             this.HideUnofficialMapsCheckBox.UseVisualStyleBackColor = true;
             this.HideUnofficialMapsCheckBox.CheckedChanged += new System.EventHandler(this.HideUnofficialMapsCheckBox_CheckedChanged);
+            // 
+            // UseDLCLocationCheckBox
+            // 
+            this.UseDLCLocationCheckBox.AutoCheck = false;
+            this.UseDLCLocationCheckBox.AutoSize = true;
+            this.UseDLCLocationCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.UseDLCLocationCheckBox.CheckForeColor = System.Drawing.Color.Red;
+            this.UseDLCLocationCheckBox.Enabled = false;
+            this.UseDLCLocationCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(295, 213);
+            this.UseDLCLocationCheckBox.Name = "UseDLCLocationCheckBox";
+            this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(199, 17);
+            this.UseDLCLocationCheckBox.TabIndex = 5;
+            this.UseDLCLocationCheckBox.Text = "Use DLC folder for downloaded maps";
+            this.MainToolTip.SetToolTip(this.UseDLCLocationCheckBox, "Save downloaded map ZIP files to Overload DLC folder");
+            this.UseDLCLocationCheckBox.UseVisualStyleBackColor = true;
+            this.UseDLCLocationCheckBox.Click += new System.EventHandler(this.UseDLCLocationCheckBox_Click);
+            // 
+            // AutoUpdateMapsCheckBox
+            // 
+            this.AutoUpdateMapsCheckBox.AutoSize = true;
+            this.AutoUpdateMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.AutoUpdateMapsCheckBox.CheckForeColor = System.Drawing.Color.Red;
+            this.AutoUpdateMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(295, 144);
+            this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
+            this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(146, 17);
+            this.AutoUpdateMapsCheckBox.TabIndex = 5;
+            this.AutoUpdateMapsCheckBox.Text = "Update all maps at startup";
+            this.MainToolTip.SetToolTip(this.AutoUpdateMapsCheckBox, "Do an update of all maps at startup (may take a bit of extra time)");
+            this.AutoUpdateMapsCheckBox.UseVisualStyleBackColor = true;
+            this.AutoUpdateMapsCheckBox.Click += new System.EventHandler(this.AutoUpdateMaps_Click);
+            // 
+            // OnlyUpdateExistingMapsCheckBox
+            // 
+            this.OnlyUpdateExistingMapsCheckBox.AutoSize = true;
+            this.OnlyUpdateExistingMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.OnlyUpdateExistingMapsCheckBox.CheckForeColor = System.Drawing.Color.Red;
+            this.OnlyUpdateExistingMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(295, 167);
+            this.OnlyUpdateExistingMapsCheckBox.Name = "OnlyUpdateExistingMapsCheckBox";
+            this.OnlyUpdateExistingMapsCheckBox.Size = new System.Drawing.Size(146, 17);
+            this.OnlyUpdateExistingMapsCheckBox.TabIndex = 5;
+            this.OnlyUpdateExistingMapsCheckBox.Text = "Only update existing maps";
+            this.MainToolTip.SetToolTip(this.OnlyUpdateExistingMapsCheckBox, "Only update map ZIP files already on disk");
+            this.OnlyUpdateExistingMapsCheckBox.UseVisualStyleBackColor = true;
+            this.OnlyUpdateExistingMapsCheckBox.CheckedChanged += new System.EventHandler(this.OnlyUpdateExistingMapsCheckBox_CheckedChanged);
             // 
             // MapUnhideAllButton
             // 
@@ -964,6 +932,23 @@
             this.StartStopOlproxyButton.UseVisualStyleBackColor = true;
             this.StartStopOlproxyButton.Click += new System.EventHandler(this.StartStopOlproxyButton_Click);
             // 
+            // UseOlproxyCheckBox
+            // 
+            this.UseOlproxyCheckBox.AutoSize = true;
+            this.UseOlproxyCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.UseOlproxyCheckBox.Checked = true;
+            this.UseOlproxyCheckBox.CheckForeColor = System.Drawing.Color.Red;
+            this.UseOlproxyCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UseOlproxyCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UseOlproxyCheckBox.Location = new System.Drawing.Point(12, 12);
+            this.UseOlproxyCheckBox.Name = "UseOlproxyCheckBox";
+            this.UseOlproxyCheckBox.Size = new System.Drawing.Size(80, 17);
+            this.UseOlproxyCheckBox.TabIndex = 5;
+            this.UseOlproxyCheckBox.Text = "Use Olproxy";
+            this.MainToolTip.SetToolTip(this.UseOlproxyCheckBox, "Start Olproxy when Overload/Olmod is started");
+            this.UseOlproxyCheckBox.UseVisualStyleBackColor = true;
+            this.UseOlproxyCheckBox.CheckedChanged += new System.EventHandler(this.UseOlproxy_CheckedChanged);
+            // 
             // PaneOverload
             // 
             this.PaneOverload.BackColor = System.Drawing.Color.LightSlateGray;
@@ -1149,10 +1134,10 @@
             this.UseOlmodGameDirArg.Checked = true;
             this.UseOlmodGameDirArg.CheckForeColor = System.Drawing.Color.Red;
             this.UseOlmodGameDirArg.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseOlmodGameDirArg.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.UseOlmodGameDirArg.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.UseOlmodGameDirArg.Location = new System.Drawing.Point(312, 17);
             this.UseOlmodGameDirArg.Name = "UseOlmodGameDirArg";
-            this.UseOlmodGameDirArg.Size = new System.Drawing.Size(118, 17);
+            this.UseOlmodGameDirArg.Size = new System.Drawing.Size(117, 17);
             this.UseOlmodGameDirArg.TabIndex = 5;
             this.UseOlmodGameDirArg.Text = "Use -gamedir option";
             this.MainToolTip.SetToolTip(this.UseOlmodGameDirArg, "Enable this to use Olmod \'-gamedir\' to tell Olmod where Overload is installed");
@@ -1162,17 +1147,36 @@
             // AutoUpdateOlmod
             // 
             this.AutoUpdateOlmod.AutoSize = true;
+            this.AutoUpdateOlmod.CheckBackColor = System.Drawing.Color.Gray;
             this.AutoUpdateOlmod.Checked = true;
+            this.AutoUpdateOlmod.CheckForeColor = System.Drawing.Color.Red;
             this.AutoUpdateOlmod.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AutoUpdateOlmod.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.AutoUpdateOlmod.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AutoUpdateOlmod.Location = new System.Drawing.Point(146, 17);
             this.AutoUpdateOlmod.Name = "AutoUpdateOlmod";
-            this.AutoUpdateOlmod.Size = new System.Drawing.Size(115, 17);
+            this.AutoUpdateOlmod.Size = new System.Drawing.Size(114, 17);
             this.AutoUpdateOlmod.TabIndex = 5;
             this.AutoUpdateOlmod.Text = "Auto-update Olmod";
             this.MainToolTip.SetToolTip(this.AutoUpdateOlmod, "Enable this to automatically update Olmod when OCT starts");
             this.AutoUpdateOlmod.UseVisualStyleBackColor = true;
             this.AutoUpdateOlmod.CheckedChanged += new System.EventHandler(this.AutoUpdateOlmod_CheckedChanged);
+            // 
+            // UseOlmodCheckBox
+            // 
+            this.UseOlmodCheckBox.AutoSize = true;
+            this.UseOlmodCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.UseOlmodCheckBox.Checked = true;
+            this.UseOlmodCheckBox.CheckForeColor = System.Drawing.Color.Red;
+            this.UseOlmodCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UseOlmodCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UseOlmodCheckBox.Location = new System.Drawing.Point(25, 17);
+            this.UseOlmodCheckBox.Name = "UseOlmodCheckBox";
+            this.UseOlmodCheckBox.Size = new System.Drawing.Size(75, 17);
+            this.UseOlmodCheckBox.TabIndex = 5;
+            this.UseOlmodCheckBox.Text = "Use Olmod";
+            this.MainToolTip.SetToolTip(this.UseOlmodCheckBox, "If checked then Olmod will be used to run Overload");
+            this.UseOlmodCheckBox.UseVisualStyleBackColor = true;
+            this.UseOlmodCheckBox.CheckedChanged += new System.EventHandler(this.UseOlmod_CheckedChanged);
             // 
             // PaneButtonLine
             // 
@@ -1423,7 +1427,6 @@
         private System.Windows.Forms.Button StartStopButton;
         private System.Windows.Forms.Button ExitButton;
         private System.Windows.Forms.Button MapUpdateButton;
-        private System.Windows.Forms.CheckBox UseEmbeddedOlproxy;
         private System.Windows.Forms.NotifyIcon OverloadClientToolNotifyIcon;
         private System.Windows.Forms.TextBox OnlineMapJsonUrl;
         private System.Windows.Forms.PictureBox UpdatingMaps;
@@ -1471,7 +1474,6 @@
         private System.Windows.Forms.ToolTip MainToolTip;
         private System.Windows.Forms.LinkLabel OverloadLog;
         private System.Windows.Forms.LinkLabel MailLinkLabel;
-        private System.Windows.Forms.CheckBox AutoUpdateOlmod;
         private System.Windows.Forms.Button UpdateOlmod;
         private System.Windows.Forms.LinkLabel PayPalLink;
         private System.Windows.Forms.TextBox PilotXPTextBox;
@@ -1513,6 +1515,8 @@
         private CustomCheckBox UseOlmodGameDirArg;
         private CustomCheckBox AutoUpdateCheckBox;
         private CustomCheckBox HideUnofficialMapsCheckBox;
+        private CustomCheckBox UseEmbeddedOlproxy;
+        private CustomCheckBox AutoUpdateOlmod;
     }
 }
 
