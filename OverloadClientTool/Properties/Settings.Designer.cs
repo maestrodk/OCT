@@ -26,12 +26,12 @@ namespace OverloadClientTool.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string OverloadPath {
+        public string Show {
             get {
-                return ((string)(this["OverloadPath"]));
+                return ((string)(this["Show"]));
             }
             set {
-                this["OverloadPath"] = value;
+                this["Show"] = value;
             }
         }
         
@@ -169,7 +169,7 @@ namespace OverloadClientTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool AutoSavePilots {
             get {
                 return ((bool)(this["AutoSavePilots"]));
@@ -193,7 +193,7 @@ namespace OverloadClientTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DebugLogging {
             get {
                 return ((bool)(this["DebugLogging"]));
@@ -272,6 +272,18 @@ namespace OverloadClientTool.Properties {
             }
             set {
                 this["ActiveThemeName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowFPS {
+            get {
+                return ((bool)(this["ShowFPS"]));
+            }
+            set {
+                this["ShowFPS"] = value;
             }
         }
     }

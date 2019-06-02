@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="OverloadClientTool.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="OverloadPath" Type="System.String" Scope="User">
+    <Setting Name="Show" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="OlproxyPath" Type="System.String" Scope="User">
@@ -39,13 +39,13 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="AutoSavePilots" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="OlmodPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DebugLogging" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="UpdateOnlyExistingMaps" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -64,6 +64,9 @@
     </Setting>
     <Setting Name="ActiveThemeName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Dark Gray</Value>
+    </Setting>
+    <Setting Name="ShowFPS" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -13,8 +13,8 @@ namespace OverloadClientTool
 
         public string OverloadPath
         {
-            get { return Properties.Settings.Default.OverloadPath; }
-            set { Properties.Settings.Default.OverloadPath = value; }
+            get { return Properties.Settings.Default.Show; }
+            set { Properties.Settings.Default.Show = value; }
         }
 
         public bool HideNonOfficialMaps
@@ -131,7 +131,13 @@ namespace OverloadClientTool
             get { return Properties.Settings.Default.AutoUpdateOCT; }
             set { Properties.Settings.Default.AutoUpdateOCT = value; }
         }
+        public bool ShowFPS
+        {
+            get { return Properties.Settings.Default.ShowFPS; }
+            set { Properties.Settings.Default.ShowFPS = value; }
+        }
 
+        
         public void SaveSettings()
         {
             Properties.Settings.Default.Save();
@@ -315,6 +321,7 @@ namespace OverloadClientTool
             UseOlmodGameDirArg.Checked = PassGameDirToOlmod;
             AutoUpdateOlmod.Checked = OlmodAutoUpdate;
             HideUnofficialMapsCheckBox.Checked = HideNonOfficialMaps;
+            FrameTimeCheckBox.Checked = ShowFPS;
 
             // Check for change to new theme selection.
             if (String.IsNullOrEmpty(ActiveThemeName)) ActiveThemeName = "Dark Gray";

@@ -146,7 +146,6 @@ namespace OverloadClientTool
             // Locate DLC folder.
             UpdateDLCLocation();
 
-
             // Announce ourself.
             Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen.");
             Info("Olproxy 0.3.0 by Arne de Bruijn.");
@@ -674,6 +673,7 @@ namespace OverloadClientTool
             if (OverloadClientToolApplication.ValidDirectoryName(Path.GetDirectoryName(OverloadExecutable.Text), true))
             {
                 gameDir = "-gamedir \"" + Path.GetDirectoryName(OverloadExecutable.Text) + "\" ";
+                if (ShowFPS) gameDir += "-frametime ";
             }
 
             if (AutoPilotsBackupCheckbox.Checked) PilotBackupButton_Click(null, null);
@@ -1428,7 +1428,7 @@ namespace OverloadClientTool
             get
             {
                 // Check Olmod version (using GameMod.dll).
-                string olmodVersion = OverloadClientToolApplication.GetFileVersion(OlmodPath.Replace("Olmod.exe", "GameMod.dll"));
+                string olmodVersion = OverloadClientToolApplication.GetFileVersion(OlmodPath.ToLower().Replace("olmod.exe", "GameMod.dll"));
                 olmodVersion = OverloadClientToolApplication.VersionStringFix(olmodVersion);
                 return String.Format($"Olmod {olmodVersion} by Arne de Bruijn.");
             }
@@ -1676,6 +1676,11 @@ namespace OverloadClientTool
 
             // Draw the current item text
             e.Graphics.DrawString(text, treeViewFont, new SolidBrush(color), e.Bounds, StringFormat.GenericDefault);
+        }
+
+        private void FrameTimeCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowFPS = FrameTimeCheckBox.Checked;
         }
     }
 }
