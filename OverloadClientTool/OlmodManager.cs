@@ -23,25 +23,16 @@ namespace OverloadClientTool
 
         // The loggers must be able to resolve any thread/invoke issues.
         private LogMessageDelegate infoLogger = null;
-        private LogMessageDelegate errorLogger = null;
+        private LogMessageDelegate verboseLogger = null;
 
-        public OlmodManager()
+        private OlmodManager()
         {
         }
 
-        public OlmodManager(LogMessageDelegate logger = null) : base()
+        public OlmodManager(LogMessageDelegate infoLogger = null, LogMessageDelegate verboseLogger = null)
         {
-            if (logger != null)
-            {
-                this.infoLogger = logger;
-                this.errorLogger = logger;
-            }
-        }
-
-        public OlmodManager(LogMessageDelegate infoLogger = null, LogMessageDelegate errorLogger = null) : base()
-        {
-            if (infoLogger != null) this.infoLogger = infoLogger;
-            if (errorLogger != null) this.errorLogger = errorLogger;
+            this.infoLogger = infoLogger;
+            this.verboseLogger = verboseLogger;
         }
 
         /// <summary>
@@ -53,21 +44,12 @@ namespace OverloadClientTool
             infoLogger?.Invoke(s);
         }
 
-        // Set delegate for logging.
-        public void SetLogger(LogMessageDelegate logger = null, LogMessageDelegate errorLogger = null)
-        {
-            this.infoLogger = logger;
-            if (this.errorLogger == null)
-            {
-                if (errorLogger == null) this.errorLogger = logger;
-                else this.errorLogger = errorLogger;
-            }
-        }
-
         // Log an error message.
-        void LogErrorMessage(string s)
+        void LogVerboseMessage(string s)
         {
-            LogMessage(s);
+            if (verboseLogger != null) verboseLogger?.Invoke(s);
+            else LogMessage(s);
+
             Debug.WriteLine(s);
         }
 
@@ -114,7 +96,7 @@ namespace OverloadClientTool
                 }
                 catch (Exception ex)
                 {
-                    LogErrorMessage(String.Format($"Cannot get Olmod JSON release info: {ex.Message}"));
+                    LogVerboseMessage($"Cannot get Olmod JSON release info: {ex.Message}");
                 }
 
                 return null;
@@ -148,11 +130,11 @@ namespace OverloadClientTool
                 File.SetCreationTime(Path.Combine(localInstallFolder, "olmod.exe"), release.Created);
                 File.SetLastWriteTime(Path.Combine(localInstallFolder, "olmod.exe"), release.Created);
 
-                LogMessage(String.Format($"Olmod has been updated."));
+                LogVerboseMessage($"Olmod has been updated.");
             }
             catch (Exception ex)
             {
-                LogErrorMessage(String.Format($"Cannot download/install Olmod: {ex.Message}"));
+                LogVerboseMessage($"Cannot download/install Olmod: {ex.Message}");
             }
             finally
             {

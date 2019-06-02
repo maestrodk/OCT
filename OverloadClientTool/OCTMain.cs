@@ -19,7 +19,6 @@ namespace OverloadClientTool
         public Theme theme = Theme.GetDarkGrayTheme;
 
         private bool autoStart = false;
-        private ListViewLogger logger = null;
 
         // This matches MJDict defined on Olproxy.
         private Dictionary<string, object> olproxyConfig = new Dictionary<string, object>();
@@ -68,6 +67,12 @@ namespace OverloadClientTool
 
             // Initialize controls on main form.
             InitializeComponent();
+
+            // Setup tooltip.
+            MainToolTip.OwnerDraw = true;
+            MainToolTip.IsBalloon = false;
+            MainToolTip.Draw += MainToolTip_Draw;
+            MainToolTip.Popup += MainToolTip_Popup;
 
             // Center main form on Desktop.
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -126,18 +131,15 @@ namespace OverloadClientTool
         {
             LogDebugMessage("Main_Load()");
 
-            // Start logging (default is paused state, will be enabled when startup is complete).
-            logger = new ListViewLogger(ActivityListView, theme, this);
-
             // Set controls colors according to the selected theme.
             UpdateTheme(theme);
-           
+
             // Focus the first pane.
             paneController.SwitchToPane(PaneSelectMain);
 
             // Make sure no text is selected.
             Unfocus();
-              
+
             // Check settings and update buttons.
             ValidateSettings();
 
@@ -161,7 +163,7 @@ namespace OverloadClientTool
             if (OlmodAutoUpdate) UpdateOlmod_Click(null, null);
 
             if (OverloadClientToolApplication.ValidFileName(OlmodPath, true)) Info($"{OlmodVersionInfo}");
-            else Info("Olmod not foundo.");
+            else Verbose("Cannot locate Olmod.");
 
             // Check for startup options.
             // OverloadClientToolNotifyIcon.Icon = Properties.Resources.OST;
@@ -257,24 +259,28 @@ namespace OverloadClientTool
             }
         }
 
-        private void Info(string text)
+        private void AddNewLogMessage(string text, bool error = false)
         {
-            logger?.InfoLogMessage(text);
+            this.UIThread(delegate
+            {
+                string prefixedText = DateTime.Now.ToString("HH:mm:ss") + " " + text;
+                LogTreeViewText(prefixedText, error);
+            });
         }
 
-        private void Warning(string text)
+        private void Info(string text)
         {
-            logger?.WarningLogMessage(text);
+            AddNewLogMessage(text);
         }
 
         private void Verbose(string text)
         {
-            logger?.VerboseLogMessage(text);
+            AddNewLogMessage(text, true);
         }
-   
+
         private void Error(string text)
         {
-            logger?.ErrorLogMessage(text);
+            AddNewLogMessage(text, true);
         }
 
         /// <summary>
@@ -414,7 +420,12 @@ namespace OverloadClientTool
         {
             while (true)
             {
-                Thread.Sleep(2000);
+                Thread.Sleep(250);
+                CycleTheme();
+                Thread.Sleep(250);
+                CycleTheme();
+                Thread.Sleep(250);
+                CycleTheme();
 
                 bool overloadRunning = IsOverloadRunning;
                 bool olproxyRunning = IsOlproxyRunning;
@@ -476,6 +487,26 @@ namespace OverloadClientTool
                     StatusMessage.Text = statusText;
                 });
             }
+        }
+
+        private void CycleTheme()
+        {
+            this.UIThread(delegate
+            {
+                if (!PartyModeCheckBox.Checked) return;
+
+                try
+                {
+                    if (AvailableThemesListBox.SelectedIndex >= 0)
+                    {
+                        if (AvailableThemesListBox.SelectedIndex == 6) AvailableThemesListBox.SelectedIndex = 0;
+                        else AvailableThemesListBox.SelectedIndex++;
+                    }
+                }
+                catch
+                {
+                }
+            });
         }
 
         private void ValidateSettings()
@@ -582,23 +613,9 @@ namespace OverloadClientTool
             }
         }
 
-        private void StartUp(bool useOlmod, bool useOlproxy)
-        {
-            Thread startOverloadThread = new Thread(LaunchOverload);
-            startOverloadThread.IsBackground = true;
-            startOverloadThread.Start();
-
-            if (useOlproxy)
-            {
-                Thread startOlproxyThread = new Thread(LaunchOlproxy);
-                startOlproxyThread.IsBackground = true;
-                startOlproxyThread.Start();
-            }
-        }
-
         private void LaunchOlproxy()
         {
-            Verbose("Starting up Olproxy.");
+            Info("Starting up Olproxy.");
 
             string name = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
             string args = OlproxyArgs.Text;
@@ -645,9 +662,7 @@ namespace OverloadClientTool
 
         private void LaunchOverload()
         {
-            Verbose("Starting up");
-
-            string overloadPath = Path.GetDirectoryName(OverloadExecutable.Text);
+             string overloadPath = Path.GetDirectoryName(OverloadExecutable.Text);
             string overloadExe = Path.Combine(overloadPath, "overload.exe");
             string olmodExe = Path.Combine(overloadPath, "olmod.exe");
 
@@ -697,7 +712,16 @@ namespace OverloadClientTool
                 if (process.ProcessName.ToLower() == name) running++;
             }
 
-            if (running == 1) return;
+            if (running == 1)
+            {
+                if (name.ToLower().Contains("olmod")) Info("Overload (Olmod) ís already running.");
+                else Info("Overload is already running.");
+
+                return;
+            }
+
+            if (name.ToLower().Contains("olmod")) Info("Starting up Overload (via Olmod).");
+            else Info("Starting up Overload.");
 
             // If more than one is running we kill the all and start fresh instance.
             if (running > 1) KillRunningProcess(name);
@@ -732,7 +756,7 @@ namespace OverloadClientTool
 
         private void StopButton_Click(object sender, EventArgs e)
         {
-            Verbose("Shutting down active tasks.");
+            Info("Shutting down active tasks.");
 
             ValidateButton(StartStopButton, theme);
 
@@ -1403,7 +1427,8 @@ namespace OverloadClientTool
         {
             get
             {
-                string olmodVersion = OverloadClientToolApplication.GetFileVersion(OlmodPath);
+                // Check Olmod version (using GameMod.dll).
+                string olmodVersion = OverloadClientToolApplication.GetFileVersion(OlmodPath.Replace("Olmod.exe", "GameMod.dll"));
                 olmodVersion = OverloadClientToolApplication.VersionStringFix(olmodVersion);
                 return String.Format($"Olmod {olmodVersion} by Arne de Bruijn.");
             }
@@ -1425,7 +1450,7 @@ namespace OverloadClientTool
             }
             catch
             {
-            }            
+            }
         }
 
         private void StartStopOlproxyButton_Click(object sender, EventArgs e)
@@ -1443,7 +1468,7 @@ namespace OverloadClientTool
             // Either we are shutting down or user wants to shut down Olproxy.
             if (IsOlproxyRunning)
             {
-                Verbose("Shutting down Olproxy.");
+                Info("Shutting down Olproxy.");
 
                 // ValidateButton(StartButton, theme);
                 // Defocus();
@@ -1498,7 +1523,7 @@ namespace OverloadClientTool
 
             // Draw the current item text
             e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.PanelForeColor), e.Bounds, StringFormat.GenericDefault);
-            
+
             // If the ListBox has focus, draw a focus rectangle around the selected item.
             e.DrawFocusRectangle();
         }
@@ -1506,7 +1531,7 @@ namespace OverloadClientTool
         private void AvailableThemesListBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0) return;
-    
+
             // If the item state is selected them change the back color.
             if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
             {
@@ -1517,7 +1542,7 @@ namespace OverloadClientTool
                                           e.State ^ DrawItemState.Selected,
                                           e.ForeColor,
                                           theme.ActivePaneButtonBackColor);
-            }          
+            }
 
             // Draw the background of the ListBox control for each item.
             e.DrawBackground();
@@ -1581,17 +1606,76 @@ namespace OverloadClientTool
             e.DrawFocusRectangle();
         }
 
+        string temptooltiptext = "";
+
         private void MainToolTip_Draw(object sender, DrawToolTipEventArgs e)
         {
-            Font f = new Font("Calibri", 8.0f);
+            Font tooltipFont = new Font("Calibri", 9.0f);
             e.DrawBackground();
-            e.DrawBorder();            
-            e.Graphics.DrawString(e.ToolTipText, f, Brushes.Black, new PointF(2, 2));
+            e.DrawBorder();
+            temptooltiptext = e.ToolTipText;
+            e.Graphics.DrawString(e.ToolTipText, tooltipFont, Brushes.Black, new PointF(2, 2));
         }
 
         private void MainToolTip_Popup(object sender, PopupEventArgs e)
         {
-            e.ToolTipSize = TextRenderer.MeasureText(MainToolTip.GetToolTip(e.AssociatedControl), new Font("Calibri", 8.0f));
+            e.ToolTipSize = TextRenderer.MeasureText(MainToolTip.GetToolTip(e.AssociatedControl), new Font("Calibri", 9.0f));
+        }
+
+        private void AutoPilotsBackupCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            AutoSavePilots = AutoPilotsBackupCheckbox.Checked;
+        }
+
+        private void AutoUpdateCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            AutoUpdateOCT = AutoUpdateCheckBox.Checked;
+        }
+
+        private Font treeViewFont = new Font("Calibri", 9f, FontStyle.Regular);
+
+        public void LogTreeViewText(string text, bool error = false)
+        {
+            if (LogTreeView.Nodes.Count > 999) LogTreeView.Nodes[0].Remove();
+
+            LogTreeView.Nodes.Add(text);
+ 
+            LogTreeView.ShowNodeToolTips = true;
+            TreeNode node = LogTreeView.Nodes[LogTreeView.Nodes.Count - 1];
+            node.ToolTipText = text;
+            node.Tag = (error) ? "Error" : "Ihfo";
+
+            LogTreeView.Nodes[LogTreeView.Nodes.Count - 1].EnsureVisible();
+        }
+
+        private void LogTreeView_DrawNode(object sender, DrawTreeNodeEventArgs e)
+        {
+            int elipsisLen = 50;
+            int maxLen = 55;
+
+            String text = e.Node.Text;
+
+            Rectangle rect = new Rectangle(0, e.Node.Bounds.Y, LogTreeView.Width, e.Node.Bounds.Height);
+
+            Size size = TextRenderer.MeasureText(text as string, treeViewFont);
+            while (size.Width > (rect.Width + 8))
+            {
+                text = text.Substring(0, text.Length - 3);
+                size = TextRenderer.MeasureText(text as string, treeViewFont);
+            }
+
+            if (text.Length < e.Node.Text.Length) text += "...";
+
+            // Draw the background of the ListBox control for each item.
+            rect.Y++;
+            e.Graphics.FillRectangle(new SolidBrush(theme.InputBackColor), rect);
+            rect.Y--;
+
+            Color color = theme.InputForeColor;
+            if (((String)e.Node.Tag).ToLower().Contains("error")) color = theme.TextHighlightColor;
+
+            // Draw the current item text
+            e.Graphics.DrawString(text, treeViewFont, new SolidBrush(color), e.Bounds, StringFormat.GenericDefault);
         }
     }
 }

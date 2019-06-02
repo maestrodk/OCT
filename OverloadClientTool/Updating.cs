@@ -13,11 +13,6 @@ namespace OverloadClientTool
 {
     public partial class OCTMain : Form
     {
-        private void AutoUpdateCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            AutoUpdateOCT = AutoUpdateCheckBox.Checked;
-        }
-
         private void ForceUpdateButton_Click(object sender, EventArgs e)
         {
             SaveSettings();

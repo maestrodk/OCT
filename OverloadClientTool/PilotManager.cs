@@ -592,10 +592,5 @@ namespace OverloadClientTool
                 GetPilotXP(null);
             }
         }
-
-        private void AutoPilotsBackupCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            AutoSavePilots = AutoPilotsBackupCheckbox.Checked;
-        }
     }
 }

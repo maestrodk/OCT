@@ -157,7 +157,7 @@ namespace OverloadClientTool
                 string dvdLocation = null;
 
                 // Check for a STEAM install of Overload.
-                logger?.ErrorLogMessage(String.Format($"Checking for STEAM registry key."));
+                Info(String.Format($"Checking for STEAM registry key."));
 
                 try
                 {
@@ -211,7 +211,7 @@ namespace OverloadClientTool
                 }
 
                 // Check for a GOG install of Overload.
-                logger?.ErrorLogMessage(String.Format($"Checking for GOG registry key."));
+                Info(String.Format($"Checking for GOG registry key."));
 
                 try
                 {
@@ -230,7 +230,7 @@ namespace OverloadClientTool
                 }
 
                 // Check for a DVD install of Overload (KickStarter backer DVD).
-                logger?.ErrorLogMessage(String.Format($"Checking for DVD registry key."));
+                Info(String.Format($"Checking for DVD registry key."));
                 try
                 {
                     using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
@@ -251,7 +251,7 @@ namespace OverloadClientTool
 
                 if (String.IsNullOrEmpty(initPath))
                 {
-                    logger?.ErrorLogMessage(String.Format($"Unable to autolocate Overload installation!"));
+                    Info(String.Format($"Unable to autolocate Overload installation!"));
                     initPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
                 }
 
@@ -343,7 +343,6 @@ namespace OverloadClientTool
 
             // Apply theme to specific controls.
             paneController.SetTheme(theme);
-            logger?.SetTheme(theme);
 
             ValidateSettings();
         }
@@ -363,18 +362,18 @@ namespace OverloadClientTool
 
                 foreach (Control child in control.Controls) child.ForeColor = theme.PanelForeColor;
             }
-            else if ((control.Name == "PilotsPanel") || (control.Name == "MapsPanel") || (control.Name == "ActiveThemePanel") || (control.Name == "ActivityLogPanel"))
+            else if ((control.Name == "PilotsPanel") || (control.Name == "MapsPanel") || (control.Name == "ActiveThemePanel") || (control.Name == "ActivityLogPanel") || (control.Name == "TreeViewLogPanel"))
             {
                 // These panels contain a single listbox child control.
                 // The panel is used to create a border around them.
                 control.BackColor = theme.TextHighlightColor;
             }
-            else if ((control is TextBox) || (control is RichTextBox) || (control is ListBox) || (control is ListView) || (control is TabPage))
+            else if ((control is TextBox) || (control is RichTextBox) || (control is ListBox) || (control is ListView) || (control is TabPage) || (control is TreeView))
             {
                 control.BackColor = theme.InputBackColor;
                 control.ForeColor = theme.InputForeColor;
             }
-            else if ((control is ListBox) || (control is ListView) || (control is TabPage))
+            else if ((control is ListBox) || (control is ListView) || (control is TreeView))
             {
                 control.BackColor = theme.InputBackColor;
                 control.ForeColor = theme.InputForeColor;

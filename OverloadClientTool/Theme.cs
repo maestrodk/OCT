@@ -377,7 +377,7 @@ namespace OverloadClientTool
                 theme.InputBackColor = Color.FromArgb(24, 16, 8);
                 theme.InputForeColor = Color.FromArgb(160, 96, 32);
 
-                theme.TextHighlightColor = Color.FromArgb(255, 160, 160);
+                theme.TextHighlightColor = Color.FromArgb(255, 192, 160);
 
                 theme.InvalidForeColor = Color.Coral;
 

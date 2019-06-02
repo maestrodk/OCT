@@ -69,6 +69,8 @@ namespace OverloadClientTool
             catch (Exception ex)
             {
                 LogDebugMessage(String.Format($"OCT exited due to an unexpected error: {ex.Message} at {ex.TargetSite}"), debugFileName);
+                string message = $"OCT crashed due to an unexpected error: {ex.Message} at {ex.TargetSite}";
+                MessageBox.Show(message, "Internal error");
             }
         }
 
