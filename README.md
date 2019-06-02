@@ -22,6 +22,8 @@ OCT is a Windows GUI front end for Overload
 
 - Map manager to auto/manually update maps (with an option to only update existing maps)
 
+- Map manager can auto-hide unofficial maps (prevents Overload from getting confused)
+
 - Supports both Overload Application Data folder and Overload DLC folder for maps
 
 - Supports moving of maps between Application Data folder and Overload DLC folder
@@ -30,9 +32,9 @@ OCT is a Windows GUI front end for Overload
 
 - Pilot manager to clone/delete/rename/backup pilots
 
-- Pilot XP feature to set XP to any value between 0..99999
+- Pilot XP feature to set XP to any value between 0..999999
 
-- Light/dark themes
+- Many different color themes to choose from
 
 #### Notes:
 
