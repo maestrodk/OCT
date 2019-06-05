@@ -203,7 +203,7 @@ namespace OverloadClientTool
             Properties.Settings.Default.Save();
         }
 
-        public void FindOverloadInstall(bool onlyOverload = false)
+        public void FindOverloadInstall(bool onlyOverload = false, bool showInfo = false)
         {
             LogDebugMessage("FindOverloadInstall()");
 
@@ -223,7 +223,7 @@ namespace OverloadClientTool
                 string dvdLocation = null;
 
                 // Check for a STEAM install of Overload.
-                Info(String.Format($"Checking for STEAM registry key."));
+                if (showInfo) Info(String.Format($"Checking for STEAM registry key."));
 
                 try
                 {
@@ -277,7 +277,7 @@ namespace OverloadClientTool
                 }
 
                 // Check for a GOG install of Overload.
-                Info(String.Format($"Checking for GOG registry key."));
+                if (showInfo) Info(String.Format($"Checking for GOG registry key."));
 
                 try
                 {
@@ -296,7 +296,8 @@ namespace OverloadClientTool
                 }
 
                 // Check for a DVD install of Overload (KickStarter backer DVD).
-                Info(String.Format($"Checking for DVD registry key."));
+                if (showInfo) Info(String.Format($"Checking for DVD registry key."));
+
                 try
                 {
                     using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
@@ -317,7 +318,7 @@ namespace OverloadClientTool
 
                 if (String.IsNullOrEmpty(initPath))
                 {
-                    Info(String.Format($"Unable to autolocate Overload installation!"));
+                    Error(String.Format($"Unable to autolocate Overload installation!"));
                     initPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
                 }
 

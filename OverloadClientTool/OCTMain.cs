@@ -926,7 +926,7 @@ namespace OverloadClientTool
 
         private void SearchOverloadButton_Click(object sender, EventArgs e)
         {
-            FindOverloadInstall();
+            FindOverloadInstall(false, true);
         }
 
         private void OlmodExecutable_DoubleClick(object sender, EventArgs e)
