@@ -81,9 +81,14 @@ namespace OverloadClientTool
         public Color PanelBackColor { get; set; }
 
         /// <summary>
-        /// Text color for forms, panels and group boxes.
+        /// Active control forecolor for forms, panels and group boxes.
         /// </summary>
         public Color PanelForeColor { get; set; }
+
+        /// <summary>
+        /// Inactive control forecolor for forms, panels and group boxes.
+        /// </summary>
+        public Color PanelInactiveForeColor { get; set; }
 
         /// <summary>
         /// Text color for invalid data in a TextBox/RichTextBox.
@@ -149,10 +154,10 @@ namespace OverloadClientTool
                 // Links.
                 theme.TextHighlightColor = Color.FromArgb(224, 224, 224);
 
-                // Pane background and labels.
+                // Pane background and general text colors.
                 theme.PanelBackColor = Color.FromArgb(0, 0, 0);
                 theme.PanelForeColor = theme.ButtonEnabledForeColor;
-
+                
                 theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
                 theme.ActivePaneButtonForeColor = theme.ButtonEnabledForeColor;
 
@@ -192,6 +197,7 @@ namespace OverloadClientTool
 
                 theme.PanelBackColor = Color.FromArgb(24, 24, 24);
                 theme.PanelForeColor = theme.InputForeColor;
+                theme.PanelInactiveForeColor = Color.Gray;
 
                 theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
                 theme.ActivePaneButtonForeColor = Color.White;

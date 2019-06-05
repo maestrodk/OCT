@@ -18,6 +18,9 @@ namespace OverloadClientTool
         // Set a default them (might change when reading settings).
         public Theme theme = Theme.GetDarkGrayTheme;
 
+        // Shortcut link for Startupt folde (if file exists the autostart is enabled).
+        string shortcutFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "OverLoad Client Tool AutoStart.lnk");
+
         private bool autoStart = false;
 
         // This matches MJDict defined on Olproxy.
@@ -59,7 +62,7 @@ namespace OverloadClientTool
 
             foreach (string a in args)
             {
-                //if (a.ToLower().Contains("-launched")) autoStart = true;
+                if (a.ToLower().Contains("-launched")) autoStart = true;
             }
 
             // Init map manager.
@@ -67,12 +70,6 @@ namespace OverloadClientTool
 
             // Initialize controls on main form.
             InitializeComponent();
-
-            // Setup tooltip.
-            MainToolTip.OwnerDraw = true;
-            MainToolTip.IsBalloon = false;
-            MainToolTip.Draw += MainToolTip_Draw;
-            MainToolTip.Popup += MainToolTip_Popup;
 
             // Center main form on Desktop.
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -86,6 +83,7 @@ namespace OverloadClientTool
             paneController.SetupPaneButton(PaneSelectOverload, PaneOverload);
             paneController.SetupPaneButton(PaneSelectOlproxy, PaneOlproxy);
             paneController.SetupPaneButton(PaneSelectOlmod, PaneOlmod);
+            paneController.SetupPaneButton(PaneSelectServer, PaneServer);
             paneController.SetupPaneButton(PaneSelectOptions, PaneOptions);
 
             // Load user preferences.
@@ -125,6 +123,57 @@ namespace OverloadClientTool
             olproxyConfig.Add("trackerBaseUrl", "");
             olproxyConfig.Add("serverName", "");
             olproxyConfig.Add("notes", "");
+
+            // Set Olproxy config.
+            UpdateOlproxyConfig();
+        }
+
+        /// <summary>
+        /// Creates or deletes shortcut link to startup OST.
+        /// </summary>
+        /// <param name="create"></param>
+        /// <returns></returns>
+        private bool SetAutoStartup(bool create)
+        {
+            if (create)
+            {
+                try
+                {
+                    string appname = Assembly.GetExecutingAssembly().FullName.Remove(Assembly.GetExecutingAssembly().FullName.IndexOf(","));
+                    string shortcutTarget = System.IO.Path.Combine(Application.StartupPath, appname + ".exe");
+
+                    WshShell myShell = new WshShell();
+                    WshShortcut myShortcut = (WshShortcut)myShell.CreateShortcut(shortcutFileName);
+
+                    myShortcut.TargetPath = shortcutTarget;                 // Shortcut to OverloadServerTool.exe.
+                    myShortcut.IconLocation = shortcutTarget + ",0";        // Use default application icon.
+                    myShortcut.WorkingDirectory = Application.StartupPath;  // Working directory.
+                    myShortcut.Arguments = "-launched";                     // Parameters sent to OverloadServerTool.exe.
+                    myShortcut.Save();                                      // Create shortcut.
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Unable to create autostart shortcut: {ex.Message}");
+                }
+
+                return false;
+            }
+            else
+            {
+                try
+                {
+                    if (System.IO.File.Exists(shortcutFileName)) System.IO.File.Delete(shortcutFileName);
+                    else return false;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Unable to remove autostart shortcut: {ex.Message}");
+                }
+
+                return true;
+            }
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -164,24 +213,21 @@ namespace OverloadClientTool
             if (OverloadClientToolApplication.ValidFileName(OlmodPath, true)) Info($"{OlmodVersionInfo}");
             else Verbose("Cannot locate Olmod.");
 
+
             // Check for startup options.
-            // OverloadClientToolNotifyIcon.Icon = Properties.Resources.OST;
-            this.ShowInTaskbar = true;
+            OverloadClientToolNotifyIcon.Icon = Properties.Resources.oct_logo_484_12;
+            this.ShowInTaskbar = !UseTrayIcon.Checked;
+            OverloadClientToolNotifyIcon.Visible = UseTrayIcon.Checked;
 
             if (autoStart)
             {
-                if (false)
-                {
-                    this.ShowInTaskbar = false;
-                    this.WindowState = FormWindowState.Minimized;
-                    OverloadClientToolNotifyIcon.Visible = true;
-                }
+                if (UseTrayIcon.Checked) WindowState = FormWindowState.Minimized;
                 StartButton_Click(null, null);
             }
             else
             {
                 this.WindowState = FormWindowState.Normal;
-                this.ShowInTaskbar = true;
+                //OverloadServerToolNotifyIcon.Visible = false;
             }
 
             Defocus();
@@ -203,6 +249,7 @@ namespace OverloadClientTool
 
             Defocus();
         }
+
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Kill embedded Olproxy.
@@ -323,11 +370,24 @@ namespace OverloadClientTool
         /// <returns>A dictionary object matching MJDict</returns>
         private Dictionary<string, object> UpdateOlproxyConfig()
         {
-            olproxyConfig["isServer"] = false;
-            olproxyConfig["signOff"] = false;
-            olproxyConfig["trackerBaseUrl"] = "";
-            olproxyConfig["serverName"] = "";
-            olproxyConfig["notes"] = "";
+            if (!RunDedicatedServer)
+            {
+                // Overload client.
+                olproxyConfig["isServer"] = false;
+                olproxyConfig["signOff"] = false;
+                olproxyConfig["trackerBaseUrl"] = "";
+                olproxyConfig["serverName"] = "";
+                olproxyConfig["notes"] = "";
+            }
+            else
+            {
+                // Overload dedicated server.
+                olproxyConfig["isServer"] = ServerAnnounceOnTrackerCheckBox.Checked;
+                olproxyConfig["signOff"] = ServerAutoSignOffTracker.Checked;
+                olproxyConfig["trackerBaseUrl"] = ServerTrackerUrl.Text;
+                olproxyConfig["serverName"] = ServerTrackerName.Text;
+                olproxyConfig["notes"] = ServerTrackerNotes.Text;
+            }
             return olproxyConfig;
         }
 
@@ -435,11 +495,12 @@ namespace OverloadClientTool
                     OverloadLogFileCheck();
 
                     string statusText = "Ready for some Overload action!";
+                    string server = (RunDedicatedServer) ? " server" : "";
 
-                    if (overloadRunning && !olproxyRunning && !olmodRunning) statusText = "Overload is running.";
-                    else if (overloadRunning && olproxyRunning && !olmodRunning) statusText = "Overload and Olproxy (external) are running.";
-                    else if (olmodRunning && !olproxyRunning) statusText = "Overload (Olmod) is running.";
-                    else if (olmodRunning && olproxyRunning) statusText = "Overload (Olmod) and Olproxy are running.";
+                    if (overloadRunning && !olproxyRunning && !olmodRunning) statusText = $"Overload{server}is running.";
+                    else if (overloadRunning && olproxyRunning && !olmodRunning) statusText = $"Overload{server} and Olproxy (external) are running.";
+                    else if (olmodRunning && !olproxyRunning) statusText = $"Overload{server} (using Olmod) is running.";
+                    else if (olmodRunning && olproxyRunning) statusText = $"Overload{server} (using Olmod) and Olproxy are running.";
                     else if (olproxyRunning) statusText = "Olproxy is running.";
                     else
                     {
@@ -456,10 +517,14 @@ namespace OverloadClientTool
                     OverloadRunning.Visible = overloadRunning || olmodRunning;
                     OlproxyRunning.Visible = olproxyRunning;
 
+                    UpdateOlmodButton.Enabled = !olmodRunning;
+
+                    ServerEnableCheckBox.Enabled = !(overloadRunning || olmodRunning);
+
+                    ApplyThemeToControl(ServerEnableCheckBox, theme);
+
                     StartStopButton.Text = (overloadRunning || olmodRunning) ? "Stop" : "Start";
                     StartStopOlproxyButton.Text = (olproxyRunning) ? "Stop" : "Start";
-
-                    UpdateOlmod.Enabled = !olmodRunning;
 
                     if (StartStopButton.Enabled)
                     {
@@ -472,15 +537,15 @@ namespace OverloadClientTool
                         StartStopButton.ForeColor = theme.ButtonDisabledForeColor;
                     }
 
-                    if (UpdateOlmod.Enabled)
+                    if (UpdateOlmodButton.Enabled)
                     {
-                        UpdateOlmod.BackColor = theme.ButtonEnabledBackColor;
-                        UpdateOlmod.ForeColor = theme.ButtonEnabledForeColor;
+                        UpdateOlmodButton.BackColor = theme.ButtonEnabledBackColor;
+                        UpdateOlmodButton.ForeColor = theme.ButtonEnabledForeColor;
                     }
                     else
                     {
-                        UpdateOlmod.BackColor = theme.ButtonDisabledBackColor;
-                        UpdateOlmod.ForeColor = theme.ButtonDisabledForeColor;
+                        UpdateOlmodButton.BackColor = theme.ButtonDisabledBackColor;
+                        UpdateOlmodButton.ForeColor = theme.ButtonDisabledForeColor;
                     }
 
                     StatusMessage.Text = statusText;
@@ -661,20 +726,33 @@ namespace OverloadClientTool
 
         private void LaunchOverload()
         {
-             string overloadPath = Path.GetDirectoryName(OverloadExecutable.Text);
+            string overloadPath = Path.GetDirectoryName(OverloadExecutable.Text);
             string overloadExe = Path.Combine(overloadPath, "overload.exe");
             string olmodExe = Path.Combine(overloadPath, "olmod.exe");
 
             string name = null;
             string app = null;
 
+            // This will be enabled again by the background task.
+            this.UIThread(delegate 
+            {
+                ServerEnableCheckBox.Enabled = false;
+                ApplyThemeToControl(ServerEnableCheckBox, theme);
+            });
+
             // If Olmod is enabled check if we should pass Overload install folder.
-            string gameDir = "";
+            string olmodStartupArgs = "";
             if (OverloadClientToolApplication.ValidDirectoryName(Path.GetDirectoryName(OverloadExecutable.Text), true))
             {
-                gameDir = "-gamedir \"" + Path.GetDirectoryName(OverloadExecutable.Text) + "\" ";
-                if (ShowFPS) gameDir += "-frametime ";
+                olmodStartupArgs = " -gamedir \"" + Path.GetDirectoryName(OverloadExecutable.Text) + "\"";
+
+                if (ShowFPS && !olmodStartupArgs.ToLower().Contains("-frametime")) olmodStartupArgs += " -frametime";
+
+                if (RunDedicatedServer && !olmodStartupArgs.ToLower().Contains("-batchmode")) olmodStartupArgs += " -batchmode";
+                if (RunDedicatedServer && !olmodStartupArgs.ToLower().Contains("-nographics")) olmodStartupArgs += " -nographics";
             }
+
+            olmodStartupArgs = olmodStartupArgs.Trim();
 
             if (AutoPilotsBackupCheckbox.Checked) PilotBackupButton_Click(null, null);
 
@@ -720,15 +798,16 @@ namespace OverloadClientTool
                 return;
             }
 
-            if (name.ToLower().Contains("olmod")) Info("Starting up Overload (via Olmod).");
-            else Info("Starting up Overload.");
+            string server = (RunDedicatedServer) ? " dedicated server" : "";
+            if (name.ToLower().Contains("olmod")) Info($"Starting up Overload{server} (using Olmod).");
+            else Info($"Starting up Overload{server}.");
 
-            // If more than one is running we kill the all and start fresh instance.
+            // If more than one is running we kill them all and start fresh instance.
             if (running > 1) KillRunningProcess(name);
 
             // (Re)start application..
             Process appStart = new Process();
-            appStart.StartInfo = new ProcessStartInfo(Path.GetFileName(app), (gameDir + OverloadArgs.Text).Trim());
+            appStart.StartInfo = new ProcessStartInfo(Path.GetFileName(app), (olmodStartupArgs + OverloadArgs.Text).Trim());
             appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(app);
             appStart.Start();
         }
@@ -818,7 +897,7 @@ namespace OverloadClientTool
             if (WindowState == FormWindowState.Minimized)
             {
                 // Tray or minimize to task bar?
-                if (false)
+                if (UseTrayIcon.Checked)
                 {
                     Hide();
                     OverloadClientToolNotifyIcon.Visible = true;
@@ -829,7 +908,7 @@ namespace OverloadClientTool
         private void OverloadClientToolNotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Show();
-            OverloadClientToolNotifyIcon.Visible = false;
+            //OverloadClientToolNotifyIcon.Visible = false;
             WindowState = FormWindowState.Normal;
         }
 
@@ -916,7 +995,7 @@ namespace OverloadClientTool
         private void EnableDebugCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Debugging = EnableDebugCheckBox.Checked;
-            Info((EnableDebugCheckBox.Checked) ? "Debug logging enabled." : "Debug logging disabled.");
+            //Info((EnableDebugCheckBox.Checked) ? "Debug logging enabled." : "Debug logging disabled.");
         }
 
         private void OpenDebugFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1480,7 +1559,6 @@ namespace OverloadClientTool
 
         private void PilotXPTextBox_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void AvailableThemes_SelectedIndexChanged(object sender, EventArgs e)
@@ -1610,16 +1688,15 @@ namespace OverloadClientTool
 
         private void MainToolTip_Draw(object sender, DrawToolTipEventArgs e)
         {
-            Font tooltipFont = new Font("Calibri", 9.0f);
             e.DrawBackground();
             e.DrawBorder();
             temptooltiptext = e.ToolTipText;
-            e.Graphics.DrawString(e.ToolTipText, tooltipFont, Brushes.Black, new PointF(2, 2));
+            e.Graphics.DrawString(e.ToolTipText, treeViewFont, Brushes.Black, new PointF(2, 2));
         }
 
         private void MainToolTip_Popup(object sender, PopupEventArgs e)
         {
-            e.ToolTipSize = TextRenderer.MeasureText(MainToolTip.GetToolTip(e.AssociatedControl), new Font("Calibri", 9.0f));
+            //e.ToolTipSize = TextRenderer.MeasureText(MainToolTip.GetToolTip(e.AssociatedControl), new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular));
         }
 
         private void AutoPilotsBackupCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1632,7 +1709,7 @@ namespace OverloadClientTool
             AutoUpdateOCT = AutoUpdateCheckBox.Checked;
         }
 
-        private Font treeViewFont = new Font("Calibri", 9f, FontStyle.Regular);
+        private Font treeViewFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
 
         public void LogTreeViewText(string text, bool error = false)
         {
@@ -1650,14 +1727,11 @@ namespace OverloadClientTool
 
         private void LogTreeView_DrawNode(object sender, DrawTreeNodeEventArgs e)
         {
-            int elipsisLen = 50;
-            int maxLen = 55;
-
             String text = e.Node.Text;
 
             Rectangle rect = new Rectangle(0, e.Node.Bounds.Y, LogTreeView.Width, e.Node.Bounds.Height);
-
             Size size = TextRenderer.MeasureText(text as string, treeViewFont);
+
             while (size.Width > (rect.Width + 8))
             {
                 text = text.Substring(0, text.Length - 3);
@@ -1681,6 +1755,51 @@ namespace OverloadClientTool
         private void FrameTimeCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             ShowFPS = FrameTimeCheckBox.Checked;
+        }
+
+        #region Server
+        private void ServerTrackerName_TextChanged(object sender, EventArgs e)
+        {
+            OlproxyServerName = ServerTrackerName.Text;
+        }
+
+        private void ServerTrackerUrl_TextChanged(object sender, EventArgs e)
+        {
+            OlproxyTrackerBaseUrl = ServerTrackerUrl.Text;
+        }
+
+        private void ServerAnnounceOnTrackerCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            OlproxyIsServer = ServerAnnounceOnTrackerCheckBox.Checked;
+        }
+
+        private void ServerAutoSignOffTracker_CheckedChanged(object sender, EventArgs e)
+        {
+            OlproxySignOff = ServerAutoSignOffTracker.Checked;
+        }
+
+        private void AutoStartCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SetAutoStartup(AutoStartCheckBox.Checked);
+            StartWithWindows = AutoStartCheckBox.Checked;
+        }
+
+        private void ServerTrackerNotes_TextChanged(object sender, EventArgs e)
+        {
+            OlproxyNotes = ServerTrackerNotes.Text;
+        }
+
+        private void EnableServerCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            RunDedicatedServer = ServerEnableCheckBox.Checked;
+        }
+        #endregion
+
+        private void UseTrayIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            TrayInsteadOfTaskBar = UseTrayIcon.Checked;
+            ShowInTaskbar = !UseTrayIcon.Checked;
+            OverloadClientToolNotifyIcon.Visible = UseTrayIcon.Checked;
         }
     }
 }

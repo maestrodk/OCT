@@ -23,11 +23,10 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.HideNonOfficialMaps = value; }
         }
 
-        
-        public bool OlproxyEmbedded
+        public bool TrayIcon
         {
-            get { return Properties.Settings.Default.EmbeddedOlproxy; }
-            set { Properties.Settings.Default.EmbeddedOlproxy = value; }
+            get { return Properties.Settings.Default.TrayOnly; }
+            set { Properties.Settings.Default.TrayOnly = value; }
         }
 
         public string OlmodPath
@@ -48,12 +47,43 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.OlproxyPath = value; }
         }
 
-        public string MapListUrl
+        public string OlproxyTrackerBaseUrl
         {
-            get { return Properties.Settings.Default.MapListUrl; }
-            set { Properties.Settings.Default.MapListUrl = value; }
+            get { return Properties.Settings.Default.trackerBaseUrl; }
+            set { Properties.Settings.Default.trackerBaseUrl = value; }
         }
 
+        public string OlproxyNotes
+        {
+            get { return Properties.Settings.Default.notes; }
+            set { Properties.Settings.Default.notes = value; }
+        }
+
+        public string OlproxyServerName
+        {
+            get { return Properties.Settings.Default.serverName; }
+            set { Properties.Settings.Default.serverName = value; }
+        }
+
+        public bool OlproxySignOff
+        {
+            get { return Properties.Settings.Default.signOff; }
+            set { Properties.Settings.Default.signOff = value; }
+        }
+
+        public bool OlproxyIsServer
+        {
+            get { return Properties.Settings.Default.isServer; }
+            set { Properties.Settings.Default.isServer = value; }
+        }
+
+        public bool OlproxyEmbedded
+        {
+            get { return Properties.Settings.Default.EmbeddedOlproxy; }
+            set { Properties.Settings.Default.EmbeddedOlproxy = value; }
+        }
+
+ 
         public string OlproxyParameters
         {
             get { return Properties.Settings.Default.OlproxyParameters; }
@@ -102,6 +132,12 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.UseOlmod= value; }
         }
 
+        public string MapListUrl
+        {
+            get { return Properties.Settings.Default.MapListUrl; }
+            set { Properties.Settings.Default.MapListUrl = value; }
+        }
+
         public bool UpdateOnlyExistingMaps
         {
             get { return Properties.Settings.Default.UpdateOnlyExistingMaps; }
@@ -131,13 +167,37 @@ namespace OverloadClientTool
             get { return Properties.Settings.Default.AutoUpdateOCT; }
             set { Properties.Settings.Default.AutoUpdateOCT = value; }
         }
+
         public bool ShowFPS
         {
             get { return Properties.Settings.Default.ShowFPS; }
             set { Properties.Settings.Default.ShowFPS = value; }
         }
-
         
+        public bool RunDedicatedServer
+        {
+            get { return Properties.Settings.Default.RunDedicatedServer; }
+            set { Properties.Settings.Default.RunDedicatedServer = value; }
+        }
+
+        public bool StartWithWindows
+        {
+            get { return Properties.Settings.Default.StartWithWindows; }
+            set { Properties.Settings.Default.StartWithWindows = value; }
+        }
+
+        public bool StartMinimized
+        {
+            get { return Properties.Settings.Default.StartMinimized; }
+            set { Properties.Settings.Default.StartMinimized = value; }
+        }
+
+        public bool TrayInsteadOfTaskBar
+        {
+            get { return Properties.Settings.Default.TrayOnly; }
+            set { Properties.Settings.Default.TrayOnly = value; }
+        }
+
         public void SaveSettings()
         {
             Properties.Settings.Default.Save();
@@ -301,34 +361,49 @@ namespace OverloadClientTool
 
             if (String.IsNullOrEmpty(OverloadPath)) FindOverloadInstall();
 
-            OlmodExecutable.Text = OlmodPath;
-
             OverloadExecutable.Text = OverloadPath;
             OverloadArgs.Text = OverloadParameters;
 
             OlproxyExecutable.Text = OlproxyPath;
             OlproxyArgs.Text = OlproxyParameters;
-
-            UseEmbeddedOlproxy.Checked = OlproxyEmbedded;
-            UseOlmodCheckBox.Checked = UseOlmod;
             UseOlproxyCheckBox.Checked = UseOlproxy;
-            AutoUpdateMapsCheckBox.Checked = AutoUpdateMaps;
-            UseDLCLocationCheckBox.Checked = UseDLCLocation;
-            AutoPilotsBackupCheckbox.Checked = AutoSavePilots;
-            OnlyUpdateExistingMapsCheckBox.Checked = UpdateOnlyExistingMaps;
-            OnlineMapJsonUrl.Text = MapListUrl;
-            AutoUpdateCheckBox.Checked = AutoUpdateOCT;
-            UseOlmodGameDirArg.Checked = PassGameDirToOlmod;
+            UseEmbeddedOlproxy.Checked = OlproxyEmbedded;
+
+            OlmodExecutable.Text = OlmodPath;
             AutoUpdateOlmod.Checked = OlmodAutoUpdate;
-            HideUnofficialMapsCheckBox.Checked = HideNonOfficialMaps;
+            UseOlmodCheckBox.Checked = UseOlmod;
             FrameTimeCheckBox.Checked = ShowFPS;
+            UseOlmodGameDirArg.Checked = PassGameDirToOlmod;
+
+            // Map settings.
+            OnlineMapJsonUrl.Text = MapListUrl;
+            AutoUpdateMapsCheckBox.Checked = AutoUpdateMaps;
+            OnlyUpdateExistingMapsCheckBox.Checked = UpdateOnlyExistingMaps;
+            UseDLCLocationCheckBox.Checked = UseDLCLocation;
+            HideUnofficialMapsCheckBox.Checked = HideNonOfficialMaps;
+
+            // Pilot settings.
+            AutoPilotsBackupCheckbox.Checked = AutoSavePilots;
+
+            // General settings.
+            AutoUpdateCheckBox.Checked = AutoUpdateOCT;
+            EnableDebugCheckBox.Checked = Debugging;
+            UseTrayIcon.Checked = TrayIcon;
+
+            AutoStartCheckBox.Checked = StartWithWindows;
+            UseTrayIcon.Checked = TrayInsteadOfTaskBar;
+
+            // Server settings.
+            ServerTrackerName.Text = OlproxyServerName;
+            ServerTrackerNotes.Text = OlproxyNotes;
+            ServerTrackerUrl.Text = OlproxyTrackerBaseUrl;
+            ServerAutoSignOffTracker.Checked = OlproxySignOff;
+            ServerAnnounceOnTrackerCheckBox.Checked = OlproxyIsServer;
+            ServerEnableCheckBox.Checked = RunDedicatedServer;
 
             // Check for change to new theme selection.
             if (String.IsNullOrEmpty(ActiveThemeName)) ActiveThemeName = "Dark Gray";
             theme = Theme.GetThemeByName(ActiveThemeName);
-
-            // Get debug setting and update debug file name info.
-            EnableDebugCheckBox.Checked = Debugging;
         }
         
         private void UpdateTheme(Theme theme)
@@ -403,14 +478,17 @@ namespace OverloadClientTool
             {
                 CustomCheckBox checkBox = control as CustomCheckBox;
 
+                // Set text colors.
                 checkBox.BackColor = theme.PanelBackColor;
-                checkBox.ForeColor = theme.PanelForeColor;
+                checkBox.ForeColor = (checkBox.Enabled) ? theme.PanelForeColor : Color.Red;
 
-                checkBox.CheckBackColor = theme.InputBackColor;
-                checkBox.CheckForeColor = theme.TextHighlightColor;
+                // Set checkmark colors.
+                checkBox.CheckBackColor = theme.PanelBackColor;
+                checkBox.CheckForeColor = (checkBox.Enabled) ? theme.TextHighlightColor : theme.PanelForeColor;
+                checkBox.CheckInactiveForeColor = theme.PanelForeColor;
 
-                // Easy fix for text location.
-                if (!checkBox.Text.StartsWith(" ")) checkBox.Text = " " + checkBox.Text;
+                // Fix for text position.
+                //if (!checkBox.Text.StartsWith(" ")) checkBox.Text = " " + checkBox.Text;
             }
             else if (control is CheckBox)
             {

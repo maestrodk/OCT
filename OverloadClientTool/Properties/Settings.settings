@@ -68,5 +68,29 @@
     <Setting Name="ShowFPS" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="StartWithWindows" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="StartMinimized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="trackerBaseUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://olproxy.otl.gg</Value>
+    </Setting>
+    <Setting Name="serverName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">My Overload Server</Value>
+    </Setting>
+    <Setting Name="notes" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Change these notes to give information about your server, such as geographical location, hardware, bandwidth, etc.</Value>
+    </Setting>
+    <Setting Name="isServer" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="signOff" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RunDedicatedServer" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
