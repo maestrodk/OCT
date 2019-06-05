@@ -25,8 +25,8 @@ namespace OverloadClientTool
 
             // Default colors for the checkbox.
             CheckBackColor = Color.Gray;
-            CheckForeColor = Color.Red;
-            CheckInactiveForeColor = Color.Orange;
+            CheckForeColor = Color.SteelBlue;
+            CheckInactiveForeColor = Color.Gray;
 
             base.FlatStyle = FlatStyle.Flat;
             this.FlatAppearance.BorderSize = 1;
@@ -35,11 +35,12 @@ namespace OverloadClientTool
 
         protected override void OnPaint(PaintEventArgs paintEvent)
         {
+            Color foreColor = (this.Enabled) ? this.CheckForeColor : this.CheckInactiveForeColor;
+
             base.OnPaint(paintEvent);
 
-            Size size = this.Size;
-
-            Color foreColor = (this.Enabled) ? this.CheckForeColor : this.CheckInactiveForeColor;
+            // Clear the background.
+            paintEvent.Graphics.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(0, 0, this.Width, this.Height));
 
             // Paint the checkbox.
             paintEvent.Graphics.DrawRectangle(new Pen(foreColor), new Rectangle(0, 0, 14, 14));
@@ -53,7 +54,6 @@ namespace OverloadClientTool
             }
 
             // Paint the text.
-            paintEvent.Graphics.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(15, 0, 19, this.Height));
             Rectangle rect = new Rectangle(16, 1, this.Width - 16, this.Height);
             TextRenderer.DrawText(paintEvent.Graphics, this.Text, Font, rect, foreColor, this.BackColor, TextFormatFlags.Left | TextFormatFlags.Default);
         }

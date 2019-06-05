@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="Install.cs" />
     <Compile Include="OCTRelease.cs" />
+    <Compile Include="Olproxy\OCTExtensions.cs" />
     <Compile Include="Resolution.cs" />
     <Compile Include="UpdateForm.cs">
       <SubType>Form</SubType>

@@ -157,7 +157,8 @@ namespace OverloadClientTool
                 // Pane background and general text colors.
                 theme.PanelBackColor = Color.FromArgb(0, 0, 0);
                 theme.PanelForeColor = theme.ButtonEnabledForeColor;
-                
+                theme.PanelInactiveForeColor = Color.FromArgb(64, 64, 64);
+
                 theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
                 theme.ActivePaneButtonForeColor = theme.ButtonEnabledForeColor;
 
@@ -197,7 +198,7 @@ namespace OverloadClientTool
 
                 theme.PanelBackColor = Color.FromArgb(24, 24, 24);
                 theme.PanelForeColor = theme.InputForeColor;
-                theme.PanelInactiveForeColor = Color.Gray;
+                theme.PanelInactiveForeColor = Color.FromArgb(32, 64, 96);
 
                 theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
                 theme.ActivePaneButtonForeColor = Color.White;
@@ -238,6 +239,7 @@ namespace OverloadClientTool
 
                 theme.PanelBackColor = Color.FromArgb(24, 24, 24);
                 theme.PanelForeColor = theme.InputForeColor;
+                theme.PanelInactiveForeColor = Color.FromArgb(96, 96, 96);
 
                 theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
                 theme.ActivePaneButtonForeColor = Color.White;
@@ -278,7 +280,8 @@ namespace OverloadClientTool
 
                 theme.PanelBackColor = Color.White;
                 theme.PanelForeColor = Color.FromArgb(50, 50, 50);
- 
+                theme.PanelInactiveForeColor = Color.FromArgb(64, 96, 160);  
+
                 theme.ActivePaneButtonBackColor = Color.LightSteelBlue;
                 theme.ActivePaneButtonForeColor = Color.Black;
 
@@ -315,6 +318,7 @@ namespace OverloadClientTool
 
                 theme.PanelBackColor = Color.FromArgb(64, 32, 16);
                 theme.PanelForeColor = Color.FromArgb(224, 224, 192);
+                theme.PanelInactiveForeColor = Color.FromArgb(96, 96, 64);
 
                 theme.ActivePaneButtonBackColor = Color.FromArgb(192, 160, 32);
                 theme.ActivePaneButtonForeColor = Color.Black;
@@ -352,6 +356,7 @@ namespace OverloadClientTool
 
                 theme.PanelBackColor = Color.FromArgb(0, 16, 0);
                 theme.PanelForeColor = Color.FromArgb(128, 255, 128);
+                theme.PanelInactiveForeColor = Color.FromArgb(64, 96, 32);
 
                 theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
                 theme.ActivePaneButtonForeColor = theme.ButtonEnabledForeColor;
@@ -389,6 +394,7 @@ namespace OverloadClientTool
 
                 theme.PanelBackColor = Color.FromArgb(16, 16, 0);
                 theme.PanelForeColor = theme.InputForeColor;
+                theme.PanelInactiveForeColor = theme.InputForeColor;
 
                 theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
                 theme.ActivePaneButtonForeColor = theme.ButtonEnabledForeColor;

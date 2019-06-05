@@ -484,11 +484,10 @@ namespace OverloadClientTool
 
                 // Set checkmark colors.
                 checkBox.CheckBackColor = theme.PanelBackColor;
-                checkBox.CheckForeColor = (checkBox.Enabled) ? theme.TextHighlightColor : theme.PanelForeColor;
-                checkBox.CheckInactiveForeColor = theme.PanelForeColor;
+                checkBox.CheckForeColor = theme.PanelForeColor;
+                checkBox.CheckInactiveForeColor = theme.PanelInactiveForeColor;
 
-                // Fix for text position.
-                //if (!checkBox.Text.StartsWith(" ")) checkBox.Text = " " + checkBox.Text;
+                checkBox.Invalidate();
             }
             else if (control is CheckBox)
             {

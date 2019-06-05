@@ -213,13 +213,12 @@ namespace OverloadClientTool
             if (OverloadClientToolApplication.ValidFileName(OlmodPath, true)) Info($"{OlmodVersionInfo}");
             else Verbose("Cannot locate Olmod.");
 
-
             // Check for startup options.
             OverloadClientToolNotifyIcon.Icon = Properties.Resources.oct_logo_484_12;
             this.ShowInTaskbar = !UseTrayIcon.Checked;
             OverloadClientToolNotifyIcon.Visible = UseTrayIcon.Checked;
 
-            if (autoStart)
+            if (RunDedicatedServer)
             {
                 if (UseTrayIcon.Checked) WindowState = FormWindowState.Minimized;
                 StartButton_Click(null, null);
@@ -227,7 +226,6 @@ namespace OverloadClientTool
             else
             {
                 this.WindowState = FormWindowState.Normal;
-                //OverloadServerToolNotifyIcon.Visible = false;
             }
 
             Defocus();
@@ -518,7 +516,6 @@ namespace OverloadClientTool
                     OlproxyRunning.Visible = olproxyRunning;
 
                     UpdateOlmodButton.Enabled = !olmodRunning;
-
                     ServerEnableCheckBox.Enabled = !(overloadRunning || olmodRunning);
 
                     ApplyThemeToControl(ServerEnableCheckBox, theme);
@@ -652,6 +649,7 @@ namespace OverloadClientTool
 
         private void ExitButton_Click(object sender, EventArgs e)
         {
+            StopButton_Click(null, null);
             Close();
         }
 
@@ -1456,7 +1454,7 @@ namespace OverloadClientTool
         {
             if (IsOlmodRunning)
             {
-                Error("Cannot update Olmod when it is running!");
+                Info("Olmod is running - skipping version check/update.");
                 return;
             }
 
