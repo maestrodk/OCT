@@ -218,16 +218,14 @@ namespace OverloadClientTool
             this.ShowInTaskbar = !UseTrayIcon.Checked;
             OverloadClientToolNotifyIcon.Visible = UseTrayIcon.Checked;
 
+            if (MinimizeOnStartupCheckBox.Checked) WindowState = FormWindowState.Minimized;
+            else this.WindowState = FormWindowState.Normal;
+
             if (RunDedicatedServer)
             {
-                if (UseTrayIcon.Checked) WindowState = FormWindowState.Minimized;
                 StartButton_Click(null, null);
             }
-            else
-            {
-                this.WindowState = FormWindowState.Normal;
-            }
-
+            
             Defocus();
 
             // Check for OCT update.
@@ -1718,36 +1716,62 @@ namespace OverloadClientTool
             LogTreeView.ShowNodeToolTips = true;
             TreeNode node = LogTreeView.Nodes[LogTreeView.Nodes.Count - 1];
             node.ToolTipText = text;
-            node.Tag = (error) ? "Error" : "Ihfo";
+            node.Tag = (error) ? "Error" : "Info";
 
             LogTreeView.Nodes[LogTreeView.Nodes.Count - 1].EnsureVisible();
         }
 
         private void LogTreeView_DrawNode(object sender, DrawTreeNodeEventArgs e)
         {
-            String text = e.Node.Text;
+            String nodeText = String.IsNullOrEmpty(e.Node.Text) ? "- This message shouldn't be shown - " : e.Node.Text;
+            string text = nodeText;
 
-            Rectangle rect = new Rectangle(0, e.Node.Bounds.Y, LogTreeView.Width, e.Node.Bounds.Height);
-            Size size = TextRenderer.MeasureText(text as string, treeViewFont);
-
-            while (size.Width > (rect.Width + 8))
+            Rectangle rect = new Rectangle(0, 0, 0, 0);
+            try
             {
-                text = text.Substring(0, text.Length - 3);
-                size = TextRenderer.MeasureText(text as string, treeViewFont);
+                rect = new Rectangle(0, e.Node.Bounds.Y, LogTreeView.Width, e.Node.Bounds.Height);
+                Size size = TextRenderer.MeasureText(text, treeViewFont);
+
+                while (size.Width > (rect.Width + 8))
+                {
+                    text = text.Substring(0, text.Length - 3);
+                    size = TextRenderer.MeasureText(text, treeViewFont);
+                }
+
+                if (text.Length < nodeText.Length) text += "...";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception in LogTreeView_DrawNode [1]");
             }
 
-            if (text.Length < e.Node.Text.Length) text += "...";
-
-            // Draw the background of the ListBox control for each item.
-            rect.Y++;
-            e.Graphics.FillRectangle(new SolidBrush(theme.InputBackColor), rect);
-            rect.Y--;
-
             Color color = theme.InputForeColor;
-            if (((String)e.Node.Tag).ToLower().Contains("error")) color = theme.TextHighlightColor;
+            try
+            {
+                // Draw the background of the ListBox control for each item.
+                rect.Y++;
+                e.Graphics.FillRectangle(new SolidBrush(theme.InputBackColor), rect);
+                rect.Y--;
 
-            // Draw the current item text
-            e.Graphics.DrawString(text, treeViewFont, new SolidBrush(color), e.Bounds, StringFormat.GenericDefault);
+                string test = e.Node.Tag as string;
+                test = String.IsNullOrEmpty(test) ? "" : test;
+                if (test.ToLower().Contains("error")) color = theme.TextHighlightColor;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception in LogTreeView_DrawNode [2]");
+            }
+
+            try
+            {
+                // Draw the current item text
+                e.Graphics.DrawString(text, treeViewFont, new SolidBrush(color), e.Bounds, StringFormat.GenericDefault);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception in LogTreeView_DrawNode [3]");
+            }
+
         }
 
         private void FrameTimeCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1798,6 +1822,11 @@ namespace OverloadClientTool
             TrayInsteadOfTaskBar = UseTrayIcon.Checked;
             ShowInTaskbar = !UseTrayIcon.Checked;
             OverloadClientToolNotifyIcon.Visible = UseTrayIcon.Checked;
+        }
+
+        private void MinimizeOnStartupCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            StartMinimized = MinimizeOnStartupCheckBox.Checked;
         }
     }
 }

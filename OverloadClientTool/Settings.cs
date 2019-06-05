@@ -82,7 +82,6 @@ namespace OverloadClientTool
             get { return Properties.Settings.Default.EmbeddedOlproxy; }
             set { Properties.Settings.Default.EmbeddedOlproxy = value; }
         }
-
  
         public string OlproxyParameters
         {
@@ -392,6 +391,7 @@ namespace OverloadClientTool
             UseTrayIcon.Checked = TrayIcon;
 
             AutoStartCheckBox.Checked = StartWithWindows;
+            MinimizeOnStartupCheckBox.Checked = StartMinimized;
             UseTrayIcon.Checked = TrayInsteadOfTaskBar;
 
             // Server settings.
