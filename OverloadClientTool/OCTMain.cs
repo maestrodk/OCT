@@ -38,6 +38,8 @@ namespace OverloadClientTool
 
         private DisplaySettings displaySettings = new DisplaySettings();
 
+        private int serverProcessId = 0;
+
         // Directory for DLC.
         private string dlcLocation = null;
 
@@ -248,12 +250,14 @@ namespace OverloadClientTool
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Kill embedded Olproxy.
-            StartStopOlproxyButton_Click(null, null);
-
             // Shutdown background workers.
-            //StopMapsMonitoring();
             StopPilotsMonitoring();
+
+            // Kill embedded Olproxy.
+            ShutdownOlproxy();
+
+            // Shut down server.
+            if (serverProcessId > 0) StartServerButton_Click(null, null);
 
             // Save settings for main application.
             try
@@ -405,15 +409,23 @@ namespace OverloadClientTool
         {
             if (olproxyThread != null)
             {
-                if (olproxyTask.KillFlag == false) olproxyTask.KillFlag = true;
-
-                int n = 25;
-                while ((n-- > 0) && (olproxyTask.KillFlag == true))
+                try
                 {
-                    Thread.Sleep(100);
-                }
+                    if (olproxyTask.KillFlag == false) olproxyTask.KillFlag = true;
 
-                olproxyThread = null;
+                    int n = 25;
+                    while ((n-- > 0) && (olproxyTask.KillFlag == true))
+                    {
+                        Thread.Sleep(100);
+                    }
+                }
+                catch
+                {
+                }
+                finally
+                {
+                    olproxyThread = null;
+                }
             }
         }
 
@@ -512,6 +524,7 @@ namespace OverloadClientTool
 
                     OverloadRunning.Visible = overloadRunning || olmodRunning;
                     OlproxyRunning.Visible = olproxyRunning;
+                    ServerRunning.Visible = serverProcessId > 0;
 
                     UpdateOlmodButton.Enabled = !olmodRunning;
                     ServerEnableCheckBox.Enabled = !(overloadRunning || olmodRunning);
@@ -660,21 +673,15 @@ namespace OverloadClientTool
             }
             else
             {
-                Thread startOverloadThread = new Thread(LaunchOverload);
-                startOverloadThread.IsBackground = true;
-                startOverloadThread.Start();
-
-                if (UseOlproxyCheckBox.Checked)
-                {
-                    Thread startOlproxyThread = new Thread(LaunchOlproxy);
-                    startOlproxyThread.IsBackground = true;
-                    startOlproxyThread.Start();
-                }
+                LaunchOverloadClient();
+                if (UseOlproxyCheckBox.Checked) LaunchOlproxy();
             }
         }
 
         private void LaunchOlproxy()
         {
+            if (IsOlproxyRunning || !UseOlproxyCheckBox.Checked) return;
+
             Info("Starting up Olproxy.");
 
             string name = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
@@ -720,91 +727,83 @@ namespace OverloadClientTool
             appStart.Start();
         }
 
-        private void LaunchOverload()
+        private void LaunchOverloadClient()
         {
-            string overloadPath = Path.GetDirectoryName(OverloadExecutable.Text);
-            string overloadExe = Path.Combine(overloadPath, "overload.exe");
-            string olmodExe = Path.Combine(overloadPath, "olmod.exe");
-
-            string name = null;
-            string app = null;
-
-            // This will be enabled again by the background task.
-            this.UIThread(delegate 
-            {
-                ServerEnableCheckBox.Enabled = false;
-                ApplyThemeToControl(ServerEnableCheckBox, theme);
-            });
-
-            // If Olmod is enabled check if we should pass Overload install folder.
-            string olmodStartupArgs = "";
-            if (OverloadClientToolApplication.ValidDirectoryName(Path.GetDirectoryName(OverloadExecutable.Text), true))
-            {
-                olmodStartupArgs = " -gamedir \"" + Path.GetDirectoryName(OverloadExecutable.Text) + "\"";
-
-                if (ShowFPS && !olmodStartupArgs.ToLower().Contains("-frametime")) olmodStartupArgs += " -frametime";
-
-                if (RunDedicatedServer && !olmodStartupArgs.ToLower().Contains("-batchmode")) olmodStartupArgs += " -batchmode";
-                if (RunDedicatedServer && !olmodStartupArgs.ToLower().Contains("-nographics")) olmodStartupArgs += " -nographics";
-            }
-
-            olmodStartupArgs = olmodStartupArgs.Trim();
-
-            if (AutoPilotsBackupCheckbox.Checked) PilotBackupButton_Click(null, null);
+            string exePath = OverloadExecutable.Text;
+            string olmodExe = OlmodExecutable.Text;
 
             if (UseOlmodCheckBox.Checked)
             {
-                if (System.IO.File.Exists(olmodExe))
+                exePath = OlmodExecutable.Text;
+                if (!OverloadClientToolApplication.ValidFileName(exePath, true))
                 {
-                    name = Path.GetFileNameWithoutExtension(olmodExe);
-                    app = olmodExe;
-                }
-                else
-                {
-                    MessageBox.Show("Olmod.exe not found!");
+                    MessageBox.Show("Olmod (.exe) application not found!");
                     return;
                 }
             }
             else
             {
-                if (System.IO.File.Exists(overloadExe))
+                if (!OverloadClientToolApplication.ValidFileName(exePath, true))
                 {
-                    name = Path.GetFileNameWithoutExtension(overloadExe);
-                    app = overloadExe;
-                }
-                else
-                {
-                    MessageBox.Show("Overload.exe not found in Overload path!");
+                    MessageBox.Show("Overload (.exe) application not found!");
                     return;
                 }
             }
+
+            string name = Path.GetFileNameWithoutExtension(exePath);
+
+            // This will be enabled again by the background task.
+            this.UIThread(delegate 
+            {
+            });
+
+            string path = Path.GetDirectoryName(OverloadExecutable.Text);
+            if (path.EndsWith("\\")) path = path.Substring(0, path.Length - 1);
+
+            // Prepare command line parameters.
+            string commandLineArgs = OverloadParameters.Trim();
+
+            // Add Olmod parameters if Olmod is enabled-
+            if (UseOlmodCheckBox.Checked)
+            {
+                if (PassGameDirToOlmod && !OlproxyArgs.Text.ToLower().Contains("-gamedir")) commandLineArgs = " -gamedir \"" + path + "\"";
+                if (ShowFPS && !commandLineArgs.ToLower().Contains("-frametime")) commandLineArgs += " -frametime";
+            }
+
+            commandLineArgs += " " + OverloadParameters;
+            commandLineArgs = commandLineArgs.Trim();
+
+            LogDebugMessage($"Launcing{exePath} with \"{commandLineArgs}\"");
+
+            if (AutoPilotsBackupCheckbox.Checked) PilotBackupButton_Click(null, null);
 
             // Start application it is not already running.
             int running = 0;
             foreach (Process process in Process.GetProcesses())
             {
-                if (process.ProcessName.ToLower() == name) running++;
+                if ((process.Id != serverProcessId) && (process.ProcessName.ToLower() == name)) running++;
             }
 
             if (running == 1)
             {
                 if (name.ToLower().Contains("olmod")) Info("Overload (Olmod) ís already running.");
                 else Info("Overload is already running.");
-
                 return;
             }
 
-            string server = (RunDedicatedServer) ? " dedicated server" : "";
-            if (name.ToLower().Contains("olmod")) Info($"Starting up Overload{server} (using Olmod).");
-            else Info($"Starting up Overload{server}.");
+            if (name.ToLower().Contains("olmod")) Info($"Starting up Overload (using Olmod).");
+            else Info($"Starting up Overload.");
 
             // If more than one is running we kill them all and start fresh instance.
             if (running > 1) KillRunningProcess(name);
 
             // (Re)start application..
-            Process appStart = new Process();
-            appStart.StartInfo = new ProcessStartInfo(Path.GetFileName(app), (olmodStartupArgs + OverloadArgs.Text).Trim());
-            appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(app);
+            Process appStart = new Process
+            {
+                StartInfo = new ProcessStartInfo(exePath, commandLineArgs)
+            };
+
+            appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(exePath);
             appStart.Start();
         }
 
@@ -812,13 +811,22 @@ namespace OverloadClientTool
         public Process GetRunningProcess(string name)
         {
             if (String.IsNullOrEmpty(name)) return null;
-            foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) return process;
+
+            foreach (Process process in Process.GetProcesses())
+            {
+                if ((process.Id != serverProcessId) && process.ProcessName.ToLower() == name.ToLower()) return process;
+            }
             return null;
         }
 
         private void KillRunningProcess(string name)
         {
-            foreach (Process process in Process.GetProcesses()) if (process.ProcessName.ToLower() == name.ToLower()) process.Kill();
+            if (String.IsNullOrEmpty(name)) return;
+
+            foreach (Process process in Process.GetProcesses())
+            {
+                if ((process.Id != serverProcessId) && process.ProcessName.ToLower() == name.ToLower()) process.Kill();
+            }
         }
 
         // listBoxLog.Log(Level.Debug, "A debug level message");
@@ -840,7 +848,8 @@ namespace OverloadClientTool
             KillRunningProcess("overload");
             KillRunningProcess("olmod");
 
-            StartStopOlproxyButton_Click(null, null);
+            // Let Olproxy live if server is running.
+            if (serverProcessId == 0) ShutdownOlproxy();
         }
 
         /// <summary>
@@ -853,6 +862,7 @@ namespace OverloadClientTool
 
         private void StopExitButton_Click(object sender, EventArgs e)
         {
+            if (serverProcessId > 0) StartServerButton_Click(null, null);
             StopButton_Click(null, null);
             Close();
         }
@@ -1528,16 +1538,18 @@ namespace OverloadClientTool
             }
         }
 
+        private void ShutdownOlproxy()
+        {
+            KillRunningProcess("olproxy");
+            if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive)) KillOlproxyThread();
+        }
+
         private void StartStopOlproxyButton_Click(object sender, EventArgs e)
         {
             if (sender != null)
             {
                 // Only launch Olproxy if OCT isn't shutting down.
-                if (!IsOlproxyRunning)
-                {
-                    LaunchOlproxy();
-                    return;
-                }
+                LaunchOlproxy();
             }
 
             // Either we are shutting down or user wants to shut down Olproxy.
@@ -1827,6 +1839,102 @@ namespace OverloadClientTool
         private void MinimizeOnStartupCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             StartMinimized = MinimizeOnStartupCheckBox.Checked;
+        }
+
+        private void StartServerButton_Click(object sender, EventArgs e)
+        {
+            if (serverProcessId > 0)
+            {
+                try
+                {
+                    foreach (Process process in Process.GetProcesses())
+                    {
+                        if (process.Id == serverProcessId) process.Kill();
+                    }
+                }
+                catch
+                {
+                }
+                finally
+                {
+                    serverProcessId = 0;
+                }
+
+                if (!IsOverloadOrOlmodRunning) ShutdownOlproxy();
+
+                StartServerButton.Text = "Start server";
+                return;
+            }
+
+            StartServerButton.Text = "Stop server";
+
+            LaunchOlproxy();
+
+            string exePath = OverloadExecutable.Text;
+            string olmodExe = OlmodExecutable.Text;
+
+            if (UseOlmodCheckBox.Checked)
+            {
+                exePath = OlmodExecutable.Text;
+                if (!OverloadClientToolApplication.ValidFileName(exePath, true))
+                {
+                    StartServerButton.Text = "Start server";
+                    MessageBox.Show("Olmod (.exe) application not found!");
+                    return;
+                }
+            }
+            else
+            {
+                if (!OverloadClientToolApplication.ValidFileName(exePath, true))
+                {
+                    StartServerButton.Text = "Start server";
+                    MessageBox.Show("Overload (.exe) application not found!");
+                    return;
+                }
+            }
+
+            string name = Path.GetFileNameWithoutExtension(exePath);
+
+            // This will be enabled again by the background task.
+            this.UIThread(delegate
+            {
+            });
+
+            // Prepare command line parameters.
+            string commandLineArgs = OverloadParameters.Trim();
+
+            // Setup server parameters.
+            if (!commandLineArgs.ToLower().Contains("-batchmode")) commandLineArgs += " -batchmode";
+            if (!commandLineArgs.ToLower().Contains("-nographics")) commandLineArgs += " -nographics";
+
+            string path = Path.GetDirectoryName(OverloadExecutable.Text);
+            if (path.EndsWith("\\")) path = path.Substring(0, path.Length - 1);
+
+            // Add Olmod parameters if Olmod is enabled-
+            if (UseOlmodCheckBox.Checked)
+            {
+                if (PassGameDirToOlmod && !OlproxyArgs.Text.ToLower().Contains("-gamedir")) commandLineArgs += " -gamedir \"" + path + "\"";
+            }
+
+            commandLineArgs += " " + OverloadParameters;
+            commandLineArgs = commandLineArgs.Trim();
+
+            LogDebugMessage($"Launcing server {exePath} with \"{commandLineArgs}\"");
+
+            // Start server.
+            if (name.ToLower().Contains("olmod")) Info($"Starting up Overload server (using Olmod).");
+            else Info($"Starting up Overload server.");
+
+            // (Re)start application..
+            Process appStart = new Process
+            {
+                StartInfo = new ProcessStartInfo(exePath, commandLineArgs)
+            };
+
+            appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(exePath);
+            appStart.Start();
+
+            serverProcessId = appStart.Id;
         }
     }
 }

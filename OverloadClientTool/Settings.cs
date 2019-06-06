@@ -420,6 +420,7 @@ namespace OverloadClientTool
             UpdatingMaps.Image = theme.IsRunningImage;
             OlproxyRunning.Image = theme.IsRunningImage;
             OverloadRunning.Image = theme.IsRunningImage;
+            ServerRunning.Image = theme.IsRunningImage;
 
             // Set the active theme (recursively).
             ApplyThemeToControl(this, theme);
