@@ -370,24 +370,12 @@ namespace OverloadClientTool
         /// <returns>A dictionary object matching MJDict</returns>
         private Dictionary<string, object> UpdateOlproxyConfig()
         {
-            if (!RunDedicatedServer)
-            {
-                // Overload client.
-                olproxyConfig["isServer"] = false;
-                olproxyConfig["signOff"] = false;
-                olproxyConfig["trackerBaseUrl"] = "";
-                olproxyConfig["serverName"] = "";
-                olproxyConfig["notes"] = "";
-            }
-            else
-            {
-                // Overload dedicated server.
-                olproxyConfig["isServer"] = ServerAnnounceOnTrackerCheckBox.Checked;
-                olproxyConfig["signOff"] = ServerAutoSignOffTracker.Checked;
-                olproxyConfig["trackerBaseUrl"] = ServerTrackerUrl.Text;
-                olproxyConfig["serverName"] = ServerTrackerName.Text;
-                olproxyConfig["notes"] = ServerTrackerNotes.Text;
-            }
+            // Overload dedicated server.
+            olproxyConfig["isServer"] = ServerAnnounceOnTrackerCheckBox.Checked;
+            olproxyConfig["signOff"] = ServerAutoSignOffTracker.Checked;
+            olproxyConfig["trackerBaseUrl"] = ServerTrackerUrl.Text;
+            olproxyConfig["serverName"] = ServerTrackerName.Text;
+            olproxyConfig["notes"] = ServerTrackerNotes.Text;
             return olproxyConfig;
         }
 
@@ -396,7 +384,6 @@ namespace OverloadClientTool
         /// </summary>
         private void StartOlproxyThread()
         {
-            UpdateOlproxyConfig();
             olproxyThread = new Thread(OlproxyThread);
             olproxyThread.IsBackground = true;
             olproxyThread.Start();
