@@ -1,5 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -13,8 +15,8 @@ namespace OverloadClientTool
 
         public string OverloadPath
         {
-            get { return Properties.Settings.Default.Show; }
-            set { Properties.Settings.Default.Show = value; }
+            get { return Properties.Settings.Default.OverloadPath; }
+            set { Properties.Settings.Default.OverloadPath = value; }
         }
 
         public bool HideNonOfficialMaps
@@ -355,11 +357,34 @@ namespace OverloadClientTool
 
         private string initPath = "";
 
-        public void LoadSettings()
+        public void LoadSettings(Dictionary<string, string> previousSettings = null)
         {
             LogDebugMessage("LoadSettings()");
 
             if (String.IsNullOrEmpty(OverloadPath)) FindOverloadInstall();
+
+            // First restore old settings if we can match their setting name.
+            if ((previousSettings != null) && (previousSettings.Count > 0))
+            {
+                SettingsPropertyCollection settings = Properties.Settings.Default.Properties;
+                foreach (KeyValuePair<string, string> kvp in previousSettings)
+                {
+                    string name = kvp.Key;
+                    string value = String.IsNullOrEmpty(kvp.Value) ? "" : kvp.Value;
+                    try
+                    {
+                        if (settings[name] != null)
+                        {
+                            if (settings[name].PropertyType.Name == "String") Properties.Settings.Default[name] = value;
+                            else if (settings[name].PropertyType.Name == "Boolean") Properties.Settings.Default[name] = (value.ToLower() == "true") ? true : false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LogDebugMessage($"Unable to restore previous setting '{name}': {ex.Message}");
+                    }
+                }
+            }
 
             OverloadExecutable.Text = OverloadPath;
             OverloadArgs.Text = OverloadParameters;

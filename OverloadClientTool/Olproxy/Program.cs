@@ -496,9 +496,15 @@ namespace olproxy
                 }
                 else if (idx == 1) // remote
                 {
-                    var result = taskRemote.Result;
-                    ProcessRemotePacket(result.RemoteEndPoint, result.Buffer);
-                    taskRemote = remoteSocket.ReceiveAsync();
+                    try
+                    {
+                        var result = taskRemote.Result;
+                        ProcessRemotePacket(result.RemoteEndPoint, result.Buffer);
+                        taskRemote = remoteSocket.ReceiveAsync();
+                    }
+                    catch
+                    {
+                    }
                 }
                 else if (idx == -1) // timeout
                 {
@@ -532,7 +538,7 @@ namespace olproxy
 
             try { File.WriteAllText(configFileName, jsonString); } catch { return false; }
 
-            // Optionall update the appsettings.json placed in the same directory as Olproxy.exe.
+            // Optionally update the appsettings.json placed in the same directory as Olproxy.exe.
             if (!String.IsNullOrEmpty(alternateFileName))  try { File.WriteAllText(alternateFileName, jsonString); } catch { return false; }            
 
             return true;

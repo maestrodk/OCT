@@ -53,17 +53,56 @@ namespace OverloadClientTool
                 return;
             }
 
+            // Check if just installed and we need to cleanup.
+            Dictionary<string, string> oldSettings = new Dictionary<string, string>();
+
             if ((args.Length > 1) && (args[0].ToLower() == "-cleanup"))
             {
-                LogDebugMessage("Removing installation files in " + args[1], debugFileName);
+                LogDebugMessage("Removing installation files in " + args[1] + ".", debugFileName);
                 RemoveInstallDirectory(args[1], debugFileName);
                 LogDebugMessage("Finished cleanup.", debugFileName);
+
+            }
+
+            string applicationFolder = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
+            string previousConfig = Path.Combine(applicationFolder, "previous.config");
+            if (OverloadClientToolApplication.ValidFileName(previousConfig, true))
+            {
+                LogDebugMessage("Will merge previous settings.");
+
+                XDocument oldDoc = XDocument.Load(previousConfig);
+
+                IEnumerable<XElement> settings =
+                    from p in oldDoc.Descendants("setting")
+                    where p.Parent.Name == "OverloadClientTool.Properties.Settings"
+                    select p;
+
+                // <setting name = "OverloadPath" serializeAs = "String">
+                //   <Value />
+                // </setting >
+
+                foreach (XElement o in settings)
+                {
+                    try
+                    {
+                        var oldAttr = o.Attributes().Single(x => x.Name == "name");
+                        var oldName = oldAttr.Value;
+                        var oldValue = oldAttr.Parent.Value;
+                        oldSettings.Add(oldName, oldValue);
+                        LogDebugMessage($"Read previous setting: {oldAttr} = {oldValue}");
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                try { File.Delete(previousConfig); } catch { }
             }
 
             try
             {
                 LogDebugMessage("Starting OCT main UI thread.", debugFileName);
-                Application.Run(new OCTMain(args, debugFileName));
+                Application.Run(new OCTMain(args, debugFileName, oldSettings));
                 LogDebugMessage("OCT main exit - shutting UI thread.", debugFileName);
             }
             catch (Exception ex)

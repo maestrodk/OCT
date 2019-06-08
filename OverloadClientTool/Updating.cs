@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -139,6 +140,16 @@ namespace OverloadClientTool
                 DirectoryInfo subDirList = new DirectoryInfo(localTempFolder);
                 DirectoryInfo[] subDirs = subDirList.GetDirectories();
                 if (subDirs.Length > 0) localSourceFolder = subDirs[0].FullName;
+
+                // Copy existing settings to the install folder.
+                try
+                {
+                    string existingConfig = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+                    File.Copy(existingConfig, Path.Combine(localSourceFolder, "previous.config"));
+                }
+                catch
+                {
+                }
 
                 Process appStart = new Process();
                 appStart.StartInfo = new ProcessStartInfo(Path.Combine(localSourceFolder, "OverloadClientTool.exe"));

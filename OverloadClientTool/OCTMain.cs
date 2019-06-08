@@ -53,7 +53,7 @@ namespace OverloadClientTool
             try { System.IO.File.AppendAllText(debugFileName, String.Format($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}")); } catch { }
         }
 
-        public OCTMain(string[] args, string debugFileName)
+        public OCTMain(string[] args, string debugFileName, Dictionary<string, string> previousSettings = null)
         {
             this.debugFileName = debugFileName;
 
@@ -89,7 +89,7 @@ namespace OverloadClientTool
             paneController.SetupPaneButton(PaneSelectOptions, PaneOptions);
 
             // Load user preferences.
-            LoadSettings();
+            LoadSettings(previousSettings);
 
             // Init theme listbox.
             AvailableThemesListBox.Items.Clear();
@@ -125,9 +125,6 @@ namespace OverloadClientTool
             olproxyConfig.Add("trackerBaseUrl", "");
             olproxyConfig.Add("serverName", "");
             olproxyConfig.Add("notes", "");
-
-            // Set Olproxy config.
-            UpdateOlproxyConfig();
         }
 
         /// <summary>
@@ -254,7 +251,7 @@ namespace OverloadClientTool
             StopPilotsMonitoring();
 
             // Kill embedded Olproxy.
-            ShutdownOlproxy();
+            if (IsOlproxyRunning) ShutdownOlproxy();
 
             // Shut down server.
             if (serverProcessId > 0) StartServerButton_Click(null, null);
@@ -272,8 +269,8 @@ namespace OverloadClientTool
             try
             {
                 // Update config then save as json for standalone Olproxy.
-                string alterateFileName = Path.Combine(OlproxyExecutable.Text, "appsettings.json");
-                olproxyTask.SaveConfig(UpdateOlproxyConfig(), alterateFileName);
+                string alternateFileName = Path.Combine(OlproxyExecutable.Text, "appsettings.json");
+                olproxyTask.SaveConfig(GetOlproxyConfigClient(), alternateFileName);
             }
             catch (Exception ex)
             {
@@ -361,14 +358,25 @@ namespace OverloadClientTool
         /// </summary>
         private void OlproxyThread()
         {
-            olproxyTask.Run(new string[1] { OverloadArgs.Text }, UpdateOlproxyConfig());
+            olproxyTask.Run(new string[1] { OverloadArgs.Text }, olproxyConfig);
         }
 
         /// <summary> 
         /// Refresh and return Olproxy configuration object.
         /// </summary>
         /// <returns>A dictionary object matching MJDict</returns>
-        private Dictionary<string, object> UpdateOlproxyConfig()
+        private Dictionary<string, object> GetOlproxyConfigClient()
+        {
+            // Overload dedicated server.
+            olproxyConfig["isServer"] = false;
+            olproxyConfig["signOff"] = false;
+            olproxyConfig["trackerBaseUrl"] = "";
+            olproxyConfig["serverName"] = "";
+            olproxyConfig["notes"] = "";
+            return olproxyConfig;
+        }
+
+        private Dictionary<string, object> GetOlproxyConfigServer()
         {
             // Overload dedicated server.
             olproxyConfig["isServer"] = ServerAnnounceOnTrackerCheckBox.Checked;
@@ -378,6 +386,7 @@ namespace OverloadClientTool
             olproxyConfig["notes"] = ServerTrackerNotes.Text;
             return olproxyConfig;
         }
+
 
         /// <summary>
         /// Start emnbedded Olproxy thread.
@@ -660,23 +669,29 @@ namespace OverloadClientTool
             }
             else
             {
+                if (UseOlproxyCheckBox.Checked)
+                {
+                    // Only start Olproxy if server isn't running.
+                    if (serverProcessId == 0)
+                    {
+                        GetOlproxyConfigClient();
+                        LaunchOlproxy();
+                    }
+                }
+
                 LaunchOverloadClient();
-                if (UseOlproxyCheckBox.Checked) LaunchOlproxy();
             }
         }
 
-        private void LaunchOlproxy()
+        private void LaunchOlproxy(bool server = false)
         {
-            if (IsOlproxyRunning || !UseOlproxyCheckBox.Checked) return;
-
-            Info("Starting up Olproxy.");
+            if (IsOlproxyRunning || !UseOlproxy) return;
 
             string name = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
-            string args = OlproxyArgs.Text;
 
-            // Update external Olproxy config.
-            string alterateFileName = Path.Combine(OlproxyExecutable.Text, "appsettings.json");
-            olproxyTask.SaveConfig(UpdateOlproxyConfig(), alterateFileName);
+            // Update external Olproxy config. At this point the config has been setup already.
+            string olproxyConfigFileName = Path.Combine(OlproxyExecutable.Text, "appsettings.json");
+            olproxyTask.SaveConfig(olproxyConfig, olproxyConfigFileName);
 
             // Start application it is not already running.
             int running = 0;
@@ -692,21 +707,27 @@ namespace OverloadClientTool
             KillRunningProcess(name);
 
             // Should have no running instances now.
-            if (UseEmbeddedOlproxy.Checked)
+            if (OlproxyEmbedded)
             {
+                if (server) Info("Starting up embedded Olproxy for server.");
+                else Info("Starting up embedded Olproxy.");
+
                 if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive)) KillOlproxyThread();
                 StartOlproxyThread();
                 return;
             }
 
-            // Make sure Oloroxy.exe exists.
+            // Make sure Olproxy.exe exists.
             if (new FileInfo(OlproxyExecutable.Text).Exists == false)
             {
                 MessageBox.Show("Missing Olproxy.exe!");
                 return;
             }
 
-            // Start Olproxy application.
+            if (server) Info("Starting up external Olproxy for server.");
+            else Info("Starting up external Olproxy.");
+            
+            // Start external Olproxy application.
             Process appStart = new Process();
             appStart.StartInfo = new ProcessStartInfo(OlproxyExecutable.Text, OlproxyArgs.Text);
             appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(OlproxyExecutable.Text);
@@ -826,17 +847,17 @@ namespace OverloadClientTool
 
         private void StopButton_Click(object sender, EventArgs e)
         {
-            Info("Shutting down active tasks.");
-
             ValidateButton(StartStopButton, theme);
 
             Defocus();
 
+            Info("Shutting down Overload.");
+
             KillRunningProcess("overload");
             KillRunningProcess("olmod");
 
-            // Let Olproxy live if server is running.
-            if (serverProcessId == 0) ShutdownOlproxy();
+            // Only shut down Olproxy live if server isn't running.
+            if ((serverProcessId == 0) && IsOlproxyRunning) ShutdownOlproxy();
         }
 
         /// <summary>
@@ -858,7 +879,7 @@ namespace OverloadClientTool
         {
             OlproxyEmbedded = UseEmbeddedOlproxy.Checked;
 
-            Info((UseEmbeddedOlproxy.Checked) ? "Using embedded Olproxy." : "Using standalone Olproxy application.");
+            Info((UseEmbeddedOlproxy.Checked) ? "Using embedded Olproxy." : "Using external Olproxy.");
 
             if (UseEmbeddedOlproxy.Checked == true)
             {
@@ -1527,6 +1548,8 @@ namespace OverloadClientTool
 
         private void ShutdownOlproxy()
         {
+            Info("Shutting down Olproxy.");
+
             KillRunningProcess("olproxy");
             if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive)) KillOlproxyThread();
         }
@@ -1536,7 +1559,9 @@ namespace OverloadClientTool
             if (sender != null)
             {
                 // Only launch Olproxy if OCT isn't shutting down.
-                LaunchOlproxy();
+                if (IsOlproxyRunning) ShutdownOlproxy();
+                else LaunchOlproxy();
+                return;
             }
 
             // Either we are shutting down or user wants to shut down Olproxy.
@@ -1847,7 +1872,17 @@ namespace OverloadClientTool
                     serverProcessId = 0;
                 }
 
-                if (!IsOverloadOrOlmodRunning) ShutdownOlproxy();
+                if (IsOlproxyRunning) ShutdownOlproxy();
+
+                // Switch to client-only Olproxy if Overload/Olmod client is running.
+                if (IsOverloadOrOlmodRunning)
+                {
+                    if (UseOlproxy)
+                    {
+                        GetOlproxyConfigClient();
+                        LaunchOlproxy();
+                    }
+                }
 
                 StartServerButton.Text = "Start server";
                 return;
@@ -1855,7 +1890,14 @@ namespace OverloadClientTool
 
             StartServerButton.Text = "Stop server";
 
-            LaunchOlproxy();
+            // Setup Olproxy for server.
+            if (IsOlproxyRunning) ShutdownOlproxy();
+
+            if (UseOlproxy)
+            {
+                GetOlproxyConfigServer();
+                LaunchOlproxy(true);
+            }
 
             string exePath = OverloadExecutable.Text;
             string olmodExe = OlmodExecutable.Text;
@@ -1881,11 +1923,6 @@ namespace OverloadClientTool
             }
 
             string name = Path.GetFileNameWithoutExtension(exePath);
-
-            // This will be enabled again by the background task.
-            this.UIThread(delegate
-            {
-            });
 
             // Prepare command line parameters.
             string commandLineArgs = OverloadParameters.Trim();

@@ -48,15 +48,15 @@ namespace OverloadClientTool
                     {
                         File.Copy(fi.FullName, Path.Combine(installFolder, fi.Name), true);
                     }
-                    else if (fi.Name.ToLower().EndsWith(applicationName + ".config"))
+                    else if (fi.Name.ToLower() == "previous.config")
                     {
-                        string existingConfig = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+                        string newConfig = Path.Combine(sourceFolder, applicationName + ".exe.config");
+                        string oldConfig = fi.FullName;
 
-                        if (OverloadClientToolApplication.ValidFileName(existingConfig, true))
+                        if (OverloadClientToolApplication.ValidFileName(newConfig, true))
                         {
                             XDocument newDoc = XDocument.Load(fi.FullName);
-
-                            XDocument oldDoc = XDocument.Load(existingConfig);
+                            XDocument oldDoc = XDocument.Load(oldConfig);
 
                             IEnumerable<XElement> newSettings =
                                 from p in newDoc.Descendants("setting")
@@ -77,7 +77,6 @@ namespace OverloadClientTool
                             {
                                 var newNameAttr = n.Attributes().Single(x => x.Name == "name");
 
-                                bool add = true;
                                 foreach (XElement o in oldSettings)
                                 {
                                     var oldNameAttr = o.Attributes().Single(x => x.Name == "name");
@@ -85,7 +84,7 @@ namespace OverloadClientTool
                                 }
                             }
 
-                            newDoc.Save(fi.FullName);
+                            newDoc.Save(newConfig);
                         }
 
                         // Copy new/updated configuration.

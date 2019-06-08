@@ -26,12 +26,12 @@ namespace OverloadClientTool.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Show {
+        public string OverloadPath {
             get {
-                return ((string)(this["Show"]));
+                return ((string)(this["OverloadPath"]));
             }
             set {
-                this["Show"] = value;
+                this["OverloadPath"] = value;
             }
         }
         
