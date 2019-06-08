@@ -266,15 +266,20 @@ namespace OverloadClientTool
                 MessageBox.Show($"Unable to save settings: {ex.Message}", "Error");
             }
 
+
+            // Update external Olproxy config (at this point the config has been setup for either server or client).
             try
             {
-                // Update config then save as json for standalone Olproxy.
-                string alternateFileName = Path.Combine(OlproxyExecutable.Text, "appsettings.json");
-                olproxyTask.SaveConfig(GetOlproxyConfigClient(), alternateFileName);
+                GetOlproxyConfigClient();
+
+                if (OverloadClientToolApplication.ValidFileName(OlproxyExecutable.Text))
+                {
+                    string olproxyConfigFileName = Path.Combine(Path.GetDirectoryName(OlproxyExecutable.Text), "appsettings.json");
+                    olproxyTask.SaveConfig(olproxyConfig, olproxyConfigFileName);
+                }
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show($"Unable to save Olpropxy settings: {ex.Message}", "Error");
             }
         }
 
@@ -689,9 +694,18 @@ namespace OverloadClientTool
 
             string name = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
 
-            // Update external Olproxy config. At this point the config has been setup already.
-            string olproxyConfigFileName = Path.Combine(OlproxyExecutable.Text, "appsettings.json");
-            olproxyTask.SaveConfig(olproxyConfig, olproxyConfigFileName);
+            // Update external Olproxy config (at this point the config has been setup for either server or client).
+            try
+            {
+                if (OverloadClientToolApplication.ValidFileName(OlproxyExecutable.Text))
+                {
+                    string olproxyConfigFileName = Path.Combine(Path.GetDirectoryName(OlproxyExecutable.Text), "appsettings.json");
+                    olproxyTask.SaveConfig(olproxyConfig, olproxyConfigFileName);
+                }
+            }
+            catch
+            {
+            }
 
             // Start application it is not already running.
             int running = 0;
