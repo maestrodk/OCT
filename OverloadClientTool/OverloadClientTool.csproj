@@ -40,6 +40,15 @@
   <PropertyGroup>
     <ApplicationIcon>oct_logo_484_12.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>OverloadClientTool.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -126,6 +135,8 @@
     <EmbeddedResource Include="OCTMain.resx">
       <DependentUpon>OCTMain.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="OverloadClientTool.snk" />
+    <None Include="OverloadClientToolHelp.pdf" />
     <EmbeddedResource Include="UpdateForm.resx">
       <DependentUpon>UpdateForm.cs</DependentUpon>
     </EmbeddedResource>

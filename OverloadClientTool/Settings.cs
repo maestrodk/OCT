@@ -13,6 +13,11 @@ namespace OverloadClientTool
         private Color activeTextBoxColor;
         private Color inactiveTextBoxColor;
 
+        public byte[] HelpFileBytes
+        {
+            get { return Properties.Resources.OverloadClientToolHelp; }
+        }
+
         public string OverloadPath
         {
             get { return Properties.Settings.Default.OverloadPath; }

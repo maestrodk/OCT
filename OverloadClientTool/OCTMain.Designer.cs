@@ -149,6 +149,7 @@ namespace OverloadClientTool
             this.label15 = new System.Windows.Forms.Label();
             this.ServerTrackerUrl = new System.Windows.Forms.TextBox();
             this.ServerRunning = new System.Windows.Forms.PictureBox();
+            this.DisplayHelpLink = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).BeginInit();
@@ -1272,6 +1273,7 @@ namespace OverloadClientTool
             this.PaneOptions.Controls.Add(this.MinimizeOnStartupCheckBox);
             this.PaneOptions.Controls.Add(this.UseTrayIcon);
             this.PaneOptions.Controls.Add(this.PayPalLink);
+            this.PaneOptions.Controls.Add(this.DisplayHelpLink);
             this.PaneOptions.Controls.Add(this.MailLinkLabel);
             this.PaneOptions.Controls.Add(this.DebugFileNameLink);
             this.PaneOptions.Controls.Add(this.PartyModeCheckBox);
@@ -1417,7 +1419,7 @@ namespace OverloadClientTool
             this.PartyModeCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.PartyModeCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.PartyModeCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PartyModeCheckBox.Location = new System.Drawing.Point(272, 120);
+            this.PartyModeCheckBox.Location = new System.Drawing.Point(272, 118);
             this.PartyModeCheckBox.Margin = new System.Windows.Forms.Padding(0);
             this.PartyModeCheckBox.Name = "PartyModeCheckBox";
             this.PartyModeCheckBox.Size = new System.Drawing.Size(79, 17);
@@ -1457,7 +1459,7 @@ namespace OverloadClientTool
             this.AutoUpdateCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.AutoUpdateCheckBox.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
             this.AutoUpdateCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AutoUpdateCheckBox.Location = new System.Drawing.Point(272, 38);
+            this.AutoUpdateCheckBox.Location = new System.Drawing.Point(272, 40);
             this.AutoUpdateCheckBox.Margin = new System.Windows.Forms.Padding(0);
             this.AutoUpdateCheckBox.Name = "AutoUpdateCheckBox";
             this.AutoUpdateCheckBox.Size = new System.Drawing.Size(167, 17);
@@ -1692,6 +1694,17 @@ namespace OverloadClientTool
             this.ServerRunning.TabStop = false;
             this.ServerRunning.Visible = false;
             // 
+            // DisplayHelpLink
+            // 
+            this.DisplayHelpLink.AutoSize = true;
+            this.DisplayHelpLink.Location = new System.Drawing.Point(20, 234);
+            this.DisplayHelpLink.Name = "DisplayHelpLink";
+            this.DisplayHelpLink.Size = new System.Drawing.Size(132, 13);
+            this.DisplayHelpLink.TabIndex = 18;
+            this.DisplayHelpLink.TabStop = true;
+            this.DisplayHelpLink.Text = "Click to open PDF help file";
+            this.DisplayHelpLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DisplayHelpLink_LinkClicked);
+            // 
             // OCTMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1893,6 +1906,7 @@ namespace OverloadClientTool
         private CustomCheckBox MinimizeOnStartupCheckBox;
         private System.Windows.Forms.Button StartServerButton;
         private System.Windows.Forms.PictureBox ServerRunning;
+        private System.Windows.Forms.LinkLabel DisplayHelpLink;
     }
 }
 

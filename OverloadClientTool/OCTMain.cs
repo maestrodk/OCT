@@ -1974,5 +1974,20 @@ namespace OverloadClientTool
 
             serverProcessId = appStart.Id;
         }
+
+        private void DisplayHelpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            byte[] helpBytes = HelpFileBytes;
+            if ((helpBytes != null) && (helpBytes.Length > 0))
+            {
+                string tempPdfFile = Path.Combine(Path.GetTempPath(), "OverloadClientHelp.pdf");
+                System.IO.File.WriteAllBytes(tempPdfFile, helpBytes);
+                using (Process helpProcess = new Process())
+                {
+                    helpProcess.StartInfo.FileName = tempPdfFile;
+                    helpProcess.Start();
+                }
+            }
+        }
     }
 }

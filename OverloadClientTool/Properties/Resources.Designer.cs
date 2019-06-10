@@ -179,5 +179,15 @@ namespace OverloadClientTool.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] OverloadClientToolHelp {
+            get {
+                object obj = ResourceManager.GetObject("OverloadClientToolHelp", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
