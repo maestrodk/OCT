@@ -31,6 +31,7 @@ namespace OverloadClientTool
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OCTMain));
             this.OverloadExecutable = new System.Windows.Forms.TextBox();
             this.OverloadArgs = new System.Windows.Forms.TextBox();
             this.OlproxyExecutable = new System.Windows.Forms.TextBox();
@@ -126,6 +127,7 @@ namespace OverloadClientTool
             this.MinimizeOnStartupCheckBox = new OverloadClientTool.CustomCheckBox();
             this.UseTrayIcon = new OverloadClientTool.CustomCheckBox();
             this.PayPalLink = new System.Windows.Forms.LinkLabel();
+            this.DisplayHelpLink = new System.Windows.Forms.LinkLabel();
             this.MailLinkLabel = new System.Windows.Forms.LinkLabel();
             this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
             this.PartyModeCheckBox = new OverloadClientTool.CustomCheckBox();
@@ -149,7 +151,6 @@ namespace OverloadClientTool
             this.label15 = new System.Windows.Forms.Label();
             this.ServerTrackerUrl = new System.Windows.Forms.TextBox();
             this.ServerRunning = new System.Windows.Forms.PictureBox();
-            this.DisplayHelpLink = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).BeginInit();
@@ -332,6 +333,10 @@ namespace OverloadClientTool
             // 
             // OverloadClientToolNotifyIcon
             // 
+            this.OverloadClientToolNotifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.OverloadClientToolNotifyIcon.BalloonTipText = "Have great fun!";
+            this.OverloadClientToolNotifyIcon.BalloonTipTitle = "Overload Client Tool";
+            this.OverloadClientToolNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("OverloadClientToolNotifyIcon.Icon")));
             this.OverloadClientToolNotifyIcon.Text = "Overload Client Tool";
             this.OverloadClientToolNotifyIcon.Visible = true;
             this.OverloadClientToolNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.OverloadClientToolNotifyIcon_MouseDoubleClick);
@@ -1389,6 +1394,17 @@ namespace OverloadClientTool
             this.MainToolTip.SetToolTip(this.PayPalLink, "This is TOTALLY optional as OCT will always be free!");
             this.PayPalLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PayPalLink_LinkClicked);
             // 
+            // DisplayHelpLink
+            // 
+            this.DisplayHelpLink.AutoSize = true;
+            this.DisplayHelpLink.Location = new System.Drawing.Point(20, 234);
+            this.DisplayHelpLink.Name = "DisplayHelpLink";
+            this.DisplayHelpLink.Size = new System.Drawing.Size(132, 13);
+            this.DisplayHelpLink.TabIndex = 18;
+            this.DisplayHelpLink.TabStop = true;
+            this.DisplayHelpLink.Text = "Click to open PDF help file";
+            this.DisplayHelpLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DisplayHelpLink_LinkClicked);
+            // 
             // MailLinkLabel
             // 
             this.MailLinkLabel.AutoSize = true;
@@ -1693,17 +1709,6 @@ namespace OverloadClientTool
             this.ServerRunning.TabIndex = 10;
             this.ServerRunning.TabStop = false;
             this.ServerRunning.Visible = false;
-            // 
-            // DisplayHelpLink
-            // 
-            this.DisplayHelpLink.AutoSize = true;
-            this.DisplayHelpLink.Location = new System.Drawing.Point(20, 234);
-            this.DisplayHelpLink.Name = "DisplayHelpLink";
-            this.DisplayHelpLink.Size = new System.Drawing.Size(132, 13);
-            this.DisplayHelpLink.TabIndex = 18;
-            this.DisplayHelpLink.TabStop = true;
-            this.DisplayHelpLink.Text = "Click to open PDF help file";
-            this.DisplayHelpLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DisplayHelpLink_LinkClicked);
             // 
             // OCTMain
             // 

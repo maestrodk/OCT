@@ -45,6 +45,12 @@ namespace OverloadClientTool
 
         private string debugFileName = null;
 
+        // Tray icon menu.
+        private ContextMenu trayContextMenu = new ContextMenu();
+        private MenuItem trayMenuItemStart = new System.Windows.Forms.MenuItem();
+        private MenuItem trayMenuItemStartServer = new System.Windows.Forms.MenuItem();
+        private MenuItem trayMenuItemExit = new System.Windows.Forms.MenuItem();
+
         public void LogDebugMessage(string message)
         {
             if (!Debugging) return;
@@ -72,6 +78,25 @@ namespace OverloadClientTool
 
             // Initialize controls on main form.
             InitializeComponent();
+  
+            // Initialize tray menu item 1.
+            trayMenuItemStart.Index = 0;
+            trayMenuItemStart.Text = "&Start";
+            trayMenuItemStart.Click += new System.EventHandler(StartButton_Click);
+
+            // Initialize tray menu item 2.
+            trayMenuItemStartServer.Index = 1;
+            trayMenuItemStartServer.Text = "St&art server";
+            trayMenuItemStartServer.Click += new System.EventHandler(StartServerButton_Click);
+
+            // Initialize tray menu item 3.
+            trayMenuItemExit.Index = 2;
+            trayMenuItemExit.Text = "E&xit";
+            trayMenuItemExit.Click += new System.EventHandler(StopExitButton_Click);
+
+            // Setuy tray menu.
+            trayContextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { trayMenuItemStart, trayMenuItemStartServer, trayMenuItemExit });
+            OverloadClientToolNotifyIcon.ContextMenu = trayContextMenu;
 
             // Center main form on Desktop.
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -534,6 +559,8 @@ namespace OverloadClientTool
 
                     StartStopButton.Text = (overloadRunning || olmodRunning) ? "Stop" : "Start";
                     StartStopOlproxyButton.Text = (olproxyRunning) ? "Stop" : "Start";
+
+                    trayMenuItemStart.Text = (overloadRunning || olmodRunning) ? "&Stop" : "&Start";
 
                     if (StartStopButton.Enabled)
                     {
@@ -1899,10 +1926,13 @@ namespace OverloadClientTool
                 }
 
                 StartServerButton.Text = "Start server";
+                trayMenuItemStartServer.Text = "St&art server";
+
                 return;
             }
 
             StartServerButton.Text = "Stop server";
+            trayMenuItemStartServer.Text = "St&op server";
 
             // Setup Olproxy for server.
             if (IsOlproxyRunning) ShutdownOlproxy();
