@@ -96,18 +96,30 @@ namespace OverloadClientTool
                 }
                 else
                 {
-                    string activeText = " is the active pilot.";
-                    if (PilotNameLabel.Text != (testPilotName + activeText))
+                    try
                     {
-                        PilotNameLabel.Text = "";
-                        PilotNameLabel.SelectionFont = new Font(PilotNameLabel.Font, FontStyle.Bold);
-                        PilotNameLabel.AppendText(testPilotName);
-                        PilotNameLabel.SelectionFont = new Font(PilotNameLabel.Font, FontStyle.Regular);
-                        PilotNameLabel.AppendText(activeText);
+                        string activeText = " is the active pilot.";
+                        if (PilotNameLabel.Text != (testPilotName + activeText))
+                        {
+                            PilotNameLabel.Text = "";
+                            PilotNameLabel.SelectionFont = new Font(PilotNameLabel.Font, FontStyle.Bold);
+                            PilotNameLabel.AppendText(testPilotName);
+                            PilotNameLabel.SelectionFont = new Font(PilotNameLabel.Font, FontStyle.Regular);
+                            PilotNameLabel.AppendText(activeText);
+                        }
+                    }
+                    catch
+                    {
                     }
                 }
 
-                OCTMain.ApplyThemeToControl(PanePilots, theme);
+                try
+                {
+                    OCTMain.ApplyThemeToControl(PanePilots, theme);
+                }
+                catch
+                {
+                }
 
                 ValidateSetXp();
             });

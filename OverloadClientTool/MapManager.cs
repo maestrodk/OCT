@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Timers;
 using System.IO.Compression;
+using System.Text.RegularExpressions;
 
 namespace OverloadClientTool
 {
@@ -31,6 +32,8 @@ namespace OverloadClientTool
         public string LocalZipFileName = null;      // Full path to ZIP file if map exists locally in the Overload application data folder.
         public string LocalDLCZipFileName = null;   // Full path to ZIP file if map exists locally in the Overload application data folder.
 
+        public string MapTypes = null;
+
         public OverloadMap(string url, DateTime dateTime, int size, string mapZipName)
         {
             this.Url = url;
@@ -41,7 +44,7 @@ namespace OverloadClientTool
             mapZipName = HttpUtility.UrlDecode(mapZipName);
 
             // If Url is null then get file name only of mapZipName.
-            // Otherwise mapZipName must be online and the name is alread stripped from other URL path segments.
+            // Otherwise mapZipName must be online and the name is already stripped from other URL path segments.
             if (String.IsNullOrEmpty(this.Url))
             {
                 if (mapZipName.Contains(Path.DirectorySeparatorChar + "DLC" + Path.DirectorySeparatorChar)) this.LocalDLCZipFileName = mapZipName;
@@ -53,6 +56,8 @@ namespace OverloadClientTool
             {
                 this.ZipName = mapZipName;
             }
+
+            ReflectMapTypes();
         }
 
         /// <summary>
@@ -169,6 +174,8 @@ namespace OverloadClientTool
             result += (Hidden) ? " (Hidden)" : "";
 
             //result += (IsOnline) ? " (Online)" : "";
+            //result += (IsLocal) ? " (Local)" : "";
+
             //result += (InApplicationDataFolder) ? " (App)" : "";
             //result += (InDLCFolder) ? " (DLC)" : "";
 
@@ -217,6 +224,10 @@ namespace OverloadClientTool
                 if (InApplicationDataFolder) result += String.Format($", Application data folder");
                 if (InDLCFolder) result += String.Format($", DLC folder");
 
+                if (IsMPMap) result += String.Format($", MP");
+                if (IsSPMap) result += String.Format($", SP");
+                if (IsCMMap) result += String.Format($", CM");
+
                 return result.Trim();
             }
         }
@@ -248,6 +259,71 @@ namespace OverloadClientTool
         {
             using (ZipArchive zip = ZipFile.Open(zipFileName, ZipArchiveMode.Read)) foreach (ZipArchiveEntry entry in zip.Entries) if (entry.Name.ToLower().EndsWith(".mp")) return true;
             return false;
+        }
+
+        public bool IsMPMap
+        {
+            get
+            {
+                if (MapTypes == null) ReflectMapTypes();
+                return MapTypes.Contains("MP");
+            }
+        }
+
+        public bool IsSPMap
+        {
+            get
+            {
+                if (MapTypes == null) ReflectMapTypes();
+                return MapTypes.Contains("SP");
+            }
+        }
+
+        public bool IsCMMap
+        {
+            get
+            {
+                if (MapTypes == null) ReflectMapTypes();
+                return MapTypes.Contains("CM");
+            }
+        }
+
+        public void ReflectMapTypes()
+        {
+            string zipFileName = LocalZipFileName;
+            if (String.IsNullOrEmpty(zipFileName)) zipFileName = LocalDLCZipFileName;
+            if (String.IsNullOrEmpty(zipFileName)) return;
+
+            using (ZipArchive zip = ZipFile.Open(zipFileName, ZipArchiveMode.Read))
+            {
+                foreach (ZipArchiveEntry entry in zip.Entries)
+                {
+                    if (entry.Name.ToLower().EndsWith(".mp")) MapTypes += ",MP";
+                    if (entry.Name.ToLower().EndsWith(".sp")) MapTypes += ",SP";
+                    if (entry.Name.ToLower().EndsWith(".cm")) MapTypes += ",CM";
+                }
+                if (MapTypes.StartsWith(",")) MapTypes = MapTypes.Substring(1);
+            }
+        }
+
+        public static string GetMapTypesString(string zipFileName)
+        {
+            string mapTypes = "";
+
+            if (String.IsNullOrEmpty(zipFileName)) return "";
+
+            using (ZipArchive zip = ZipFile.Open(zipFileName, ZipArchiveMode.Read))
+            {
+                foreach (ZipArchiveEntry entry in zip.Entries)
+                {
+                    if (entry.Name.ToLower().EndsWith(".mp")) mapTypes += ",MP";
+                    if (entry.Name.ToLower().EndsWith(".sp")) mapTypes += ",SP";
+                    if (entry.Name.ToLower().EndsWith(".cm")) mapTypes += ",CM";
+                }
+                if (mapTypes.StartsWith(",")) mapTypes = mapTypes.Substring(1);
+            }
+
+            return mapTypes;
         }
     }
 
@@ -289,6 +365,13 @@ namespace OverloadClientTool
         public int Errors = 0;
 
         public bool OnlyUpdateExistingMaps { get; set; }
+
+        public bool IncludeMP { get; set; }
+
+        public bool IncludeSP { get; set; }
+
+        public bool IncludeCM { get; set; }
+
         public bool HideUnOfficialMaps { get; set; }
 
         // Set delegate for logging.
@@ -318,10 +401,20 @@ namespace OverloadClientTool
             Debug.WriteLine(s);
         }
 
+        public bool IsDLC(string fileName)
+        {
+            // https://regexr.com/
+            var match = Regex.Match(fileName, @"s*[d][l][c]([0-9]{0,3})[.][z][i][p]", RegexOptions.IgnoreCase);
+            return match.Success;
+        }
+
         // Prevent default constructor.
-        public OverloadMapManager(bool onlyExistingMaps = false)
+        public OverloadMapManager(bool onlyExistingMaps = false, bool includeMP = true, bool includeSP = false, bool includeCM = false)
         {
             OnlyUpdateExistingMaps = onlyExistingMaps;
+            IncludeMP = includeMP;
+            IncludeSP = includeSP;
+            IncludeCM = includeCM;
         }
 
         /// <summary>
@@ -387,11 +480,51 @@ namespace OverloadClientTool
                     {
                         // Get the ZIP file name from URL.
                         string mapZipName = mapUri.Segments[mapUri.Segments.Length - 1];
-                        if (mapZipName.ToLower().EndsWith(".zip"))
+                        if (mapZipName.ToLower().EndsWith(".zip")) 
                         {
+                            // Try to get map types, default to MP.
+                            Newtonsoft.Json.Linq.JArray mapLevels = null;
+                            string mapTypes = null;
+
+                            try
+                            {
+                                mapLevels = map.levels;
+                                string mapType = null;
+
+                                foreach (dynamic level in mapLevels)
+                                {
+                                    try
+                                    {
+                                        mapType = level.type;
+                                        mapTypes += " " + mapType.ToUpper();
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                            }
+
                             // Uppercase first char in map name.
                             mapZipName = mapZipName.Substring(0, 1).ToUpper() + mapZipName.Substring(1);
+                            string mapZipDisplayName = WebUtility.UrlDecode(mapZipName).Trim();
+
                             OverloadMap newMap = new OverloadMap(baseUrl + map.url, UnixTimeStampToDateTime(Convert.ToDouble(map.mtime)), Convert.ToInt32(map.size), mapZipName);
+
+                            bool getMap = false;
+
+                            if (IncludeMP && mapTypes.Contains("MP")) getMap = true;
+                            if (IncludeSP && mapTypes.Contains("SP")) getMap = true;
+                            if (IncludeCM && mapTypes.Contains("CM")) getMap = true;
+
+                            if (!getMap)
+                            {
+                                newMap.Url = null;
+                                LogMessage($"Skipping online map {mapZipDisplayName}.");
+                            }
+
                             newMapList.Add(mapZipName.ToLower(), newMap);
                         }
                     }
@@ -412,7 +545,7 @@ namespace OverloadClientTool
                     string[] list = Directory.GetFiles(applicationMapFolder, "*.zip*");
                     foreach (string mapFileName in list)
                     {
-                        if (mapFileName.EndsWith(HiddenMarker) || mapFileName.ToLower().EndsWith(".zip"))
+                        if (mapFileName.EndsWith(HiddenMarker) || (mapFileName.ToLower().EndsWith(".zip") && !IsDLC(mapFileName)))
                         {
                             string mapKey = Path.GetFileName(mapFileName).ToLower();
 
@@ -440,8 +573,9 @@ namespace OverloadClientTool
 
                             if (!found)
                             {
-                                // See if we should hide MP maps if not included in the official map list.
-                                if (HideUnOfficialMaps && OverloadMap.ContainsMultiplayerMap(mapFileName) && !newMap.Hidden)
+                                // See if we should hide map if not included in the official map list and not purposedly skipped.
+                                //if (HideUnOfficialMaps && OverloadMap.ContainsMultiplayerMap(mapFileName) && !newMap.Hidden)
+                                if (HideUnOfficialMaps && !newMap.Hidden)
                                 {
                                     string zipName = newMap.ZipName;
                                     if (zipName.ToLower().EndsWith(".zip")) zipName = zipName.Substring(0, zipName.Length - ".zip".Length);
@@ -472,7 +606,7 @@ namespace OverloadClientTool
                     string[] list = Directory.GetFiles(dlcMapFolder, "*.zip*");
                     foreach (string mapFileName in list)
                     {
-                        if (mapFileName.EndsWith(HiddenMarker) || mapFileName.ToLower().EndsWith(".zip"))
+                        if (mapFileName.EndsWith(HiddenMarker) || (mapFileName.ToLower().EndsWith(".zip") && !IsDLC(mapFileName)))
                         {
                             string mapKey = Path.GetFileName(mapFileName).ToLower();
 
@@ -500,8 +634,8 @@ namespace OverloadClientTool
 
                             if (!found)
                             {
-                                // See if we should hide MP maps if not included in the official map list.
-                                if (HideUnOfficialMaps && OverloadMap.ContainsMultiplayerMap(mapFileName) && !newMap.Hidden)
+                                //if (HideUnOfficialMaps && OverloadMap.ContainsMultiplayerMap(mapFileName) && !newMap.Hidden)
+                                if (HideUnOfficialMaps && !newMap.Hidden)
                                 {
                                     string zipName = newMap.ZipName;
                                     if (zipName.ToLower().EndsWith(".zip")) zipName = zipName.Substring(0, zipName.Length - ".zip".Length);
@@ -524,7 +658,7 @@ namespace OverloadClientTool
             }
 
             // Update maps.
-            SortedMaps = newMapList;
+            SortedMaps = newMapList;            
         }
 
         /// <summary>

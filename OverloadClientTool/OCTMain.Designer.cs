@@ -44,7 +44,7 @@ namespace OverloadClientTool
             this.OlproxyRunning = new System.Windows.Forms.PictureBox();
             this.UpdatingMaps = new System.Windows.Forms.PictureBox();
             this.OnlineMapJsonUrl = new System.Windows.Forms.TextBox();
-            this.MapsListBox = new System.Windows.Forms.ListBox();
+            this.MapsListBox = new CustomListBox(); // new System.Windows.Forms.ListBox();
             this.OverloadClientToolNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.PilotDeleteButton = new System.Windows.Forms.Button();
             this.PilotRenameButton = new System.Windows.Forms.Button();
@@ -57,7 +57,6 @@ namespace OverloadClientTool
             this.panel11 = new System.Windows.Forms.Panel();
             this.label12 = new System.Windows.Forms.Label();
             this.TreeViewLogPanel = new System.Windows.Forms.Panel();
-            this.LogTreeView = new OverloadClientTool.CustomTreeView();
             this.StatusMessage = new System.Windows.Forms.Label();
             this.PaneSelectMain = new System.Windows.Forms.Button();
             this.PaneSelectMapManager = new System.Windows.Forms.Button();
@@ -68,10 +67,6 @@ namespace OverloadClientTool
             this.panel7 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
             this.MapsPanel = new System.Windows.Forms.Panel();
-            this.HideUnofficialMapsCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.UseDLCLocationCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.AutoUpdateMapsCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.OnlyUpdateExistingMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.MapUnhideAllButton = new System.Windows.Forms.Button();
             this.MapRefreshButton = new System.Windows.Forms.Button();
             this.PanePilots = new System.Windows.Forms.Panel();
@@ -81,9 +76,7 @@ namespace OverloadClientTool
             this.PilotXPTextBox = new System.Windows.Forms.TextBox();
             this.PilotsPanel = new System.Windows.Forms.Panel();
             this.OpenPilotsBackupFolder = new System.Windows.Forms.LinkLabel();
-            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
             this.PilotMakeActiveButton = new System.Windows.Forms.Button();
-            this.AutoPilotsBackupCheckbox = new OverloadClientTool.CustomCheckBox();
             this.PilotXPSetButton = new System.Windows.Forms.Button();
             this.PaneSelectOlproxy = new System.Windows.Forms.Button();
             this.PaneSelectOlmod = new System.Windows.Forms.Button();
@@ -94,8 +87,6 @@ namespace OverloadClientTool
             this.panel2 = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.StartStopOlproxyButton = new System.Windows.Forms.Button();
-            this.UseEmbeddedOlproxy = new OverloadClientTool.CustomCheckBox();
-            this.UseOlproxyCheckBox = new OverloadClientTool.CustomCheckBox();
             this.PaneOverload = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
@@ -112,10 +103,6 @@ namespace OverloadClientTool
             this.OlmodExecutable = new System.Windows.Forms.TextBox();
             this.OlmodReleases = new System.Windows.Forms.LinkLabel();
             this.UpdateOlmodButton = new System.Windows.Forms.Button();
-            this.FrameTimeCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.UseOlmodGameDirArg = new OverloadClientTool.CustomCheckBox();
-            this.AutoUpdateOlmod = new OverloadClientTool.CustomCheckBox();
-            this.UseOlmodCheckBox = new OverloadClientTool.CustomCheckBox();
             this.PaneButtonLine = new System.Windows.Forms.Panel();
             this.PaneSelectOptions = new System.Windows.Forms.Button();
             this.PaneOptions = new System.Windows.Forms.Panel();
@@ -124,20 +111,11 @@ namespace OverloadClientTool
             this.ActiveThemePanel = new System.Windows.Forms.Panel();
             this.AvailableThemesListBox = new System.Windows.Forms.ListBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.MinimizeOnStartupCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.UseTrayIcon = new OverloadClientTool.CustomCheckBox();
             this.PayPalLink = new System.Windows.Forms.LinkLabel();
             this.DisplayHelpLink = new System.Windows.Forms.LinkLabel();
             this.MailLinkLabel = new System.Windows.Forms.LinkLabel();
             this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
-            this.PartyModeCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.EnableDebugCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.AutoUpdateCheckBox = new OverloadClientTool.CustomCheckBox();
             this.MainToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.ServerEnableCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.ServerAnnounceOnTrackerCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.ServerAutoSignOffTracker = new OverloadClientTool.CustomCheckBox();
-            this.AutoStartCheckBox = new OverloadClientTool.CustomCheckBox();
             this.PaneSelectServer = new System.Windows.Forms.Button();
             this.PaneServer = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -151,6 +129,32 @@ namespace OverloadClientTool
             this.label15 = new System.Windows.Forms.Label();
             this.ServerTrackerUrl = new System.Windows.Forms.TextBox();
             this.ServerRunning = new System.Windows.Forms.PictureBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.ServerEnableCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.ServerAnnounceOnTrackerCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.ServerAutoSignOffTracker = new OverloadClientTool.CustomCheckBox();
+            this.AutoStartCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.MinimizeOnStartupCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.UseTrayIcon = new OverloadClientTool.CustomCheckBox();
+            this.PartyModeCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.EnableDebugCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.AutoUpdateCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.FrameTimeCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.UseOlmodGameDirArg = new OverloadClientTool.CustomCheckBox();
+            this.AutoUpdateOlmod = new OverloadClientTool.CustomCheckBox();
+            this.UseOlmodCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.UseEmbeddedOlproxy = new OverloadClientTool.CustomCheckBox();
+            this.UseOlproxyCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.CMMapsCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.SPMapsCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.MPMapsCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.HideUnofficialMapsCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.UseDLCLocationCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.AutoUpdateMapsCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.OnlyUpdateExistingMapsCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.PilotNameLabel = new OverloadClientTool.TransparentLabel();
+            this.AutoPilotsBackupCheckbox = new OverloadClientTool.CustomCheckBox();
+            this.LogTreeView = new OverloadClientTool.CustomTreeView();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).BeginInit();
@@ -257,7 +261,7 @@ namespace OverloadClientTool
             // MapUpdateButton
             // 
             this.MapUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapUpdateButton.Location = new System.Drawing.Point(284, 288);
+            this.MapUpdateButton.Location = new System.Drawing.Point(301, 285);
             this.MapUpdateButton.Name = "MapUpdateButton";
             this.MapUpdateButton.Size = new System.Drawing.Size(106, 24);
             this.MapUpdateButton.TabIndex = 9;
@@ -295,7 +299,7 @@ namespace OverloadClientTool
             // 
             this.UpdatingMaps.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.UpdatingMaps.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-            this.UpdatingMaps.Location = new System.Drawing.Point(394, 292);
+            this.UpdatingMaps.Location = new System.Drawing.Point(411, 289);
             this.UpdatingMaps.Name = "UpdatingMaps";
             this.UpdatingMaps.Size = new System.Drawing.Size(18, 18);
             this.UpdatingMaps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -310,7 +314,7 @@ namespace OverloadClientTool
             this.OnlineMapJsonUrl.Location = new System.Drawing.Point(7, 19);
             this.OnlineMapJsonUrl.Margin = new System.Windows.Forms.Padding(1);
             this.OnlineMapJsonUrl.Name = "OnlineMapJsonUrl";
-            this.OnlineMapJsonUrl.Size = new System.Drawing.Size(252, 20);
+            this.OnlineMapJsonUrl.Size = new System.Drawing.Size(257, 20);
             this.OnlineMapJsonUrl.TabIndex = 1;
             this.OnlineMapJsonUrl.Text = "https://www.overloadmaps.com/data/mp.json";
             this.OnlineMapJsonUrl.TextChanged += new System.EventHandler(this.OnlineMapJsonUrl_TextChanged);
@@ -325,7 +329,7 @@ namespace OverloadClientTool
             this.MapsListBox.FormattingEnabled = true;
             this.MapsListBox.Location = new System.Drawing.Point(1, 1);
             this.MapsListBox.Name = "MapsListBox";
-            this.MapsListBox.Size = new System.Drawing.Size(263, 234);
+            this.MapsListBox.Size = new System.Drawing.Size(173, 234);
             this.MapsListBox.TabIndex = 0;
             this.MapsListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.MapsListBox_DrawItem);
             this.MapsListBox.SelectedIndexChanged += new System.EventHandler(this.MapsListBox_SelectedIndexChanged);
@@ -401,7 +405,7 @@ namespace OverloadClientTool
             // MapDeleteButton
             // 
             this.MapDeleteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapDeleteButton.Location = new System.Drawing.Point(295, 54);
+            this.MapDeleteButton.Location = new System.Drawing.Point(211, 54);
             this.MapDeleteButton.Name = "MapDeleteButton";
             this.MapDeleteButton.Size = new System.Drawing.Size(65, 23);
             this.MapDeleteButton.TabIndex = 14;
@@ -412,7 +416,7 @@ namespace OverloadClientTool
             // MapHideButton
             // 
             this.MapHideButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapHideButton.Location = new System.Drawing.Point(295, 25);
+            this.MapHideButton.Location = new System.Drawing.Point(211, 25);
             this.MapHideButton.Name = "MapHideButton";
             this.MapHideButton.Size = new System.Drawing.Size(65, 23);
             this.MapHideButton.TabIndex = 14;
@@ -460,27 +464,6 @@ namespace OverloadClientTool
             this.TreeViewLogPanel.Name = "TreeViewLogPanel";
             this.TreeViewLogPanel.Size = new System.Drawing.Size(500, 265);
             this.TreeViewLogPanel.TabIndex = 19;
-            // 
-            // LogTreeView
-            // 
-            this.LogTreeView.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.LogTreeView.BackColor = System.Drawing.Color.Gray;
-            this.LogTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTreeView.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-            this.LogTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LogTreeView.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.LogTreeView.FullRowSelect = true;
-            this.LogTreeView.ItemHeight = 14;
-            this.LogTreeView.Location = new System.Drawing.Point(1, 1);
-            this.LogTreeView.Margin = new System.Windows.Forms.Padding(0);
-            this.LogTreeView.Name = "LogTreeView";
-            this.LogTreeView.ShowLines = false;
-            this.LogTreeView.ShowPlusMinus = false;
-            this.LogTreeView.ShowRootLines = false;
-            this.LogTreeView.Size = new System.Drawing.Size(498, 263);
-            this.LogTreeView.TabIndex = 19;
-            this.LogTreeView.TabStop = false;
-            this.LogTreeView.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.LogTreeView_DrawNode);
             // 
             // StatusMessage
             // 
@@ -562,9 +545,13 @@ namespace OverloadClientTool
             // PaneMaps
             // 
             this.PaneMaps.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneMaps.Controls.Add(this.label17);
             this.PaneMaps.Controls.Add(this.label6);
             this.PaneMaps.Controls.Add(this.panel7);
             this.PaneMaps.Controls.Add(this.MapsPanel);
+            this.PaneMaps.Controls.Add(this.CMMapsCheckBox);
+            this.PaneMaps.Controls.Add(this.SPMapsCheckBox);
+            this.PaneMaps.Controls.Add(this.MPMapsCheckBox);
             this.PaneMaps.Controls.Add(this.HideUnofficialMapsCheckBox);
             this.PaneMaps.Controls.Add(this.UseDLCLocationCheckBox);
             this.PaneMaps.Controls.Add(this.MapUpdateButton);
@@ -596,7 +583,7 @@ namespace OverloadClientTool
             this.panel7.Controls.Add(this.OnlineMapJsonUrl);
             this.panel7.Location = new System.Drawing.Point(17, 270);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(264, 47);
+            this.panel7.Size = new System.Drawing.Size(278, 47);
             this.panel7.TabIndex = 18;
             // 
             // label7
@@ -614,83 +601,13 @@ namespace OverloadClientTool
             this.MapsPanel.Controls.Add(this.MapsListBox);
             this.MapsPanel.Location = new System.Drawing.Point(16, 25);
             this.MapsPanel.Name = "MapsPanel";
-            this.MapsPanel.Size = new System.Drawing.Size(265, 236);
+            this.MapsPanel.Size = new System.Drawing.Size(175, 236);
             this.MapsPanel.TabIndex = 19;
-            // 
-            // HideUnofficialMapsCheckBox
-            // 
-            this.HideUnofficialMapsCheckBox.AutoSize = true;
-            this.HideUnofficialMapsCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.HideUnofficialMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.HideUnofficialMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.HideUnofficialMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.HideUnofficialMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HideUnofficialMapsCheckBox.Location = new System.Drawing.Point(295, 190);
-            this.HideUnofficialMapsCheckBox.Name = "HideUnofficialMapsCheckBox";
-            this.HideUnofficialMapsCheckBox.Size = new System.Drawing.Size(211, 17);
-            this.HideUnofficialMapsCheckBox.TabIndex = 5;
-            this.HideUnofficialMapsCheckBox.Text = "When updating hide unofficial MP maps";
-            this.MainToolTip.SetToolTip(this.HideUnofficialMapsCheckBox, "Select this to hide MP maps that are not in the official map list");
-            this.HideUnofficialMapsCheckBox.UseVisualStyleBackColor = false;
-            this.HideUnofficialMapsCheckBox.CheckedChanged += new System.EventHandler(this.HideUnofficialMapsCheckBox_CheckedChanged);
-            // 
-            // UseDLCLocationCheckBox
-            // 
-            this.UseDLCLocationCheckBox.AutoCheck = false;
-            this.UseDLCLocationCheckBox.AutoSize = true;
-            this.UseDLCLocationCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.UseDLCLocationCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.UseDLCLocationCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.UseDLCLocationCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.UseDLCLocationCheckBox.Enabled = false;
-            this.UseDLCLocationCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(295, 213);
-            this.UseDLCLocationCheckBox.Name = "UseDLCLocationCheckBox";
-            this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(199, 17);
-            this.UseDLCLocationCheckBox.TabIndex = 5;
-            this.UseDLCLocationCheckBox.Text = "Use DLC folder for downloaded maps";
-            this.MainToolTip.SetToolTip(this.UseDLCLocationCheckBox, "Save downloaded map ZIP files to Overload DLC folder");
-            this.UseDLCLocationCheckBox.UseVisualStyleBackColor = false;
-            this.UseDLCLocationCheckBox.Click += new System.EventHandler(this.UseDLCLocationCheckBox_Click);
-            // 
-            // AutoUpdateMapsCheckBox
-            // 
-            this.AutoUpdateMapsCheckBox.AutoSize = true;
-            this.AutoUpdateMapsCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.AutoUpdateMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.AutoUpdateMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.AutoUpdateMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.AutoUpdateMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(295, 144);
-            this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
-            this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(146, 17);
-            this.AutoUpdateMapsCheckBox.TabIndex = 5;
-            this.AutoUpdateMapsCheckBox.Text = "Update all maps at startup";
-            this.MainToolTip.SetToolTip(this.AutoUpdateMapsCheckBox, "Do an update of all maps at startup (may take a bit of extra time)");
-            this.AutoUpdateMapsCheckBox.UseVisualStyleBackColor = false;
-            this.AutoUpdateMapsCheckBox.Click += new System.EventHandler(this.AutoUpdateMaps_Click);
-            // 
-            // OnlyUpdateExistingMapsCheckBox
-            // 
-            this.OnlyUpdateExistingMapsCheckBox.AutoSize = true;
-            this.OnlyUpdateExistingMapsCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.OnlyUpdateExistingMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.OnlyUpdateExistingMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.OnlyUpdateExistingMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.OnlyUpdateExistingMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(295, 167);
-            this.OnlyUpdateExistingMapsCheckBox.Name = "OnlyUpdateExistingMapsCheckBox";
-            this.OnlyUpdateExistingMapsCheckBox.Size = new System.Drawing.Size(146, 17);
-            this.OnlyUpdateExistingMapsCheckBox.TabIndex = 5;
-            this.OnlyUpdateExistingMapsCheckBox.Text = "Only update existing maps";
-            this.MainToolTip.SetToolTip(this.OnlyUpdateExistingMapsCheckBox, "Only update map ZIP files already on disk");
-            this.OnlyUpdateExistingMapsCheckBox.UseVisualStyleBackColor = false;
-            this.OnlyUpdateExistingMapsCheckBox.CheckedChanged += new System.EventHandler(this.OnlyUpdateExistingMapsCheckBox_CheckedChanged);
             // 
             // MapUnhideAllButton
             // 
             this.MapUnhideAllButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapUnhideAllButton.Location = new System.Drawing.Point(372, 25);
+            this.MapUnhideAllButton.Location = new System.Drawing.Point(211, 111);
             this.MapUnhideAllButton.Name = "MapUnhideAllButton";
             this.MapUnhideAllButton.Size = new System.Drawing.Size(65, 23);
             this.MapUnhideAllButton.TabIndex = 14;
@@ -702,7 +619,7 @@ namespace OverloadClientTool
             // 
             this.MapRefreshButton.Enabled = false;
             this.MapRefreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapRefreshButton.Location = new System.Drawing.Point(295, 83);
+            this.MapRefreshButton.Location = new System.Drawing.Point(211, 83);
             this.MapRefreshButton.Name = "MapRefreshButton";
             this.MapRefreshButton.Size = new System.Drawing.Size(65, 23);
             this.MapRefreshButton.TabIndex = 14;
@@ -792,18 +709,6 @@ namespace OverloadClientTool
             this.OpenPilotsBackupFolder.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
             this.OpenPilotsBackupFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OpenPilotsBackupFolder_LinkClicked);
             // 
-            // PilotNameLabel
-            // 
-            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PilotNameLabel.Enabled = false;
-            this.PilotNameLabel.Location = new System.Drawing.Point(22, 255);
-            this.PilotNameLabel.Multiline = false;
-            this.PilotNameLabel.Name = "PilotNameLabel";
-            this.PilotNameLabel.ReadOnly = true;
-            this.PilotNameLabel.Size = new System.Drawing.Size(471, 17);
-            this.PilotNameLabel.TabIndex = 17;
-            this.PilotNameLabel.Text = "Pilot";
-            // 
             // PilotMakeActiveButton
             // 
             this.PilotMakeActiveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -814,22 +719,6 @@ namespace OverloadClientTool
             this.PilotMakeActiveButton.Text = "Select";
             this.PilotMakeActiveButton.UseVisualStyleBackColor = true;
             this.PilotMakeActiveButton.Click += new System.EventHandler(this.PilotMakeActiveButton_Click);
-            // 
-            // AutoPilotsBackupCheckbox
-            // 
-            this.AutoPilotsBackupCheckbox.AutoSize = true;
-            this.AutoPilotsBackupCheckbox.CheckBackColor = System.Drawing.Color.Gray;
-            this.AutoPilotsBackupCheckbox.CheckForeColor = System.Drawing.Color.SkyBlue;
-            this.AutoPilotsBackupCheckbox.CheckInactiveForeColor = System.Drawing.Color.SlateGray;
-            this.AutoPilotsBackupCheckbox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AutoPilotsBackupCheckbox.Location = new System.Drawing.Point(22, 301);
-            this.AutoPilotsBackupCheckbox.Name = "AutoPilotsBackupCheckbox";
-            this.AutoPilotsBackupCheckbox.Size = new System.Drawing.Size(277, 17);
-            this.AutoPilotsBackupCheckbox.TabIndex = 5;
-            this.AutoPilotsBackupCheckbox.Text = "Do a backup of all pilots each time Overload is started";
-            this.MainToolTip.SetToolTip(this.AutoPilotsBackupCheckbox, "Check this to save a ZIP\'ed backup of all pilots when Overload/Olmod starts");
-            this.AutoPilotsBackupCheckbox.UseVisualStyleBackColor = true;
-            this.AutoPilotsBackupCheckbox.CheckedChanged += new System.EventHandler(this.AutoPilotsBackupCheckbox_CheckedChanged);
             // 
             // PilotXPSetButton
             // 
@@ -951,44 +840,6 @@ namespace OverloadClientTool
             this.StartStopOlproxyButton.Text = "Start";
             this.StartStopOlproxyButton.UseVisualStyleBackColor = true;
             this.StartStopOlproxyButton.Click += new System.EventHandler(this.StartStopOlproxyButton_Click);
-            // 
-            // UseEmbeddedOlproxy
-            // 
-            this.UseEmbeddedOlproxy.AutoSize = true;
-            this.UseEmbeddedOlproxy.BackColor = System.Drawing.Color.LightSlateGray;
-            this.UseEmbeddedOlproxy.CheckBackColor = System.Drawing.Color.Gray;
-            this.UseEmbeddedOlproxy.Checked = true;
-            this.UseEmbeddedOlproxy.CheckForeColor = System.Drawing.Color.Black;
-            this.UseEmbeddedOlproxy.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.UseEmbeddedOlproxy.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseEmbeddedOlproxy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UseEmbeddedOlproxy.Location = new System.Drawing.Point(127, 13);
-            this.UseEmbeddedOlproxy.Name = "UseEmbeddedOlproxy";
-            this.UseEmbeddedOlproxy.Size = new System.Drawing.Size(133, 17);
-            this.UseEmbeddedOlproxy.TabIndex = 5;
-            this.UseEmbeddedOlproxy.Text = "Use embedded Olproxy";
-            this.MainToolTip.SetToolTip(this.UseEmbeddedOlproxy, "Use the built-in Olproxy");
-            this.UseEmbeddedOlproxy.UseVisualStyleBackColor = false;
-            this.UseEmbeddedOlproxy.CheckedChanged += new System.EventHandler(this.UseEmbeddedOlproxy_CheckedChanged);
-            // 
-            // UseOlproxyCheckBox
-            // 
-            this.UseOlproxyCheckBox.AutoSize = true;
-            this.UseOlproxyCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.UseOlproxyCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.UseOlproxyCheckBox.Checked = true;
-            this.UseOlproxyCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.UseOlproxyCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.UseOlproxyCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseOlproxyCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UseOlproxyCheckBox.Location = new System.Drawing.Point(12, 12);
-            this.UseOlproxyCheckBox.Name = "UseOlproxyCheckBox";
-            this.UseOlproxyCheckBox.Size = new System.Drawing.Size(80, 17);
-            this.UseOlproxyCheckBox.TabIndex = 5;
-            this.UseOlproxyCheckBox.Text = "Use Olproxy";
-            this.MainToolTip.SetToolTip(this.UseOlproxyCheckBox, "Start Olproxy when Overload/Olmod is started");
-            this.UseOlproxyCheckBox.UseVisualStyleBackColor = false;
-            this.UseOlproxyCheckBox.CheckedChanged += new System.EventHandler(this.UseOlproxy_CheckedChanged);
             // 
             // PaneOverload
             // 
@@ -1169,79 +1020,6 @@ namespace OverloadClientTool
             this.UpdateOlmodButton.UseVisualStyleBackColor = true;
             this.UpdateOlmodButton.Click += new System.EventHandler(this.UpdateOlmod_Click);
             // 
-            // FrameTimeCheckBox
-            // 
-            this.FrameTimeCheckBox.AutoSize = true;
-            this.FrameTimeCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.FrameTimeCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.FrameTimeCheckBox.Checked = true;
-            this.FrameTimeCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.FrameTimeCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.FrameTimeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.FrameTimeCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.FrameTimeCheckBox.Location = new System.Drawing.Point(25, 177);
-            this.FrameTimeCheckBox.Name = "FrameTimeCheckBox";
-            this.FrameTimeCheckBox.Size = new System.Drawing.Size(190, 17);
-            this.FrameTimeCheckBox.TabIndex = 5;
-            this.FrameTimeCheckBox.Text = "Show FPS (using -frametime option)";
-            this.FrameTimeCheckBox.UseVisualStyleBackColor = false;
-            this.FrameTimeCheckBox.CheckedChanged += new System.EventHandler(this.FrameTimeCheckBox_CheckedChanged);
-            // 
-            // UseOlmodGameDirArg
-            // 
-            this.UseOlmodGameDirArg.AutoSize = true;
-            this.UseOlmodGameDirArg.BackColor = System.Drawing.Color.LightSlateGray;
-            this.UseOlmodGameDirArg.CheckBackColor = System.Drawing.Color.Gray;
-            this.UseOlmodGameDirArg.Checked = true;
-            this.UseOlmodGameDirArg.CheckForeColor = System.Drawing.Color.Black;
-            this.UseOlmodGameDirArg.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.UseOlmodGameDirArg.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseOlmodGameDirArg.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UseOlmodGameDirArg.Location = new System.Drawing.Point(25, 154);
-            this.UseOlmodGameDirArg.Name = "UseOlmodGameDirArg";
-            this.UseOlmodGameDirArg.Size = new System.Drawing.Size(308, 17);
-            this.UseOlmodGameDirArg.TabIndex = 5;
-            this.UseOlmodGameDirArg.Text = "Tell Olmod where Overload is installed (using-gamedir option)";
-            this.MainToolTip.SetToolTip(this.UseOlmodGameDirArg, "Enable this to use Olmod \'-gamedir\' to tell Olmod where Overload is installed");
-            this.UseOlmodGameDirArg.UseVisualStyleBackColor = false;
-            this.UseOlmodGameDirArg.CheckedChanged += new System.EventHandler(this.UseGameDirArg_CheckedChanged);
-            // 
-            // AutoUpdateOlmod
-            // 
-            this.AutoUpdateOlmod.AutoSize = true;
-            this.AutoUpdateOlmod.CheckBackColor = System.Drawing.Color.Gray;
-            this.AutoUpdateOlmod.Checked = true;
-            this.AutoUpdateOlmod.CheckForeColor = System.Drawing.Color.SkyBlue;
-            this.AutoUpdateOlmod.CheckInactiveForeColor = System.Drawing.Color.SlateGray;
-            this.AutoUpdateOlmod.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AutoUpdateOlmod.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AutoUpdateOlmod.Location = new System.Drawing.Point(119, 17);
-            this.AutoUpdateOlmod.Name = "AutoUpdateOlmod";
-            this.AutoUpdateOlmod.Size = new System.Drawing.Size(114, 17);
-            this.AutoUpdateOlmod.TabIndex = 5;
-            this.AutoUpdateOlmod.Text = "Auto-update Olmod";
-            this.MainToolTip.SetToolTip(this.AutoUpdateOlmod, "Enable this to automatically update Olmod when OCT starts");
-            this.AutoUpdateOlmod.UseVisualStyleBackColor = true;
-            this.AutoUpdateOlmod.CheckedChanged += new System.EventHandler(this.AutoUpdateOlmod_CheckedChanged);
-            // 
-            // UseOlmodCheckBox
-            // 
-            this.UseOlmodCheckBox.AutoSize = true;
-            this.UseOlmodCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.UseOlmodCheckBox.Checked = true;
-            this.UseOlmodCheckBox.CheckForeColor = System.Drawing.Color.SkyBlue;
-            this.UseOlmodCheckBox.CheckInactiveForeColor = System.Drawing.Color.SlateGray;
-            this.UseOlmodCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseOlmodCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UseOlmodCheckBox.Location = new System.Drawing.Point(25, 17);
-            this.UseOlmodCheckBox.Name = "UseOlmodCheckBox";
-            this.UseOlmodCheckBox.Size = new System.Drawing.Size(75, 17);
-            this.UseOlmodCheckBox.TabIndex = 5;
-            this.UseOlmodCheckBox.Text = "Use Olmod";
-            this.MainToolTip.SetToolTip(this.UseOlmodCheckBox, "If checked then Olmod will be used to run Overload");
-            this.UseOlmodCheckBox.UseVisualStyleBackColor = true;
-            this.UseOlmodCheckBox.CheckedChanged += new System.EventHandler(this.UseOlmod_CheckedChanged);
-            // 
             // PaneButtonLine
             // 
             this.PaneButtonLine.BackColor = System.Drawing.Color.MediumBlue;
@@ -1344,44 +1122,6 @@ namespace OverloadClientTool
             this.label13.TabIndex = 3;
             this.label13.Text = "Active Theme";
             // 
-            // MinimizeOnStartupCheckBox
-            // 
-            this.MinimizeOnStartupCheckBox.AutoSize = true;
-            this.MinimizeOnStartupCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.MinimizeOnStartupCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.MinimizeOnStartupCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.MinimizeOnStartupCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.MinimizeOnStartupCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MinimizeOnStartupCheckBox.Location = new System.Drawing.Point(272, 66);
-            this.MinimizeOnStartupCheckBox.Margin = new System.Windows.Forms.Padding(0);
-            this.MinimizeOnStartupCheckBox.Name = "MinimizeOnStartupCheckBox";
-            this.MinimizeOnStartupCheckBox.Size = new System.Drawing.Size(113, 17);
-            this.MinimizeOnStartupCheckBox.TabIndex = 5;
-            this.MinimizeOnStartupCheckBox.Text = "Minimize on startup";
-            this.MinimizeOnStartupCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.MainToolTip.SetToolTip(this.MinimizeOnStartupCheckBox, "Select this to minimize OCT on startup");
-            this.MinimizeOnStartupCheckBox.UseVisualStyleBackColor = false;
-            this.MinimizeOnStartupCheckBox.CheckedChanged += new System.EventHandler(this.MinimizeOnStartupCheckBox_CheckedChanged);
-            // 
-            // UseTrayIcon
-            // 
-            this.UseTrayIcon.AutoSize = true;
-            this.UseTrayIcon.BackColor = System.Drawing.Color.LightSlateGray;
-            this.UseTrayIcon.CheckBackColor = System.Drawing.Color.Gray;
-            this.UseTrayIcon.CheckForeColor = System.Drawing.Color.Black;
-            this.UseTrayIcon.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.UseTrayIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UseTrayIcon.Location = new System.Drawing.Point(272, 92);
-            this.UseTrayIcon.Margin = new System.Windows.Forms.Padding(0);
-            this.UseTrayIcon.Name = "UseTrayIcon";
-            this.UseTrayIcon.Size = new System.Drawing.Size(85, 17);
-            this.UseTrayIcon.TabIndex = 5;
-            this.UseTrayIcon.Text = "Use tray icon";
-            this.UseTrayIcon.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.MainToolTip.SetToolTip(this.UseTrayIcon, "Minimize to tray instead of the taskbar");
-            this.UseTrayIcon.UseVisualStyleBackColor = false;
-            this.UseTrayIcon.CheckedChanged += new System.EventHandler(this.UseTrayIcon_CheckedChanged);
-            // 
             // PayPalLink
             // 
             this.PayPalLink.AutoSize = true;
@@ -1427,142 +1167,11 @@ namespace OverloadClientTool
             this.DebugFileNameLink.Text = "View logs";
             this.DebugFileNameLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OpenDebugFolder_LinkClicked);
             // 
-            // PartyModeCheckBox
-            // 
-            this.PartyModeCheckBox.AutoSize = true;
-            this.PartyModeCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.PartyModeCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.PartyModeCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.PartyModeCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.PartyModeCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PartyModeCheckBox.Location = new System.Drawing.Point(272, 118);
-            this.PartyModeCheckBox.Margin = new System.Windows.Forms.Padding(0);
-            this.PartyModeCheckBox.Name = "PartyModeCheckBox";
-            this.PartyModeCheckBox.Size = new System.Drawing.Size(79, 17);
-            this.PartyModeCheckBox.TabIndex = 5;
-            this.PartyModeCheckBox.Text = "Party mode!";
-            this.PartyModeCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.MainToolTip.SetToolTip(this.PartyModeCheckBox, "Don\'t select this (you have been warned) :) !!");
-            this.PartyModeCheckBox.UseVisualStyleBackColor = false;
-            // 
-            // EnableDebugCheckBox
-            // 
-            this.EnableDebugCheckBox.AutoSize = true;
-            this.EnableDebugCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.EnableDebugCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.EnableDebugCheckBox.Checked = true;
-            this.EnableDebugCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.EnableDebugCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.EnableDebugCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.EnableDebugCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.EnableDebugCheckBox.Location = new System.Drawing.Point(272, 14);
-            this.EnableDebugCheckBox.Margin = new System.Windows.Forms.Padding(0);
-            this.EnableDebugCheckBox.Name = "EnableDebugCheckBox";
-            this.EnableDebugCheckBox.Size = new System.Drawing.Size(126, 17);
-            this.EnableDebugCheckBox.TabIndex = 5;
-            this.EnableDebugCheckBox.Text = "Enable debug logging";
-            this.EnableDebugCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.MainToolTip.SetToolTip(this.EnableDebugCheckBox, "Check this to save debugging info to a text file");
-            this.EnableDebugCheckBox.UseVisualStyleBackColor = false;
-            this.EnableDebugCheckBox.CheckedChanged += new System.EventHandler(this.EnableDebugCheckBox_CheckedChanged);
-            // 
-            // AutoUpdateCheckBox
-            // 
-            this.AutoUpdateCheckBox.AutoSize = true;
-            this.AutoUpdateCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.AutoUpdateCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.AutoUpdateCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.AutoUpdateCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.AutoUpdateCheckBox.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
-            this.AutoUpdateCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AutoUpdateCheckBox.Location = new System.Drawing.Point(272, 40);
-            this.AutoUpdateCheckBox.Margin = new System.Windows.Forms.Padding(0);
-            this.AutoUpdateCheckBox.Name = "AutoUpdateCheckBox";
-            this.AutoUpdateCheckBox.Size = new System.Drawing.Size(167, 17);
-            this.AutoUpdateCheckBox.TabIndex = 5;
-            this.AutoUpdateCheckBox.Text = "Check for update upon startup";
-            this.AutoUpdateCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.MainToolTip.SetToolTip(this.AutoUpdateCheckBox, "Select this to make OCT check for new release at startup");
-            this.AutoUpdateCheckBox.UseVisualStyleBackColor = false;
-            this.AutoUpdateCheckBox.CheckedChanged += new System.EventHandler(this.AutoUpdateCheckBox_CheckedChanged);
-            // 
             // MainToolTip
             // 
             this.MainToolTip.AutoPopDelay = 10000;
             this.MainToolTip.InitialDelay = 1000;
             this.MainToolTip.ReshowDelay = 100;
-            // 
-            // ServerEnableCheckBox
-            // 
-            this.ServerEnableCheckBox.AutoSize = true;
-            this.ServerEnableCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.ServerEnableCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.ServerEnableCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.ServerEnableCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.ServerEnableCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ServerEnableCheckBox.Location = new System.Drawing.Point(364, 140);
-            this.ServerEnableCheckBox.Name = "ServerEnableCheckBox";
-            this.ServerEnableCheckBox.Size = new System.Drawing.Size(133, 17);
-            this.ServerEnableCheckBox.TabIndex = 5;
-            this.ServerEnableCheckBox.Text = "Dedicated server mode";
-            this.MainToolTip.SetToolTip(this.ServerEnableCheckBox, "Select this to run as a dedicated server instead of a client");
-            this.ServerEnableCheckBox.UseVisualStyleBackColor = false;
-            this.ServerEnableCheckBox.Visible = false;
-            this.ServerEnableCheckBox.CheckedChanged += new System.EventHandler(this.EnableServerCheckBox_CheckedChanged);
-            // 
-            // ServerAnnounceOnTrackerCheckBox
-            // 
-            this.ServerAnnounceOnTrackerCheckBox.AutoSize = true;
-            this.ServerAnnounceOnTrackerCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.ServerAnnounceOnTrackerCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.ServerAnnounceOnTrackerCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.ServerAnnounceOnTrackerCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.ServerAnnounceOnTrackerCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ServerAnnounceOnTrackerCheckBox.Location = new System.Drawing.Point(32, 140);
-            this.ServerAnnounceOnTrackerCheckBox.Name = "ServerAnnounceOnTrackerCheckBox";
-            this.ServerAnnounceOnTrackerCheckBox.Size = new System.Drawing.Size(165, 17);
-            this.ServerAnnounceOnTrackerCheckBox.TabIndex = 5;
-            this.ServerAnnounceOnTrackerCheckBox.Text = "Make server visible on tracker";
-            this.MainToolTip.SetToolTip(this.ServerAnnounceOnTrackerCheckBox, "Send server info to tracker when running");
-            this.ServerAnnounceOnTrackerCheckBox.UseVisualStyleBackColor = false;
-            this.ServerAnnounceOnTrackerCheckBox.CheckedChanged += new System.EventHandler(this.ServerAnnounceOnTrackerCheckBox_CheckedChanged);
-            // 
-            // ServerAutoSignOffTracker
-            // 
-            this.ServerAutoSignOffTracker.AutoSize = true;
-            this.ServerAutoSignOffTracker.BackColor = System.Drawing.Color.LightSlateGray;
-            this.ServerAutoSignOffTracker.CheckBackColor = System.Drawing.Color.Gray;
-            this.ServerAutoSignOffTracker.Checked = true;
-            this.ServerAutoSignOffTracker.CheckForeColor = System.Drawing.Color.Black;
-            this.ServerAutoSignOffTracker.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.ServerAutoSignOffTracker.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ServerAutoSignOffTracker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ServerAutoSignOffTracker.Location = new System.Drawing.Point(32, 172);
-            this.ServerAutoSignOffTracker.Name = "ServerAutoSignOffTracker";
-            this.ServerAutoSignOffTracker.Size = new System.Drawing.Size(194, 17);
-            this.ServerAutoSignOffTracker.TabIndex = 5;
-            this.ServerAutoSignOffTracker.Text = "Remove inactive server from tracker";
-            this.MainToolTip.SetToolTip(this.ServerAutoSignOffTracker, "Select this to remove the server from tracker when it isn\'t running");
-            this.ServerAutoSignOffTracker.UseVisualStyleBackColor = false;
-            this.ServerAutoSignOffTracker.CheckedChanged += new System.EventHandler(this.ServerAutoSignOffTracker_CheckedChanged);
-            // 
-            // AutoStartCheckBox
-            // 
-            this.AutoStartCheckBox.AutoSize = true;
-            this.AutoStartCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.AutoStartCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.AutoStartCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.AutoStartCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.AutoStartCheckBox.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
-            this.AutoStartCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AutoStartCheckBox.Location = new System.Drawing.Point(32, 204);
-            this.AutoStartCheckBox.Name = "AutoStartCheckBox";
-            this.AutoStartCheckBox.Size = new System.Drawing.Size(133, 17);
-            this.AutoStartCheckBox.TabIndex = 5;
-            this.AutoStartCheckBox.Text = "Start at Windows logon";
-            this.MainToolTip.SetToolTip(this.AutoStartCheckBox, "Select this to autostart OCT + server at Windows startup");
-            this.AutoStartCheckBox.UseVisualStyleBackColor = false;
-            this.AutoStartCheckBox.CheckedChanged += new System.EventHandler(this.AutoStartCheckBox_CheckedChanged);
             // 
             // PaneSelectServer
             // 
@@ -1709,6 +1318,462 @@ namespace OverloadClientTool
             this.ServerRunning.TabIndex = 10;
             this.ServerRunning.TabStop = false;
             this.ServerRunning.Visible = false;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(298, 144);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(195, 13);
+            this.label17.TabIndex = 3;
+            this.label17.Text = "Include these maps type when updating";
+            // 
+            // ServerEnableCheckBox
+            // 
+            this.ServerEnableCheckBox.AutoSize = true;
+            this.ServerEnableCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.ServerEnableCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.ServerEnableCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.ServerEnableCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.ServerEnableCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ServerEnableCheckBox.Location = new System.Drawing.Point(364, 140);
+            this.ServerEnableCheckBox.Name = "ServerEnableCheckBox";
+            this.ServerEnableCheckBox.Size = new System.Drawing.Size(133, 17);
+            this.ServerEnableCheckBox.TabIndex = 5;
+            this.ServerEnableCheckBox.Text = "Dedicated server mode";
+            this.MainToolTip.SetToolTip(this.ServerEnableCheckBox, "Select this to run as a dedicated server instead of a client");
+            this.ServerEnableCheckBox.UseVisualStyleBackColor = false;
+            this.ServerEnableCheckBox.Visible = false;
+            this.ServerEnableCheckBox.CheckedChanged += new System.EventHandler(this.EnableServerCheckBox_CheckedChanged);
+            // 
+            // ServerAnnounceOnTrackerCheckBox
+            // 
+            this.ServerAnnounceOnTrackerCheckBox.AutoSize = true;
+            this.ServerAnnounceOnTrackerCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.ServerAnnounceOnTrackerCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.ServerAnnounceOnTrackerCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.ServerAnnounceOnTrackerCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.ServerAnnounceOnTrackerCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ServerAnnounceOnTrackerCheckBox.Location = new System.Drawing.Point(32, 140);
+            this.ServerAnnounceOnTrackerCheckBox.Name = "ServerAnnounceOnTrackerCheckBox";
+            this.ServerAnnounceOnTrackerCheckBox.Size = new System.Drawing.Size(165, 17);
+            this.ServerAnnounceOnTrackerCheckBox.TabIndex = 5;
+            this.ServerAnnounceOnTrackerCheckBox.Text = "Make server visible on tracker";
+            this.MainToolTip.SetToolTip(this.ServerAnnounceOnTrackerCheckBox, "Send server info to tracker when running");
+            this.ServerAnnounceOnTrackerCheckBox.UseVisualStyleBackColor = false;
+            this.ServerAnnounceOnTrackerCheckBox.CheckedChanged += new System.EventHandler(this.ServerAnnounceOnTrackerCheckBox_CheckedChanged);
+            // 
+            // ServerAutoSignOffTracker
+            // 
+            this.ServerAutoSignOffTracker.AutoSize = true;
+            this.ServerAutoSignOffTracker.BackColor = System.Drawing.Color.LightSlateGray;
+            this.ServerAutoSignOffTracker.CheckBackColor = System.Drawing.Color.Gray;
+            this.ServerAutoSignOffTracker.Checked = true;
+            this.ServerAutoSignOffTracker.CheckForeColor = System.Drawing.Color.Black;
+            this.ServerAutoSignOffTracker.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.ServerAutoSignOffTracker.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ServerAutoSignOffTracker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ServerAutoSignOffTracker.Location = new System.Drawing.Point(32, 172);
+            this.ServerAutoSignOffTracker.Name = "ServerAutoSignOffTracker";
+            this.ServerAutoSignOffTracker.Size = new System.Drawing.Size(194, 17);
+            this.ServerAutoSignOffTracker.TabIndex = 5;
+            this.ServerAutoSignOffTracker.Text = "Remove inactive server from tracker";
+            this.MainToolTip.SetToolTip(this.ServerAutoSignOffTracker, "Select this to remove the server from tracker when it isn\'t running");
+            this.ServerAutoSignOffTracker.UseVisualStyleBackColor = false;
+            this.ServerAutoSignOffTracker.CheckedChanged += new System.EventHandler(this.ServerAutoSignOffTracker_CheckedChanged);
+            // 
+            // AutoStartCheckBox
+            // 
+            this.AutoStartCheckBox.AutoSize = true;
+            this.AutoStartCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.AutoStartCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.AutoStartCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.AutoStartCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.AutoStartCheckBox.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            this.AutoStartCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AutoStartCheckBox.Location = new System.Drawing.Point(32, 204);
+            this.AutoStartCheckBox.Name = "AutoStartCheckBox";
+            this.AutoStartCheckBox.Size = new System.Drawing.Size(133, 17);
+            this.AutoStartCheckBox.TabIndex = 5;
+            this.AutoStartCheckBox.Text = "Start at Windows logon";
+            this.MainToolTip.SetToolTip(this.AutoStartCheckBox, "Select this to autostart OCT + server at Windows startup");
+            this.AutoStartCheckBox.UseVisualStyleBackColor = false;
+            this.AutoStartCheckBox.CheckedChanged += new System.EventHandler(this.AutoStartCheckBox_CheckedChanged);
+            // 
+            // MinimizeOnStartupCheckBox
+            // 
+            this.MinimizeOnStartupCheckBox.AutoSize = true;
+            this.MinimizeOnStartupCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.MinimizeOnStartupCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.MinimizeOnStartupCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.MinimizeOnStartupCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.MinimizeOnStartupCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MinimizeOnStartupCheckBox.Location = new System.Drawing.Point(272, 66);
+            this.MinimizeOnStartupCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            this.MinimizeOnStartupCheckBox.Name = "MinimizeOnStartupCheckBox";
+            this.MinimizeOnStartupCheckBox.Size = new System.Drawing.Size(113, 17);
+            this.MinimizeOnStartupCheckBox.TabIndex = 5;
+            this.MinimizeOnStartupCheckBox.Text = "Minimize on startup";
+            this.MinimizeOnStartupCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.MainToolTip.SetToolTip(this.MinimizeOnStartupCheckBox, "Select this to minimize OCT on startup");
+            this.MinimizeOnStartupCheckBox.UseVisualStyleBackColor = false;
+            this.MinimizeOnStartupCheckBox.CheckedChanged += new System.EventHandler(this.MinimizeOnStartupCheckBox_CheckedChanged);
+            // 
+            // UseTrayIcon
+            // 
+            this.UseTrayIcon.AutoSize = true;
+            this.UseTrayIcon.BackColor = System.Drawing.Color.LightSlateGray;
+            this.UseTrayIcon.CheckBackColor = System.Drawing.Color.Gray;
+            this.UseTrayIcon.CheckForeColor = System.Drawing.Color.Black;
+            this.UseTrayIcon.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.UseTrayIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UseTrayIcon.Location = new System.Drawing.Point(272, 92);
+            this.UseTrayIcon.Margin = new System.Windows.Forms.Padding(0);
+            this.UseTrayIcon.Name = "UseTrayIcon";
+            this.UseTrayIcon.Size = new System.Drawing.Size(85, 17);
+            this.UseTrayIcon.TabIndex = 5;
+            this.UseTrayIcon.Text = "Use tray icon";
+            this.UseTrayIcon.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.MainToolTip.SetToolTip(this.UseTrayIcon, "Minimize to tray instead of the taskbar");
+            this.UseTrayIcon.UseVisualStyleBackColor = false;
+            this.UseTrayIcon.CheckedChanged += new System.EventHandler(this.UseTrayIcon_CheckedChanged);
+            // 
+            // PartyModeCheckBox
+            // 
+            this.PartyModeCheckBox.AutoSize = true;
+            this.PartyModeCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PartyModeCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.PartyModeCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.PartyModeCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.PartyModeCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.PartyModeCheckBox.Location = new System.Drawing.Point(272, 118);
+            this.PartyModeCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            this.PartyModeCheckBox.Name = "PartyModeCheckBox";
+            this.PartyModeCheckBox.Size = new System.Drawing.Size(79, 17);
+            this.PartyModeCheckBox.TabIndex = 5;
+            this.PartyModeCheckBox.Text = "Party mode!";
+            this.PartyModeCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.MainToolTip.SetToolTip(this.PartyModeCheckBox, "Don\'t select this (you have been warned) :) !!");
+            this.PartyModeCheckBox.UseVisualStyleBackColor = false;
+            // 
+            // EnableDebugCheckBox
+            // 
+            this.EnableDebugCheckBox.AutoSize = true;
+            this.EnableDebugCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.EnableDebugCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.EnableDebugCheckBox.Checked = true;
+            this.EnableDebugCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.EnableDebugCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.EnableDebugCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.EnableDebugCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.EnableDebugCheckBox.Location = new System.Drawing.Point(272, 14);
+            this.EnableDebugCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            this.EnableDebugCheckBox.Name = "EnableDebugCheckBox";
+            this.EnableDebugCheckBox.Size = new System.Drawing.Size(126, 17);
+            this.EnableDebugCheckBox.TabIndex = 5;
+            this.EnableDebugCheckBox.Text = "Enable debug logging";
+            this.EnableDebugCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.MainToolTip.SetToolTip(this.EnableDebugCheckBox, "Check this to save debugging info to a text file");
+            this.EnableDebugCheckBox.UseVisualStyleBackColor = false;
+            this.EnableDebugCheckBox.CheckedChanged += new System.EventHandler(this.EnableDebugCheckBox_CheckedChanged);
+            // 
+            // AutoUpdateCheckBox
+            // 
+            this.AutoUpdateCheckBox.AutoSize = true;
+            this.AutoUpdateCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.AutoUpdateCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.AutoUpdateCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.AutoUpdateCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.AutoUpdateCheckBox.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            this.AutoUpdateCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AutoUpdateCheckBox.Location = new System.Drawing.Point(272, 40);
+            this.AutoUpdateCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            this.AutoUpdateCheckBox.Name = "AutoUpdateCheckBox";
+            this.AutoUpdateCheckBox.Size = new System.Drawing.Size(167, 17);
+            this.AutoUpdateCheckBox.TabIndex = 5;
+            this.AutoUpdateCheckBox.Text = "Check for update upon startup";
+            this.AutoUpdateCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.MainToolTip.SetToolTip(this.AutoUpdateCheckBox, "Select this to make OCT check for new release at startup");
+            this.AutoUpdateCheckBox.UseVisualStyleBackColor = false;
+            this.AutoUpdateCheckBox.CheckedChanged += new System.EventHandler(this.AutoUpdateCheckBox_CheckedChanged);
+            // 
+            // FrameTimeCheckBox
+            // 
+            this.FrameTimeCheckBox.AutoSize = true;
+            this.FrameTimeCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.FrameTimeCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.FrameTimeCheckBox.Checked = true;
+            this.FrameTimeCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.FrameTimeCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.FrameTimeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.FrameTimeCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.FrameTimeCheckBox.Location = new System.Drawing.Point(25, 177);
+            this.FrameTimeCheckBox.Name = "FrameTimeCheckBox";
+            this.FrameTimeCheckBox.Size = new System.Drawing.Size(190, 17);
+            this.FrameTimeCheckBox.TabIndex = 5;
+            this.FrameTimeCheckBox.Text = "Show FPS (using -frametime option)";
+            this.FrameTimeCheckBox.UseVisualStyleBackColor = false;
+            this.FrameTimeCheckBox.CheckedChanged += new System.EventHandler(this.FrameTimeCheckBox_CheckedChanged);
+            // 
+            // UseOlmodGameDirArg
+            // 
+            this.UseOlmodGameDirArg.AutoSize = true;
+            this.UseOlmodGameDirArg.BackColor = System.Drawing.Color.LightSlateGray;
+            this.UseOlmodGameDirArg.CheckBackColor = System.Drawing.Color.Gray;
+            this.UseOlmodGameDirArg.Checked = true;
+            this.UseOlmodGameDirArg.CheckForeColor = System.Drawing.Color.Black;
+            this.UseOlmodGameDirArg.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.UseOlmodGameDirArg.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UseOlmodGameDirArg.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UseOlmodGameDirArg.Location = new System.Drawing.Point(25, 154);
+            this.UseOlmodGameDirArg.Name = "UseOlmodGameDirArg";
+            this.UseOlmodGameDirArg.Size = new System.Drawing.Size(308, 17);
+            this.UseOlmodGameDirArg.TabIndex = 5;
+            this.UseOlmodGameDirArg.Text = "Tell Olmod where Overload is installed (using-gamedir option)";
+            this.MainToolTip.SetToolTip(this.UseOlmodGameDirArg, "Enable this to use Olmod \'-gamedir\' to tell Olmod where Overload is installed");
+            this.UseOlmodGameDirArg.UseVisualStyleBackColor = false;
+            this.UseOlmodGameDirArg.CheckedChanged += new System.EventHandler(this.UseGameDirArg_CheckedChanged);
+            // 
+            // AutoUpdateOlmod
+            // 
+            this.AutoUpdateOlmod.AutoSize = true;
+            this.AutoUpdateOlmod.CheckBackColor = System.Drawing.Color.Gray;
+            this.AutoUpdateOlmod.Checked = true;
+            this.AutoUpdateOlmod.CheckForeColor = System.Drawing.Color.SkyBlue;
+            this.AutoUpdateOlmod.CheckInactiveForeColor = System.Drawing.Color.SlateGray;
+            this.AutoUpdateOlmod.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AutoUpdateOlmod.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AutoUpdateOlmod.Location = new System.Drawing.Point(119, 17);
+            this.AutoUpdateOlmod.Name = "AutoUpdateOlmod";
+            this.AutoUpdateOlmod.Size = new System.Drawing.Size(114, 17);
+            this.AutoUpdateOlmod.TabIndex = 5;
+            this.AutoUpdateOlmod.Text = "Auto-update Olmod";
+            this.MainToolTip.SetToolTip(this.AutoUpdateOlmod, "Enable this to automatically update Olmod when OCT starts");
+            this.AutoUpdateOlmod.UseVisualStyleBackColor = true;
+            this.AutoUpdateOlmod.CheckedChanged += new System.EventHandler(this.AutoUpdateOlmod_CheckedChanged);
+            // 
+            // UseOlmodCheckBox
+            // 
+            this.UseOlmodCheckBox.AutoSize = true;
+            this.UseOlmodCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.UseOlmodCheckBox.Checked = true;
+            this.UseOlmodCheckBox.CheckForeColor = System.Drawing.Color.SkyBlue;
+            this.UseOlmodCheckBox.CheckInactiveForeColor = System.Drawing.Color.SlateGray;
+            this.UseOlmodCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UseOlmodCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UseOlmodCheckBox.Location = new System.Drawing.Point(25, 17);
+            this.UseOlmodCheckBox.Name = "UseOlmodCheckBox";
+            this.UseOlmodCheckBox.Size = new System.Drawing.Size(75, 17);
+            this.UseOlmodCheckBox.TabIndex = 5;
+            this.UseOlmodCheckBox.Text = "Use Olmod";
+            this.MainToolTip.SetToolTip(this.UseOlmodCheckBox, "If checked then Olmod will be used to run Overload");
+            this.UseOlmodCheckBox.UseVisualStyleBackColor = true;
+            this.UseOlmodCheckBox.CheckedChanged += new System.EventHandler(this.UseOlmod_CheckedChanged);
+            // 
+            // UseEmbeddedOlproxy
+            // 
+            this.UseEmbeddedOlproxy.AutoSize = true;
+            this.UseEmbeddedOlproxy.BackColor = System.Drawing.Color.LightSlateGray;
+            this.UseEmbeddedOlproxy.CheckBackColor = System.Drawing.Color.Gray;
+            this.UseEmbeddedOlproxy.Checked = true;
+            this.UseEmbeddedOlproxy.CheckForeColor = System.Drawing.Color.Black;
+            this.UseEmbeddedOlproxy.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.UseEmbeddedOlproxy.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UseEmbeddedOlproxy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UseEmbeddedOlproxy.Location = new System.Drawing.Point(127, 13);
+            this.UseEmbeddedOlproxy.Name = "UseEmbeddedOlproxy";
+            this.UseEmbeddedOlproxy.Size = new System.Drawing.Size(133, 17);
+            this.UseEmbeddedOlproxy.TabIndex = 5;
+            this.UseEmbeddedOlproxy.Text = "Use embedded Olproxy";
+            this.MainToolTip.SetToolTip(this.UseEmbeddedOlproxy, "Use the built-in Olproxy");
+            this.UseEmbeddedOlproxy.UseVisualStyleBackColor = false;
+            this.UseEmbeddedOlproxy.CheckedChanged += new System.EventHandler(this.UseEmbeddedOlproxy_CheckedChanged);
+            // 
+            // UseOlproxyCheckBox
+            // 
+            this.UseOlproxyCheckBox.AutoSize = true;
+            this.UseOlproxyCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.UseOlproxyCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.UseOlproxyCheckBox.Checked = true;
+            this.UseOlproxyCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.UseOlproxyCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.UseOlproxyCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UseOlproxyCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UseOlproxyCheckBox.Location = new System.Drawing.Point(12, 12);
+            this.UseOlproxyCheckBox.Name = "UseOlproxyCheckBox";
+            this.UseOlproxyCheckBox.Size = new System.Drawing.Size(80, 17);
+            this.UseOlproxyCheckBox.TabIndex = 5;
+            this.UseOlproxyCheckBox.Text = "Use Olproxy";
+            this.MainToolTip.SetToolTip(this.UseOlproxyCheckBox, "Start Olproxy when Overload/Olmod is started");
+            this.UseOlproxyCheckBox.UseVisualStyleBackColor = false;
+            this.UseOlproxyCheckBox.CheckedChanged += new System.EventHandler(this.UseOlproxy_CheckedChanged);
+            // 
+            // CMMapsCheckBox
+            // 
+            this.CMMapsCheckBox.AutoSize = true;
+            this.CMMapsCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.CMMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.CMMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.CMMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.CMMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CMMapsCheckBox.Location = new System.Drawing.Point(301, 210);
+            this.CMMapsCheckBox.Name = "CMMapsCheckBox";
+            this.CMMapsCheckBox.Size = new System.Drawing.Size(127, 17);
+            this.CMMapsCheckBox.TabIndex = 5;
+            this.CMMapsCheckBox.Text = "Challenge mode maps";
+            this.CMMapsCheckBox.UseVisualStyleBackColor = false;
+            this.CMMapsCheckBox.CheckedChanged += new System.EventHandler(this.CMMapsCheckBox_CheckedChanged);
+            // 
+            // SPMapsCheckBox
+            // 
+            this.SPMapsCheckBox.AutoSize = true;
+            this.SPMapsCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.SPMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.SPMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.SPMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.SPMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SPMapsCheckBox.Location = new System.Drawing.Point(301, 187);
+            this.SPMapsCheckBox.Name = "SPMapsCheckBox";
+            this.SPMapsCheckBox.Size = new System.Drawing.Size(111, 17);
+            this.SPMapsCheckBox.TabIndex = 5;
+            this.SPMapsCheckBox.Text = "Single player maps";
+            this.SPMapsCheckBox.UseVisualStyleBackColor = false;
+            this.SPMapsCheckBox.CheckedChanged += new System.EventHandler(this.SPMapsCheckBox_CheckedChanged);
+            // 
+            // MPMapsCheckBox
+            // 
+            this.MPMapsCheckBox.AutoSize = true;
+            this.MPMapsCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.MPMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.MPMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.MPMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.MPMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MPMapsCheckBox.Location = new System.Drawing.Point(301, 164);
+            this.MPMapsCheckBox.Name = "MPMapsCheckBox";
+            this.MPMapsCheckBox.Size = new System.Drawing.Size(101, 17);
+            this.MPMapsCheckBox.TabIndex = 5;
+            this.MPMapsCheckBox.Text = "Multiplayer maps";
+            this.MPMapsCheckBox.UseVisualStyleBackColor = false;
+            this.MPMapsCheckBox.CheckedChanged += new System.EventHandler(this.MpMapsCheckBox_CheckedChanged);
+            // 
+            // HideUnofficialMapsCheckBox
+            // 
+            this.HideUnofficialMapsCheckBox.AutoSize = true;
+            this.HideUnofficialMapsCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.HideUnofficialMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.HideUnofficialMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.HideUnofficialMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.HideUnofficialMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.HideUnofficialMapsCheckBox.Location = new System.Drawing.Point(301, 71);
+            this.HideUnofficialMapsCheckBox.Name = "HideUnofficialMapsCheckBox";
+            this.HideUnofficialMapsCheckBox.Size = new System.Drawing.Size(192, 17);
+            this.HideUnofficialMapsCheckBox.TabIndex = 5;
+            this.HideUnofficialMapsCheckBox.Text = "When updating hide unofficial maps";
+            this.MainToolTip.SetToolTip(this.HideUnofficialMapsCheckBox, "Select this to hide maps that are not in the official map list");
+            this.HideUnofficialMapsCheckBox.UseVisualStyleBackColor = false;
+            this.HideUnofficialMapsCheckBox.CheckedChanged += new System.EventHandler(this.HideUnofficialMapsCheckBox_CheckedChanged);
+            // 
+            // UseDLCLocationCheckBox
+            // 
+            this.UseDLCLocationCheckBox.AutoCheck = false;
+            this.UseDLCLocationCheckBox.AutoSize = true;
+            this.UseDLCLocationCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.UseDLCLocationCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.UseDLCLocationCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.UseDLCLocationCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.UseDLCLocationCheckBox.Enabled = false;
+            this.UseDLCLocationCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(301, 94);
+            this.UseDLCLocationCheckBox.Name = "UseDLCLocationCheckBox";
+            this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(199, 17);
+            this.UseDLCLocationCheckBox.TabIndex = 5;
+            this.UseDLCLocationCheckBox.Text = "Use DLC folder for downloaded maps";
+            this.MainToolTip.SetToolTip(this.UseDLCLocationCheckBox, "Save downloaded map ZIP files to Overload DLC folder");
+            this.UseDLCLocationCheckBox.UseVisualStyleBackColor = false;
+            this.UseDLCLocationCheckBox.Click += new System.EventHandler(this.UseDLCLocationCheckBox_Click);
+            // 
+            // AutoUpdateMapsCheckBox
+            // 
+            this.AutoUpdateMapsCheckBox.AutoSize = true;
+            this.AutoUpdateMapsCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.AutoUpdateMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.AutoUpdateMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.AutoUpdateMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.AutoUpdateMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(301, 25);
+            this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
+            this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(146, 17);
+            this.AutoUpdateMapsCheckBox.TabIndex = 5;
+            this.AutoUpdateMapsCheckBox.Text = "Update all maps at startup";
+            this.MainToolTip.SetToolTip(this.AutoUpdateMapsCheckBox, "Do an update of all maps at startup (may take a bit of extra time)");
+            this.AutoUpdateMapsCheckBox.UseVisualStyleBackColor = false;
+            this.AutoUpdateMapsCheckBox.Click += new System.EventHandler(this.AutoUpdateMaps_Click);
+            // 
+            // OnlyUpdateExistingMapsCheckBox
+            // 
+            this.OnlyUpdateExistingMapsCheckBox.AutoSize = true;
+            this.OnlyUpdateExistingMapsCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.OnlyUpdateExistingMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.OnlyUpdateExistingMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.OnlyUpdateExistingMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.OnlyUpdateExistingMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(301, 48);
+            this.OnlyUpdateExistingMapsCheckBox.Name = "OnlyUpdateExistingMapsCheckBox";
+            this.OnlyUpdateExistingMapsCheckBox.Size = new System.Drawing.Size(146, 17);
+            this.OnlyUpdateExistingMapsCheckBox.TabIndex = 5;
+            this.OnlyUpdateExistingMapsCheckBox.Text = "Only update existing maps";
+            this.MainToolTip.SetToolTip(this.OnlyUpdateExistingMapsCheckBox, "Only update map ZIP files already on disk");
+            this.OnlyUpdateExistingMapsCheckBox.UseVisualStyleBackColor = false;
+            this.OnlyUpdateExistingMapsCheckBox.CheckedChanged += new System.EventHandler(this.OnlyUpdateExistingMapsCheckBox_CheckedChanged);
+            // 
+            // PilotNameLabel
+            // 
+            this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.PilotNameLabel.Enabled = false;
+            this.PilotNameLabel.Location = new System.Drawing.Point(22, 255);
+            this.PilotNameLabel.Multiline = false;
+            this.PilotNameLabel.Name = "PilotNameLabel";
+            this.PilotNameLabel.ReadOnly = true;
+            this.PilotNameLabel.Size = new System.Drawing.Size(471, 17);
+            this.PilotNameLabel.TabIndex = 17;
+            this.PilotNameLabel.Text = "Pilot";
+            // 
+            // AutoPilotsBackupCheckbox
+            // 
+            this.AutoPilotsBackupCheckbox.AutoSize = true;
+            this.AutoPilotsBackupCheckbox.CheckBackColor = System.Drawing.Color.Gray;
+            this.AutoPilotsBackupCheckbox.CheckForeColor = System.Drawing.Color.SkyBlue;
+            this.AutoPilotsBackupCheckbox.CheckInactiveForeColor = System.Drawing.Color.SlateGray;
+            this.AutoPilotsBackupCheckbox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AutoPilotsBackupCheckbox.Location = new System.Drawing.Point(22, 301);
+            this.AutoPilotsBackupCheckbox.Name = "AutoPilotsBackupCheckbox";
+            this.AutoPilotsBackupCheckbox.Size = new System.Drawing.Size(277, 17);
+            this.AutoPilotsBackupCheckbox.TabIndex = 5;
+            this.AutoPilotsBackupCheckbox.Text = "Do a backup of all pilots each time Overload is started";
+            this.MainToolTip.SetToolTip(this.AutoPilotsBackupCheckbox, "Check this to save a ZIP\'ed backup of all pilots when Overload/Olmod starts");
+            this.AutoPilotsBackupCheckbox.UseVisualStyleBackColor = true;
+            this.AutoPilotsBackupCheckbox.CheckedChanged += new System.EventHandler(this.AutoPilotsBackupCheckbox_CheckedChanged);
+            // 
+            // LogTreeView
+            // 
+            this.LogTreeView.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.LogTreeView.BackColor = System.Drawing.Color.Gray;
+            this.LogTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.LogTreeView.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
+            this.LogTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LogTreeView.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.LogTreeView.FullRowSelect = true;
+            this.LogTreeView.ItemHeight = 14;
+            this.LogTreeView.Location = new System.Drawing.Point(1, 1);
+            this.LogTreeView.Margin = new System.Windows.Forms.Padding(0);
+            this.LogTreeView.Name = "LogTreeView";
+            this.LogTreeView.ShowLines = false;
+            this.LogTreeView.ShowPlusMinus = false;
+            this.LogTreeView.ShowRootLines = false;
+            this.LogTreeView.Size = new System.Drawing.Size(498, 263);
+            this.LogTreeView.TabIndex = 19;
+            this.LogTreeView.TabStop = false;
+            this.LogTreeView.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.LogTreeView_DrawNode);
             // 
             // OCTMain
             // 
@@ -1912,6 +1977,10 @@ namespace OverloadClientTool
         private System.Windows.Forms.Button StartServerButton;
         private System.Windows.Forms.PictureBox ServerRunning;
         private System.Windows.Forms.LinkLabel DisplayHelpLink;
+        private CustomCheckBox CMMapsCheckBox;
+        private CustomCheckBox SPMapsCheckBox;
+        private CustomCheckBox MPMapsCheckBox;
+        private System.Windows.Forms.Label label17;
     }
 }
 

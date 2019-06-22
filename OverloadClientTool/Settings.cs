@@ -150,6 +150,24 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.UpdateOnlyExistingMaps = value; }
         }
 
+        public bool IncludeMP
+        {
+            get { return Properties.Settings.Default.IncludeMP; }
+            set { Properties.Settings.Default.IncludeMP = value; }
+        }
+
+        public bool IncludeSP
+        {
+            get { return Properties.Settings.Default.IncludeSP; }
+            set { Properties.Settings.Default.IncludeSP = value; }
+        }
+
+        public bool IncludeCM
+        {
+            get { return Properties.Settings.Default.IncludeCM; }
+            set { Properties.Settings.Default.IncludeCM = value; }
+        }
+
         public bool UseDLCLocation
         {
             get { return Properties.Settings.Default.UseDLCPath; }
@@ -411,6 +429,9 @@ namespace OverloadClientTool
             OnlyUpdateExistingMapsCheckBox.Checked = UpdateOnlyExistingMaps;
             UseDLCLocationCheckBox.Checked = UseDLCLocation;
             HideUnofficialMapsCheckBox.Checked = HideNonOfficialMaps;
+            MPMapsCheckBox.Checked = IncludeMP;
+            SPMapsCheckBox.Checked = IncludeSP;
+            CMMapsCheckBox.Checked = IncludeCM;
 
             // Pilot settings.
             AutoPilotsBackupCheckbox.Checked = AutoSavePilots;
@@ -485,12 +506,7 @@ namespace OverloadClientTool
             else if ((control is TextBox) || (control is RichTextBox) || (control is ListBox) || (control is ListView) || (control is TabPage) || (control is TreeView))
             {
                 control.BackColor = theme.InputBackColor;
-                control.ForeColor = theme.InputForeColor;
-            }
-            else if ((control is ListBox) || (control is ListView) || (control is TreeView))
-            {
-                control.BackColor = theme.InputBackColor;
-                control.ForeColor = theme.InputForeColor;
+                control.ForeColor = (control.Enabled) ? theme.InputForeColor : theme.PanelInactiveForeColor;
             }
             else if (control is LinkLabel)
             {
@@ -519,13 +535,14 @@ namespace OverloadClientTool
                 checkBox.CheckForeColor = theme.PanelForeColor;
                 checkBox.CheckInactiveForeColor = theme.PanelInactiveForeColor;
 
-                checkBox.Invalidate();
+                //checkBox.Invalidate();
             }
             else if (control is CheckBox)
             {
                 CheckBox checkBox = control as CheckBox;
                 checkBox.BackColor = theme.InputBackColor;
                 checkBox.ForeColor = theme.InactivePaneButtonBackColor;
+
                 // checkBox.FlatAppearance.CheckedBackColor = Color.White; // No effect?
             }
             else if (control is Button)

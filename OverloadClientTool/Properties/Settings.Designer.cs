@@ -383,5 +383,41 @@ namespace OverloadClientTool.Properties {
                 this["RunDedicatedServer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeMP {
+            get {
+                return ((bool)(this["IncludeMP"]));
+            }
+            set {
+                this["IncludeMP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IncludeSP {
+            get {
+                return ((bool)(this["IncludeSP"]));
+            }
+            set {
+                this["IncludeSP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IncludeCM {
+            get {
+                return ((bool)(this["IncludeCM"]));
+            }
+            set {
+                this["IncludeCM"] = value;
+            }
+        }
     }
 }

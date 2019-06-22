@@ -74,7 +74,7 @@ namespace OverloadClientTool
             }
 
             // Init map manager.
-            mapManager = new OverloadMapManager(UpdateOnlyExistingMaps);
+            mapManager = new OverloadMapManager(UpdateOnlyExistingMaps, IncludeMP, IncludeSP, IncludeCM);
 
             // Initialize controls on main form.
             InitializeComponent();
@@ -1274,7 +1274,9 @@ namespace OverloadClientTool
             this.UIThread(delegate
             {
                 UpdatingMaps.Visible = true;
+
                 MapsListBox.Enabled = false;
+                MapsPanel.Enabled = false;
 
                 MapRefreshButton.Enabled = false;
                 MapDeleteButton.Enabled = false;
@@ -1283,6 +1285,15 @@ namespace OverloadClientTool
                 UseDLCLocationCheckBox.Enabled = false;
                 AutoUpdateMapsCheckBox.Enabled = false;
                 OnlyUpdateExistingMapsCheckBox.Enabled = false;
+                HideUnofficialMapsCheckBox.Enabled = false;
+
+                MPMapsCheckBox.Enabled = false;
+                SPMapsCheckBox.Enabled = false;
+                CMMapsCheckBox.Enabled = false;
+
+                OnlineMapJsonUrl.Enabled = false;
+
+                ApplyThemeToControl(MapsPanel, theme);
 
                 if (UpdateOnlyExistingMaps) Verbose(String.Format("Checking for updated maps."));
                 else Verbose(String.Format("Checking for new/updated maps."));
@@ -1291,7 +1302,7 @@ namespace OverloadClientTool
                 Verbose(String.Format("Overload " + ((UseDLCLocation && !String.IsNullOrEmpty(dlcLocation)) ? "DLC" : "application") + " folder used for new maps."));
             });
 
-            // UpdateAllMaps() must not touch UI elements!
+            // UpdateAllMaps() cannot touch UI elements!
             mapManager.UpdateAllMaps(OnlineMapJsonUrl.Text, dlcLocation, null);
 
             this.UIThread(delegate
@@ -1303,11 +1314,22 @@ namespace OverloadClientTool
 
                 UpdatingMaps.Visible = false;
                 MapUpdateButton.Enabled = true;
+
                 MapsListBox.Enabled = true;
+                MapsPanel.Enabled = true;
 
                 UseDLCLocationCheckBox.Enabled = true;
                 AutoUpdateMapsCheckBox.Enabled = true;
                 OnlyUpdateExistingMapsCheckBox.Enabled = true;
+                HideUnofficialMapsCheckBox.Enabled = true;
+
+                MPMapsCheckBox.Enabled = true;
+                SPMapsCheckBox.Enabled = true;
+                CMMapsCheckBox.Enabled = true;
+
+                OnlineMapJsonUrl.Enabled = true;
+
+                ApplyThemeToControl(MapsPanel, theme);
 
                 SetMapButtons();
             });
@@ -2016,6 +2038,42 @@ namespace OverloadClientTool
                 {
                     helpProcess.StartInfo.FileName = tempPdfFile;
                     helpProcess.Start();
+                }
+            }
+        }
+
+        private void MpMapsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            IncludeMP = MPMapsCheckBox.Checked;
+            mapManager.IncludeMP = IncludeMP;
+        }
+
+        private void SPMapsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            IncludeSP = SPMapsCheckBox.Checked;
+            mapManager.IncludeSP = IncludeSP;
+
+            if (IncludeSP && !OnlineMapJsonUrl.Text.ToLower().EndsWith("all.json"))
+            {
+                if (MessageBox.Show("Also include all map types when uypdating maps?", "Update map JSON URL?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    OnlineMapJsonUrl.Text = @"https://www.overloadmaps.com/data/all.json";
+                    MapListUrl = OnlineMapJsonUrl.Text;
+                }
+            }
+        }
+
+        private void CMMapsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            IncludeCM = CMMapsCheckBox.Checked;
+            mapManager.IncludeCM = IncludeCM;
+
+            if (IncludeCM && !OnlineMapJsonUrl.Text.ToLower().EndsWith("all.json"))
+            {
+                if (MessageBox.Show("Also include all map types when uypdating maps?", "Update map JSON URL?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    OnlineMapJsonUrl.Text = @"https://www.overloadmaps.com/data/all.json";
+                    MapListUrl = OnlineMapJsonUrl.Text;
                 }
             }
         }
