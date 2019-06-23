@@ -1285,6 +1285,13 @@ namespace OverloadClientTool
                 SPMapsCheckBox.Enabled = false;
                 CMMapsCheckBox.Enabled = false;
 
+                HideMPMapsButton.Enabled = false;
+                HideSPMapsButton.Enabled = false;
+                HideCMMapsButton.Enabled = false;
+                UnhideMPMapsButton.Enabled = false;
+                UnhideSPMapsButton.Enabled = false;
+                UnhideCMMapsButton.Enabled = false;
+
                 OnlineMapJsonUrl.Enabled = false;
 
                 ApplyThemeToControl(MapsPanel, theme);
@@ -1321,6 +1328,13 @@ namespace OverloadClientTool
                 MPMapsCheckBox.Enabled = true;
                 SPMapsCheckBox.Enabled = true;
                 CMMapsCheckBox.Enabled = true;
+
+                HideMPMapsButton.Enabled = true;
+                HideSPMapsButton.Enabled = true;
+                HideCMMapsButton.Enabled = true;
+                UnhideMPMapsButton.Enabled = true;
+                UnhideSPMapsButton.Enabled = true;
+                UnhideCMMapsButton.Enabled = true;
 
                 OnlineMapJsonUrl.Enabled = true;
 
@@ -2067,6 +2081,72 @@ namespace OverloadClientTool
         private void HideHiddenMapsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             HideHiddenMaps = HideHiddenMapsCheckBox.Checked;
+            UpdateMapListBox();
+            Unfocus();
+        }
+
+        private void HideMPMapsButton_Click(object sender, EventArgs e)
+        {
+            foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.SortedMaps)
+            {
+                if (setMap.Value.IsMPMap) setMap.Value.Hidden = true;
+            }
+
+            UpdateMapListBox();
+            Unfocus();
+        }
+
+        private void HideSPMapsButton_Click(object sender, EventArgs e)
+        {
+            foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.SortedMaps)
+            {
+                if (setMap.Value.IsSPMap) setMap.Value.Hidden = true;
+            }
+
+            UpdateMapListBox();
+            Unfocus();
+        }
+
+        private void HideCMMapsButton_Click(object sender, EventArgs e)
+        {
+            foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.SortedMaps)
+            {
+                if (setMap.Value.IsCMMap) setMap.Value.Hidden = true;
+            }
+
+            UpdateMapListBox();
+            Unfocus();
+        }
+
+        private void UnhideMPMapsButton_Click(object sender, EventArgs e)
+        {
+            foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.SortedMaps)
+            {
+                if (setMap.Value.IsMPMap) setMap.Value.Hidden = false;
+            }
+
+            UpdateMapListBox();
+            Unfocus();
+        }
+
+        private void UnhideSPMapsButton_Click(object sender, EventArgs e)
+        {
+            foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.SortedMaps)
+            {
+                if (setMap.Value.IsSPMap) setMap.Value.Hidden = false;
+            }
+
+            UpdateMapListBox();
+            Unfocus();
+        }
+
+        private void UnhideCMMapsButton_Click(object sender, EventArgs e)
+        {
+            foreach (KeyValuePair<string, OverloadMap> setMap in mapManager.SortedMaps)
+            {
+                if (setMap.Value.IsCMMap) setMap.Value.Hidden = false;
+            }
+
             UpdateMapListBox();
             Unfocus();
         }

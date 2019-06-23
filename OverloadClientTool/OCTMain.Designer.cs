@@ -78,6 +78,12 @@ namespace OverloadClientTool
             this.AutoUpdateMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.OnlyUpdateExistingMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.MapUnhideAllButton = new System.Windows.Forms.Button();
+            this.UnhideCMMapsButton = new System.Windows.Forms.Button();
+            this.HideCMMapsButton = new System.Windows.Forms.Button();
+            this.UnhideSPMapsButton = new System.Windows.Forms.Button();
+            this.HideSPMapsButton = new System.Windows.Forms.Button();
+            this.UnhideMPMapsButton = new System.Windows.Forms.Button();
+            this.HideMPMapsButton = new System.Windows.Forms.Button();
             this.MapRefreshButton = new System.Windows.Forms.Button();
             this.PanePilots = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
@@ -191,7 +197,7 @@ namespace OverloadClientTool
             this.OverloadExecutable.Location = new System.Drawing.Point(10, 19);
             this.OverloadExecutable.Margin = new System.Windows.Forms.Padding(1);
             this.OverloadExecutable.Name = "OverloadExecutable";
-            this.OverloadExecutable.Size = new System.Drawing.Size(465, 20);
+            this.OverloadExecutable.Size = new System.Drawing.Size(478, 20);
             this.OverloadExecutable.TabIndex = 1;
             this.OverloadExecutable.TextChanged += new System.EventHandler(this.OverloadExecutable_TextChanged);
             this.OverloadExecutable.DoubleClick += new System.EventHandler(this.OverloadExecutable_MouseDoubleClick);
@@ -203,7 +209,7 @@ namespace OverloadClientTool
             this.OverloadArgs.Location = new System.Drawing.Point(10, 20);
             this.OverloadArgs.Margin = new System.Windows.Forms.Padding(2);
             this.OverloadArgs.Name = "OverloadArgs";
-            this.OverloadArgs.Size = new System.Drawing.Size(465, 20);
+            this.OverloadArgs.Size = new System.Drawing.Size(478, 20);
             this.OverloadArgs.TabIndex = 2;
             this.OverloadArgs.TextChanged += new System.EventHandler(this.OverloadArgs_TextChanged);
             // 
@@ -214,7 +220,7 @@ namespace OverloadClientTool
             this.OlproxyExecutable.Location = new System.Drawing.Point(6, 17);
             this.OlproxyExecutable.Margin = new System.Windows.Forms.Padding(4);
             this.OlproxyExecutable.Name = "OlproxyExecutable";
-            this.OlproxyExecutable.Size = new System.Drawing.Size(446, 20);
+            this.OlproxyExecutable.Size = new System.Drawing.Size(501, 20);
             this.OlproxyExecutable.TabIndex = 3;
             this.OlproxyExecutable.TextChanged += new System.EventHandler(this.OlproxyExecutable_TextChanged);
             this.OlproxyExecutable.DoubleClick += new System.EventHandler(this.OlproxyExecutable_DoubleClick);
@@ -226,7 +232,7 @@ namespace OverloadClientTool
             this.OlproxyArgs.Location = new System.Drawing.Point(6, 17);
             this.OlproxyArgs.Margin = new System.Windows.Forms.Padding(2);
             this.OlproxyArgs.Name = "OlproxyArgs";
-            this.OlproxyArgs.Size = new System.Drawing.Size(446, 20);
+            this.OlproxyArgs.Size = new System.Drawing.Size(501, 20);
             this.OlproxyArgs.TabIndex = 4;
             this.OlproxyArgs.TextChanged += new System.EventHandler(this.OlproxyArgs_TextChanged);
             // 
@@ -238,7 +244,7 @@ namespace OverloadClientTool
             // StartStopButton
             // 
             this.StartStopButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StartStopButton.Location = new System.Drawing.Point(388, 297);
+            this.StartStopButton.Location = new System.Drawing.Point(405, 296);
             this.StartStopButton.Name = "StartStopButton";
             this.StartStopButton.Size = new System.Drawing.Size(56, 24);
             this.StartStopButton.TabIndex = 9;
@@ -250,7 +256,7 @@ namespace OverloadClientTool
             // 
             this.ExitButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ExitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ExitButton.Location = new System.Drawing.Point(450, 297);
+            this.ExitButton.Location = new System.Drawing.Point(467, 296);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(60, 24);
             this.ExitButton.TabIndex = 9;
@@ -390,9 +396,9 @@ namespace OverloadClientTool
             // MapDeleteButton
             // 
             this.MapDeleteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapDeleteButton.Location = new System.Drawing.Point(211, 54);
+            this.MapDeleteButton.Location = new System.Drawing.Point(162, 54);
             this.MapDeleteButton.Name = "MapDeleteButton";
-            this.MapDeleteButton.Size = new System.Drawing.Size(65, 23);
+            this.MapDeleteButton.Size = new System.Drawing.Size(71, 23);
             this.MapDeleteButton.TabIndex = 14;
             this.MapDeleteButton.Text = "Delete";
             this.MapDeleteButton.UseVisualStyleBackColor = true;
@@ -401,9 +407,9 @@ namespace OverloadClientTool
             // MapHideButton
             // 
             this.MapHideButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapHideButton.Location = new System.Drawing.Point(211, 25);
+            this.MapHideButton.Location = new System.Drawing.Point(162, 25);
             this.MapHideButton.Name = "MapHideButton";
-            this.MapHideButton.Size = new System.Drawing.Size(65, 23);
+            this.MapHideButton.Size = new System.Drawing.Size(71, 23);
             this.MapHideButton.TabIndex = 14;
             this.MapHideButton.Text = "Hide";
             this.MapHideButton.UseVisualStyleBackColor = true;
@@ -420,7 +426,7 @@ namespace OverloadClientTool
             this.PaneMain.Location = new System.Drawing.Point(9, 43);
             this.PaneMain.Margin = new System.Windows.Forms.Padding(0);
             this.PaneMain.Name = "PaneMain";
-            this.PaneMain.Size = new System.Drawing.Size(530, 336);
+            this.PaneMain.Size = new System.Drawing.Size(547, 336);
             this.PaneMain.TabIndex = 18;
             // 
             // panel11
@@ -429,7 +435,7 @@ namespace OverloadClientTool
             this.panel11.Controls.Add(this.TreeViewLogPanel);
             this.panel11.Location = new System.Drawing.Point(3, 5);
             this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(524, 288);
+            this.panel11.Size = new System.Drawing.Size(541, 288);
             this.panel11.TabIndex = 16;
             // 
             // label12
@@ -447,7 +453,7 @@ namespace OverloadClientTool
             this.TreeViewLogPanel.Controls.Add(this.LogTreeView);
             this.TreeViewLogPanel.Location = new System.Drawing.Point(7, 18);
             this.TreeViewLogPanel.Name = "TreeViewLogPanel";
-            this.TreeViewLogPanel.Size = new System.Drawing.Size(500, 265);
+            this.TreeViewLogPanel.Size = new System.Drawing.Size(517, 265);
             this.TreeViewLogPanel.TabIndex = 19;
             // 
             // LogTreeView
@@ -466,7 +472,7 @@ namespace OverloadClientTool
             this.LogTreeView.ShowLines = false;
             this.LogTreeView.ShowPlusMinus = false;
             this.LogTreeView.ShowRootLines = false;
-            this.LogTreeView.Size = new System.Drawing.Size(498, 263);
+            this.LogTreeView.Size = new System.Drawing.Size(515, 263);
             this.LogTreeView.TabIndex = 19;
             this.LogTreeView.TabStop = false;
             this.LogTreeView.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.LogTreeView_DrawNode);
@@ -567,18 +573,24 @@ namespace OverloadClientTool
             this.PaneMaps.Controls.Add(this.OnlyUpdateExistingMapsCheckBox);
             this.PaneMaps.Controls.Add(this.MapUnhideAllButton);
             this.PaneMaps.Controls.Add(this.MapHideButton);
+            this.PaneMaps.Controls.Add(this.UnhideCMMapsButton);
+            this.PaneMaps.Controls.Add(this.HideCMMapsButton);
+            this.PaneMaps.Controls.Add(this.UnhideSPMapsButton);
+            this.PaneMaps.Controls.Add(this.HideSPMapsButton);
+            this.PaneMaps.Controls.Add(this.UnhideMPMapsButton);
+            this.PaneMaps.Controls.Add(this.HideMPMapsButton);
             this.PaneMaps.Controls.Add(this.MapRefreshButton);
             this.PaneMaps.Controls.Add(this.MapDeleteButton);
             this.PaneMaps.Location = new System.Drawing.Point(9, 393);
             this.PaneMaps.Margin = new System.Windows.Forms.Padding(0);
             this.PaneMaps.Name = "PaneMaps";
-            this.PaneMaps.Size = new System.Drawing.Size(530, 336);
+            this.PaneMaps.Size = new System.Drawing.Size(547, 336);
             this.PaneMaps.TabIndex = 19;
             // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(298, 155);
+            this.label17.Location = new System.Drawing.Point(321, 177);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(195, 13);
             this.label17.TabIndex = 3;
@@ -617,7 +629,7 @@ namespace OverloadClientTool
             this.MapsPanel.Controls.Add(this.MapsListBox);
             this.MapsPanel.Location = new System.Drawing.Point(16, 25);
             this.MapsPanel.Name = "MapsPanel";
-            this.MapsPanel.Size = new System.Drawing.Size(175, 236);
+            this.MapsPanel.Size = new System.Drawing.Size(138, 236);
             this.MapsPanel.TabIndex = 19;
             // 
             // MapsListBox
@@ -629,7 +641,7 @@ namespace OverloadClientTool
             this.MapsListBox.FormattingEnabled = true;
             this.MapsListBox.Location = new System.Drawing.Point(1, 1);
             this.MapsListBox.Name = "MapsListBox";
-            this.MapsListBox.Size = new System.Drawing.Size(173, 234);
+            this.MapsListBox.Size = new System.Drawing.Size(136, 234);
             this.MapsListBox.TabIndex = 0;
             this.MapsListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.MapsListBox_DrawItem);
             this.MapsListBox.SelectedIndexChanged += new System.EventHandler(this.MapsListBox_SelectedIndexChanged);
@@ -643,7 +655,7 @@ namespace OverloadClientTool
             this.CMMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.CMMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.CMMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CMMapsCheckBox.Location = new System.Drawing.Point(301, 221);
+            this.CMMapsCheckBox.Location = new System.Drawing.Point(324, 243);
             this.CMMapsCheckBox.Name = "CMMapsCheckBox";
             this.CMMapsCheckBox.Size = new System.Drawing.Size(135, 17);
             this.CMMapsCheckBox.TabIndex = 5;
@@ -660,7 +672,7 @@ namespace OverloadClientTool
             this.SPMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.SPMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.SPMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SPMapsCheckBox.Location = new System.Drawing.Point(301, 198);
+            this.SPMapsCheckBox.Location = new System.Drawing.Point(324, 220);
             this.SPMapsCheckBox.Name = "SPMapsCheckBox";
             this.SPMapsCheckBox.Size = new System.Drawing.Size(111, 17);
             this.SPMapsCheckBox.TabIndex = 5;
@@ -677,7 +689,7 @@ namespace OverloadClientTool
             this.MPMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.MPMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.MPMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MPMapsCheckBox.Location = new System.Drawing.Point(301, 175);
+            this.MPMapsCheckBox.Location = new System.Drawing.Point(324, 197);
             this.MPMapsCheckBox.Name = "MPMapsCheckBox";
             this.MPMapsCheckBox.Size = new System.Drawing.Size(101, 17);
             this.MPMapsCheckBox.TabIndex = 5;
@@ -694,7 +706,7 @@ namespace OverloadClientTool
             this.HideUnofficialMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.HideUnofficialMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.HideUnofficialMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HideUnofficialMapsCheckBox.Location = new System.Drawing.Point(301, 71);
+            this.HideUnofficialMapsCheckBox.Location = new System.Drawing.Point(324, 63);
             this.HideUnofficialMapsCheckBox.Name = "HideUnofficialMapsCheckBox";
             this.HideUnofficialMapsCheckBox.Size = new System.Drawing.Size(192, 17);
             this.HideUnofficialMapsCheckBox.TabIndex = 5;
@@ -711,7 +723,7 @@ namespace OverloadClientTool
             this.HideHiddenMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.HideHiddenMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.HideHiddenMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HideHiddenMapsCheckBox.Location = new System.Drawing.Point(301, 116);
+            this.HideHiddenMapsCheckBox.Location = new System.Drawing.Point(324, 108);
             this.HideHiddenMapsCheckBox.Name = "HideHiddenMapsCheckBox";
             this.HideHiddenMapsCheckBox.Size = new System.Drawing.Size(139, 17);
             this.HideHiddenMapsCheckBox.TabIndex = 5;
@@ -729,7 +741,7 @@ namespace OverloadClientTool
             this.UseDLCLocationCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.UseDLCLocationCheckBox.Enabled = false;
             this.UseDLCLocationCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(301, 94);
+            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(324, 86);
             this.UseDLCLocationCheckBox.Name = "UseDLCLocationCheckBox";
             this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(199, 17);
             this.UseDLCLocationCheckBox.TabIndex = 5;
@@ -746,7 +758,7 @@ namespace OverloadClientTool
             this.AutoUpdateMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.AutoUpdateMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.AutoUpdateMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(301, 25);
+            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(324, 17);
             this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
             this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(146, 17);
             this.AutoUpdateMapsCheckBox.TabIndex = 5;
@@ -763,7 +775,7 @@ namespace OverloadClientTool
             this.OnlyUpdateExistingMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.OnlyUpdateExistingMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.OnlyUpdateExistingMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(301, 48);
+            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(324, 39);
             this.OnlyUpdateExistingMapsCheckBox.Name = "OnlyUpdateExistingMapsCheckBox";
             this.OnlyUpdateExistingMapsCheckBox.Size = new System.Drawing.Size(146, 17);
             this.OnlyUpdateExistingMapsCheckBox.TabIndex = 5;
@@ -775,21 +787,87 @@ namespace OverloadClientTool
             // MapUnhideAllButton
             // 
             this.MapUnhideAllButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapUnhideAllButton.Location = new System.Drawing.Point(211, 111);
+            this.MapUnhideAllButton.Location = new System.Drawing.Point(162, 237);
             this.MapUnhideAllButton.Name = "MapUnhideAllButton";
-            this.MapUnhideAllButton.Size = new System.Drawing.Size(65, 23);
+            this.MapUnhideAllButton.Size = new System.Drawing.Size(71, 23);
             this.MapUnhideAllButton.TabIndex = 14;
             this.MapUnhideAllButton.Text = "Unhide all";
             this.MapUnhideAllButton.UseVisualStyleBackColor = true;
             this.MapUnhideAllButton.Click += new System.EventHandler(this.MapUnhideAllButton_Click);
             // 
+            // UnhideCMMapsButton
+            // 
+            this.UnhideCMMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UnhideCMMapsButton.Location = new System.Drawing.Point(238, 193);
+            this.UnhideCMMapsButton.Name = "UnhideCMMapsButton";
+            this.UnhideCMMapsButton.Size = new System.Drawing.Size(71, 23);
+            this.UnhideCMMapsButton.TabIndex = 14;
+            this.UnhideCMMapsButton.Text = "Unhide CM";
+            this.UnhideCMMapsButton.UseVisualStyleBackColor = true;
+            this.UnhideCMMapsButton.Click += new System.EventHandler(this.UnhideCMMapsButton_Click);
+            // 
+            // HideCMMapsButton
+            // 
+            this.HideCMMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.HideCMMapsButton.Location = new System.Drawing.Point(162, 193);
+            this.HideCMMapsButton.Name = "HideCMMapsButton";
+            this.HideCMMapsButton.Size = new System.Drawing.Size(71, 23);
+            this.HideCMMapsButton.TabIndex = 14;
+            this.HideCMMapsButton.Text = "Hide CM";
+            this.HideCMMapsButton.UseVisualStyleBackColor = true;
+            this.HideCMMapsButton.Click += new System.EventHandler(this.HideCMMapsButton_Click);
+            // 
+            // UnhideSPMapsButton
+            // 
+            this.UnhideSPMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UnhideSPMapsButton.Location = new System.Drawing.Point(238, 166);
+            this.UnhideSPMapsButton.Name = "UnhideSPMapsButton";
+            this.UnhideSPMapsButton.Size = new System.Drawing.Size(71, 23);
+            this.UnhideSPMapsButton.TabIndex = 14;
+            this.UnhideSPMapsButton.Text = "Unhide SP";
+            this.UnhideSPMapsButton.UseVisualStyleBackColor = true;
+            this.UnhideSPMapsButton.Click += new System.EventHandler(this.UnhideSPMapsButton_Click);
+            // 
+            // HideSPMapsButton
+            // 
+            this.HideSPMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.HideSPMapsButton.Location = new System.Drawing.Point(162, 166);
+            this.HideSPMapsButton.Name = "HideSPMapsButton";
+            this.HideSPMapsButton.Size = new System.Drawing.Size(71, 23);
+            this.HideSPMapsButton.TabIndex = 14;
+            this.HideSPMapsButton.Text = "Hide SP";
+            this.HideSPMapsButton.UseVisualStyleBackColor = true;
+            this.HideSPMapsButton.Click += new System.EventHandler(this.HideSPMapsButton_Click);
+            // 
+            // UnhideMPMapsButton
+            // 
+            this.UnhideMPMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UnhideMPMapsButton.Location = new System.Drawing.Point(238, 139);
+            this.UnhideMPMapsButton.Name = "UnhideMPMapsButton";
+            this.UnhideMPMapsButton.Size = new System.Drawing.Size(71, 23);
+            this.UnhideMPMapsButton.TabIndex = 14;
+            this.UnhideMPMapsButton.Text = "Unhide MP";
+            this.UnhideMPMapsButton.UseVisualStyleBackColor = true;
+            this.UnhideMPMapsButton.Click += new System.EventHandler(this.UnhideMPMapsButton_Click);
+            // 
+            // HideMPMapsButton
+            // 
+            this.HideMPMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.HideMPMapsButton.Location = new System.Drawing.Point(162, 139);
+            this.HideMPMapsButton.Name = "HideMPMapsButton";
+            this.HideMPMapsButton.Size = new System.Drawing.Size(71, 23);
+            this.HideMPMapsButton.TabIndex = 14;
+            this.HideMPMapsButton.Text = "Hide MP";
+            this.HideMPMapsButton.UseVisualStyleBackColor = true;
+            this.HideMPMapsButton.Click += new System.EventHandler(this.HideMPMapsButton_Click);
+            // 
             // MapRefreshButton
             // 
             this.MapRefreshButton.Enabled = false;
             this.MapRefreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapRefreshButton.Location = new System.Drawing.Point(211, 83);
+            this.MapRefreshButton.Location = new System.Drawing.Point(162, 83);
             this.MapRefreshButton.Name = "MapRefreshButton";
-            this.MapRefreshButton.Size = new System.Drawing.Size(65, 23);
+            this.MapRefreshButton.Size = new System.Drawing.Size(71, 23);
             this.MapRefreshButton.TabIndex = 14;
             this.MapRefreshButton.Text = "Refresh";
             this.MapRefreshButton.UseVisualStyleBackColor = true;
@@ -829,7 +907,7 @@ namespace OverloadClientTool
             // 
             this.panel9.Controls.Add(this.label9);
             this.panel9.Controls.Add(this.PilotXPTextBox);
-            this.panel9.Location = new System.Drawing.Point(357, 13);
+            this.panel9.Location = new System.Drawing.Point(346, 8);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(89, 39);
             this.panel9.TabIndex = 18;
@@ -919,7 +997,7 @@ namespace OverloadClientTool
             // PilotXPSetButton
             // 
             this.PilotXPSetButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PilotXPSetButton.Location = new System.Drawing.Point(449, 28);
+            this.PilotXPSetButton.Location = new System.Drawing.Point(438, 23);
             this.PilotXPSetButton.Name = "PilotXPSetButton";
             this.PilotXPSetButton.Size = new System.Drawing.Size(62, 24);
             this.PilotXPSetButton.TabIndex = 14;
@@ -974,7 +1052,7 @@ namespace OverloadClientTool
             this.PaneOlproxy.Location = new System.Drawing.Point(585, 43);
             this.PaneOlproxy.Margin = new System.Windows.Forms.Padding(0);
             this.PaneOlproxy.Name = "PaneOlproxy";
-            this.PaneOlproxy.Size = new System.Drawing.Size(530, 336);
+            this.PaneOlproxy.Size = new System.Drawing.Size(547, 336);
             this.PaneOlproxy.TabIndex = 21;
             // 
             // panel10
@@ -983,7 +1061,7 @@ namespace OverloadClientTool
             this.panel10.Controls.Add(this.label11);
             this.panel10.Location = new System.Drawing.Point(8, 94);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(467, 43);
+            this.panel10.Size = new System.Drawing.Size(521, 43);
             this.panel10.TabIndex = 18;
             // 
             // label11
@@ -1014,7 +1092,7 @@ namespace OverloadClientTool
             this.panel2.Controls.Add(this.label10);
             this.panel2.Location = new System.Drawing.Point(8, 40);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(467, 43);
+            this.panel2.Size = new System.Drawing.Size(521, 43);
             this.panel2.TabIndex = 18;
             // 
             // label10
@@ -1096,7 +1174,7 @@ namespace OverloadClientTool
             this.panel4.Controls.Add(this.OverloadExecutable);
             this.panel4.Location = new System.Drawing.Point(12, 11);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(486, 47);
+            this.panel4.Size = new System.Drawing.Size(499, 47);
             this.panel4.TabIndex = 19;
             // 
             // label4
@@ -1114,7 +1192,7 @@ namespace OverloadClientTool
             this.panel3.Controls.Add(this.OverloadArgs);
             this.panel3.Location = new System.Drawing.Point(12, 66);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(486, 47);
+            this.panel3.Size = new System.Drawing.Size(499, 47);
             this.panel3.TabIndex = 18;
             // 
             // label3
@@ -1196,7 +1274,7 @@ namespace OverloadClientTool
             this.PaneOlmod.Location = new System.Drawing.Point(585, 393);
             this.PaneOlmod.Margin = new System.Windows.Forms.Padding(0);
             this.PaneOlmod.Name = "PaneOlmod";
-            this.PaneOlmod.Size = new System.Drawing.Size(530, 336);
+            this.PaneOlmod.Size = new System.Drawing.Size(547, 336);
             this.PaneOlmod.TabIndex = 23;
             // 
             // panel5
@@ -1205,7 +1283,7 @@ namespace OverloadClientTool
             this.panel5.Controls.Add(this.OlmodExecutable);
             this.panel5.Location = new System.Drawing.Point(25, 47);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(478, 51);
+            this.panel5.Size = new System.Drawing.Size(504, 51);
             this.panel5.TabIndex = 18;
             // 
             // label5
@@ -1224,7 +1302,7 @@ namespace OverloadClientTool
             this.OlmodExecutable.Location = new System.Drawing.Point(11, 23);
             this.OlmodExecutable.Margin = new System.Windows.Forms.Padding(2);
             this.OlmodExecutable.Name = "OlmodExecutable";
-            this.OlmodExecutable.Size = new System.Drawing.Size(457, 20);
+            this.OlmodExecutable.Size = new System.Drawing.Size(479, 20);
             this.OlmodExecutable.TabIndex = 3;
             this.OlmodExecutable.TextChanged += new System.EventHandler(this.OlmodExecutable_TextChanged);
             this.OlmodExecutable.DoubleClick += new System.EventHandler(this.OlmodExecutable_DoubleClick);
@@ -1246,7 +1324,7 @@ namespace OverloadClientTool
             // 
             this.UpdateOlmodButton.Enabled = false;
             this.UpdateOlmodButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UpdateOlmodButton.Location = new System.Drawing.Point(384, 104);
+            this.UpdateOlmodButton.Location = new System.Drawing.Point(406, 104);
             this.UpdateOlmodButton.Name = "UpdateOlmodButton";
             this.UpdateOlmodButton.Size = new System.Drawing.Size(109, 24);
             this.UpdateOlmodButton.TabIndex = 9;
@@ -1372,13 +1450,13 @@ namespace OverloadClientTool
             this.PaneOptions.Location = new System.Drawing.Point(1732, 43);
             this.PaneOptions.Margin = new System.Windows.Forms.Padding(0);
             this.PaneOptions.Name = "PaneOptions";
-            this.PaneOptions.Size = new System.Drawing.Size(530, 336);
+            this.PaneOptions.Size = new System.Drawing.Size(547, 336);
             this.PaneOptions.TabIndex = 25;
             // 
             // ForceUpdateButton
             // 
             this.ForceUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ForceUpdateButton.Location = new System.Drawing.Point(439, 34);
+            this.ForceUpdateButton.Location = new System.Drawing.Point(439, 36);
             this.ForceUpdateButton.Margin = new System.Windows.Forms.Padding(0);
             this.ForceUpdateButton.Name = "ForceUpdateButton";
             this.ForceUpdateButton.Size = new System.Drawing.Size(77, 23);
@@ -1470,7 +1548,7 @@ namespace OverloadClientTool
             // PayPalLink
             // 
             this.PayPalLink.AutoSize = true;
-            this.PayPalLink.Location = new System.Drawing.Point(20, 296);
+            this.PayPalLink.Location = new System.Drawing.Point(20, 305);
             this.PayPalLink.Name = "PayPalLink";
             this.PayPalLink.Size = new System.Drawing.Size(255, 13);
             this.PayPalLink.TabIndex = 18;
@@ -1484,16 +1562,16 @@ namespace OverloadClientTool
             this.DisplayHelpLink.AutoSize = true;
             this.DisplayHelpLink.Location = new System.Drawing.Point(20, 234);
             this.DisplayHelpLink.Name = "DisplayHelpLink";
-            this.DisplayHelpLink.Size = new System.Drawing.Size(95, 13);
+            this.DisplayHelpLink.Size = new System.Drawing.Size(97, 13);
             this.DisplayHelpLink.TabIndex = 18;
             this.DisplayHelpLink.TabStop = true;
-            this.DisplayHelpLink.Text = "Click to open help!";
+            this.DisplayHelpLink.Text = "Help on using OCT";
             this.DisplayHelpLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DisplayHelpLink_LinkClicked);
             // 
             // MailLinkLabel
             // 
             this.MailLinkLabel.AutoSize = true;
-            this.MailLinkLabel.Location = new System.Drawing.Point(20, 275);
+            this.MailLinkLabel.Location = new System.Drawing.Point(20, 284);
             this.MailLinkLabel.Name = "MailLinkLabel";
             this.MailLinkLabel.Size = new System.Drawing.Size(251, 13);
             this.MailLinkLabel.TabIndex = 18;
@@ -1662,7 +1740,7 @@ namespace OverloadClientTool
             this.PaneServer.Location = new System.Drawing.Point(1732, 393);
             this.PaneServer.Margin = new System.Windows.Forms.Padding(0);
             this.PaneServer.Name = "PaneServer";
-            this.PaneServer.Size = new System.Drawing.Size(530, 336);
+            this.PaneServer.Size = new System.Drawing.Size(547, 336);
             this.PaneServer.TabIndex = 25;
             // 
             // panel6
@@ -1700,7 +1778,7 @@ namespace OverloadClientTool
             this.panel8.Controls.Add(this.ServerTrackerNotes);
             this.panel8.Location = new System.Drawing.Point(22, 71);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(484, 50);
+            this.panel8.Size = new System.Drawing.Size(511, 50);
             this.panel8.TabIndex = 18;
             // 
             // label14
@@ -1719,7 +1797,7 @@ namespace OverloadClientTool
             this.ServerTrackerNotes.Location = new System.Drawing.Point(10, 20);
             this.ServerTrackerNotes.Margin = new System.Windows.Forms.Padding(2);
             this.ServerTrackerNotes.Name = "ServerTrackerNotes";
-            this.ServerTrackerNotes.Size = new System.Drawing.Size(465, 20);
+            this.ServerTrackerNotes.Size = new System.Drawing.Size(492, 20);
             this.ServerTrackerNotes.TabIndex = 2;
             this.ServerTrackerNotes.TextChanged += new System.EventHandler(this.ServerTrackerNotes_TextChanged);
             // 
@@ -1740,7 +1818,7 @@ namespace OverloadClientTool
             this.panel1.Controls.Add(this.ServerTrackerUrl);
             this.panel1.Location = new System.Drawing.Point(225, 11);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(283, 47);
+            this.panel1.Size = new System.Drawing.Size(310, 47);
             this.panel1.TabIndex = 18;
             // 
             // label15
@@ -1759,7 +1837,7 @@ namespace OverloadClientTool
             this.ServerTrackerUrl.Location = new System.Drawing.Point(10, 20);
             this.ServerTrackerUrl.Margin = new System.Windows.Forms.Padding(2);
             this.ServerTrackerUrl.Name = "ServerTrackerUrl";
-            this.ServerTrackerUrl.Size = new System.Drawing.Size(262, 20);
+            this.ServerTrackerUrl.Size = new System.Drawing.Size(289, 20);
             this.ServerTrackerUrl.TabIndex = 2;
             this.ServerTrackerUrl.TextChanged += new System.EventHandler(this.ServerTrackerUrl_TextChanged);
             // 
@@ -1982,6 +2060,12 @@ namespace OverloadClientTool
         private System.Windows.Forms.Label label17;
         private CustomListBox MapsListBox;
         private CustomCheckBox HideHiddenMapsCheckBox;
+        private System.Windows.Forms.Button HideCMMapsButton;
+        private System.Windows.Forms.Button HideSPMapsButton;
+        private System.Windows.Forms.Button HideMPMapsButton;
+        private System.Windows.Forms.Button UnhideCMMapsButton;
+        private System.Windows.Forms.Button UnhideSPMapsButton;
+        private System.Windows.Forms.Button UnhideMPMapsButton;
     }
 }
 

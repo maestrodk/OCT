@@ -34,7 +34,7 @@ namespace OverloadClientTool
 
         public string MapTypes = null;
 
-        public OverloadMap(string url, DateTime dateTime, int size, string mapZipName)
+        public OverloadMap(string url, DateTime dateTime, int size, string mapZipName = null, string mapTypes = null)
         {
             this.Url = url;
             this.DateTime = dateTime;
@@ -57,7 +57,8 @@ namespace OverloadClientTool
                 this.ZipName = mapZipName;
             }
 
-            ReflectMapTypes();
+            if (mapTypes != null) MapTypes = mapTypes;
+            else ReflectMapTypes();
         }
 
         /// <summary>
@@ -83,8 +84,16 @@ namespace OverloadClientTool
         {
             get
             {
-                if (!String.IsNullOrEmpty(LocalZipFileName)) return LocalZipFileName.EndsWith(MapHiddenMarker);
-                if (!String.IsNullOrEmpty(LocalDLCZipFileName)) return LocalDLCZipFileName.EndsWith(MapHiddenMarker);
+
+                try
+                {
+                    if (!String.IsNullOrEmpty(LocalZipFileName)) return LocalZipFileName.EndsWith(MapHiddenMarker);
+                    if (!String.IsNullOrEmpty(LocalDLCZipFileName)) return LocalDLCZipFileName.EndsWith(MapHiddenMarker);
+                }
+                catch (Exception ex)
+                {
+
+                }
 
                 // In case a local file does not exists...
                 return false;
@@ -290,7 +299,10 @@ namespace OverloadClientTool
 
         public void ReflectMapTypes()
         {
+            MapTypes = "";
+
             string zipFileName = LocalZipFileName;
+
             if (String.IsNullOrEmpty(zipFileName)) zipFileName = LocalDLCZipFileName;
             if (String.IsNullOrEmpty(zipFileName)) return;
 
@@ -302,6 +314,7 @@ namespace OverloadClientTool
                     if (entry.Name.ToLower().EndsWith(".sp")) MapTypes += ",SP";
                     if (entry.Name.ToLower().EndsWith(".cm")) MapTypes += ",CM";
                 }
+
                 if (MapTypes.StartsWith(",")) MapTypes = MapTypes.Substring(1);
             }
         }
@@ -484,7 +497,7 @@ namespace OverloadClientTool
                         {
                             // Try to get map types, default to MP.
                             Newtonsoft.Json.Linq.JArray mapLevels = null;
-                            string mapTypes = null;
+                            string mapTypes = "";
 
                             try
                             {
@@ -498,7 +511,7 @@ namespace OverloadClientTool
                                         mapType = level.type;
                                         mapTypes += " " + mapType.ToUpper();
                                     }
-                                    catch
+                                    catch (Exception ex)
                                     {
                                     }
                                 }
@@ -511,7 +524,7 @@ namespace OverloadClientTool
                             mapZipName = mapZipName.Substring(0, 1).ToUpper() + mapZipName.Substring(1);
                             string mapZipDisplayName = WebUtility.UrlDecode(mapZipName).Trim();
 
-                            OverloadMap newMap = new OverloadMap(baseUrl + map.url, UnixTimeStampToDateTime(Convert.ToDouble(map.mtime)), Convert.ToInt32(map.size), mapZipName);
+                            OverloadMap newMap = new OverloadMap(baseUrl + map.url, UnixTimeStampToDateTime(Convert.ToDouble(map.mtime)), Convert.ToInt32(map.size), mapZipName, mapTypes);
 
                             bool getMap = false;
 
@@ -579,7 +592,7 @@ namespace OverloadClientTool
                                 {
                                     string zipName = newMap.ZipName;
                                     if (zipName.ToLower().EndsWith(".zip")) zipName = zipName.Substring(0, zipName.Length - ".zip".Length);
-                                    LogMessage($"Hidding {zipName} as it is not in the official MP map list.");
+                                    LogMessage($"Hidding {zipName} as it is not in the official map list.");
                                     newMap.Hide();
                                 }
 

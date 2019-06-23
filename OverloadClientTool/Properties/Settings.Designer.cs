@@ -97,7 +97,7 @@ namespace OverloadClientTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://www.overloadmaps.com/data/mp.json")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://www.overloadmaps.com/data/all.json")]
         public string MapListUrl {
             get {
                 return ((string)(this["MapListUrl"]));

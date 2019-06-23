@@ -21,7 +21,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MapListUrl" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://www.overloadmaps.com/data/mp.json</Value>
+      <Value Profile="(Default)">https://www.overloadmaps.com/data/all.json</Value>
     </Setting>
     <Setting Name="UseOlproxy" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
