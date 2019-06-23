@@ -13,9 +13,9 @@ namespace OverloadClientTool
         private Color activeTextBoxColor;
         private Color inactiveTextBoxColor;
 
-        public byte[] HelpFileBytes
+        public string HelpFileBytes
         {
-            get { return Properties.Resources.OverloadClientToolHelp; }
+            get { return Properties.Resources.Overload_Client_Tool_Help; }
         }
 
         public string OverloadPath
@@ -114,12 +114,6 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.PassGameDirToOlmod = value; }
         }
 
-        public bool DarkTheme
-        {
-            get { return Properties.Settings.Default.DarkTheme; }
-            set { Properties.Settings.Default.DarkTheme = value; }
-        }
-
         public bool UseOlproxy
         {
             get { return Properties.Settings.Default.UseOlproxy; }
@@ -198,12 +192,6 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.ShowFPS = value; }
         }
         
-        public bool RunDedicatedServer
-        {
-            get { return Properties.Settings.Default.RunDedicatedServer; }
-            set { Properties.Settings.Default.RunDedicatedServer = value; }
-        }
-
         public bool StartWithWindows
         {
             get { return Properties.Settings.Default.StartWithWindows; }
@@ -451,7 +439,6 @@ namespace OverloadClientTool
             ServerTrackerUrl.Text = OlproxyTrackerBaseUrl;
             ServerAutoSignOffTracker.Checked = OlproxySignOff;
             ServerAnnounceOnTrackerCheckBox.Checked = OlproxyIsServer;
-            ServerEnableCheckBox.Checked = RunDedicatedServer;
 
             // Check for change to new theme selection.
             if (String.IsNullOrEmpty(ActiveThemeName)) ActiveThemeName = "Dark Gray";

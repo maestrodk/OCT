@@ -8,9 +8,6 @@
     <Setting Name="OlproxyPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="DarkTheme" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="TrayOnly" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
@@ -87,9 +84,6 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="signOff" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="RunDedicatedServer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="IncludeMP" Type="System.Boolean" Scope="User">

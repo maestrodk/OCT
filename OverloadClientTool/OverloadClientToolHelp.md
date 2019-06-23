@@ -1,12 +1,37 @@
-# Overload Client Tool Help 
+﻿# Overload Client Tool Help 
 
 - Last revised 2019-06-10 by Søren "Maestro" Michélsen
-- This revision applies to OCT v1.8.2+
+- This revision applies to OCT v1.8.5+
 
+### About the author
+I'm 57, married, no children but we have 4 cats. In my daytime I work as a Dynamics AX/.NET developer with focus on EDI and integration. When not working I spend my time doing photography, music (piano & guitar) and of course gaming. Overload is my favorite game as I love Descent-style games and used to play D1/D2/D3 when I was a bit younger (at that time my alias was 'Mick' playing on the SWM team).
+
+Should you wish to contact you can reach me  on Discord, my ID is Maestro#4825.
+
+### Acknowledgement
+Thanks to everyone helping me with suggestions and bug reports while working on OCT with special thanks going to the following people:
+- Arne
+- Roncli
+- Luponix
+- Obi-Wan Kenobi
+- sLLiK
+- Tobias
+- jazzyjet
+- terminal
+- Members and friends of the SWM team:
+  - Dreawus
+  - JoBo-One
+  - Hiflier
+  - Zhrothgar
+  - KAHA
+  - Mr. Aesthetic
 
 ### Introduction
 
 [Overload Client Tool](https://github.com/maestrodk/OCT) is a UI frontend for [Revival Productions](https://www.revivalprod.com/) superb 6-DOF shooter [Overload](https://playoverload.com/). You don't need OCT to play Overload but it offers several benefits that isn't a part of the original game.
+
+OCT was created to make it easier to maintain maps, use Olproxy + Olmod and whatever else is needed to get the most out of Overload. 
+
 
 Note that originally there also was a Overload _Server_ Tool (OST) also written by the same author. But both tools have since merged into a single tool (OCT). So don't get misled by the 'client' part, OCT does everything OST did (and some more :)). 
 
@@ -79,9 +104,11 @@ Here you can see all maps installed in either the Overload DLC or the Overload P
 
 The `Hide` button will change between 'Hide' and 'Unhide' depending whether the selected map is hidden or not. Hiding a map (using the `Hide` button) is useful to limit the maps visible to Overload as you then can find your favorite maps faster (less clicking!). 
 
-When auto-updating there is an option to automatically hide MP (multiplayer) maps if there are not included in the official map list, this is to avoid Overload getting confused in case more than one ZIP file contains the same MP map. It is recommended to leave this option enabled).
+When auto-updating there is an option to automatically hide local maps not included in the official map list, this is to avoid Overload getting confused in case more than one ZIP file contains the same map. It strongly recommended to enable this option!
 
-The `Refresh` button will download a selected map again if it is a public MP map. Use this if you think the local map ZIP file is corrupt to download a fresh version. This is only available if the map is included on the online MP map list.
+The `Refresh` button will download a fresh copy of selected map. Use this if the local map ZIP file has been corrupted. This button is only selectable if the map is included on the official map list.
+
+Per default only MP maps are downloaded but you can choose to also include SP (single player) and CM (challenge missions) when updating maps. Please note that SP/CM maps can be quite big and downloading these maps can take some time. OCT will ask you if you want the JSON URL to be changed to include all map types (here you should chose 'Yes' or otherwise only MP maps will be updated).
 
 When you toggle the `Use DLC folder for downloaded maps` OCT will ask you if you want to move all maps between the ProgramData folder or the DLC folder (the move depending on what the option is set to). You don't have to do this as OCT will check ZIP files in both folders when updating maps and show maps found in either folder in the listbox. If the same map ZIP is stored in _both_ folders OCT will try its best to avoid confusion (like hiding/unhiding both maps in tandem etc).
 

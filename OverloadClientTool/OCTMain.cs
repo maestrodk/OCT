@@ -47,6 +47,7 @@ namespace OverloadClientTool
 
         // Tray icon menu.
         private ContextMenu trayContextMenu = new ContextMenu();
+
         private MenuItem trayMenuItemStart = new System.Windows.Forms.MenuItem();
         private MenuItem trayMenuItemStartServer = new System.Windows.Forms.MenuItem();
         private MenuItem trayMenuItemExit = new System.Windows.Forms.MenuItem();
@@ -81,17 +82,17 @@ namespace OverloadClientTool
   
             // Initialize tray menu item 1.
             trayMenuItemStart.Index = 0;
-            trayMenuItemStart.Text = "&Start";
+            trayMenuItemStart.Text = "&Start Overload";
             trayMenuItemStart.Click += new System.EventHandler(StartButton_Click);
 
             // Initialize tray menu item 2.
             trayMenuItemStartServer.Index = 1;
-            trayMenuItemStartServer.Text = "St&art server";
+            trayMenuItemStartServer.Text = "St&art Overload server";
             trayMenuItemStartServer.Click += new System.EventHandler(StartServerButton_Click);
 
             // Initialize tray menu item 3.
             trayMenuItemExit.Index = 2;
-            trayMenuItemExit.Text = "E&xit";
+            trayMenuItemExit.Text = "E&xit OCT";
             trayMenuItemExit.Click += new System.EventHandler(StopExitButton_Click);
 
             // Setuy tray menu.
@@ -244,12 +245,7 @@ namespace OverloadClientTool
 
             if (MinimizeOnStartupCheckBox.Checked) WindowState = FormWindowState.Minimized;
             else this.WindowState = FormWindowState.Normal;
-
-            if (RunDedicatedServer)
-            {
-                StartButton_Click(null, null);
-            }
-            
+         
             Defocus();
 
             // Check for OCT update.
@@ -529,7 +525,7 @@ namespace OverloadClientTool
                     OverloadLogFileCheck();
 
                     string statusText = "Ready for some Overload action!";
-                    string server = (RunDedicatedServer) ? " server" : "";
+                    string server = "";
 
                     if (overloadRunning && !olproxyRunning && !olmodRunning) statusText = $"Overload{server}is running.";
                     else if (overloadRunning && olproxyRunning && !olmodRunning) statusText = $"Overload{server} and Olproxy (external) are running.";
@@ -553,9 +549,6 @@ namespace OverloadClientTool
                     ServerRunning.Visible = serverProcessId > 0;
 
                     UpdateOlmodButton.Enabled = !olmodRunning;
-                    ServerEnableCheckBox.Enabled = !(overloadRunning || olmodRunning);
-
-                    ApplyThemeToControl(ServerEnableCheckBox, theme);
 
                     StartStopButton.Text = (overloadRunning || olmodRunning) ? "Stop" : "Start";
                     StartStopOlproxyButton.Text = (olproxyRunning) ? "Stop" : "Start";
@@ -1897,11 +1890,6 @@ namespace OverloadClientTool
         {
             OlproxyNotes = ServerTrackerNotes.Text;
         }
-
-        private void EnableServerCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            RunDedicatedServer = ServerEnableCheckBox.Checked;
-        }
         #endregion
 
         private void UseTrayIcon_CheckedChanged(object sender, EventArgs e)
@@ -2029,16 +2017,12 @@ namespace OverloadClientTool
 
         private void DisplayHelpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            byte[] helpBytes = HelpFileBytes;
-            if ((helpBytes != null) && (helpBytes.Length > 0))
+            string tempPdfFile = Path.Combine(Path.GetTempPath(), "Overload Client Tool Help.html");
+            System.IO.File.WriteAllText(tempPdfFile, HelpFileBytes);
+            using (Process helpProcess = new Process())
             {
-                string tempPdfFile = Path.Combine(Path.GetTempPath(), "OverloadClientHelp.pdf");
-                System.IO.File.WriteAllBytes(tempPdfFile, helpBytes);
-                using (Process helpProcess = new Process())
-                {
-                    helpProcess.StartInfo.FileName = tempPdfFile;
-                    helpProcess.Start();
-                }
+                helpProcess.StartInfo.FileName = tempPdfFile;
+                helpProcess.Start();
             }
         }
 

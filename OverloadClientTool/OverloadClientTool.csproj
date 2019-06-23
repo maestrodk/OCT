@@ -139,7 +139,6 @@
       <DependentUpon>OCTMain.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="OverloadClientTool.snk" />
-    <None Include="OverloadClientToolHelp.pdf" />
     <EmbeddedResource Include="UpdateForm.resx">
       <DependentUpon>UpdateForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -185,6 +184,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Overload Client Tool Help.html" />
     <EmbeddedResource Include="Newtonsoft.Json.dll" />
     <None Include="arrows blue on black 000000 07CEFA.gif" />
     <None Include="arrows yellow on brown 402010 C0A020.gif" />

@@ -50,18 +50,6 @@ namespace OverloadClientTool.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DarkTheme {
-            get {
-                return ((bool)(this["DarkTheme"]));
-            }
-            set {
-                this["DarkTheme"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool TrayOnly {
             get {
                 return ((bool)(this["TrayOnly"]));
@@ -369,18 +357,6 @@ namespace OverloadClientTool.Properties {
             }
             set {
                 this["signOff"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool RunDedicatedServer {
-            get {
-                return ((bool)(this["RunDedicatedServer"]));
-            }
-            set {
-                this["RunDedicatedServer"] = value;
             }
         }
         

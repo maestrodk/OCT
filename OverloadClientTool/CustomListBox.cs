@@ -14,7 +14,6 @@ namespace OverloadClientTool
         public CustomListBox()
         {
             DrawMode = DrawMode.OwnerDrawFixed;
-            this.
         }
 
         protected override void OnDrawItem(DrawItemEventArgs e)
