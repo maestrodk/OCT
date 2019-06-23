@@ -73,6 +73,7 @@ namespace OverloadClientTool
             this.SPMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.MPMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.HideUnofficialMapsCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.HideHiddenMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.UseDLCLocationCheckBox = new OverloadClientTool.CustomCheckBox();
             this.AutoUpdateMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.OnlyUpdateExistingMapsCheckBox = new OverloadClientTool.CustomCheckBox();
@@ -558,6 +559,7 @@ namespace OverloadClientTool
             this.PaneMaps.Controls.Add(this.SPMapsCheckBox);
             this.PaneMaps.Controls.Add(this.MPMapsCheckBox);
             this.PaneMaps.Controls.Add(this.HideUnofficialMapsCheckBox);
+            this.PaneMaps.Controls.Add(this.HideHiddenMapsCheckBox);
             this.PaneMaps.Controls.Add(this.UseDLCLocationCheckBox);
             this.PaneMaps.Controls.Add(this.MapUpdateButton);
             this.PaneMaps.Controls.Add(this.AutoUpdateMapsCheckBox);
@@ -576,11 +578,11 @@ namespace OverloadClientTool
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(298, 144);
+            this.label17.Location = new System.Drawing.Point(298, 155);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(195, 13);
             this.label17.TabIndex = 3;
-            this.label17.Text = "Include these maps type when updating";
+            this.label17.Text = "Include these map types when updating";
             // 
             // label6
             // 
@@ -641,7 +643,7 @@ namespace OverloadClientTool
             this.CMMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.CMMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.CMMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CMMapsCheckBox.Location = new System.Drawing.Point(301, 210);
+            this.CMMapsCheckBox.Location = new System.Drawing.Point(301, 221);
             this.CMMapsCheckBox.Name = "CMMapsCheckBox";
             this.CMMapsCheckBox.Size = new System.Drawing.Size(135, 17);
             this.CMMapsCheckBox.TabIndex = 5;
@@ -658,7 +660,7 @@ namespace OverloadClientTool
             this.SPMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.SPMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.SPMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SPMapsCheckBox.Location = new System.Drawing.Point(301, 187);
+            this.SPMapsCheckBox.Location = new System.Drawing.Point(301, 198);
             this.SPMapsCheckBox.Name = "SPMapsCheckBox";
             this.SPMapsCheckBox.Size = new System.Drawing.Size(111, 17);
             this.SPMapsCheckBox.TabIndex = 5;
@@ -675,7 +677,7 @@ namespace OverloadClientTool
             this.MPMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.MPMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.MPMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MPMapsCheckBox.Location = new System.Drawing.Point(301, 164);
+            this.MPMapsCheckBox.Location = new System.Drawing.Point(301, 175);
             this.MPMapsCheckBox.Name = "MPMapsCheckBox";
             this.MPMapsCheckBox.Size = new System.Drawing.Size(101, 17);
             this.MPMapsCheckBox.TabIndex = 5;
@@ -700,6 +702,22 @@ namespace OverloadClientTool
             this.MainToolTip.SetToolTip(this.HideUnofficialMapsCheckBox, "Select this to hide maps that are not in the official map list");
             this.HideUnofficialMapsCheckBox.UseVisualStyleBackColor = false;
             this.HideUnofficialMapsCheckBox.CheckedChanged += new System.EventHandler(this.HideUnofficialMapsCheckBox_CheckedChanged);
+            // 
+            // HideHiddenMapsCheckBox
+            // 
+            this.HideHiddenMapsCheckBox.AutoSize = true;
+            this.HideHiddenMapsCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.HideHiddenMapsCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.HideHiddenMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.HideHiddenMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.HideHiddenMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.HideHiddenMapsCheckBox.Location = new System.Drawing.Point(301, 116);
+            this.HideHiddenMapsCheckBox.Name = "HideHiddenMapsCheckBox";
+            this.HideHiddenMapsCheckBox.Size = new System.Drawing.Size(139, 17);
+            this.HideHiddenMapsCheckBox.TabIndex = 5;
+            this.HideHiddenMapsCheckBox.Text = "Don\'t show hidden maps";
+            this.HideHiddenMapsCheckBox.UseVisualStyleBackColor = false;
+            this.HideHiddenMapsCheckBox.CheckedChanged += new System.EventHandler(this.HideHiddenMapsCheckBox_CheckedChanged);
             // 
             // UseDLCLocationCheckBox
             // 
@@ -1963,6 +1981,7 @@ namespace OverloadClientTool
         private CustomCheckBox MPMapsCheckBox;
         private System.Windows.Forms.Label label17;
         private CustomListBox MapsListBox;
+        private CustomCheckBox HideHiddenMapsCheckBox;
     }
 }
 

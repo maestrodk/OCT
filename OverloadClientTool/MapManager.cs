@@ -658,7 +658,7 @@ namespace OverloadClientTool
             }
 
             // Update maps.
-            SortedMaps = newMapList;            
+            SortedMaps = newMapList;
         }
 
         /// <summary>
@@ -914,5 +914,4 @@ namespace OverloadClientTool
             return dtDateTime;
         }
     }
-
 }

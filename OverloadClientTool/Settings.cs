@@ -30,6 +30,12 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.HideNonOfficialMaps = value; }
         }
 
+        public bool HideHiddenMaps
+        {
+            get { return Properties.Settings.Default.HideHiddenMaps; }
+            set { Properties.Settings.Default.HideHiddenMaps = value; }
+        }
+
         public bool TrayIcon
         {
             get { return Properties.Settings.Default.TrayOnly; }
@@ -415,8 +421,9 @@ namespace OverloadClientTool
             OnlineMapJsonUrl.Text = MapListUrl;
             AutoUpdateMapsCheckBox.Checked = AutoUpdateMaps;
             OnlyUpdateExistingMapsCheckBox.Checked = UpdateOnlyExistingMaps;
-            UseDLCLocationCheckBox.Checked = UseDLCLocation;
+            UseDLCLocationCheckBox.Checked = UseDLCLocation;            
             HideUnofficialMapsCheckBox.Checked = HideNonOfficialMaps;
+            HideHiddenMapsCheckBox.Checked = HideHiddenMaps;
             MPMapsCheckBox.Checked = IncludeMP;
             SPMapsCheckBox.Checked = IncludeSP;
             CMMapsCheckBox.Checked = IncludeCM;

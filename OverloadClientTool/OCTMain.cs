@@ -1220,7 +1220,7 @@ namespace OverloadClientTool
 
             foreach (KeyValuePair<string, OverloadMap> map in mapManager.SortedMaps)
             {
-                if (map.Value.IsLocal)
+                if (map.Value.IsLocal && !(HideHiddenMaps && map.Value.Hidden))
                 {
                     MapsListBox.Items.Add(map.Value);
                     if (map.Value.Hidden) anyHidden = true;
@@ -1240,7 +1240,7 @@ namespace OverloadClientTool
                 }
             }
 
-            MapUnhideAllButton.Enabled = anyHidden;
+            MapUnhideAllButton.Enabled = true; // anyHidden;
             ApplyThemeToControl(MapUnhideAllButton, theme);
 
             SetMapButtons();
@@ -1279,6 +1279,7 @@ namespace OverloadClientTool
                 AutoUpdateMapsCheckBox.Enabled = false;
                 OnlyUpdateExistingMapsCheckBox.Enabled = false;
                 HideUnofficialMapsCheckBox.Enabled = false;
+                HideHiddenMapsCheckBox.Enabled = false;
 
                 MPMapsCheckBox.Enabled = false;
                 SPMapsCheckBox.Enabled = false;
@@ -1315,6 +1316,7 @@ namespace OverloadClientTool
                 AutoUpdateMapsCheckBox.Enabled = true;
                 OnlyUpdateExistingMapsCheckBox.Enabled = true;
                 HideUnofficialMapsCheckBox.Enabled = true;
+                HideHiddenMapsCheckBox.Enabled = true;
 
                 MPMapsCheckBox.Enabled = true;
                 SPMapsCheckBox.Enabled = true;
@@ -2060,6 +2062,13 @@ namespace OverloadClientTool
                     MapListUrl = OnlineMapJsonUrl.Text;
                 }
             }
+        }
+
+        private void HideHiddenMapsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            HideHiddenMaps = HideHiddenMapsCheckBox.Checked;
+            UpdateMapListBox();
+            Unfocus();
         }
     }
 }
