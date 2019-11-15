@@ -157,9 +157,8 @@ namespace OverloadClientTool
                 {
                     string name = Path.GetFileNameWithoutExtension(p);
                     string prefs = Path.Combine(pilotsPath, name + ".xprefs");
-                    string scores = Path.Combine(pilotsPath, name + ".xscores");
 
-                    if (!String.IsNullOrEmpty(p) && System.IO.File.Exists(prefs) && System.IO.File.Exists(scores)) pilots.Add(name);
+                    if (!String.IsNullOrEmpty(p) && System.IO.File.Exists(prefs)) pilots.Add(name);
                 }
 
                 return pilots;
@@ -234,13 +233,15 @@ namespace OverloadClientTool
                     {
                         File.Move(Path.Combine(pilotsPath, pilotSelected + ".xconfig"), Path.Combine(pilotsPath, newPilot + ".xconfig"));
                         File.Move(Path.Combine(pilotsPath, pilotSelected + ".xprefs"), Path.Combine(pilotsPath, newPilot + ".xprefs"));
-                        File.Move(Path.Combine(pilotsPath, pilotSelected + ".xscores"), Path.Combine(pilotsPath, newPilot + ".xscores"));
+                        if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"))) File.Move(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"), Path.Combine(pilotsPath, newPilot + ".xprefsmod"));
+                        if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xscores"))) File.Move(Path.Combine(pilotsPath, pilotSelected + ".xscores"), Path.Combine(pilotsPath, newPilot + ".xscores"));
                     }
                     catch (Exception ex)
                     {
                         // Try to roll back changes.
                         try { File.Move(Path.Combine(pilotsPath, newPilot + ".xconfig"), Path.Combine(pilotsPath, pilotSelected + ".xconfig")); } catch { }
                         try { File.Move(Path.Combine(pilotsPath, newPilot + ".xprefs"), Path.Combine(pilotsPath, pilotSelected + ".xprefs")); } catch { }
+                        try { File.Move(Path.Combine(pilotsPath, newPilot + ".xprefsmod"), Path.Combine(pilotsPath, pilotSelected + ".xprefsmod")); } catch { }
                         try { File.Move(Path.Combine(pilotsPath, newPilot + ".xscores"), Path.Combine(pilotsPath, pilotSelected + ".xscores")); } catch { }
 
                         MessageBox.Show($"Something went wrong during pilot rename (will try to rollback changes): {ex.Message}!");
@@ -280,9 +281,10 @@ namespace OverloadClientTool
 
                 try
                 {
-                    File.Delete(Path.Combine(pilotsPath, pilotSelected + ".xconfig"));
-                    File.Delete(Path.Combine(pilotsPath, pilotSelected + ".xprefs"));
-                    File.Delete(Path.Combine(pilotsPath, pilotSelected + ".xscores"));
+                    if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xconfig"))) File.Delete(Path.Combine(pilotsPath, pilotSelected + ".xconfig"));
+                    if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xprefs"))) File.Delete(Path.Combine(pilotsPath, pilotSelected + ".xprefs"));
+                    if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"))) File.Delete(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"));
+                    if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xscores"))) File.Delete(Path.Combine(pilotsPath, pilotSelected + ".xscores"));
                 }
                 catch (Exception ex)
                 {
@@ -335,15 +337,18 @@ namespace OverloadClientTool
 
                     try
                     {
-                        File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xconfig"), Path.Combine(pilotsPath, newPilot + ".xconfig"));
-                        File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xprefs"), Path.Combine(pilotsPath, newPilot + ".xprefs"));
-                        File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xscores"), Path.Combine(pilotsPath, newPilot + ".xscores"));
+
+                        if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xconfig"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xconfig"), Path.Combine(pilotsPath, newPilot + ".xconfig"));
+                        if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xprefs"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xprefs"), Path.Combine(pilotsPath, newPilot + ".xprefs"));
+                        if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"), Path.Combine(pilotsPath, newPilot + ".xprefsmod"));
+                        if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xscores"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xscores"), Path.Combine(pilotsPath, newPilot + ".xscores"));
                     }
                     catch (Exception ex)
                     {
                         // Try to roll back changes.
                         try { File.Delete(Path.Combine(pilotsPath, newPilot + ".xconfig")); } catch { }
                         try { File.Delete(Path.Combine(pilotsPath, newPilot + ".xprefs")); } catch { }
+                        try { File.Delete(Path.Combine(pilotsPath, newPilot + ".xprefsmod")); } catch { }
                         try { File.Delete(Path.Combine(pilotsPath, newPilot + ".xscores")); } catch { }
 
                         MessageBox.Show("Something went wrong during pilot rename (will try to rollback changes)!");
@@ -405,24 +410,41 @@ namespace OverloadClientTool
                     {
                         string xconfig = Path.Combine(pilotsPath, pilot + ".xconfig");
                         string prefs = Path.Combine(pilotsPath, pilot + ".xprefs");
+                        string prefsmod = Path.Combine(pilotsPath, pilot + ".xprefsmod");
                         string scores = Path.Combine(pilotsPath, pilot + ".xscores");
 
                         FileInfo fiXconfig = new FileInfo(xconfig);
                         FileInfo fiPrefs = new FileInfo(prefs);
                         FileInfo fiScores = new FileInfo(scores);
+                        FileInfo fiMod = new FileInfo(prefsmod);
 
-                        if (fiXconfig.Exists && fiPrefs.Exists && fiScores.Exists)
+                        byte[] buffer;
+
+                        if (fiXconfig.Exists)
                         {
-                            byte[] buffer = File.ReadAllBytes(xconfig);
+                            buffer = File.ReadAllBytes(xconfig);
                             var zipArchiveEntry = archive.CreateEntry(Path.GetFileName(xconfig), CompressionLevel.Optimal);
                             using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
+                        }
 
+                        if (fiPrefs.Exists)
+                        {
                             buffer = File.ReadAllBytes(prefs);
-                            zipArchiveEntry = archive.CreateEntry(Path.GetFileName(prefs), CompressionLevel.Optimal);
+                            var zipArchiveEntry = archive.CreateEntry(Path.GetFileName(prefs), CompressionLevel.Optimal);
                             using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
+                        }
 
-                            buffer = File.ReadAllBytes(xconfig);
-                            zipArchiveEntry = archive.CreateEntry(Path.GetFileName(xconfig), CompressionLevel.Optimal);
+                        if (fiScores.Exists)
+                        {
+                            buffer = File.ReadAllBytes(scores);
+                            var zipArchiveEntry = archive.CreateEntry(Path.GetFileName(scores), CompressionLevel.Optimal);
+                            using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
+                        }
+
+                        if (fiMod.Exists)
+                        {
+                            buffer = File.ReadAllBytes(prefsmod);
+                            var zipArchiveEntry = archive.CreateEntry(Path.GetFileName(prefsmod), CompressionLevel.Optimal);
                             using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
                         }
                     }

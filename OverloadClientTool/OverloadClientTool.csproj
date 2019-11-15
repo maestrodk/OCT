@@ -85,13 +85,19 @@
     </Compile>
     <Compile Include="Install.cs" />
     <Compile Include="OCTRelease.cs" />
-    <Compile Include="Olproxy\OCTExtensions.cs" />
-    <Compile Include="Resolution.cs" />
-    <Compile Include="UpdateForm.cs">
+    <Compile Include="OlmodUpdateForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UpdateForm.Designer.cs">
-      <DependentUpon>UpdateForm.cs</DependentUpon>
+    <Compile Include="OlmodUpdateForm.Designer.cs">
+      <DependentUpon>OlmodUpdateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Olproxy\OCTExtensions.cs" />
+    <Compile Include="Resolution.cs" />
+    <Compile Include="OCTUpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OCTUpdateForm.Designer.cs">
+      <DependentUpon>OCTUpdateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Theme.cs" />
     <Compile Include="Extensions.cs" />
@@ -139,8 +145,11 @@
       <DependentUpon>OCTMain.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="OverloadClientTool.snk" />
-    <EmbeddedResource Include="UpdateForm.resx">
-      <DependentUpon>UpdateForm.cs</DependentUpon>
+    <EmbeddedResource Include="OlmodUpdateForm.resx">
+      <DependentUpon>OlmodUpdateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OCTUpdateForm.resx">
+      <DependentUpon>OCTUpdateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

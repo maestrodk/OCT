@@ -11,6 +11,7 @@ namespace OverloadClientTool
     public class PaneController
     {
         private OCTMain parent;
+
         private Panel paneButtonLine;
 
         private Button activeButton = null;

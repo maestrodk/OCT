@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using IWshRuntimeLibrary;
+using minijson;
 using static OverloadClientTool.OverloadMap;
 
 namespace OverloadClientTool
@@ -25,6 +26,7 @@ namespace OverloadClientTool
 
         // This matches MJDict defined on Olproxy.
         private Dictionary<string, object> olproxyConfig = new Dictionary<string, object>();
+        private Dictionary<string, object> olmodConfig = new Dictionary<string, object>();
 
         private olproxy.Program olproxyTask = null;
         private Thread olproxyThread = null;
@@ -51,6 +53,7 @@ namespace OverloadClientTool
         private MenuItem trayMenuItemStart = new System.Windows.Forms.MenuItem();
         private MenuItem trayMenuItemStartServer = new System.Windows.Forms.MenuItem();
         private MenuItem trayMenuItemExit = new System.Windows.Forms.MenuItem();
+        private MenuItem trayMenuItemSwitch = new System.Windows.Forms.MenuItem();
 
         public void LogDebugMessage(string message)
         {
@@ -90,13 +93,18 @@ namespace OverloadClientTool
             trayMenuItemStartServer.Text = "St&art Overload server";
             trayMenuItemStartServer.Click += new System.EventHandler(StartServerButton_Click);
 
-            // Initialize tray menu item 3.
-            trayMenuItemExit.Index = 2;
+            // Initialize tray menu item 2.
+            trayMenuItemSwitch.Index = 2;
+            trayMenuItemSwitch.Text = "Switch to &taskbar";
+            trayMenuItemSwitch.Click += new System.EventHandler(SwitchToTaskBar_Click);
+
+            // Initialize tray menu item 4.
+            trayMenuItemExit.Index = 3;
             trayMenuItemExit.Text = "E&xit OCT";
             trayMenuItemExit.Click += new System.EventHandler(StopExitButton_Click);
 
             // Setuy tray menu.
-            trayContextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { trayMenuItemStart, trayMenuItemStartServer, trayMenuItemExit });
+            trayContextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { trayMenuItemStart, trayMenuItemStartServer, trayMenuItemSwitch, trayMenuItemExit });
             OverloadClientToolNotifyIcon.ContextMenu = trayContextMenu;
 
             // Center main form on Desktop.
@@ -151,6 +159,20 @@ namespace OverloadClientTool
             olproxyConfig.Add("trackerBaseUrl", "");
             olproxyConfig.Add("serverName", "");
             olproxyConfig.Add("notes", "");
+
+            // Create properties for Olmod .
+            olmodConfig.Add("isServer", false);
+            olmodConfig.Add("keepListed", false);
+            olmodConfig.Add("trackerBaseUrl", "");
+            olmodConfig.Add("serverName", "");
+            olmodConfig.Add("notes", "");
+        }
+
+        private void SwitchToTaskBar_Click(object sender, EventArgs e)
+        {
+            UseTrayIcon.Checked = false;
+            ShowInTaskbar = true;
+            OverloadClientToolNotifyIcon.Visible = false;
         }
 
         /// <summary>
@@ -304,6 +326,29 @@ namespace OverloadClientTool
             }
         }
 
+        // This saves a JSON config file to the Olmod application folder.
+        public void SetOlmodSettings()
+        {
+            string path = String.IsNullOrEmpty(OlmodPath) ? OverloadPath : OlmodPath;
+            
+            if (String.IsNullOrEmpty(path)) return;
+
+            path = Path.GetDirectoryName(path);
+            if (Directory.Exists(path) == false) return;
+
+            string configFileName = Path.Combine(path, "olmodsettings.json");
+
+            foreach (KeyValuePair<string, object> kvp in olproxyConfig)
+            {
+                if (kvp.Key != "signOff") olmodConfig[kvp.Key] = kvp.Value;
+                else olmodConfig["keepListed"] = ((bool)kvp.Value == false) ? true : false;
+            }
+
+            string jsonString = MiniJson.ToString(olmodConfig);
+
+            try { System.IO.File.WriteAllText(configFileName, jsonString); } catch { }
+        }
+
         [DllImport("shell32.dll")]
         static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
 
@@ -332,8 +377,49 @@ namespace OverloadClientTool
         {
             this.UIThread(delegate
             {
-                string prefixedText = DateTime.Now.ToString("HH:mm:ss") + " " + text;
-                LogTreeViewText(prefixedText, error);
+                string prefix = DateTime.Now.ToString("HH:mm:ss") + " ";
+
+                Graphics graphics = this.CreateGraphics();
+                SizeF prefixSize = graphics.MeasureString(prefix, treeViewFont);
+
+                string remaining = text;
+
+                int count = 0;
+
+                while (remaining.Length > 0)
+                {
+                    count++;
+                    text = remaining;
+
+                    SizeF textSize = graphics.MeasureString(text, treeViewFont);
+
+                    while ((prefixSize.Width + textSize.Width + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth + 2) > LogTreeView.Width)
+                    {
+                        int i = text.LastIndexOf(' ');
+                        if (i < 0) text.LastIndexOf('-');
+
+                        if (i > 0) text = text.Substring(0, i).Trim();
+                        else text = text.Substring(0, text.Length - 1).Trim();
+
+                        textSize = graphics.MeasureString(text, treeViewFont);
+                    }
+
+                    remaining = remaining.Substring(text.Length);
+
+                    LogTreeViewText(prefix + text, error);
+
+                    /*
+                    if (remaining.Length > 0)
+                    { 
+                        if (count == 1) LogTreeViewText(prefix + text + "...", error);
+                        else LogTreeViewText(prefix + "..." + text + "...", error);
+                    }
+                    else
+                    {
+                        if (count > 1) LogTreeViewText(prefix + "..." + text, error);                        
+                        else LogTreeViewText(prefix + text, error);
+                    }*/
+                }
             });
         }
 
@@ -412,7 +498,6 @@ namespace OverloadClientTool
             olproxyConfig["notes"] = ServerTrackerNotes.Text;
             return olproxyConfig;
         }
-
 
         /// <summary>
         /// Start emnbedded Olproxy thread.
@@ -1566,14 +1651,32 @@ namespace OverloadClientTool
                 return;
             }
 
-            // Check if update is required. We use the ZIP date to stamp Olmod.exe
-            if ((OverloadClientToolApplication.ValidFileName(OlmodPath, true)) && (new FileInfo(OlmodPath).CreationTimeUtc == latest.Created))
+            latest.Version = OverloadClientToolApplication.VersionStringFix(latest.Version);
+
+            string olmodVersion = OverloadClientToolApplication.GetFileVersion(OlmodPath.ToLower().Replace("olmod.exe", "GameMod.dll"));
+
+            if (olmodVersion != null) olmodVersion = OverloadClientToolApplication.VersionStringFix(olmodVersion);
+
+            if (olmodVersion != null)
             {
-                if (sender != null) Info("Already using the latest Olmod version.");
-                return;
+                // A version of Olmod is already installed.
+                //if (olmodVersion == latest.Version) return;
+
+                if (sender != null)
+                {
+                    OverloadClientApplication.OlmodUpdateForm updateForm = new OverloadClientApplication.OlmodUpdateForm(olmodVersion, latest.Version);
+                    ApplyThemeToControl(updateForm, theme);
+                    updateForm.BackColor = theme.InactivePaneButtonBackColor;
+                    updateForm.StartPosition = FormStartPosition.CenterParent;
+                    if (updateForm.ShowDialog() == DialogResult.Cancel) return;
+                }
+                else if (olmodVersion == latest.Version)
+                {
+                    return;
+                }
             }
 
-            Info("Installing latest Olmod release from Github.");
+            Info("Installing current Olmod release from Github.");
 
             try
             {
@@ -1805,7 +1908,7 @@ namespace OverloadClientTool
 
         public void LogTreeViewText(string text, bool error = false)
         {
-            if (LogTreeView.Nodes.Count > 999) LogTreeView.Nodes[0].Remove();
+            if (LogTreeView.Nodes.Count > 9999) LogTreeView.Nodes[0].Remove();
 
             LogTreeView.Nodes.Add(text);
  
@@ -1981,6 +2084,9 @@ namespace OverloadClientTool
                     MessageBox.Show("Olmod (.exe) application not found!");
                     return;
                 }
+
+                // Needed since Olmod 0.2.7+ 
+                SetOlmodSettings();
             }
             else
             {
@@ -2026,9 +2132,54 @@ namespace OverloadClientTool
             };
 
             appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(exePath);
+            appStart.StartInfo.UseShellExecute = false;
+            appStart.StartInfo.RedirectStandardError = true;
+            appStart.StartInfo.RedirectStandardOutput = true;
+
+            appStart.EnableRaisingEvents = true;
+
+            appStart.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler(ServerLogging);
+            appStart.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler(ServerErrorLogging);
+            appStart.Exited += new System.EventHandler(ServerProcessExit);
+
             appStart.Start();
 
             serverProcessId = appStart.Id;
+
+            appStart.BeginErrorReadLine();
+            appStart.BeginOutputReadLine();
+        }
+
+        private void ServerProcessExit(object sender, EventArgs e)
+        {
+            Info(String.Format($"Server process has exited."));
+        }
+
+        private void ServerErrorLogging(object sender, DataReceivedEventArgs e)
+        {
+            string s = ServerCleanString(e.Data);
+            if (s != null) Info("Server: " + ServerCleanString(e.Data));
+        }
+
+        private void ServerLogging(object sender, DataReceivedEventArgs e)
+        {
+            string s = ServerCleanString(e.Data);
+            if (s != null) Info("Server: " + ServerCleanString(e.Data));
+        }
+
+        private string ServerCleanString(string s)
+        {
+            if (s == null) return null;
+
+            int am = s.IndexOf("AM:");
+            int pm = s.IndexOf("PM:");
+
+            if (am > 0) s = s.Substring(am + 3).Trim();
+            else if (pm > 0) s = s.Substring(pm + 3).Trim();
+
+            if (s.StartsWith("......")) s = "  " + s.Substring(6);
+
+            return s;
         }
 
         private void DisplayHelpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

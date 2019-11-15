@@ -53,7 +53,7 @@ namespace OverloadClientTool
             this.MapDeleteButton = new System.Windows.Forms.Button();
             this.MapHideButton = new System.Windows.Forms.Button();
             this.PaneMain = new System.Windows.Forms.Panel();
-            this.panel11 = new System.Windows.Forms.Panel();
+            this.LogTreePanel = new System.Windows.Forms.Panel();
             this.label12 = new System.Windows.Forms.Label();
             this.TreeViewLogPanel = new System.Windows.Forms.Panel();
             this.LogTreeView = new OverloadClientTool.CustomTreeView();
@@ -165,7 +165,7 @@ namespace OverloadClientTool
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).BeginInit();
             this.PaneMain.SuspendLayout();
-            this.panel11.SuspendLayout();
+            this.LogTreePanel.SuspendLayout();
             this.TreeViewLogPanel.SuspendLayout();
             this.PaneMaps.SuspendLayout();
             this.panel7.SuspendLayout();
@@ -418,7 +418,7 @@ namespace OverloadClientTool
             // PaneMain
             // 
             this.PaneMain.BackColor = System.Drawing.Color.LightSlateGray;
-            this.PaneMain.Controls.Add(this.panel11);
+            this.PaneMain.Controls.Add(this.LogTreePanel);
             this.PaneMain.Controls.Add(this.StatusMessage);
             this.PaneMain.Controls.Add(this.StartStopButton);
             this.PaneMain.Controls.Add(this.OverloadRunning);
@@ -429,14 +429,14 @@ namespace OverloadClientTool
             this.PaneMain.Size = new System.Drawing.Size(547, 336);
             this.PaneMain.TabIndex = 18;
             // 
-            // panel11
+            // LogTreePanel
             // 
-            this.panel11.Controls.Add(this.label12);
-            this.panel11.Controls.Add(this.TreeViewLogPanel);
-            this.panel11.Location = new System.Drawing.Point(3, 5);
-            this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(541, 288);
-            this.panel11.TabIndex = 16;
+            this.LogTreePanel.Controls.Add(this.label12);
+            this.LogTreePanel.Controls.Add(this.TreeViewLogPanel);
+            this.LogTreePanel.Location = new System.Drawing.Point(3, 5);
+            this.LogTreePanel.Name = "LogTreePanel";
+            this.LogTreePanel.Size = new System.Drawing.Size(541, 288);
+            this.LogTreePanel.TabIndex = 16;
             // 
             // label12
             // 
@@ -1411,7 +1411,7 @@ namespace OverloadClientTool
             this.PaneButtonLine.Location = new System.Drawing.Point(0, 26);
             this.PaneButtonLine.Margin = new System.Windows.Forms.Padding(0);
             this.PaneButtonLine.Name = "PaneButtonLine";
-            this.PaneButtonLine.Size = new System.Drawing.Size(469, 2);
+            this.PaneButtonLine.Size = new System.Drawing.Size(496, 10);
             this.PaneButtonLine.TabIndex = 24;
             // 
             // PaneSelectOptions
@@ -1878,7 +1878,7 @@ namespace OverloadClientTool
             this.Controls.Add(this.PaneSelectMapManager);
             this.Controls.Add(this.PaneSelectMain);
             this.Controls.Add(this.PaneMain);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "OCTMain";
             this.Text = "Overload Client Tool";
@@ -1891,8 +1891,8 @@ namespace OverloadClientTool
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).EndInit();
             this.PaneMain.ResumeLayout(false);
             this.PaneMain.PerformLayout();
-            this.panel11.ResumeLayout(false);
-            this.panel11.PerformLayout();
+            this.LogTreePanel.ResumeLayout(false);
+            this.LogTreePanel.PerformLayout();
             this.TreeViewLogPanel.ResumeLayout(false);
             this.PaneMaps.ResumeLayout(false);
             this.PaneMaps.PerformLayout();
@@ -2013,7 +2013,7 @@ namespace OverloadClientTool
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Panel panel11;
+        private System.Windows.Forms.Panel LogTreePanel;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Panel ActiveThemePanel;
         private System.Windows.Forms.Label label13;

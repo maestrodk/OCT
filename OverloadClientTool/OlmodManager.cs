@@ -15,7 +15,7 @@ namespace OverloadClientTool
 {
     public class OlmodManager
     {
-        private const string jsonOlmodUrl = @"https://api.github.com/repos/arbruijn/olmod/releases/latest";
+        private const string jsonOlmodUrl = @"https://api.github.com/repos/arbruijn/olmod/releases";
         private const string jsonZipField = @"browser_download_url";
 
         // Delegate for sending log messages to main application.
@@ -80,10 +80,27 @@ namespace OverloadClientTool
 
                     dynamic olmodReleaseInfo = JsonConvert.DeserializeObject(json);
 
-                    string zipUrl = olmodReleaseInfo.assets[0].browser_download_url;
-                    long size = Convert.ToInt64(olmodReleaseInfo.assets[0].size);
-                    DateTime created = Convert.ToDateTime(olmodReleaseInfo.assets[0].created_at, CultureInfo.InvariantCulture);
-                    string version = olmodReleaseInfo.tag_name;
+                    // Find latest non-prerelease version.
+                    int i = 0;
+                    int pub = -1;
+                    int pre  = -1;
+                    while (i < olmodReleaseInfo.Count) 
+                    {
+                        if ((pre < 0) && (olmodReleaseInfo[i].prerelease == true)) pre = i;
+                        if ((pub < 0) && (olmodReleaseInfo[i].prerelease == false)) pub = i;
+                        i++;
+                    }
+
+                    if (pub < 0)
+                    {
+                        LogVerboseMessage($"Cannot get Olmod JSON release info.");
+                        return null;
+                    }
+
+                    string zipUrl = olmodReleaseInfo[pub].assets[0].browser_download_url;
+                    long size = Convert.ToInt64(olmodReleaseInfo[pub].assets[0].size);
+                    DateTime created = Convert.ToDateTime(olmodReleaseInfo[pub].assets[0].created_at, CultureInfo.InvariantCulture);
+                    string version = olmodReleaseInfo[pub].tag_name;
 
                     OlmodRelease release = new OlmodRelease();
                     release.DownloadUrl = zipUrl;
