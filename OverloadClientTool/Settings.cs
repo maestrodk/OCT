@@ -491,7 +491,7 @@ namespace OverloadClientTool
 
                 foreach (Control child in control.Controls) child.ForeColor = theme.PanelForeColor;
             }
-            else if ((control.Name == "PilotsPanel") || (control.Name == "MapsPanel") || (control.Name == "ActiveThemePanel") || (control.Name == "ActivityLogPanel") || (control.Name == "TreeViewLogPanel"))
+            else if ((control.Name == "PilotsPanel") || (control.Name == "MapsPanel") || (control.Name == "ActiveThemePanel") || (control.Name == "ActivityLogPanel") || (control.Name == "TreeViewLogPanel") || (control.Name == "ServersPanel"))
             {
                 // These panels contain a single listbox child control.
                 // The panel is used to create a border around them.

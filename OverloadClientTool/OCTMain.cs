@@ -120,6 +120,7 @@ namespace OverloadClientTool
             paneController.SetupPaneButton(PaneSelectOlproxy, PaneOlproxy);
             paneController.SetupPaneButton(PaneSelectOlmod, PaneOlmod);
             paneController.SetupPaneButton(PaneSelectServer, PaneServer);
+            paneController.SetupPaneButton(PaneSelectOnline, PaneOnline);
             paneController.SetupPaneButton(PaneSelectOptions, PaneOptions);
 
             // Load user preferences.
@@ -272,6 +273,8 @@ namespace OverloadClientTool
 
             // Check for OCT update.
             if (AutoUpdateOCT) UpdateCheck(debugFileName, false);
+
+            UpdateServerListButton_Click(null, null);
         }
 
         /// <summary>
@@ -2300,6 +2303,47 @@ namespace OverloadClientTool
 
             UpdateMapListBox();
             Unfocus();
+        }
+
+        private void UpdateServerListButton_Click(object sender, EventArgs e)
+        {
+            List<Server> servers = Servers.ServerList;
+            if (servers == null) return;
+            string[] list = new string[servers.Count];
+            int i = 0;
+            foreach (Server server in servers) list[i++] = server.ToString();
+            ServersListBox.Items.Clear();
+            ServersListBox.Items.AddRange(list);
+        }
+
+        private void ServersListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void ServersListBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0) return;
+
+            // If the item state is selected them change the back color.
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+            {
+                e = new DrawItemEventArgs(e.Graphics,
+                                          e.Font,
+                                          e.Bounds,
+                                          e.Index,
+                                          e.State ^ DrawItemState.Selected,
+                                          e.ForeColor,
+                                          theme.ActivePaneButtonBackColor);
+            }
+
+            // Draw the background of the ListBox control for each item.
+            e.DrawBackground();
+
+            // Draw the current item text
+            e.Graphics.DrawString(ServersListBox.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.PanelForeColor), e.Bounds, StringFormat.GenericDefault);
+
+            // If the ListBox has focus, draw a focus rectangle around the selected item.
+            e.DrawFocusRectangle();
         }
     }
 }

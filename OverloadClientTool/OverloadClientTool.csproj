@@ -99,6 +99,7 @@
     <Compile Include="OCTUpdateForm.Designer.cs">
       <DependentUpon>OCTUpdateForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Servers.cs" />
     <Compile Include="Theme.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="InputBox.cs">

@@ -161,6 +161,12 @@ namespace OverloadClientTool
             this.label15 = new System.Windows.Forms.Label();
             this.ServerTrackerUrl = new System.Windows.Forms.TextBox();
             this.ServerRunning = new System.Windows.Forms.PictureBox();
+            this.PaneOnline = new System.Windows.Forms.Panel();
+            this.UpdateServerListButton = new System.Windows.Forms.Button();
+            this.ServersPanel = new System.Windows.Forms.Panel();
+            this.ServersListBox = new System.Windows.Forms.ListBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.PaneSelectOnline = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).BeginInit();
@@ -188,6 +194,8 @@ namespace OverloadClientTool
             this.panel8.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ServerRunning)).BeginInit();
+            this.PaneOnline.SuspendLayout();
+            this.ServersPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // OverloadExecutable
@@ -1421,7 +1429,7 @@ namespace OverloadClientTool
             this.PaneSelectOptions.FlatAppearance.BorderSize = 0;
             this.PaneSelectOptions.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectOptions.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectOptions.Location = new System.Drawing.Point(399, 0);
+            this.PaneSelectOptions.Location = new System.Drawing.Point(456, 0);
             this.PaneSelectOptions.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectOptions.Name = "PaneSelectOptions";
             this.PaneSelectOptions.Size = new System.Drawing.Size(57, 23);
@@ -1854,13 +1862,88 @@ namespace OverloadClientTool
             this.ServerRunning.TabStop = false;
             this.ServerRunning.Visible = false;
             // 
+            // PaneOnline
+            // 
+            this.PaneOnline.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOnline.Controls.Add(this.UpdateServerListButton);
+            this.PaneOnline.Controls.Add(this.ServersPanel);
+            this.PaneOnline.Controls.Add(this.label19);
+            this.PaneOnline.Location = new System.Drawing.Point(2291, 43);
+            this.PaneOnline.Margin = new System.Windows.Forms.Padding(0);
+            this.PaneOnline.Name = "PaneOnline";
+            this.PaneOnline.Size = new System.Drawing.Size(547, 336);
+            this.PaneOnline.TabIndex = 27;
+            // 
+            // UpdateServerListButton
+            // 
+            this.UpdateServerListButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UpdateServerListButton.Location = new System.Drawing.Point(456, 292);
+            this.UpdateServerListButton.Margin = new System.Windows.Forms.Padding(0);
+            this.UpdateServerListButton.Name = "UpdateServerListButton";
+            this.UpdateServerListButton.Size = new System.Drawing.Size(77, 23);
+            this.UpdateServerListButton.TabIndex = 14;
+            this.UpdateServerListButton.Text = "Update now";
+            this.UpdateServerListButton.UseVisualStyleBackColor = true;
+            this.UpdateServerListButton.Click += new System.EventHandler(this.UpdateServerListButton_Click);
+            // 
+            // ServersPanel
+            // 
+            this.ServersPanel.BackColor = System.Drawing.Color.Blue;
+            this.ServersPanel.Controls.Add(this.ServersListBox);
+            this.ServersPanel.Location = new System.Drawing.Point(12, 25);
+            this.ServersPanel.Name = "ServersPanel";
+            this.ServersPanel.Size = new System.Drawing.Size(518, 249);
+            this.ServersPanel.TabIndex = 19;
+            // 
+            // ServersListBox
+            // 
+            this.ServersListBox.BackColor = System.Drawing.Color.Gray;
+            this.ServersListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ServersListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.ServersListBox.FormattingEnabled = true;
+            this.ServersListBox.Location = new System.Drawing.Point(1, 1);
+            this.ServersListBox.Margin = new System.Windows.Forms.Padding(1);
+            this.ServersListBox.Name = "ServersListBox";
+            this.ServersListBox.Size = new System.Drawing.Size(516, 247);
+            this.ServersListBox.TabIndex = 19;
+            this.ServersListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ServersListBox_DrawItem);
+            this.ServersListBox.SelectedIndexChanged += new System.EventHandler(this.ServersListBox_SelectedIndexChanged);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(9, 11);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(74, 13);
+            this.label19.TabIndex = 3;
+            this.label19.Text = "Online servers";
+            // 
+            // PaneSelectOnline
+            // 
+            this.PaneSelectOnline.BackColor = System.Drawing.Color.MidnightBlue;
+            this.PaneSelectOnline.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.PaneSelectOnline.FlatAppearance.BorderSize = 0;
+            this.PaneSelectOnline.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.PaneSelectOnline.ForeColor = System.Drawing.Color.White;
+            this.PaneSelectOnline.Location = new System.Drawing.Point(399, 0);
+            this.PaneSelectOnline.Margin = new System.Windows.Forms.Padding(0);
+            this.PaneSelectOnline.Name = "PaneSelectOnline";
+            this.PaneSelectOnline.Size = new System.Drawing.Size(57, 23);
+            this.PaneSelectOnline.TabIndex = 28;
+            this.PaneSelectOnline.TabStop = false;
+            this.PaneSelectOnline.Text = "  Online";
+            this.PaneSelectOnline.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.PaneSelectOnline.UseVisualStyleBackColor = false;
+            // 
             // OCTMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.CancelButton = this.ExitButton;
-            this.ClientSize = new System.Drawing.Size(2321, 821);
+            this.ClientSize = new System.Drawing.Size(2862, 821);
+            this.Controls.Add(this.PaneSelectOnline);
+            this.Controls.Add(this.PaneOnline);
             this.Controls.Add(this.PaneSelectServer);
             this.Controls.Add(this.PaneServer);
             this.Controls.Add(this.PaneOptions);
@@ -1932,6 +2015,9 @@ namespace OverloadClientTool
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ServerRunning)).EndInit();
+            this.PaneOnline.ResumeLayout(false);
+            this.PaneOnline.PerformLayout();
+            this.ServersPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2066,6 +2152,12 @@ namespace OverloadClientTool
         private System.Windows.Forms.Button UnhideCMMapsButton;
         private System.Windows.Forms.Button UnhideSPMapsButton;
         private System.Windows.Forms.Button UnhideMPMapsButton;
+        private System.Windows.Forms.Panel PaneOnline;
+        private System.Windows.Forms.Button UpdateServerListButton;
+        private System.Windows.Forms.Panel ServersPanel;
+        private System.Windows.Forms.ListBox ServersListBox;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Button PaneSelectOnline;
     }
 }
 
