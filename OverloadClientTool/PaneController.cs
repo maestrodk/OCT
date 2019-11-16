@@ -114,7 +114,10 @@ namespace OverloadClientTool
 
                     // Set the active button colors.
                     button.BackColor = theme.ActivePaneButtonBackColor;
-                    button.ForeColor = theme.ActivePaneButtonForeColor;                   
+                    button.ForeColor = theme.ActivePaneButtonForeColor;
+
+                    // Hack to set background color in server list view.
+                    if (panel.Name == "PaneOnline") parent.DrawServerListViewBackground(theme);
                 }
 
                 //button.Refresh();

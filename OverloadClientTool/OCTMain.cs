@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows.Forms;
 using IWshRuntimeLibrary;
 using minijson;
+using static System.Windows.Forms.ListView;
 using static OverloadClientTool.OverloadMap;
 
 namespace OverloadClientTool
@@ -595,6 +596,8 @@ namespace OverloadClientTool
         /// </summary>
         private void ActivityBackgroundMonitor()
         {
+            int count = 120;
+
             while (true)
             {
                 Thread.Sleep(250);
@@ -607,6 +610,16 @@ namespace OverloadClientTool
                 bool overloadRunning = IsOverloadRunning;
                 bool olproxyRunning = IsOlproxyRunning;
                 bool olmodRunning = IsOlmodRunning;
+
+                if (--count < 0)
+                {
+                    count = 120;
+                    this.UIThread(delegate
+                    {
+                        this.Info("Updated server list.");
+                        UpdateServerListButton_Click(null, null);
+                    });
+                }
 
                 this.UIThread(delegate
                 {
@@ -2307,43 +2320,142 @@ namespace OverloadClientTool
 
         private void UpdateServerListButton_Click(object sender, EventArgs e)
         {
+            ServersListView.BackColor = theme.PanelBackColor;
+
+            //Point locationOnForm = ServersListView.FindForm().PointToClient(ServersListView.Parent.PointToScreen(ServersListView.Location));
+
+            string oldIP = "";
+
+            if ((ServersListView.SelectedIndices == null) || (ServersListView.SelectedIndices.Count < 1))
+            {
+                CurrentServerNotes.Text = "";
+                CurrentServerStarted.Text = "";
+            }
+            else
+            {
+                int oldIndex = ServersListView.SelectedIndices[0];
+                oldIP = ServersListView.Items[oldIndex].SubItems[0].Text;
+            }
+
             List<Server> servers = Servers.ServerList;
             if (servers == null) return;
-            string[] list = new string[servers.Count];
-            int i = 0;
-            foreach (Server server in servers) list[i++] = server.ToString();
-            ServersListBox.Items.Clear();
-            ServersListBox.Items.AddRange(list);
-        }
 
-        private void ServersListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void ServersListBox_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            if (e.Index < 0) return;
-
-            // If the item state is selected them change the back color.
-            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+            // IP, Name, Mode, Players, MaxPlayers, Started, Notes.
+            ServersListView.Items.Clear();
+            foreach (Server server in servers)
             {
-                e = new DrawItemEventArgs(e.Graphics,
-                                          e.Font,
-                                          e.Bounds,
-                                          e.Index,
-                                          e.State ^ DrawItemState.Selected,
-                                          e.ForeColor,
-                                          theme.ActivePaneButtonBackColor);
+                string[] values = new string[5];
+                values = new string[5];
+                values[0] = server.IP;
+                values[1] = server.Name;
+                values[2] = server.Mode;
+                values[3] = server.NumPlayers.ToString().PadLeft(3);
+                values[4] = server.MaxNumPlayers.ToString().PadLeft(3);
+                ServersListView.Items.Add(new ListViewItem(values));
+            }
+
+            int i = 0;
+            foreach (ListViewItem item in ServersListView.Items)
+            {
+                if (item.SubItems[0].Text == oldIP) ServersListView.Items[i].Selected = true;
+                i++;
+            }
+        }
+
+        private void ServersListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ServersListView.SelectedIndices.Count < 1)
+            {
+                CurrentServerNotes.Text = "";
+                CurrentServerStarted.Text = "";
+                return;
+            }
+
+            int i = ServersListView.SelectedIndices[0];
+            string ip = ServersListView.Items[i].SubItems[0].Text;
+
+            List<Server> servers = Servers.ServerList;
+            foreach (Server server in servers)
+            {
+                if (server.IP == ip)
+                {
+                    CurrentServerNotes.Text = server.Notes;
+                    CurrentServerStarted.Text = server.Started.ToString("yyyy-MM-dd HH:mm:ss");
+                }
+            }
+        }
+
+        internal void DrawServerListViewBackground(Theme theme)
+        {
+            ServersListView.BackColor = theme.PanelBackColor;
+
+            //Graphics graphics = this.CreateGraphics();
+            //Point locationOnForm = ServersListView.FindForm().PointToClient(ServersListView.Parent.PointToScreen(ServersListView.Location));
+            // Draw the background of the ListBox control for each item.
+            //graphics.FillRectangle(new SolidBrush(Color.Red), new RectangleF(locationOnForm, ServersListView.ClientSize));
+        }
+
+        private void ServersListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            if (e.ColumnIndex < 0) return;
+
+            // Draw the background of the column header.
+            e.Graphics.FillRectangle(new SolidBrush(theme.ButtonEnabledBackColor), e.Bounds);
+
+            // Draw the current item text
+            e.Graphics.DrawString(ServersListView.Columns[e.ColumnIndex].Text, treeViewFont, new SolidBrush(theme.ButtonEnabledForeColor), e.Bounds, StringFormat.GenericDefault);
+        }
+
+        private void ServersListView_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            if (e.ItemIndex < 0) return;
+
+            // Draw the background of the ListBox control for each item.
+            //e.Graphics.FillRectangle(new SolidBrush(theme.PanelBackColor), e.Bounds);
+
+            // Draw the current item text
+
+            //string text = ServersListView.Items[e.ItemIndex].SubItems[0].Text;
+            //e.Graphics.DrawString(ServersListBox.Items[e.ItemIndex]., treeViewFont, new SolidBrush(theme.PanelForeColor), e.Bounds, StringFormat.GenericDefault);
+        }
+
+        private void ServersListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            if (e.ItemIndex < 0) return;
+
+            Color b = theme.PanelBackColor;
+            Color f = theme.PanelForeColor;
+
+            if ((ServersListView.SelectedIndices != null) && (ServersListView.SelectedIndices.Count > 0))
+            {
+                if (e.ItemIndex == ServersListView.SelectedIndices[0])
+                {
+                    b = theme.ButtonEnabledBackColor;
+                    f = theme.ButtonEnabledForeColor;
+                }
             }
 
             // Draw the background of the ListBox control for each item.
-            e.DrawBackground();
+            e.Graphics.FillRectangle(new SolidBrush(b), e.Bounds);
 
             // Draw the current item text
-            e.Graphics.DrawString(ServersListBox.Items[e.Index].ToString(), e.Font, new SolidBrush(theme.PanelForeColor), e.Bounds, StringFormat.GenericDefault);
+            string text = e.SubItem.Text;
+            e.Graphics.DrawString(text, treeViewFont, new SolidBrush(f), e.Bounds, StringFormat.GenericDefault);
+        }
 
-            // If the ListBox has focus, draw a focus rectangle around the selected item.
-            e.DrawFocusRectangle();
+        private void ServersListView_DoubleClick(object sender, EventArgs e)
+        {
+            if (ServersListView.SelectedIndices.Count < 1)
+            {
+                CurrentServerNotes.Text = "";
+                CurrentServerStarted.Text = "";
+                return;
+            }
+
+            int i = ServersListView.SelectedIndices[0];
+            string ip = ServersListView.Items[i].SubItems[0].Text;
+
+            Clipboard.SetText(ip);
         }
     }
 }
