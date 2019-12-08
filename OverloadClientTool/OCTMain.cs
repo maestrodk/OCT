@@ -650,7 +650,7 @@ namespace OverloadClientTool
 
                 int reqHours = requestInterval / 3600;
                 int reqMins = (requestInterval - (reqHours * 3600)) / 60;
-                int reqSecs = requestInterval - (reqMins * 3600) - (reqMins * 60);
+                int reqSecs = requestInterval - (reqHours * 3600) - (reqMins * 60);
 
                 if (timer.Elapsed > new TimeSpan(reqHours, reqMins, reqSecs))
                 {
