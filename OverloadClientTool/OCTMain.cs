@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using IWshRuntimeLibrary;
 using minijson;
@@ -56,6 +60,8 @@ namespace OverloadClientTool
         private MenuItem trayMenuItemExit = new System.Windows.Forms.MenuItem();
         private MenuItem trayMenuItemSwitch = new System.Windows.Forms.MenuItem();
 
+        private Pinger pinger = new Pinger();
+
         public void LogDebugMessage(string message)
         {
             if (!Debugging) return;
@@ -83,7 +89,7 @@ namespace OverloadClientTool
 
             // Initialize controls on main form.
             InitializeComponent();
-  
+
             // Initialize tray menu item 1.
             trayMenuItemStart.Index = 0;
             trayMenuItemStart.Text = "&Start Overload";
@@ -243,6 +249,32 @@ namespace OverloadClientTool
 
             // Locate DLC folder.
             UpdateDLCLocation();
+
+            // Adjust server browser labels.
+            // label13 = IP.
+            // label21 = Server name.
+            // label22 = Game mode.
+            // label23 = Players.
+            // label24 = Max players.
+            // labe27 = Ping.
+
+            LabelServerName.Location = new Point(LabelServerIP.Location.X + ServersListView.Columns[0].Width, ActiveThemeLabel.Location.Y);
+            LabelServerGameMode.Location = new Point(LabelServerName.Location.X + ServersListView.Columns[1].Width, ActiveThemeLabel.Location.Y);
+            LabelServerPlayers.Location = new Point(LabelServerGameMode.Location.X + ServersListView.Columns[2].Width - 4, ActiveThemeLabel.Location.Y);
+            LabelServerMaxPlayers.Location = new Point(LabelServerPlayers.Location.X + ServersListView.Columns[3].Width + 2, ActiveThemeLabel.Location.Y);
+            // LabelServerPing.Location = new Point(LabelServerMaxPlayers.Location.X + ServersListView.Columns[4].Width, LabelServerIP.Location.Y);
+            LabelServerPing.Text = "";
+
+            // Add this here so it is ready.
+            ServersListView.ListViewItemSorter = new ListViewItemComparer();
+            ((ListViewItemComparer)ServersListView.ListViewItemSorter).Order = SortOrder.Descending;
+            ((ListViewItemComparer)ServersListView.ListViewItemSorter).Column = 3;
+
+            // Setup and hide server sort arrow symbols.
+            LabelUpArrow.Text = ((char)61613).ToString();
+            LabelUpArrow.Visible = false;
+            LabelDownArrow.Text = ((char)61615).ToString();
+            LabelDownArrow.Visible = false;
 
             // Announce ourself.
             Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen.");
@@ -596,31 +628,37 @@ namespace OverloadClientTool
         /// </summary>
         private void ActivityBackgroundMonitor()
         {
-            int count = 120;
+            int requestInterval = Servers.ServerRefreshIntervalSeconds;
+
+            Stopwatch timer = new Stopwatch();
+            timer.Restart();
 
             while (true)
             {
-                Thread.Sleep(250);
                 CycleTheme();
-                Thread.Sleep(250);
+                Thread.Sleep(1000);
+
                 CycleTheme();
-                Thread.Sleep(250);
+                Thread.Sleep(1000);
+
                 CycleTheme();
+                Thread.Sleep(850);
 
                 bool overloadRunning = IsOverloadRunning;
                 bool olproxyRunning = IsOlproxyRunning;
                 bool olmodRunning = IsOlmodRunning;
 
-                if (--count < 0)
-                {
-                    count = 120;
-                    this.UIThread(delegate
-                    {
-                        this.Info("Updated server list.");
-                        UpdateServerListButton_Click(null, null);
-                    });
-                }
+                int reqHours = requestInterval / 3600;
+                int reqMins = (requestInterval - (reqHours * 3600)) / 60;
+                int reqSecs = requestInterval - (reqMins * 3600) - (reqMins * 60);
 
+                if (timer.Elapsed > new TimeSpan(reqHours, reqMins, reqSecs))
+                {
+                    this.UIThread(delegate { UpdateServerListButton_Click(null, null); });
+                    requestInterval = Servers.ServerRefreshIntervalSeconds;
+                    timer.Restart();
+                }
+                
                 this.UIThread(delegate
                 {
                     OverloadLogFileCheck();
@@ -1921,7 +1959,7 @@ namespace OverloadClientTool
         }
 
         private Font treeViewFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
-
+        
         public void LogTreeViewText(string text, bool error = false)
         {
             if (LogTreeView.Nodes.Count > 9999) LogTreeView.Nodes[0].Remove();
@@ -2318,18 +2356,18 @@ namespace OverloadClientTool
             Unfocus();
         }
 
+        List<Server> globalServers = null;
+
         private void UpdateServerListButton_Click(object sender, EventArgs e)
         {
-            ServersListView.BackColor = theme.PanelBackColor;
-
-            //Point locationOnForm = ServersListView.FindForm().PointToClient(ServersListView.Parent.PointToScreen(ServersListView.Location));
-
+            bool resort = true;
             string oldIP = "";
 
             if ((ServersListView.SelectedIndices == null) || (ServersListView.SelectedIndices.Count < 1))
             {
                 CurrentServerNotes.Text = "";
                 CurrentServerStarted.Text = "";
+                CurrentServerMap.Text = "";
             }
             else
             {
@@ -2338,21 +2376,31 @@ namespace OverloadClientTool
             }
 
             List<Server> servers = Servers.ServerList;
+
+            if (servers == null) servers = globalServers;
             if (servers == null) return;
 
+            globalServers = servers;
+
             // IP, Name, Mode, Players, MaxPlayers, Started, Notes.
+
             ServersListView.Items.Clear();
             foreach (Server server in servers)
             {
-                string[] values = new string[5];
-                values = new string[5];
+                // pinger.AddHost(server.IP);
+
+                string[] values = new string[6];
                 values[0] = server.IP;
                 values[1] = server.Name;
                 values[2] = server.Mode;
                 values[3] = server.NumPlayers.ToString().PadLeft(3);
                 values[4] = server.MaxNumPlayers.ToString().PadLeft(3);
+                values[5] = ""; // pinger.Ping(server.IP);
+                if (!String.IsNullOrEmpty(values[5])) values[5] += " mSec";
                 ServersListView.Items.Add(new ListViewItem(values));
             }
+
+            SortServers(((ListViewItemComparer)ServersListView.ListViewItemSorter).Column, true);
 
             int i = 0;
             foreach (ListViewItem item in ServersListView.Items)
@@ -2368,19 +2416,24 @@ namespace OverloadClientTool
             {
                 CurrentServerNotes.Text = "";
                 CurrentServerStarted.Text = "";
+                CurrentServerMap.Text = "";
                 return;
             }
 
             int i = ServersListView.SelectedIndices[0];
             string ip = ServersListView.Items[i].SubItems[0].Text;
 
-            List<Server> servers = Servers.ServerList;
-            foreach (Server server in servers)
+            if (globalServers == null) globalServers = Servers.ServerList;
+
+            if (globalServers == null) return;
+
+            foreach (Server server in globalServers)
             {
                 if (server.IP == ip)
                 {
                     CurrentServerNotes.Text = server.Notes;
                     CurrentServerStarted.Text = server.Started.ToString("yyyy-MM-dd HH:mm:ss");
+                    CurrentServerMap.Text = server.Map;
                 }
             }
         }
@@ -2397,13 +2450,13 @@ namespace OverloadClientTool
 
         private void ServersListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
-            if (e.ColumnIndex < 0) return;
+            //if (e.ColumnIndex < 0) return;
 
             // Draw the background of the column header.
-            e.Graphics.FillRectangle(new SolidBrush(theme.ButtonEnabledBackColor), e.Bounds);
+            //e.Graphics.FillRectangle(new SolidBrush(theme.ButtonEnabledBackColor), e.Bounds);
 
             // Draw the current item text
-            e.Graphics.DrawString(ServersListView.Columns[e.ColumnIndex].Text, treeViewFont, new SolidBrush(theme.ButtonEnabledForeColor), e.Bounds, StringFormat.GenericDefault);
+            //e.Graphics.DrawString(ServersListView.Columns[e.ColumnIndex].Text, treeViewFont, new SolidBrush(theme.ButtonEnabledForeColor), e.Bounds, StringFormat.GenericDefault);
         }
 
         private void ServersListView_DrawItem(object sender, DrawListViewItemEventArgs e)
@@ -2438,9 +2491,14 @@ namespace OverloadClientTool
             // Draw the background of the ListBox control for each item.
             e.Graphics.FillRectangle(new SolidBrush(b), e.Bounds);
 
+            // Lower the text a bit.
+            Rectangle bounds = e.Bounds;
+            bounds.X += 1;
+            bounds.Y += 2;
+
             // Draw the current item text
             string text = e.SubItem.Text;
-            e.Graphics.DrawString(text, treeViewFont, new SolidBrush(f), e.Bounds, StringFormat.GenericDefault);
+            e.Graphics.DrawString(text, treeViewFont, new SolidBrush(f), bounds, StringFormat.GenericDefault);
         }
 
         private void ServersListView_DoubleClick(object sender, EventArgs e)
@@ -2449,6 +2507,7 @@ namespace OverloadClientTool
             {
                 CurrentServerNotes.Text = "";
                 CurrentServerStarted.Text = "";
+                CurrentServerMap.Text = "";
                 return;
             }
 
@@ -2456,6 +2515,104 @@ namespace OverloadClientTool
             string ip = ServersListView.Items[i].SubItems[0].Text;
 
             Clipboard.SetText(ip);
+        }
+
+        class ListViewItemComparer : IComparer
+        {
+            public SortOrder Order = SortOrder.Descending;
+            public int Column = 0;
+
+            public ListViewItemComparer()
+            {
+            }
+
+            public ListViewItemComparer(int column)
+            {
+                Column = column;
+            }
+            
+            public int Compare(object x, object y)
+            {
+                int result = String.Compare(((ListViewItem)x).SubItems[Column].Text, ((ListViewItem)y).SubItems[Column].Text);
+
+                if (Order == SortOrder.Descending) return -result;
+                else return result;
+            }
+        }
+
+        private void SortServers(int column, bool noChange = false)
+        {
+            ListViewItemComparer comparer = (ListViewItemComparer)ServersListView.ListViewItemSorter;
+
+            if (noChange == false)
+            {
+                if (comparer.Column != column)
+                {
+                    comparer.Column = column;
+                }
+                else
+                {
+                    if (comparer.Order == SortOrder.Ascending) comparer.Order = SortOrder.Descending;
+                    else comparer.Order = SortOrder.Ascending;
+                }
+            }
+
+            if (column == 0) SetSortArrow(LabelServerIP, comparer.Order);
+            if (column == 1) SetSortArrow(LabelServerName, comparer.Order);
+            if (column == 2) SetSortArrow(LabelServerGameMode, comparer.Order);
+            if (column == 3) SetSortArrow(LabelServerPlayers, comparer.Order);
+            if (column == 4) SetSortArrow(LabelServerMaxPlayers, comparer.Order);
+
+            ServersListView.Sort();
+        }
+
+        private void SetSortArrow(Label label, SortOrder order)
+        {
+            if (order == SortOrder.Descending)
+            {
+                LabelDownArrow.Visible = false;
+                LabelUpArrow.ForeColor = theme.TextHighlightColor;
+                LabelUpArrow.BackColor = theme.PanelBackColor;
+                LabelUpArrow.Location = new Point(label.Location.X + label.Width - 4, label.Location.Y);
+                LabelUpArrow.Visible = true;
+            }
+            else
+            {
+                LabelUpArrow.Visible = false;
+                LabelDownArrow.ForeColor = theme.TextHighlightColor;
+                LabelDownArrow.BackColor = theme.PanelBackColor;
+                LabelDownArrow.Location = new Point(label.Location.X + label.Width - 4, label.Location.Y);
+                LabelDownArrow.Visible = true;
+            }
+        }
+
+        private void LabelServerIP_Click(object sender, EventArgs e)
+        {
+            SortServers(0);
+        }
+
+        private void LabelServerName_Click(object sender, EventArgs e)
+        {
+            SortServers(1);
+        }
+
+        private void LabelServerGameMode_Click(object sender, EventArgs e)
+        {
+            SortServers(2);
+        }
+
+        private void LabelServerPlayers_Click(object sender, EventArgs e)
+        {
+            SortServers(3);
+        }
+
+        private void LabelServerMaxPlayers_Click(object sender, EventArgs e)
+        {
+            SortServers(4);
+        }
+
+        private void LabelServerPing_Click(object sender, EventArgs e)
+        {
         }
     }
 }

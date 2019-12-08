@@ -468,16 +468,23 @@ namespace OverloadClientTool
             {
                 string pilotName = "";
 
-                using (var hklm = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.CurrentUser, RegistryView.Registry64))
+                try
                 {
-                    using (var key = hklm.OpenSubKey(@"SOFTWARE\Revival\Overload"))
+                    using (var hklm = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.CurrentUser, RegistryView.Registry64))
                     {
-                        if (key != null)
+                        using (var key = hklm.OpenSubKey(@"SOFTWARE\Revival\Overload"))
                         {
-                            byte[] pilotBytes = (byte[])key.GetValue(@"pilot_h187966731");
-                            if (pilotBytes.Length > 0) pilotName = Encoding.ASCII.GetString(pilotBytes, 0, pilotBytes.Length -1);
+                            if (key != null)
+                            {
+                                byte[] pilotBytes = (byte[])key.GetValue(@"pilot_h187966731");
+                                if (pilotBytes.Length > 0) pilotName = Encoding.ASCII.GetString(pilotBytes, 0, pilotBytes.Length - 1);
+                            }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    LogDebugMessage($"Trying to get pilot name: {ex.Message}");
                 }
 
                 return pilotName;
@@ -487,15 +494,23 @@ namespace OverloadClientTool
             {
                 byte[] pilotBytes = Encoding.ASCII.GetBytes((value + '\0').ToCharArray());
 
-                using (var hklm = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.CurrentUser, RegistryView.Registry64))
+                try
                 {
-                    using (var key = hklm.OpenSubKey(@"SOFTWARE\Revival\Overload", true))
+
+                    using (var hklm = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.CurrentUser, RegistryView.Registry64))
                     {
-                        if (key != null)
+                        using (var key = hklm.OpenSubKey(@"SOFTWARE\Revival\Overload", true))
                         {
-                            key.SetValue(@"pilot_h187966731", pilotBytes);
+                            if (key != null)
+                            {
+                                key.SetValue(@"pilot_h187966731", pilotBytes);
+                            }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    LogDebugMessage($"Trying to set pilot name: {ex.Message}");
                 }
             }
         }

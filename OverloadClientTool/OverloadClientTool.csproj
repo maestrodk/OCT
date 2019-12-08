@@ -80,6 +80,9 @@
     <Compile Include="CustomListBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -92,6 +95,7 @@
       <DependentUpon>OlmodUpdateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Olproxy\OCTExtensions.cs" />
+    <Compile Include="Pinger.cs" />
     <Compile Include="Resolution.cs" />
     <Compile Include="OCTUpdateForm.cs">
       <SubType>Form</SubType>

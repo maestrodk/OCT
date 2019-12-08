@@ -25,6 +25,18 @@ namespace OverloadClientTool
         public DateTime Started { get; set; }
         public bool Old { get; set; }
 
+        public Server()
+        {
+            IP = "";
+            Name = "";
+            Mode = "";
+            Notes = "";
+            NumPlayers = 0;
+            MaxNumPlayers = 0;
+            Started = DateTime.MinValue;
+            Old = false;
+        }
+
         public override string ToString()
         {
             return $"[{IP}] {Name} - {Mode} - {NumPlayers} / {MaxNumPlayers} - {Notes}";
@@ -33,8 +45,30 @@ namespace OverloadClientTool
 
     public class Servers
     {
-        private const string serverListUrl = @"https://olproxy.otl.gg/api";
-        
+        private const string realServerListUrl = @"https://olproxy.otl.gg/api";
+        private const string serverListUrl = @"https://octcache.playoverload.online/octServerList.dat";
+        private const string serverListRequestTimeUrl = @"https://octcache.playoverload.online/octServerListRequestTime.dat";
+
+        public static int ServerRefreshIntervalSeconds
+        {
+            get
+            {
+                try
+                {
+                    using (WebClient wc = new WebClient())
+                    {
+                        wc.Headers.Add("User-Agent", "Overload Client Tool - user " + WindowsIdentity.GetCurrent().Name);
+                        int seconds = Convert.ToInt32(wc.DownloadString(serverListRequestTimeUrl));
+                        if ((seconds >= 30) && (seconds <= 3600)) return seconds;
+                    }
+                }
+                catch
+                {
+                }
+                return 720;
+            }
+        }
+
         public static List<Server> ServerList
         {
             get
@@ -69,15 +103,16 @@ namespace OverloadClientTool
 
                         Dictionary<string, object> srv = JsonConvert.DeserializeObject<Dictionary<string, object>>(kvp.Value.ToString());
 
-                        server.IP = srv["ip"].ToString();
-                        server.Name = srv["name"].ToString();
-                        server.Notes = srv["notes"].ToString();
-                        server.NumPlayers = Convert.ToInt32(srv["numPlayers"]);
-                        server.MaxNumPlayers = Convert.ToInt32(srv["maxNumPlayers"]);
-                        server.Map = srv["map"].ToString();
-                        server.Mode = srv["mode"].ToString();
-                        server.Started = Convert.ToDateTime(srv["gameStarted"]);
-                        server.Old = Convert.ToBoolean(srv["old"]); 
+                        try { server.IP = srv["ip"].ToString(); } catch { }
+                        try { server.Name = srv["name"].ToString(); } catch { }
+                        try { server.Notes = srv["notes"].ToString(); } catch { }
+                        try { server.NumPlayers = Convert.ToInt32(srv["numPlayers"]); } catch { }
+                        try { server.MaxNumPlayers = Convert.ToInt32(srv["maxNumPlayers"]); } catch { }
+                        try { server.Map = srv["map"].ToString(); } catch { }
+                        try { server.Mode = srv["mode"].ToString(); } catch { }
+                        try { server.Started = Convert.ToDateTime(srv["gameStarted"]); } catch { }
+                        try { server.Old = Convert.ToBoolean(srv["old"]); } catch { }
+
                         servers.Add(server);
                     }
 
@@ -85,7 +120,7 @@ namespace OverloadClientTool
                 }
                 catch (Exception ex)
                 {
-                    OverloadClientToolApplication.LogDebugMessage($"Cannot get serverlist from OTL: {ex.Message}");
+                    OverloadClientToolApplication.LogDebugMessage($"Cannot get server list from OTL: {ex.Message}");
                 }
 
                 return null;
