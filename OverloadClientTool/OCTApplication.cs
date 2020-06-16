@@ -4,19 +4,26 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace OverloadClientTool
 {
     static class OverloadClientToolApplication
-    {    
+    {
+        static System.Threading.Mutex singleton = new Mutex(true, "OCT");
+
+        internal static OCTMain octMain = null;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main(string[] args)
         {
+            if (!singleton.WaitOne(0, false)) return;
+
             // To embed a dll in a compiled exe:
             // 1 - Change the properties of the dll in References so that Copy Local=false
             // 2 - Add the dll file to the project as an additional file not just a reference
@@ -35,6 +42,14 @@ namespace OverloadClientTool
                     return System.Reflection.Assembly.Load(assemblyData);
                 }
             };
+
+            Application.ThreadException += new ThreadExceptionEventHandler(MyCommonExceptionHandlingMethod);
+
+            // Set the unhandled exception mode to force all Windows Forms errors to go through our handler.
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
+            // Add the event handler for handling non-UI thread exceptions to the event. 
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
             // Setup debug logging.
             string startDateTime = DateTime.Now.ToString("yyyy-dd-MM HH:mm:ss");
@@ -101,16 +116,62 @@ namespace OverloadClientTool
 
             try
             {
+                octMain = new OCTMain(args, debugFileName, oldSettings);
+
                 LogDebugMessage("Starting OCT main UI thread.", debugFileName);
-                Application.Run(new OCTMain(args, debugFileName, oldSettings));
+                Application.Run(octMain);
                 LogDebugMessage("OCT main exit - shutting UI thread.", debugFileName);
             }
             catch (Exception ex)
             {
-                LogDebugMessage(String.Format($"OCT exited due to an unexpected error: {ex.Message} at {ex.TargetSite}"), debugFileName);
-                string message = $"OCT crashed due to an unexpected error: {ex.Message} at {ex.TargetSite}";
-                MessageBox.Show(message, "Internal error");
+                string message = ex.ToString(); // GetExceptionMessages(ex);
+                
+                LogDebugMessage($"Application crashed: {message}", debugFileName);
+
+                OverloadClientApplication.OCTErrorForm errorForm = new OverloadClientApplication.OCTErrorForm(message);
+                OCTMain.ApplyThemeToControl(errorForm, octMain.theme);
+
+                errorForm.BackColor = octMain.theme.InactivePaneButtonBackColor;
+                errorForm.StartPosition = FormStartPosition.CenterParent;
+
+                octMain.Dispose();
+
+                errorForm.ShowDialog();
             }
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            ProcesException((Exception)e.ExceptionObject);
+        }
+
+        private static void MyCommonExceptionHandlingMethod(object sender, ThreadExceptionEventArgs t)
+        {
+            ProcesException(t.Exception);
+        }
+
+        private static void ProcesException(Exception ex)
+        { 
+            string message = ex.ToString(); // GetExceptionMessages(ex);
+
+            string startDateTime = DateTime.Now.ToString("yyyy-dd-MM HH:mm:ss");
+            string debugFileFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OverloadClientTool\\Debug");
+            string debugFileName = Path.Combine(debugFileFolder, String.Format($"OCT_Debug_{startDateTime.Replace(":", "").Replace("-", "").Replace(" ", "_")}.txt"));
+            try { Directory.CreateDirectory(debugFileFolder); } catch { }
+
+            LogDebugMessage($"Application crashed: {message}", debugFileName);
+
+            if (octMain != null) try { octMain.ShutdownTasks(); } catch { }
+
+            OverloadClientApplication.OCTErrorForm errorForm = new OverloadClientApplication.OCTErrorForm(message);
+            OCTMain.ApplyThemeToControl(errorForm, octMain.theme);
+
+            errorForm.BackColor = lastTheme.InactivePaneButtonBackColor;
+            errorForm.StartPosition = FormStartPosition.CenterParent;
+
+            errorForm.ShowDialog();
+
+            //Exception handling...
         }
 
         public static void LogDebugMessage(string message, string logFileName = null)
@@ -133,6 +194,32 @@ namespace OverloadClientTool
                 string debugFileName = Path.Combine(debugFileFolder, String.Format($"OCT_Debug.txt"));
                 try { Directory.CreateDirectory(debugFileFolder); } catch { }
                 try { System.IO.File.AppendAllText(debugFileName, String.Format($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}")); } catch { }
+            }
+        }
+
+        public static void TrackerMessage(string message)
+        {
+            if (false)
+            {
+                string trackerFileFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"C:\ProgramData\Revival");
+                string trackerFileName = Path.Combine(trackerFileFolder, String.Format($"OCT_Server_Tracker_Log.txt"));
+                try { Directory.CreateDirectory(trackerFileFolder); } catch { }
+
+                message = String.IsNullOrEmpty(message) ? Environment.NewLine : message + Environment.NewLine;
+                try { System.IO.File.AppendAllText(trackerFileName, String.Format($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}")); } catch { }
+            }
+        }
+
+        public static void DedicatedServerTrackerMessage(string message)
+        {
+            if (false)
+            {
+                string trackerFileFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"C:\ProgramData\Revival");
+                string trackerFileName = Path.Combine(trackerFileFolder, String.Format($"DedicatedServerLog.txt"));
+                try { Directory.CreateDirectory(trackerFileFolder); } catch { }
+
+                message = String.IsNullOrEmpty(message) ? Environment.NewLine : message + Environment.NewLine;
+                try { System.IO.File.AppendAllText(trackerFileName, String.Format($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}")); } catch { }
             }
         }
 
@@ -240,6 +327,21 @@ namespace OverloadClientTool
             if ((parts.Length > 3) && result.EndsWith(".0")) result = result.Substring(0, result.Length - 2);
 
             return result;
+        }
+
+        public static string GetExceptionMessages(Exception ex)
+        {
+            var messages = new List<string>();
+            
+            while (ex != null)
+            {
+                messages.Add(ex.Message);
+                messages.Add(ex.StackTrace);
+                ex = ex.InnerException;
+            }
+
+            string message = String.Join(" - ", messages);
+            return message;
         }
     }
 }

@@ -46,8 +46,10 @@ namespace OverloadClientTool
     public class Servers
     {
         private const string realServerListUrl = @"https://olproxy.otl.gg/api";
+
         private const string serverListUrl = @"https://octcache.playoverload.online/octServerList.dat";
         private const string serverListRequestTimeUrl = @"https://octcache.playoverload.online/octServerListRequestTime.dat";
+        private const string serverListTestUrl = @"https://gbs.globaltraders.de:22255/octdata/getwebdata/getwebdata.dat";
 
         public static int ServerRefreshIntervalSeconds
         {
@@ -57,7 +59,7 @@ namespace OverloadClientTool
                 {
                     using (WebClient wc = new WebClient())
                     {
-                        wc.Headers.Add("User-Agent", "Overload Client Tool - user " + WindowsIdentity.GetCurrent().Name);
+                        wc.Headers.Add("User-Agent", "Overload Client Tool v2.0.1 - user " + WindowsIdentity.GetCurrent().Name);
                         int seconds = Convert.ToInt32(wc.DownloadString(serverListRequestTimeUrl));
                         if ((seconds >= 30) && (seconds <= 3600)) return seconds;
                     }
@@ -86,6 +88,7 @@ namespace OverloadClientTool
                     {
                         wc.Headers.Add("User-Agent", "Overload Client Tool - user " + WindowsIdentity.GetCurrent().Name);
                         json = wc.DownloadString(serverListUrl);
+                        // json = wc.DownloadString(serverListTestUrl);
                     }
 
                     dynamic serverInfo = JsonConvert.DeserializeObject(json);
@@ -113,6 +116,7 @@ namespace OverloadClientTool
                         try { server.Started = Convert.ToDateTime(srv["gameStarted"]); } catch { }
                         try { server.Old = Convert.ToBoolean(srv["old"]); } catch { }
 
+                        //if (server.IP == "85.27.246.6") 
                         servers.Add(server);
                     }
 

@@ -8,11 +8,27 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>OverloadClientTool</RootNamespace>
     <AssemblyName>OverloadClientTool</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -88,6 +104,12 @@
     </Compile>
     <Compile Include="Install.cs" />
     <Compile Include="OCTRelease.cs" />
+    <Compile Include="OCTErrorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OCTErrorForm.Designer.cs">
+      <DependentUpon>OCTErrorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="OlmodUpdateForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,7 +117,7 @@
       <DependentUpon>OlmodUpdateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Olproxy\OCTExtensions.cs" />
-    <Compile Include="Pinger.cs" />
+    <Compile Include="OverloadPinger.cs" />
     <Compile Include="Resolution.cs" />
     <Compile Include="OCTUpdateForm.cs">
       <SubType>Form</SubType>
@@ -143,13 +165,21 @@
     <Compile Include="Updating.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="xxHash.cs" />
     <EmbeddedResource Include="InputBox.resx">
       <DependentUpon>InputBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OCTMain.resx">
       <DependentUpon>OCTMain.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Include="TrackerMatchDisconnect.cs" />
+    <Compile Include="TrackerMatchIdle.cs" />
+    <Compile Include="TrackerMatchJoin.cs" />
+    <Compile Include="TrackerMatchCreate.cs" />
     <None Include="OverloadClientTool.snk" />
+    <EmbeddedResource Include="OCTErrorForm.resx">
+      <DependentUpon>OCTErrorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OlmodUpdateForm.resx">
       <DependentUpon>OlmodUpdateForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -217,6 +247,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\OCT Logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

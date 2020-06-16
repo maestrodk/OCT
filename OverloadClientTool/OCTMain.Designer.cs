@@ -38,7 +38,6 @@ namespace OverloadClientTool
             this.OlproxyArgs = new System.Windows.Forms.TextBox();
             this.SelectExecutable = new System.Windows.Forms.OpenFileDialog();
             this.StartStopButton = new System.Windows.Forms.Button();
-            this.ExitButton = new System.Windows.Forms.Button();
             this.MapUpdateButton = new System.Windows.Forms.Button();
             this.OverloadRunning = new System.Windows.Forms.PictureBox();
             this.OlproxyRunning = new System.Windows.Forms.PictureBox();
@@ -58,12 +57,14 @@ namespace OverloadClientTool
             this.TreeViewLogPanel = new System.Windows.Forms.Panel();
             this.LogTreeView = new OverloadClientTool.CustomTreeView();
             this.StatusMessage = new System.Windows.Forms.Label();
+            this.StartServerButtonMain = new System.Windows.Forms.Button();
             this.PaneSelectMain = new System.Windows.Forms.Button();
             this.PaneSelectMapManager = new System.Windows.Forms.Button();
             this.PaneSelectPilots = new System.Windows.Forms.Button();
             this.PaneSelectOverload = new System.Windows.Forms.Button();
             this.PaneMaps = new System.Windows.Forms.Panel();
             this.label17 = new System.Windows.Forms.Label();
+            this.OverloadMaps = new System.Windows.Forms.LinkLabel();
             this.label6 = new System.Windows.Forms.Label();
             this.panel7 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
@@ -163,6 +164,7 @@ namespace OverloadClientTool
             this.ServerRunning = new System.Windows.Forms.PictureBox();
             this.PaneOnline = new System.Windows.Forms.Panel();
             this.LabelDownArrow = new System.Windows.Forms.Label();
+            this.OTLTracker = new System.Windows.Forms.LinkLabel();
             this.LabelUpArrow = new System.Windows.Forms.Label();
             this.LabelServerPing = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
@@ -278,25 +280,13 @@ namespace OverloadClientTool
             // StartStopButton
             // 
             this.StartStopButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StartStopButton.Location = new System.Drawing.Point(405, 296);
+            this.StartStopButton.Location = new System.Drawing.Point(340, 296);
             this.StartStopButton.Name = "StartStopButton";
-            this.StartStopButton.Size = new System.Drawing.Size(56, 24);
+            this.StartStopButton.Size = new System.Drawing.Size(88, 24);
             this.StartStopButton.TabIndex = 9;
-            this.StartStopButton.Text = "Start";
+            this.StartStopButton.Text = "Start client";
             this.StartStopButton.UseVisualStyleBackColor = true;
             this.StartStopButton.Click += new System.EventHandler(this.StartButton_Click);
-            // 
-            // ExitButton
-            // 
-            this.ExitButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ExitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ExitButton.Location = new System.Drawing.Point(467, 296);
-            this.ExitButton.Name = "ExitButton";
-            this.ExitButton.Size = new System.Drawing.Size(60, 24);
-            this.ExitButton.TabIndex = 9;
-            this.ExitButton.Text = "Exit";
-            this.ExitButton.UseVisualStyleBackColor = true;
-            this.ExitButton.Click += new System.EventHandler(this.ExitButton_Click);
             // 
             // MapUpdateButton
             // 
@@ -454,9 +444,9 @@ namespace OverloadClientTool
             this.PaneMain.BackColor = System.Drawing.Color.LightSlateGray;
             this.PaneMain.Controls.Add(this.LogTreePanel);
             this.PaneMain.Controls.Add(this.StatusMessage);
+            this.PaneMain.Controls.Add(this.StartServerButtonMain);
             this.PaneMain.Controls.Add(this.StartStopButton);
             this.PaneMain.Controls.Add(this.OverloadRunning);
-            this.PaneMain.Controls.Add(this.ExitButton);
             this.PaneMain.Location = new System.Drawing.Point(9, 43);
             this.PaneMain.Margin = new System.Windows.Forms.Padding(0);
             this.PaneMain.Name = "PaneMain";
@@ -519,6 +509,17 @@ namespace OverloadClientTool
             this.StatusMessage.Size = new System.Drawing.Size(101, 13);
             this.StatusMessage.TabIndex = 15;
             this.StatusMessage.Text = "StatusMessageText";
+            // 
+            // StartServerButtonMain
+            // 
+            this.StartServerButtonMain.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StartServerButtonMain.Location = new System.Drawing.Point(435, 296);
+            this.StartServerButtonMain.Name = "StartServerButtonMain";
+            this.StartServerButtonMain.Size = new System.Drawing.Size(88, 24);
+            this.StartServerButtonMain.TabIndex = 9;
+            this.StartServerButtonMain.Text = "Start server";
+            this.StartServerButtonMain.UseVisualStyleBackColor = true;
+            this.StartServerButtonMain.Click += new System.EventHandler(this.StartServerButton_Click);
             // 
             // PaneSelectMain
             // 
@@ -592,6 +593,7 @@ namespace OverloadClientTool
             // 
             this.PaneMaps.BackColor = System.Drawing.Color.LightSlateGray;
             this.PaneMaps.Controls.Add(this.label17);
+            this.PaneMaps.Controls.Add(this.OverloadMaps);
             this.PaneMaps.Controls.Add(this.label6);
             this.PaneMaps.Controls.Add(this.panel7);
             this.PaneMaps.Controls.Add(this.MapsPanel);
@@ -629,6 +631,19 @@ namespace OverloadClientTool
             this.label17.Size = new System.Drawing.Size(195, 13);
             this.label17.TabIndex = 3;
             this.label17.Text = "Include these map types when updating";
+            // 
+            // OverloadMaps
+            // 
+            this.OverloadMaps.AutoSize = true;
+            this.OverloadMaps.LinkColor = System.Drawing.Color.Blue;
+            this.OverloadMaps.Location = new System.Drawing.Point(322, 144);
+            this.OverloadMaps.Name = "OverloadMaps";
+            this.OverloadMaps.Size = new System.Drawing.Size(137, 13);
+            this.OverloadMaps.TabIndex = 17;
+            this.OverloadMaps.TabStop = true;
+            this.OverloadMaps.Text = "https://overloadmaps.com/";
+            this.OverloadMaps.VisitedLinkColor = System.Drawing.Color.SteelBlue;
+            this.OverloadMaps.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OlmodReleases_LinkClicked);
             // 
             // label6
             // 
@@ -1490,7 +1505,7 @@ namespace OverloadClientTool
             // ForceUpdateButton
             // 
             this.ForceUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ForceUpdateButton.Location = new System.Drawing.Point(439, 36);
+            this.ForceUpdateButton.Location = new System.Drawing.Point(443, 36);
             this.ForceUpdateButton.Margin = new System.Windows.Forms.Padding(0);
             this.ForceUpdateButton.Name = "ForceUpdateButton";
             this.ForceUpdateButton.Size = new System.Drawing.Size(77, 23);
@@ -1736,10 +1751,10 @@ namespace OverloadClientTool
             this.AutoStartCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AutoStartCheckBox.Location = new System.Drawing.Point(31, 186);
             this.AutoStartCheckBox.Name = "AutoStartCheckBox";
-            this.AutoStartCheckBox.Size = new System.Drawing.Size(133, 17);
+            this.AutoStartCheckBox.Size = new System.Drawing.Size(97, 17);
             this.AutoStartCheckBox.TabIndex = 5;
-            this.AutoStartCheckBox.Text = "Start at Windows logon";
-            this.MainToolTip.SetToolTip(this.AutoStartCheckBox, "Select this to autostart OCT + server at Windows startup");
+            this.AutoStartCheckBox.Text = "Autostart server";
+            this.MainToolTip.SetToolTip(this.AutoStartCheckBox, "Select this to start the server when OCT starts");
             this.AutoStartCheckBox.UseVisualStyleBackColor = false;
             this.AutoStartCheckBox.CheckedChanged += new System.EventHandler(this.AutoStartCheckBox_CheckedChanged);
             // 
@@ -1892,6 +1907,7 @@ namespace OverloadClientTool
             // 
             this.PaneOnline.BackColor = System.Drawing.Color.LightSlateGray;
             this.PaneOnline.Controls.Add(this.LabelDownArrow);
+            this.PaneOnline.Controls.Add(this.OTLTracker);
             this.PaneOnline.Controls.Add(this.LabelUpArrow);
             this.PaneOnline.Controls.Add(this.LabelServerPing);
             this.PaneOnline.Controls.Add(this.label25);
@@ -1905,7 +1921,7 @@ namespace OverloadClientTool
             this.PaneOnline.Controls.Add(this.LabelServerName);
             this.PaneOnline.Controls.Add(this.LabelServerIP);
             this.PaneOnline.Controls.Add(this.panel13);
-            this.PaneOnline.Location = new System.Drawing.Point(2291, 43);
+            this.PaneOnline.Location = new System.Drawing.Point(12, 739);
             this.PaneOnline.Margin = new System.Windows.Forms.Padding(0);
             this.PaneOnline.Name = "PaneOnline";
             this.PaneOnline.Size = new System.Drawing.Size(547, 336);
@@ -1921,6 +1937,19 @@ namespace OverloadClientTool
             this.LabelDownArrow.TabIndex = 23;
             this.LabelDownArrow.Text = "<down>";
             // 
+            // OTLTracker
+            // 
+            this.OTLTracker.AutoSize = true;
+            this.OTLTracker.LinkColor = System.Drawing.Color.Blue;
+            this.OTLTracker.Location = new System.Drawing.Point(11, 284);
+            this.OTLTracker.Name = "OTLTracker";
+            this.OTLTracker.Size = new System.Drawing.Size(110, 13);
+            this.OTLTracker.TabIndex = 17;
+            this.OTLTracker.TabStop = true;
+            this.OTLTracker.Text = "https://tracker.otl.gg/";
+            this.OTLTracker.VisitedLinkColor = System.Drawing.Color.SteelBlue;
+            this.OTLTracker.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OTLTracker_LinkClicked);
+            // 
             // LabelUpArrow
             // 
             this.LabelUpArrow.AutoSize = true;
@@ -1934,7 +1963,7 @@ namespace OverloadClientTool
             // LabelServerPing
             // 
             this.LabelServerPing.AutoSize = true;
-            this.LabelServerPing.Location = new System.Drawing.Point(472, 11);
+            this.LabelServerPing.Location = new System.Drawing.Point(430, 10);
             this.LabelServerPing.Name = "LabelServerPing";
             this.LabelServerPing.Size = new System.Drawing.Size(28, 13);
             this.LabelServerPing.TabIndex = 21;
@@ -1956,7 +1985,7 @@ namespace OverloadClientTool
             this.panel12.Controls.Add(this.CurrentServerNotes);
             this.panel12.Location = new System.Drawing.Point(5, 196);
             this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(373, 101);
+            this.panel12.Size = new System.Drawing.Size(373, 81);
             this.panel12.TabIndex = 19;
             // 
             // label20
@@ -1977,7 +2006,7 @@ namespace OverloadClientTool
             this.CurrentServerNotes.Multiline = true;
             this.CurrentServerNotes.Name = "CurrentServerNotes";
             this.CurrentServerNotes.ReadOnly = true;
-            this.CurrentServerNotes.Size = new System.Drawing.Size(360, 75);
+            this.CurrentServerNotes.Size = new System.Drawing.Size(360, 55);
             this.CurrentServerNotes.TabIndex = 1;
             // 
             // ServerViewPanel
@@ -1986,7 +2015,7 @@ namespace OverloadClientTool
             this.ServerViewPanel.Controls.Add(this.ServersListView);
             this.ServerViewPanel.Location = new System.Drawing.Point(12, 27);
             this.ServerViewPanel.Name = "ServerViewPanel";
-            this.ServerViewPanel.Size = new System.Drawing.Size(518, 167);
+            this.ServerViewPanel.Size = new System.Drawing.Size(518, 163);
             this.ServerViewPanel.TabIndex = 20;
             // 
             // ServersListView
@@ -2010,7 +2039,7 @@ namespace OverloadClientTool
             this.ServersListView.MultiSelect = false;
             this.ServersListView.Name = "ServersListView";
             this.ServersListView.OwnerDraw = true;
-            this.ServersListView.Size = new System.Drawing.Size(516, 165);
+            this.ServersListView.Size = new System.Drawing.Size(516, 161);
             this.ServersListView.TabIndex = 0;
             this.ServersListView.UseCompatibleStateImageBehavior = false;
             this.ServersListView.View = System.Windows.Forms.View.Details;
@@ -2028,25 +2057,26 @@ namespace OverloadClientTool
             // ServerName
             // 
             this.ServerName.Text = "Name";
-            this.ServerName.Width = 210;
+            this.ServerName.Width = 180;
             // 
             // ServerMode
             // 
             this.ServerMode.Text = "Mode";
-            this.ServerMode.Width = 110;
+            this.ServerMode.Width = 90;
             // 
             // ServerNumPlayers
             // 
             this.ServerNumPlayers.Text = "Players";
+            this.ServerNumPlayers.Width = 50;
             // 
             // ServerMaxPlayers
             // 
             this.ServerMaxPlayers.Text = "Max players";
-            this.ServerMaxPlayers.Width = 50;
+            this.ServerMaxPlayers.Width = 44;
             // 
             // ServerPing
             // 
-            this.ServerPing.Width = 2;
+            this.ServerPing.Text = "Ping";
             // 
             // panel11
             // 
@@ -2092,7 +2122,7 @@ namespace OverloadClientTool
             // LabelServerMaxPlayers
             // 
             this.LabelServerMaxPlayers.AutoSize = true;
-            this.LabelServerMaxPlayers.Location = new System.Drawing.Point(387, 10);
+            this.LabelServerMaxPlayers.Location = new System.Drawing.Point(384, 10);
             this.LabelServerMaxPlayers.Name = "LabelServerMaxPlayers";
             this.LabelServerMaxPlayers.Size = new System.Drawing.Size(27, 13);
             this.LabelServerMaxPlayers.TabIndex = 3;
@@ -2102,7 +2132,7 @@ namespace OverloadClientTool
             // LabelServerPlayers
             // 
             this.LabelServerPlayers.AutoSize = true;
-            this.LabelServerPlayers.Location = new System.Drawing.Point(324, 10);
+            this.LabelServerPlayers.Location = new System.Drawing.Point(334, 10);
             this.LabelServerPlayers.Name = "LabelServerPlayers";
             this.LabelServerPlayers.Size = new System.Drawing.Size(41, 13);
             this.LabelServerPlayers.TabIndex = 3;
@@ -2112,7 +2142,7 @@ namespace OverloadClientTool
             // LabelServerGameMode
             // 
             this.LabelServerGameMode.AutoSize = true;
-            this.LabelServerGameMode.Location = new System.Drawing.Point(236, 10);
+            this.LabelServerGameMode.Location = new System.Drawing.Point(214, 10);
             this.LabelServerGameMode.Name = "LabelServerGameMode";
             this.LabelServerGameMode.Size = new System.Drawing.Size(64, 13);
             this.LabelServerGameMode.TabIndex = 3;
@@ -2191,8 +2221,7 @@ namespace OverloadClientTool
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.CancelButton = this.ExitButton;
-            this.ClientSize = new System.Drawing.Size(2862, 821);
+            this.ClientSize = new System.Drawing.Size(2564, 1136);
             this.Controls.Add(this.PaneSelectOnline);
             this.Controls.Add(this.PaneOnline);
             this.Controls.Add(this.PaneSelectServer);
@@ -2215,6 +2244,7 @@ namespace OverloadClientTool
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "OCTMain";
             this.Text = "Overload Client Tool";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
@@ -2287,7 +2317,6 @@ namespace OverloadClientTool
         private System.Windows.Forms.TextBox OlproxyArgs;
         private System.Windows.Forms.OpenFileDialog SelectExecutable;
         private System.Windows.Forms.Button StartStopButton;
-        private System.Windows.Forms.Button ExitButton;
         private System.Windows.Forms.Button MapUpdateButton;
         private System.Windows.Forms.NotifyIcon OverloadClientToolNotifyIcon;
         private System.Windows.Forms.TextBox OnlineMapJsonUrl;
@@ -2439,6 +2468,9 @@ namespace OverloadClientTool
         private System.Windows.Forms.ColumnHeader ServerPing;
         private System.Windows.Forms.Label LabelDownArrow;
         private System.Windows.Forms.Label LabelUpArrow;
+        private System.Windows.Forms.Button StartServerButtonMain;
+        private System.Windows.Forms.LinkLabel OverloadMaps;
+        private System.Windows.Forms.LinkLabel OTLTracker;
     }
 }
 

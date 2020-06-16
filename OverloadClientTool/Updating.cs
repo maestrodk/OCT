@@ -153,6 +153,9 @@ namespace OverloadClientTool
 
                 Process appStart = new Process();
                 appStart.StartInfo = new ProcessStartInfo(Path.Combine(localSourceFolder, "OverloadClientTool.exe"));
+
+                appStart.StartInfo.UseShellExecute = true;
+                appStart.StartInfo.Verb = "runas";
                 appStart.StartInfo.Arguments = String.Format($"-install \"{installFolder}\"");
                 appStart.StartInfo.WorkingDirectory = localSourceFolder;
 
@@ -167,6 +170,14 @@ namespace OverloadClientTool
             {
                 MessageBox.Show(String.Format($"Unable to update application: {ex.Message}", "Error"));
             }
+        }
+
+        private static bool IsRunAsAdmin()
+        {
+            WindowsIdentity id = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(id);
+
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }

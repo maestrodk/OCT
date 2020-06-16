@@ -198,10 +198,10 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.ShowFPS = value; }
         }
         
-        public bool StartWithWindows
+        public bool AutoStartServer
         {
-            get { return Properties.Settings.Default.StartWithWindows; }
-            set { Properties.Settings.Default.StartWithWindows = value; }
+            get { return Properties.Settings.Default.AutostartServer; }
+            set { Properties.Settings.Default.AutostartServer = value; }
         }
 
         public bool StartMinimized
@@ -436,7 +436,7 @@ namespace OverloadClientTool
             EnableDebugCheckBox.Checked = Debugging;
             UseTrayIcon.Checked = TrayIcon;
 
-            AutoStartCheckBox.Checked = StartWithWindows;
+            AutoStartCheckBox.Checked = AutoStartServer;
             MinimizeOnStartupCheckBox.Checked = StartMinimized;
             UseTrayIcon.Checked = TrayInsteadOfTaskBar;
 

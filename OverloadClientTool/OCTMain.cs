@@ -21,6 +21,10 @@ namespace OverloadClientTool
 {
     public partial class OCTMain : Form
     {
+        public bool exited = false;
+        public bool shutdown = false;
+        private bool trayExitClick = false;
+        
         // Set a default them (might change when reading settings).
         public Theme theme = Theme.GetDarkGrayTheme;
 
@@ -39,7 +43,10 @@ namespace OverloadClientTool
         private OlmodManager olmodManager = null;
 
         private OverloadMapManager mapManager = null;
-        private Thread mapManagerThread = null;
+        
+        internal Thread mapManagerThread = null;
+        internal Thread pingerThread = null;
+        internal Thread backgroundThread = null;
 
         private PaneController paneController = null;
 
@@ -60,7 +67,7 @@ namespace OverloadClientTool
         private MenuItem trayMenuItemExit = new System.Windows.Forms.MenuItem();
         private MenuItem trayMenuItemSwitch = new System.Windows.Forms.MenuItem();
 
-        private Pinger pinger = new Pinger();
+        private OverloadPinger pinger = new OverloadPinger();
 
         public void LogDebugMessage(string message)
         {
@@ -262,8 +269,7 @@ namespace OverloadClientTool
             LabelServerGameMode.Location = new Point(LabelServerName.Location.X + ServersListView.Columns[1].Width, ActiveThemeLabel.Location.Y);
             LabelServerPlayers.Location = new Point(LabelServerGameMode.Location.X + ServersListView.Columns[2].Width - 4, ActiveThemeLabel.Location.Y);
             LabelServerMaxPlayers.Location = new Point(LabelServerPlayers.Location.X + ServersListView.Columns[3].Width + 2, ActiveThemeLabel.Location.Y);
-            // LabelServerPing.Location = new Point(LabelServerMaxPlayers.Location.X + ServersListView.Columns[4].Width, LabelServerIP.Location.Y);
-            LabelServerPing.Text = "";
+            LabelServerPing.Location = new Point(LabelServerMaxPlayers.Location.X + ServersListView.Columns[4].Width, LabelServerIP.Location.Y);
 
             // Add this here so it is ready.
             ServersListView.ListViewItemSorter = new ListViewItemComparer();
@@ -281,9 +287,9 @@ namespace OverloadClientTool
             Info("Olproxy 0.3.0 by Arne de Bruijn.");
 
             // Start background monitor for periodic log updates.
-            Thread thread = new Thread(ActivityBackgroundMonitor);
-            thread.IsBackground = true;
-            thread.Start();
+            backgroundThread = new Thread(ActivityBackgroundMonitor);
+            backgroundThread.IsBackground = true;
+            backgroundThread.Start();
 
             // Check if we should auto-update maps on startup.
             if (AutoUpdateMapsCheckBox.Checked) MapUpdateButton_Click(null, null);
@@ -307,7 +313,17 @@ namespace OverloadClientTool
             // Check for OCT update.
             if (AutoUpdateOCT) UpdateCheck(debugFileName, false);
 
+            // Start background pinger.
+            pingerThread = new Thread(pinger.PingUpdateThread);
+            pingerThread.IsBackground = true;
+            pingerThread.Start();
+
+            // Populate server list.
             UpdateServerListButton_Click(null, null);
+
+            if (AutoStartServer) StartServerButton_Click(null, null);
+
+            LogDebugMessage("Main_Load() done");
         }
 
         /// <summary>
@@ -324,16 +340,40 @@ namespace OverloadClientTool
             Defocus();
         }
 
-        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        internal void ShutdownTasks()
         {
+            if (exited) return;
+
             // Shutdown background workers.
-            StopPilotsMonitoring();
+            try { StopPilotsMonitoring(); } catch { }
+            try { pingerThread.Abort(); } catch { }
+            try { backgroundThread.Abort(); } catch { }
 
             // Kill embedded Olproxy.
             if (IsOlproxyRunning) ShutdownOlproxy();
 
             // Shut down server.
             if (serverProcessId > 0) StartServerButton_Click(null, null);
+
+            exited = true;
+        }
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!trayExitClick && (e.CloseReason != CloseReason.WindowsShutDown))
+            {
+                // User didn't use the tray exit option and Windows isn't doing a shutdown either.
+                // Only continue exit if user is helding down the shift button.
+                if (!(Control.ModifierKeys == Keys.Shift))
+                {
+                    e.Cancel = true;
+                    WindowState = FormWindowState.Minimized;
+                    return;
+                }
+            }
+
+            // Shutdown background workers.
+            ShutdownTasks();
 
             // Save settings for main application.
             try
@@ -344,7 +384,6 @@ namespace OverloadClientTool
             {
                 MessageBox.Show($"Unable to save settings: {ex.Message}", "Error");
             }
-
 
             // Update external Olproxy config (at this point the config has been setup for either server or client).
             try
@@ -461,6 +500,96 @@ namespace OverloadClientTool
 
         private void Info(string text)
         {
+            if (text.Contains("/api/stats"))
+            {
+                try
+                {
+                    text = text.Substring(text.IndexOf("{"));
+                    Dictionary<string, object> list = (Dictionary<string, object>)MiniJson.Parse(text);
+                    
+                    string id = list["type"] as string;
+
+                    string matchMode, level, attacker, defender, player;
+                    List<object> players;
+                    int maxPlayers, timeLimit, scoreLimit, secs, mins;
+                    TimeSpan ts;
+
+                    switch (id.ToLower())
+                    {
+                        case "startgame":
+                            matchMode = list["matchMode"].ToString();
+                            level = list["level"].ToString();
+                            maxPlayers = Convert.ToInt32(list["maxPlayers"].ToString());
+                            timeLimit = Convert.ToInt32(list["timeLimit"].ToString());
+                            scoreLimit = Convert.ToInt32(list["scoreLimit"].ToString());
+                            players = (List<object>)list["players"];
+                            DateTime dt = DateTime.SpecifyKind(Convert.ToDateTime(list["start"].ToString()), DateTimeKind.Utc);
+                            dt = TimeZoneInfo.ConvertTimeFromUtc(dt, TimeZoneInfo.Local);
+                            AddNewLogMessage($"Starting {matchMode} {level} with {players.Count}. Time limit {timeLimit}, score limit {scoreLimit}.");
+                            break;
+
+                        case "endgame":
+                            AddNewLogMessage($"Game ended.");
+                            break;
+
+                        case "kill":
+                            attacker = list["attacker"].ToString();
+                            defender = list["defender"].ToString();
+                            if (attacker != defender) AddNewLogMessage($"{defender} was killed by {attacker}.");
+                            else AddNewLogMessage($"{defender} had a fatal accident.");
+                            break;
+
+                        case "connect":
+                            // player, time (seconds).
+                            player = list["player"].ToString();
+                            secs = Convert.ToInt32(list["time"].ToString());
+                            mins = secs / 60;
+                            secs = secs % 60;
+                            ts = new TimeSpan(0, mins, secs);
+                            AddNewLogMessage($"{player} joined the server at " + ts.ToString("mm:ss") + ".");
+                            break;
+
+                        case "disconnect":
+                            // player, time (seconds).
+                            player = list["player"].ToString();
+                            secs = Convert.ToInt32(list["time"].ToString());
+                            mins = secs / 60;
+                            secs = secs % 60;
+                            ts = new TimeSpan(0, mins, secs);
+                            AddNewLogMessage($"{player} left the server at " + ts.ToString("mm:ss") + ".");
+                            break;
+
+                        case "lobbystatus":
+                            // matchMode, maxPlayers, timeLimit (seconds), scoreLimit, level, players[], turnSpeedLimit, powerupSpawn, friendlyFire, joinInProgress, teamCount.
+                            matchMode = list["matchMode"].ToString();
+                            level = list["level"].ToString();
+                            maxPlayers = Convert.ToInt32(list["maxPlayers"].ToString());
+                            timeLimit = Convert.ToInt32(list["timeLimit"].ToString());
+                            scoreLimit = Convert.ToInt32(list["scoreLimit"].ToString());
+                            players = (List<object>)list["players"];
+                            string playerString = "";
+                            foreach (string p in players) playerString += String.IsNullOrEmpty(playerString) ? p : ", " + p;
+                            AddNewLogMessage($"Lobby {matchMode} {players.Count}/{maxPlayers} players, {level},");
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+                return;
+            }
+
+            if (text.StartsWith("Server:"))
+            {
+                if (text.Contains("HOST: ProcessReady")) AddNewLogMessage("Server is ready.");
+                return;
+            }
+
             AddNewLogMessage(text);
         }
 
@@ -629,11 +758,13 @@ namespace OverloadClientTool
         private void ActivityBackgroundMonitor()
         {
             int requestInterval = Servers.ServerRefreshIntervalSeconds;
+            Stopwatch requestTimer = new Stopwatch();
+            requestTimer.Restart();
 
-            Stopwatch timer = new Stopwatch();
-            timer.Restart();
+            Stopwatch pingTimer = new Stopwatch();
+            pingTimer.Restart();
 
-            while (true)
+            while (shutdown == false)
             {
                 CycleTheme();
                 Thread.Sleep(1000);
@@ -652,18 +783,24 @@ namespace OverloadClientTool
                 int reqMins = (requestInterval - (reqHours * 3600)) / 60;
                 int reqSecs = requestInterval - (reqHours * 3600) - (reqMins * 60);
 
-                if (timer.Elapsed > new TimeSpan(reqHours, reqMins, reqSecs))
+                if (requestTimer.Elapsed > new TimeSpan(reqHours, reqMins, reqSecs))
                 {
                     this.UIThread(delegate { UpdateServerListButton_Click(null, null); });
                     requestInterval = Servers.ServerRefreshIntervalSeconds;
-                    timer.Restart();
+                    requestTimer.Restart();
                 }
-                
+
+                if (pingTimer.Elapsed > new TimeSpan(0, 0, 5))
+                {
+                    this.UIThread(delegate { UpdatePingTimes(); });
+                    pingTimer.Restart();
+                }
+
                 this.UIThread(delegate
                 {
                     OverloadLogFileCheck();
 
-                    string statusText = "Ready for some Overload action!";
+                    string statusText = "";
                     string server = "";
 
                     if (overloadRunning && !olproxyRunning && !olmodRunning) statusText = $"Overload{server}is running.";
@@ -683,13 +820,15 @@ namespace OverloadClientTool
                         else if (!UseOlmodCheckBox.Checked && !foundOverload) statusText = "Cannot find Overload (check path)!";
                     }
 
-                    OverloadRunning.Visible = overloadRunning || olmodRunning;
+                    if (serverProcessId > 0) statusText += " Server is running.";
+
+                    OverloadRunning.Visible = overloadRunning || olmodRunning || (serverProcessId > 0);
                     OlproxyRunning.Visible = olproxyRunning;
                     ServerRunning.Visible = serverProcessId > 0;
 
                     UpdateOlmodButton.Enabled = !olmodRunning;
 
-                    StartStopButton.Text = (overloadRunning || olmodRunning) ? "Stop" : "Start";
+                    StartStopButton.Text = (overloadRunning || olmodRunning) ? "Stop client" : "Start client";
                     StartStopOlproxyButton.Text = (olproxyRunning) ? "Stop" : "Start";
 
                     trayMenuItemStart.Text = (overloadRunning || olmodRunning) ? "&Stop" : "&Start";
@@ -826,10 +965,10 @@ namespace OverloadClientTool
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            if (StartStopButton.Text == "Stop")
+            if (StartStopButton.Text.Contains("Stop"))
             {
                 StopButton_Click(null, null);
-                StartStopButton.Text = "Start";
+                StartStopButton.Text = "Start client";
             }
             else
             {
@@ -851,15 +990,26 @@ namespace OverloadClientTool
         {
             if (IsOlproxyRunning || !UseOlproxy) return;
 
-            string name = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
+            LogDebugMessage($"LaunchOlproxy()");
+
+            string name = "";
 
             // Update external Olproxy config (at this point the config has been setup for either server or client).
             try
             {
                 if (OverloadClientToolApplication.ValidFileName(OlproxyExecutable.Text))
                 {
+                    LogDebugMessage($"Saving Olproxy config");
+
+                    name = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
                     string olproxyConfigFileName = Path.Combine(Path.GetDirectoryName(OlproxyExecutable.Text), "appsettings.json");
                     olproxyTask.SaveConfig(olproxyConfig, olproxyConfigFileName);
+                }
+                else
+                {
+                    LogDebugMessage($"Using default Olproxy name");
+
+                    name = "olproxy";
                 }
             }
             catch
@@ -899,7 +1049,9 @@ namespace OverloadClientTool
 
             if (server) Info("Starting up external Olproxy for server.");
             else Info("Starting up external Olproxy.");
-            
+
+            LogDebugMessage($"Starting external Olproxy");
+
             // Start external Olproxy application.
             Process appStart = new Process();
             appStart.StartInfo = new ProcessStartInfo(OlproxyExecutable.Text, OlproxyArgs.Text);
@@ -910,6 +1062,8 @@ namespace OverloadClientTool
 
         private void LaunchOverloadClient()
         {
+            LogDebugMessage("LaunchOverloadClient()");
+
             string exePath = OverloadExecutable.Text;
             string olmodExe = OlmodExecutable.Text;
 
@@ -931,20 +1085,17 @@ namespace OverloadClientTool
                 }
             }
 
+            LogDebugMessage($"Setting up name and parameters");
+
             string name = Path.GetFileNameWithoutExtension(exePath);
-
-            // This will be enabled again by the background task.
-            this.UIThread(delegate 
-            {
-            });
-
             string path = Path.GetDirectoryName(OverloadExecutable.Text);
+
             if (path.EndsWith("\\")) path = path.Substring(0, path.Length - 1);
 
             // Prepare command line parameters.
             string commandLineArgs = OverloadParameters.Trim();
 
-            // Add Olmod parameters if Olmod is enabled-
+            // Add Olmod parameters if Olmod is enabled.
             if (UseOlmodCheckBox.Checked)
             {
                 if (PassGameDirToOlmod && !OlproxyArgs.Text.ToLower().Contains("-gamedir")) commandLineArgs = " -gamedir \"" + path + "\"";
@@ -954,9 +1105,7 @@ namespace OverloadClientTool
             commandLineArgs += " " + OverloadParameters;
             commandLineArgs = commandLineArgs.Trim();
 
-            LogDebugMessage($"Launcing{exePath} with \"{commandLineArgs}\"");
-
-            if (AutoPilotsBackupCheckbox.Checked) PilotBackupButton_Click(null, null);
+            LogDebugMessage($"Setting up name and parameters");
 
             // Start application it is not already running.
             int running = 0;
@@ -977,6 +1126,8 @@ namespace OverloadClientTool
 
             // If more than one is running we kill them all and start fresh instance.
             if (running > 1) KillRunningProcess(name);
+
+            LogDebugMessage($"Launcing{exePath} with \"{commandLineArgs}\"");
 
             // (Re)start application..
             Process appStart = new Process
@@ -1045,6 +1196,7 @@ namespace OverloadClientTool
         {
             if (serverProcessId > 0) StartServerButton_Click(null, null);
             StopButton_Click(null, null);
+            trayExitClick = true;
             Close();
         }
 
@@ -1096,7 +1248,10 @@ namespace OverloadClientTool
         {
             Show();
             //OverloadClientToolNotifyIcon.Visible = false;
-            WindowState = FormWindowState.Normal;
+            // WindowState = FormWindowState.Normal;
+
+            if (WindowState == FormWindowState.Normal) WindowState = FormWindowState.Minimized;
+            else WindowState = FormWindowState.Normal;
         }
 
         private void UseOlmod_CheckedChanged(object sender, EventArgs e)
@@ -2055,8 +2210,8 @@ namespace OverloadClientTool
 
         private void AutoStartCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            SetAutoStartup(AutoStartCheckBox.Checked);
-            StartWithWindows = AutoStartCheckBox.Checked;
+            // SetAutoStartup(AutoStartCheckBox.Checked);
+            AutoStartServer = AutoStartCheckBox.Checked;
         }
 
         private void ServerTrackerNotes_TextChanged(object sender, EventArgs e)
@@ -2109,12 +2264,14 @@ namespace OverloadClientTool
                 }
 
                 StartServerButton.Text = "Start server";
+                StartServerButtonMain.Text = StartServerButton.Text;
                 trayMenuItemStartServer.Text = "St&art server";
 
                 return;
             }
 
             StartServerButton.Text = "Stop server";
+            StartServerButtonMain.Text = StartServerButton.Text;
             trayMenuItemStartServer.Text = "St&op server";
 
             // Setup Olproxy for server.
@@ -2135,6 +2292,7 @@ namespace OverloadClientTool
                 if (!OverloadClientToolApplication.ValidFileName(exePath, true))
                 {
                     StartServerButton.Text = "Start server";
+                    StartServerButtonMain.Text = StartServerButton.Text;
                     MessageBox.Show("Olmod (.exe) application not found!");
                     return;
                 }
@@ -2147,6 +2305,7 @@ namespace OverloadClientTool
                 if (!OverloadClientToolApplication.ValidFileName(exePath, true))
                 {
                     StartServerButton.Text = "Start server";
+                    StartServerButtonMain.Text = StartServerButton.Text;
                     MessageBox.Show("Overload (.exe) application not found!");
                     return;
                 }
@@ -2164,7 +2323,7 @@ namespace OverloadClientTool
             string path = Path.GetDirectoryName(OverloadExecutable.Text);
             if (path.EndsWith("\\")) path = path.Substring(0, path.Length - 1);
 
-            // Add Olmod parameters if Olmod is enabled-
+            // Add Olmod parameters if Olmod is enabled.
             if (UseOlmodCheckBox.Checked)
             {
                 if (PassGameDirToOlmod && !OlproxyArgs.Text.ToLower().Contains("-gamedir")) commandLineArgs += " -gamedir \"" + path + "\"";
@@ -2360,7 +2519,8 @@ namespace OverloadClientTool
 
         private void UpdateServerListButton_Click(object sender, EventArgs e)
         {
-            bool resort = true;
+            if (exited || shutdown) return;
+
             string oldIP = "";
 
             if ((ServersListView.SelectedIndices == null) || (ServersListView.SelectedIndices.Count < 1))
@@ -2387,7 +2547,7 @@ namespace OverloadClientTool
             ServersListView.Items.Clear();
             foreach (Server server in servers)
             {
-                // pinger.AddHost(server.IP);
+                pinger.AddHost(server.IP);
 
                 string[] values = new string[6];
                 values[0] = server.IP;
@@ -2395,9 +2555,12 @@ namespace OverloadClientTool
                 values[2] = server.Mode;
                 values[3] = server.NumPlayers.ToString().PadLeft(3);
                 values[4] = server.MaxNumPlayers.ToString().PadLeft(3);
-                values[5] = ""; // pinger.Ping(server.IP);
-                if (!String.IsNullOrEmpty(values[5])) values[5] += " mSec";
-                ServersListView.Items.Add(new ListViewItem(values));
+                values[5] = pinger.PingTime(server.IP);               
+
+                ListViewItem lvi = new ListViewItem(values);
+                lvi.Tag = server.IP;
+
+                ServersListView.Items.Add(lvi);
             }
 
             SortServers(((ListViewItemComparer)ServersListView.ListViewItemSorter).Column, true);
@@ -2407,6 +2570,23 @@ namespace OverloadClientTool
             {
                 if (item.SubItems[0].Text == oldIP) ServersListView.Items[i].Selected = true;
                 i++;
+            }
+        }
+
+        internal void UpdatePingTimes()
+        {
+            if (exited || shutdown) return;
+
+            for (int i = 0; i < ServersListView.Items.Count; i++)
+            {
+                try
+                {
+                    ListViewItem item = ServersListView.Items[i];
+                    item.SubItems[5].Text = pinger.PingTime(item.SubItems[0].Text);
+                }
+                catch (Exception ex)
+                {
+                }
             }
         }
 
@@ -2494,11 +2674,18 @@ namespace OverloadClientTool
             // Lower the text a bit.
             Rectangle bounds = e.Bounds;
             bounds.X += 1;
-            bounds.Y += 2;
+            bounds.Y += 1;
 
             // Draw the current item text
-            string text = e.SubItem.Text;
-            e.Graphics.DrawString(text, treeViewFont, new SolidBrush(f), bounds, StringFormat.GenericDefault);
+            string text = e.SubItem.Text.Replace("\r", "").Replace("\n", "");
+
+            if (e.ColumnIndex == 5)
+            {
+                while (text.StartsWith("0")) text = text.Substring(1);
+                if (text == "9999") text = "";
+            }
+
+            e.Graphics.DrawString(text, treeViewFont, new SolidBrush(f), bounds, StringFormat.GenericTypographic);
         }
 
         private void ServersListView_DoubleClick(object sender, EventArgs e)
@@ -2514,8 +2701,27 @@ namespace OverloadClientTool
             int i = ServersListView.SelectedIndices[0];
             string ip = ServersListView.Items[i].SubItems[0].Text;
 
+            int z = 0;
+            int a = 1;
+            
+            // Used when testing application exception handling.
+            //a = a / z;
+
             Clipboard.SetText(ip);
+
+            Graphics graphics = ServersListView.CreateGraphics();
+            Color b = theme.ButtonEnabledBackColor;
+            Color f = theme.ButtonEnabledForeColor;
+
+            Rectangle rect = ServersListView.Items[i].GetBounds(ItemBoundsPortion.Entire);
+            rect.Height--;
+
+            graphics.DrawRectangle(new Pen(f), rect);
+            Thread.Sleep(100);
+            graphics.DrawRectangle(new Pen(b), rect);
         }
+
+        private 
 
         class ListViewItemComparer : IComparer
         {
@@ -2562,6 +2768,7 @@ namespace OverloadClientTool
             if (column == 2) SetSortArrow(LabelServerGameMode, comparer.Order);
             if (column == 3) SetSortArrow(LabelServerPlayers, comparer.Order);
             if (column == 4) SetSortArrow(LabelServerMaxPlayers, comparer.Order);
+            if (column == 5) SetSortArrow(LabelServerPing, comparer.Order);
 
             ServersListView.Sort();
         }
@@ -2613,6 +2820,12 @@ namespace OverloadClientTool
 
         private void LabelServerPing_Click(object sender, EventArgs e)
         {
+            SortServers(5);
+        }
+
+        private void OTLTracker_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try { Process.Start(new ProcessStartInfo(OTLTracker.Text)); } catch { }
         }
     }
 }

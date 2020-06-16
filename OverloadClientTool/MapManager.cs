@@ -704,7 +704,7 @@ namespace OverloadClientTool
                     var task = UpdateMap(sortedMap.Value, false);
 
                     downloadTasks.Add(task);
-                    try { task.Start(); } catch { }
+                    // try { task.Start(); } catch { }
 
                     if (++started > MaxSimultanousDownloads)
                     {
@@ -881,8 +881,7 @@ namespace OverloadClientTool
                     timer.Elapsed += timerHandler;
                     timer.Start();
 
-                    //LogMessage(String.Format($"Downloading map {displayName}."));
-
+                    try { File.Delete(filePath); } catch { }
                     await client.DownloadFileTaskAsync(url, filePath);
 
                     LogMessage(String.Format($"{displayName} download complete."));

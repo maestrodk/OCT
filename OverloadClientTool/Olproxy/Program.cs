@@ -180,6 +180,9 @@ namespace olproxy
             {
                 AddMessage("Signing off tracker at " + config["trackerBaseUrl"]);
 
+                string trackerMessage = $"{config["serverName"]}: Sign off.";
+                OverloadClientTool.OverloadClientToolApplication.TrackerMessage(trackerMessage);
+
                 await TrackerPost("?online=false", new MJDict { });
             }
         }
@@ -210,6 +213,9 @@ namespace olproxy
                         {"map", "" },
                         {"mode", "" }
                     });
+
+                    string trackerMessage = $"{config["serverName"]}: Sign on.";
+                    OverloadClientTool.OverloadClientToolApplication.TrackerMessage(trackerMessage);
                 }
             }
         }
@@ -328,14 +334,39 @@ namespace olproxy
                     return;
                 var destEndPoint = new IPEndPoint(adr, remotePort);
                 if (isNew)
+                {
                     AddMessage(debug ? pktPid + " " + isNew + " Sending match " + msg.ticketType +
                         " " + msg.ticket +
                         " to server " + hostname :
                         "Sending " + (msg.HasPrivateMatchData ? "create" : "join") + " match " + msg.ticketType +
                             (msg.HasPrivateMatchData ? " (" + new MatchInfo(msgStr) + ")" : "") +
                             " to " + hostname);
+
+                    string createJoin = $"Server {hostname} " + (msg.HasPrivateMatchData ? "create" : "join");
+                    
+                    string matchData = "";
+                    if (msg.HasPrivateMatchData)
+                    {
+                        MatchInfo matchInfo = new MatchInfo(msgStr);
+
+                        matchData += $": creator={matchInfo.PrivateMatchData.Creator}";
+                        matchData += $", mode={matchInfo.PrivateMatchData.GameMode}";
+                        matchData += $", players={matchInfo.PlayerCount}";
+                        matchData += $", min={matchInfo.PrivateMatchData.MinPlayers}";
+                        matchData += $", max={matchInfo.PrivateMatchData.MaxPlayers}";
+                        matchData += ", jip= " + (matchInfo.PrivateMatchData.JIPEnabled ? "yes" : "no");
+                        matchData += ".";
+                    }
+                    else
+                    {
+                        matchData = ".";
+                    }
+
+                    string trackerMessage = $"{config["serverName"]}:  {createJoin} {matchData}.";
+                    OverloadClientTool.OverloadClientToolApplication.TrackerMessage(trackerMessage);
+                }
                 else
-                    spinner.Spin();
+                spinner.Spin();
                 bcast.Send(msgStr, remoteSocket.Client, destEndPoint, pktPid, isNew);
                 return;
             } else if (msg.IsMatch && isNew) {
@@ -349,6 +380,9 @@ namespace olproxy
                         TrackerPost("", new MJDict {
                             { "numPlayers", matchInfo.PlayerCount }
                         });
+
+                        string trackerMessage = $"{config["serverName"]}: Update players={matchInfo.PlayerCount}";
+                        OverloadClientTool.OverloadClientToolApplication.TrackerMessage(trackerMessage);
                     }
                 }
             }
@@ -434,10 +468,20 @@ namespace olproxy
                         {"mode", matchInfo.PrivateMatchData.GameMode },
                         {"gameStarted", DateTime.UtcNow.ToString("o") }
                     });
+
+                    string trackerMessage = $"{config["serverName"]}: ";
+                    trackerMessage += $"Mode={matchInfo.PrivateMatchData.GameMode}";
+                    trackerMessage += $", players={matchInfo.PlayerCount}";
+                    trackerMessage += $", min={matchInfo.PrivateMatchData.MinPlayers}";
+                    trackerMessage += $", max={matchInfo.PrivateMatchData.MaxPlayers}";
+                    trackerMessage += ", jip=" + (matchInfo.PrivateMatchData.JIPEnabled ? "yes." : "no.");
+
+                    OverloadClientTool.OverloadClientToolApplication.TrackerMessage(trackerMessage);
                 }
             }
             else
                 spinner.Spin();
+
             Debug.WriteLine("Received " + ParseMessage(message).ticketType + " forward to " + String.Join(", ", BroadcastEndpoints.Select(x => x.ToString())) + " pid " + pid);
             bcast.SendMulti(message, localSocket.Client, BroadcastEndpoints, pid, isNew);
         }
@@ -471,7 +515,7 @@ namespace olproxy
                 // -- Maestro: NOT used to do async's so this may be done better :)
                 var idx = (isConsoleApplication) ? Task.WaitAny(tasks, spinner.Active ? 1000 : Timeout.Infinite) : Task.WaitAny(tasks, 1000);
 
-                // -- Maestro: Check if KillFlag is set from OCT/ST - if so shutdown Olproxy task.
+                // -- Maestro: Check if KillFlag is set from OCT. If it is shutdown the Olproxy task.
                 if (KillFlag)
                 {
                     try
