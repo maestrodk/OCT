@@ -12,7 +12,7 @@ namespace OverloadClientTool.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.3.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -350,13 +350,13 @@ namespace OverloadClientTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool signOff {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool keepListed {
             get {
-                return ((bool)(this["signOff"]));
+                return ((bool)(this["keepListed"]));
             }
             set {
-                this["signOff"] = value;
+                this["keepListed"] = value;
             }
         }
         
@@ -405,6 +405,18 @@ namespace OverloadClientTool.Properties {
             }
             set {
                 this["HideHiddenMaps"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool assistScoring {
+            get {
+                return ((bool)(this["assistScoring"]));
+            }
+            set {
+                this["assistScoring"] = value;
             }
         }
     }

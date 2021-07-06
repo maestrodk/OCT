@@ -147,8 +147,9 @@ namespace OverloadClientTool
             this.AutoUpdateCheckBox = new OverloadClientTool.CustomCheckBox();
             this.MainToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.ServerAnnounceOnTrackerCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.ServerAutoSignOffTracker = new OverloadClientTool.CustomCheckBox();
+            this.ServerKeepListed = new OverloadClientTool.CustomCheckBox();
             this.AutoStartCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.AssistScoringCheckBox = new OverloadClientTool.CustomCheckBox();
             this.PaneSelectServer = new System.Windows.Forms.Button();
             this.PaneServer = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -1721,24 +1722,24 @@ namespace OverloadClientTool
             this.ServerAnnounceOnTrackerCheckBox.UseVisualStyleBackColor = false;
             this.ServerAnnounceOnTrackerCheckBox.CheckedChanged += new System.EventHandler(this.ServerAnnounceOnTrackerCheckBox_CheckedChanged);
             // 
-            // ServerAutoSignOffTracker
+            // ServerKeepListed
             // 
-            this.ServerAutoSignOffTracker.AutoSize = true;
-            this.ServerAutoSignOffTracker.BackColor = System.Drawing.Color.LightSlateGray;
-            this.ServerAutoSignOffTracker.CheckBackColor = System.Drawing.Color.Gray;
-            this.ServerAutoSignOffTracker.Checked = true;
-            this.ServerAutoSignOffTracker.CheckForeColor = System.Drawing.Color.Black;
-            this.ServerAutoSignOffTracker.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.ServerAutoSignOffTracker.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ServerAutoSignOffTracker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ServerAutoSignOffTracker.Location = new System.Drawing.Point(32, 163);
-            this.ServerAutoSignOffTracker.Name = "ServerAutoSignOffTracker";
-            this.ServerAutoSignOffTracker.Size = new System.Drawing.Size(194, 17);
-            this.ServerAutoSignOffTracker.TabIndex = 5;
-            this.ServerAutoSignOffTracker.Text = "Remove inactive server from tracker";
-            this.MainToolTip.SetToolTip(this.ServerAutoSignOffTracker, "Select this to remove the server from tracker when it isn\'t running");
-            this.ServerAutoSignOffTracker.UseVisualStyleBackColor = false;
-            this.ServerAutoSignOffTracker.CheckedChanged += new System.EventHandler(this.ServerAutoSignOffTracker_CheckedChanged);
+            this.ServerKeepListed.AutoSize = true;
+            this.ServerKeepListed.BackColor = System.Drawing.Color.LightSlateGray;
+            this.ServerKeepListed.CheckBackColor = System.Drawing.Color.Gray;
+            this.ServerKeepListed.Checked = true;
+            this.ServerKeepListed.CheckForeColor = System.Drawing.Color.Black;
+            this.ServerKeepListed.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.ServerKeepListed.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ServerKeepListed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ServerKeepListed.Location = new System.Drawing.Point(32, 163);
+            this.ServerKeepListed.Name = "ServerKeepListed";
+            this.ServerKeepListed.Size = new System.Drawing.Size(158, 17);
+            this.ServerKeepListed.TabIndex = 5;
+            this.ServerKeepListed.Text = "Keep server listed on tracker";
+            this.MainToolTip.SetToolTip(this.ServerKeepListed, "Select this to remove the server from tracker when it isn\'t running");
+            this.ServerKeepListed.UseVisualStyleBackColor = false;
+            this.ServerKeepListed.CheckedChanged += new System.EventHandler(this.ServerAutoSignOffTracker_CheckedChanged);
             // 
             // AutoStartCheckBox
             // 
@@ -1749,7 +1750,7 @@ namespace OverloadClientTool
             this.AutoStartCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.AutoStartCheckBox.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
             this.AutoStartCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AutoStartCheckBox.Location = new System.Drawing.Point(31, 186);
+            this.AutoStartCheckBox.Location = new System.Drawing.Point(32, 209);
             this.AutoStartCheckBox.Name = "AutoStartCheckBox";
             this.AutoStartCheckBox.Size = new System.Drawing.Size(97, 17);
             this.AutoStartCheckBox.TabIndex = 5;
@@ -1757,6 +1758,26 @@ namespace OverloadClientTool
             this.MainToolTip.SetToolTip(this.AutoStartCheckBox, "Select this to start the server when OCT starts");
             this.AutoStartCheckBox.UseVisualStyleBackColor = false;
             this.AutoStartCheckBox.CheckedChanged += new System.EventHandler(this.AutoStartCheckBox_CheckedChanged);
+            // 
+            // AssistScoringCheckBox
+            // 
+            this.AssistScoringCheckBox.AutoSize = true;
+            this.AssistScoringCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.AssistScoringCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.AssistScoringCheckBox.Checked = true;
+            this.AssistScoringCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.AssistScoringCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.AssistScoringCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AssistScoringCheckBox.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            this.AssistScoringCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AssistScoringCheckBox.Location = new System.Drawing.Point(32, 186);
+            this.AssistScoringCheckBox.Name = "AssistScoringCheckBox";
+            this.AssistScoringCheckBox.Size = new System.Drawing.Size(87, 17);
+            this.AssistScoringCheckBox.TabIndex = 5;
+            this.AssistScoringCheckBox.Text = "Assist scoring";
+            this.MainToolTip.SetToolTip(this.AssistScoringCheckBox, "Enable/disable assist scoring");
+            this.AssistScoringCheckBox.UseVisualStyleBackColor = false;
+            this.AssistScoringCheckBox.CheckedChanged += new System.EventHandler(this.AssistScoringCheckBox_CheckedChanged);
             // 
             // PaneSelectServer
             // 
@@ -1784,7 +1805,8 @@ namespace OverloadClientTool
             this.PaneServer.Controls.Add(this.panel1);
             this.PaneServer.Controls.Add(this.ServerRunning);
             this.PaneServer.Controls.Add(this.ServerAnnounceOnTrackerCheckBox);
-            this.PaneServer.Controls.Add(this.ServerAutoSignOffTracker);
+            this.PaneServer.Controls.Add(this.ServerKeepListed);
+            this.PaneServer.Controls.Add(this.AssistScoringCheckBox);
             this.PaneServer.Controls.Add(this.AutoStartCheckBox);
             this.PaneServer.Location = new System.Drawing.Point(1732, 393);
             this.PaneServer.Margin = new System.Windows.Forms.Padding(0);
@@ -2417,7 +2439,7 @@ namespace OverloadClientTool
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox ServerTrackerUrl;
         private CustomCheckBox ServerAnnounceOnTrackerCheckBox;
-        private CustomCheckBox ServerAutoSignOffTracker;
+        private CustomCheckBox ServerKeepListed;
         private CustomCheckBox AutoStartCheckBox;
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.Label label14;
@@ -2471,6 +2493,7 @@ namespace OverloadClientTool
         private System.Windows.Forms.Button StartServerButtonMain;
         private System.Windows.Forms.LinkLabel OverloadMaps;
         private System.Windows.Forms.LinkLabel OTLTracker;
+        private CustomCheckBox AssistScoringCheckBox;
     }
 }
 

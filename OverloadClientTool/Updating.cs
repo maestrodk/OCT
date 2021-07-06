@@ -54,7 +54,7 @@ namespace OverloadClientTool
 
                     return release;
                 }
-                catch (Exception ex)
+                catch
                 {
                 }
 
@@ -161,6 +161,10 @@ namespace OverloadClientTool
 
                 // Do graceful shutdown before launching the updater.
                 Main_FormClosing(null, null);
+                this.Dispose();
+
+                // Example executable: "C:\\Users\\Mick\\AppData\\Local\\Temp\\tmp5816.tmp_OCT_Update\\OverloadClientTool.exe"
+                // Example arguments: -install "C:\Users\Mick\Source\Repos\maestrodk\OCT\OverloadClientTool\bin\Debug"
 
                 appStart.Start();
 

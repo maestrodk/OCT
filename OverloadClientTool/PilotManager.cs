@@ -343,7 +343,7 @@ namespace OverloadClientTool
                         if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"), Path.Combine(pilotsPath, newPilot + ".xprefsmod"));
                         if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xscores"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xscores"), Path.Combine(pilotsPath, newPilot + ".xscores"));
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         // Try to roll back changes.
                         try { File.Delete(Path.Combine(pilotsPath, newPilot + ".xconfig")); } catch { }

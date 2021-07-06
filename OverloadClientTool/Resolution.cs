@@ -23,7 +23,7 @@ namespace OverloadClientTool
                 Aspect = a;
             }
 
-            public string ToString()
+            public override string ToString()
             {
                 return $"{Width}x{Height}";
             }

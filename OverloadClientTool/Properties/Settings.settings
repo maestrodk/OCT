@@ -83,8 +83,8 @@
     <Setting Name="isServer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="signOff" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+    <Setting Name="keepListed" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="IncludeMP" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -96,6 +96,9 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="HideHiddenMaps" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="assistScoring" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>

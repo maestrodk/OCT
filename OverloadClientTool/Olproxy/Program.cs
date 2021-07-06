@@ -25,9 +25,6 @@ server -> client {"max":8,"name":"MMMatch","uid":"91a3526c-ea24-4b02-8e43-448862
 
 namespace olproxy
 {
-    using MJDict = Dictionary<string, object>;
-    using MJList = List<object>;
-
     class ProxyPeerInfo
     {
 // not yet used
@@ -46,18 +43,13 @@ namespace olproxy
         private IPEndPoint[] BroadcastEndpoints;
         private HashSet<IPAddress> LocalIPSet;
         private IPAddress FirstLocalIP;
-        private Dictionary<BroadcastPeerId, int> fakePids;
         private UdpClient localSocket, remoteSocket;
         private BroadcastHandler<ProxyPeerInfo> bcast;
-        private int myPid;
         private Dictionary<IPEndPoint, DateTime> remotePeers;
         private IPAddress curLocalIP;
         private DateTime curLocalIPLast;
         private bool debug;
         private ConsoleSpinner spinner = new ConsoleSpinner();
-        private MJDict config;
-        private HttpClient http = new HttpClient();
-        private int playerCount = 0;
 
 #if NETCORE
         [DllImport("libc", SetLastError = true)]
@@ -91,22 +83,11 @@ namespace olproxy
             Debug.WriteLine(s);
         }
 
-        Task TrackerPost(string queryString, MJDict body)
-        {
-            return http.PostAsync(config["trackerBaseUrl"] + "/api" + queryString,
-                new StringContent(MiniJson.ToString(body), Encoding.UTF8, "application/json")
-            ).ContinueWith(c => {
-                if (c.Exception != null)
-                    AddMessage("Warning: Exception occurred while attempting to communicate with the tracker: " + c.Exception.ToString());
-            }, TaskContinuationOptions.OnlyOnFaulted);
-        }
-
         void InitInterfaces()
         {
             LocalIPSet = new HashSet<IPAddress>();
             List<IPEndPoint> eps = new List<IPEndPoint>();
             FirstLocalIP = null;
-            fakePids = new Dictionary<BroadcastPeerId, int>();
             foreach (NetworkInterface intf in NetworkInterface.GetAllNetworkInterfaces())
             {
                 var ipProps = intf.GetIPProperties();
@@ -174,50 +155,15 @@ namespace olproxy
             localSocket.Client.Bind(new IPEndPoint(IPAddress.Any, broadcastPort));
         }
 
-        async Task Done()
-        {
-            if (config.TryGetValue("isServer", out object isServer) && (bool)isServer && config.TryGetValue("signOff", out object signOff) && (bool)signOff)
-            {
-                AddMessage("Signing off tracker at " + config["trackerBaseUrl"]);
-
-                string trackerMessage = $"{config["serverName"]}: Sign off.";
-                OverloadClientTool.OverloadClientToolApplication.TrackerMessage(trackerMessage);
-
-                await TrackerPost("?online=false", new MJDict { });
-            }
-        }
-
         void Init()
         {
             InitInterfaces();
             InitSockets();
 
             bcast = new BroadcastHandler<ProxyPeerInfo>() { AddMessage = AddMessageDebug};
-            myPid = System.Diagnostics.Process.GetCurrentProcess().Id;
             remotePeers = new Dictionary<IPEndPoint, DateTime>();
             curLocalIP = null;
             curLocalIPLast = DateTime.MinValue;
-
-            AppDomain.CurrentDomain.ProcessExit += async (object sender, EventArgs e) => { await Done(); };
-            Console.CancelKeyPress += async (object sender, ConsoleCancelEventArgs e) => { await Done(); };
-
-            {
-                if (config.TryGetValue("isServer", out object isServer) && (bool)isServer) {
-                    AddMessage("Signing on tracker at " + config["trackerBaseUrl"]);
-
-                    TrackerPost("?online=true", new MJDict {
-                        {"name", config["serverName"] },
-                        {"notes", config["notes"] },
-                        {"numPlayers", 0 },
-                        {"maxNumPlayers", 0 },
-                        {"map", "" },
-                        {"mode", "" }
-                    });
-
-                    string trackerMessage = $"{config["serverName"]}: Sign on.";
-                    OverloadClientTool.OverloadClientToolApplication.TrackerMessage(trackerMessage);
-                }
-            }
         }
 
         UdpClient CreateUDPBroadcastSocket()
@@ -361,30 +307,11 @@ namespace olproxy
                     {
                         matchData = ".";
                     }
-
-                    string trackerMessage = $"{config["serverName"]}:  {createJoin} {matchData}.";
-                    OverloadClientTool.OverloadClientToolApplication.TrackerMessage(trackerMessage);
                 }
                 else
                 spinner.Spin();
                 bcast.Send(msgStr, remoteSocket.Client, destEndPoint, pktPid, isNew);
                 return;
-            } else if (msg.IsMatch && isNew) {
-                if (config.TryGetValue("isServer", out object isServer) && (bool)isServer) {
-                    var matchInfo = new MatchInfo(msgStr);
-                    if (playerCount != matchInfo.PlayerCount) {
-                        playerCount = matchInfo.PlayerCount;
-
-                        AddMessage("Updating tracker at " + config["trackerBaseUrl"] + " with player count of " + matchInfo.PlayerCount + ".");
-
-                        TrackerPost("", new MJDict {
-                            { "numPlayers", matchInfo.PlayerCount }
-                        });
-
-                        string trackerMessage = $"{config["serverName"]}: Update players={matchInfo.PlayerCount}";
-                        OverloadClientTool.OverloadClientToolApplication.TrackerMessage(trackerMessage);
-                    }
-                }
             }
 
             if (!remotePeers.Any())
@@ -416,10 +343,48 @@ namespace olproxy
             bcast.SendMulti(msgStr, remoteSocket.Client, remotePeers.Keys, pktPid, isNew);
         }
 
+        private void ProcessPingPacket(byte[] packetData, IPEndPoint senderEndPoint)
+        {
+            byte[] outBuf = new byte[packetData.Length];
+            Array.Copy(packetData, outBuf, packetData.Length);
+
+            // calculate incoming hash
+            Array.Copy(BitConverter.GetBytes(0), 0, outBuf, 8, 4);
+            uint srcHash = xxHash.CalculateHash(outBuf);
+
+            if (srcHash != BitConverter.ToUInt32(packetData, 8)) // ignore packet with invalid hash
+                return;
+
+            Array.Copy(BitConverter.GetBytes((int)-2), 0, outBuf, 0, 4);
+            if (outBuf.Length >= 19 + 4)
+                Array.Copy(BitConverter.GetBytes(0), 0, outBuf, 19, 4); // version
+            if (outBuf.Length >= 19 + 4 + 4)
+                Array.Copy(BitConverter.GetBytes(255), 0, outBuf, 19 + 4, 4); // status, 255 = unknown
+
+            // calculate outgoing hash
+            Array.Copy(BitConverter.GetBytes(0), 0, outBuf, 8, 4);
+            uint hash = xxHash.CalculateHash(outBuf);
+            Array.Copy(BitConverter.GetBytes(hash), 0, outBuf, 8, 4);
+
+            remoteSocket.Send(outBuf, outBuf.Length, senderEndPoint);
+        }
+
+        public static bool IsPingPacket(byte[] packetData)
+        {
+            return BitConverter.ToInt32(packetData, 0) == -1;
+        }
+
+
         void ProcessRemotePacket(IPEndPoint endPoint, byte[] packet)
         {
             if (LocalIPSet.Contains(endPoint.Address))
                 return;
+
+            if (IsPingPacket(packet))
+            {
+                ProcessPingPacket(packet, endPoint);
+                return;
+            }
 
             // store peer last seen
             remotePeers[endPoint] = DateTime.UtcNow;
@@ -453,31 +418,7 @@ namespace olproxy
                 AddMessage(debug ? peer.lastNewSeq + " Received match " + ticketType + " " + msg.ticket +
                     ", forward to " + String.Join(", ", BroadcastEndpoints.Select(x => x.ToString())) + " pid " + pid :
                     "Received " + (msg.IsRequest ? msg.HasPrivateMatchData ? "create " : "join " : "") + "match " + ticketType +
-                    (matchInfo != null ? " (" + matchInfo + ")" : ""));
-
-                if (msg.IsRequest && config.TryGetValue("isServer", out object isServer) && (bool)isServer && matchInfo != null)
-                {
-                    AddMessage("Updating tracker at " + config["trackerBaseUrl"] + " with the match information.");
-
-                    TrackerPost("", new MJDict {
-                        {"name", config["serverName"] },
-                        {"notes", config["notes"] },
-                        {"numPlayers", matchInfo.PlayerCount },
-                        {"maxNumPlayers", matchInfo.PrivateMatchData.MaxPlayers },
-                        {"map", matchInfo.PrivateMatchData.LevelName },
-                        {"mode", matchInfo.PrivateMatchData.GameMode },
-                        {"gameStarted", DateTime.UtcNow.ToString("o") }
-                    });
-
-                    string trackerMessage = $"{config["serverName"]}: ";
-                    trackerMessage += $"Mode={matchInfo.PrivateMatchData.GameMode}";
-                    trackerMessage += $", players={matchInfo.PlayerCount}";
-                    trackerMessage += $", min={matchInfo.PrivateMatchData.MinPlayers}";
-                    trackerMessage += $", max={matchInfo.PrivateMatchData.MaxPlayers}";
-                    trackerMessage += ", jip=" + (matchInfo.PrivateMatchData.JIPEnabled ? "yes." : "no.");
-
-                    OverloadClientTool.OverloadClientToolApplication.TrackerMessage(trackerMessage);
-                }
+                    (matchInfo != null ? " (" + matchInfo + ")" : ""));               
             }
             else
                 spinner.Spin();
@@ -520,15 +461,12 @@ namespace olproxy
                 {
                     try
                     {
-                        var task = Task.Run(async () => await Done());
-                        task.Wait();
+                        DestroySockets();
+                        KillFlag = false;
                     }
                     catch
                     {
                     }
-
-                    DestroySockets();
-                    KillFlag = false;
                     return;
                 }                
 
@@ -558,47 +496,12 @@ namespace olproxy
             }
         }
 
-        void LoadConfig()
-        {
-            string configFile = "appsettings.json";            
-            try
-            {
-                config = MiniJson.Parse(File.ReadAllText(configFile)) as MJDict;
-            }
-            catch (FileNotFoundException)
-            {
-                config = new MJDict();
-            }
-        }
-
-        // Mastro: This saves a JSON config file to a Olproxy application data folder (needed if no external Olproxy.exe is found).
-        public bool SaveConfig(Dictionary<string, object> saveConfig, string alternateFileName = null)
-        {
-            string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Olproxy");
-            if (Directory.Exists(configPath) == false) Directory.CreateDirectory(configPath);
-
-            string configFileName = Path.Combine(configPath, "appsettings.json");
-            string jsonString = MiniJson.ToString(saveConfig);
-
-            try { File.WriteAllText(configFileName, jsonString); } catch { return false; }
-
-            // Optionally update the appsettings.json placed in the same directory as Olproxy.exe.
-            if (!String.IsNullOrEmpty(alternateFileName))  try { File.WriteAllText(alternateFileName, jsonString); } catch { return false; }            
-
-            return true;
-        }
-
-        // -- Maestro: Added 2nd parameter initConfig to set config from OCT.
-        public void Run(string[] args, Dictionary<string, object> initConfig = null)
+        public void Run(string[] args)
         {
             foreach (var arg in args)
             {
                 if (arg == "-v") debug = true;
             }
-
-            // -- Maestro: See if we should use supplied config (OST/OCT) or load from disk (standalone).
-            if (initConfig == null) LoadConfig();
-            else config = initConfig;
 
             Init();
             MainLoop();

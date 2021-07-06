@@ -31,10 +31,9 @@ namespace OverloadClientTool
         // Shortcut link for Startupt folde (if file exists the autostart is enabled).
         string shortcutFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "OverLoad Client Tool AutoStart.lnk");
 
-        private bool autoStart = false;
+        //private bool autoStart = false;
 
         // This matches MJDict defined on Olproxy.
-        private Dictionary<string, object> olproxyConfig = new Dictionary<string, object>();
         private Dictionary<string, object> olmodConfig = new Dictionary<string, object>();
 
         private olproxy.Program olproxyTask = null;
@@ -88,7 +87,7 @@ namespace OverloadClientTool
 
             foreach (string a in args)
             {
-                if (a.ToLower().Contains("-launched")) autoStart = true;
+                //if (a.ToLower().Contains("-launched")) autoStart = true;
             }
 
             // Init map manager.
@@ -168,16 +167,10 @@ namespace OverloadClientTool
             // Init Olmod manager.
             olmodManager = new OlmodManager(Info, Error);
 
-            // Create properties for Olproxy thread (will be update from TextBox fields whenever Olproxy is restarted).
-            olproxyConfig.Add("isServer", false);
-            olproxyConfig.Add("signOff", false);
-            olproxyConfig.Add("trackerBaseUrl", "");
-            olproxyConfig.Add("serverName", "");
-            olproxyConfig.Add("notes", "");
-
             // Create properties for Olmod .
             olmodConfig.Add("isServer", false);
             olmodConfig.Add("keepListed", false);
+            olmodConfig.Add("assistScoring", false);
             olmodConfig.Add("trackerBaseUrl", "");
             olmodConfig.Add("serverName", "");
             olmodConfig.Add("notes", "");
@@ -284,7 +277,7 @@ namespace OverloadClientTool
 
             // Announce ourself.
             Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen.");
-            Info("Olproxy 0.3.0 by Arne de Bruijn.");
+            Info("Olproxy 0.3.1 by Arne de Bruijn.");
 
             // Start background monitor for periodic log updates.
             backgroundThread = new Thread(ActivityBackgroundMonitor);
@@ -360,15 +353,19 @@ namespace OverloadClientTool
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!trayExitClick && (e.CloseReason != CloseReason.WindowsShutDown))
+            if ((sender != null) && (e != null))
             {
-                // User didn't use the tray exit option and Windows isn't doing a shutdown either.
-                // Only continue exit if user is helding down the shift button.
-                if (!(Control.ModifierKeys == Keys.Shift))
+                // Not a forced shutdown.
+                if (!trayExitClick && (e.CloseReason != CloseReason.WindowsShutDown))
                 {
-                    e.Cancel = true;
-                    WindowState = FormWindowState.Minimized;
-                    return;
+                    // User didn't use the tray exit option and Windows isn't doing a shutdown either.
+                    // Only continue exit if user is helding down the shift button.
+                    if (!(Control.ModifierKeys == Keys.Shift))
+                    {
+                        e.Cancel = true;
+                        WindowState = FormWindowState.Minimized;
+                        return;
+                    }
                 }
             }
 
@@ -384,21 +381,6 @@ namespace OverloadClientTool
             {
                 MessageBox.Show($"Unable to save settings: {ex.Message}", "Error");
             }
-
-            // Update external Olproxy config (at this point the config has been setup for either server or client).
-            try
-            {
-                GetOlproxyConfigClient();
-
-                if (OverloadClientToolApplication.ValidFileName(OlproxyExecutable.Text))
-                {
-                    string olproxyConfigFileName = Path.Combine(Path.GetDirectoryName(OlproxyExecutable.Text), "appsettings.json");
-                    olproxyTask.SaveConfig(olproxyConfig, olproxyConfigFileName);
-                }
-            }
-            catch
-            {
-            }
         }
 
         // This saves a JSON config file to the Olmod application folder.
@@ -413,11 +395,13 @@ namespace OverloadClientTool
 
             string configFileName = Path.Combine(path, "olmodsettings.json");
 
-            foreach (KeyValuePair<string, object> kvp in olproxyConfig)
-            {
-                if (kvp.Key != "signOff") olmodConfig[kvp.Key] = kvp.Value;
-                else olmodConfig["keepListed"] = ((bool)kvp.Value == false) ? true : false;
-            }
+            // Set parameters.
+            olmodConfig["isServer"] = OlmodIsServer;
+            olmodConfig["keepListed"] = OlmodIsServer;
+            olmodConfig["assistScoring"] = OlmodAssistScoring;
+            olmodConfig["trackerBaseUrl"] = OlmodServerTrackerBaseUrl;
+            olmodConfig["serverName"] = OlmodServerName;
+            olmodConfig["notes"] = OlmodServerNotes;           
 
             string jsonString = MiniJson.ToString(olmodConfig);
 
@@ -576,7 +560,7 @@ namespace OverloadClientTool
                             break;
                     }
                 }
-                catch (Exception ex)
+                catch 
                 {
 
                 }
@@ -620,7 +604,7 @@ namespace OverloadClientTool
                     UseDLCLocationCheckBox.Enabled = true;
                 }
             }
-            catch (Exception ex)
+            catch 
             {
                 LogDebugMessage(String.Format($""));
 
@@ -635,33 +619,7 @@ namespace OverloadClientTool
         /// </summary>
         private void OlproxyThread()
         {
-            olproxyTask.Run(new string[1] { OverloadArgs.Text }, olproxyConfig);
-        }
-
-        /// <summary> 
-        /// Refresh and return Olproxy configuration object.
-        /// </summary>
-        /// <returns>A dictionary object matching MJDict</returns>
-        private Dictionary<string, object> GetOlproxyConfigClient()
-        {
-            // Overload dedicated server.
-            olproxyConfig["isServer"] = false;
-            olproxyConfig["signOff"] = false;
-            olproxyConfig["trackerBaseUrl"] = "";
-            olproxyConfig["serverName"] = "";
-            olproxyConfig["notes"] = "";
-            return olproxyConfig;
-        }
-
-        private Dictionary<string, object> GetOlproxyConfigServer()
-        {
-            // Overload dedicated server.
-            olproxyConfig["isServer"] = ServerAnnounceOnTrackerCheckBox.Checked;
-            olproxyConfig["signOff"] = ServerAutoSignOffTracker.Checked;
-            olproxyConfig["trackerBaseUrl"] = ServerTrackerUrl.Text;
-            olproxyConfig["serverName"] = ServerTrackerName.Text;
-            olproxyConfig["notes"] = ServerTrackerNotes.Text;
-            return olproxyConfig;
+            olproxyTask.Run(new string[1] { OverloadArgs.Text });
         }
 
         /// <summary>
@@ -977,7 +935,6 @@ namespace OverloadClientTool
                     // Only start Olproxy if server isn't running.
                     if (serverProcessId == 0)
                     {
-                        GetOlproxyConfigClient();
                         LaunchOlproxy();
                     }
                 }
@@ -993,22 +950,14 @@ namespace OverloadClientTool
             LogDebugMessage($"LaunchOlproxy()");
 
             string name = "";
-
-            // Update external Olproxy config (at this point the config has been setup for either server or client).
             try
             {
                 if (OverloadClientToolApplication.ValidFileName(OlproxyExecutable.Text))
                 {
-                    LogDebugMessage($"Saving Olproxy config");
-
                     name = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
-                    string olproxyConfigFileName = Path.Combine(Path.GetDirectoryName(OlproxyExecutable.Text), "appsettings.json");
-                    olproxyTask.SaveConfig(olproxyConfig, olproxyConfigFileName);
                 }
                 else
                 {
-                    LogDebugMessage($"Using default Olproxy name");
-
                     name = "olproxy";
                 }
             }
@@ -1510,14 +1459,11 @@ namespace OverloadClientTool
         {
             MapsListBox.Items.Clear();
 
-            bool anyHidden = false;
-
             foreach (KeyValuePair<string, OverloadMap> map in mapManager.SortedMaps)
             {
                 if (map.Value.IsLocal && !(HideHiddenMaps && map.Value.Hidden))
                 {
                     MapsListBox.Items.Add(map.Value);
-                    if (map.Value.Hidden) anyHidden = true;
                 }
             }
 
@@ -2190,33 +2136,37 @@ namespace OverloadClientTool
         #region Server
         private void ServerTrackerName_TextChanged(object sender, EventArgs e)
         {
-            OlproxyServerName = ServerTrackerName.Text;
+            OlmodServerName = ServerTrackerName.Text;
         }
 
         private void ServerTrackerUrl_TextChanged(object sender, EventArgs e)
         {
-            OlproxyTrackerBaseUrl = ServerTrackerUrl.Text;
+            OlmodServerTrackerBaseUrl = ServerTrackerUrl.Text;
         }
 
         private void ServerAnnounceOnTrackerCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            OlproxyIsServer = ServerAnnounceOnTrackerCheckBox.Checked;
+            OlmodIsServer = ServerAnnounceOnTrackerCheckBox.Checked;
         }
 
         private void ServerAutoSignOffTracker_CheckedChanged(object sender, EventArgs e)
         {
-            OlproxySignOff = ServerAutoSignOffTracker.Checked;
+            OlmodServerKeepListed = ServerKeepListed.Checked;
         }
 
         private void AutoStartCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            // SetAutoStartup(AutoStartCheckBox.Checked);
             AutoStartServer = AutoStartCheckBox.Checked;
+        }
+
+        private void AssistScoringCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            OlmodAssistScoring = AssistScoringCheckBox.Checked;
         }
 
         private void ServerTrackerNotes_TextChanged(object sender, EventArgs e)
         {
-            OlproxyNotes = ServerTrackerNotes.Text;
+            OlmodServerNotes = ServerTrackerNotes.Text;
         }
         #endregion
 
@@ -2258,7 +2208,6 @@ namespace OverloadClientTool
                 {
                     if (UseOlproxy)
                     {
-                        GetOlproxyConfigClient();
                         LaunchOlproxy();
                     }
                 }
@@ -2279,7 +2228,6 @@ namespace OverloadClientTool
 
             if (UseOlproxy)
             {
-                GetOlproxyConfigServer();
                 LaunchOlproxy(true);
             }
 
@@ -2297,7 +2245,7 @@ namespace OverloadClientTool
                     return;
                 }
 
-                // Needed since Olmod 0.2.7+ 
+                // Save settings for Olmod.
                 SetOlmodSettings();
             }
             else
@@ -2584,7 +2532,7 @@ namespace OverloadClientTool
                     ListViewItem item = ServersListView.Items[i];
                     item.SubItems[5].Text = pinger.PingTime(item.SubItems[0].Text);
                 }
-                catch (Exception ex)
+                catch 
                 {
                 }
             }
@@ -2701,11 +2649,6 @@ namespace OverloadClientTool
             int i = ServersListView.SelectedIndices[0];
             string ip = ServersListView.Items[i].SubItems[0].Text;
 
-            int z = 0;
-            int a = 1;
-            
-            // Used when testing application exception handling.
-            //a = a / z;
 
             Clipboard.SetText(ip);
 

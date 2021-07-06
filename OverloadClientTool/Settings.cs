@@ -60,31 +60,31 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.OlproxyPath = value; }
         }
 
-        public string OlproxyTrackerBaseUrl
+        public string OlmodServerTrackerBaseUrl
         {
             get { return Properties.Settings.Default.trackerBaseUrl; }
             set { Properties.Settings.Default.trackerBaseUrl = value; }
         }
 
-        public string OlproxyNotes
+        public string OlmodServerNotes
         {
             get { return Properties.Settings.Default.notes; }
             set { Properties.Settings.Default.notes = value; }
         }
 
-        public string OlproxyServerName
+        public string OlmodServerName
         {
             get { return Properties.Settings.Default.serverName; }
             set { Properties.Settings.Default.serverName = value; }
         }
 
-        public bool OlproxySignOff
+        public bool OlmodServerKeepListed
         {
-            get { return Properties.Settings.Default.signOff; }
-            set { Properties.Settings.Default.signOff = value; }
+            get { return Properties.Settings.Default.keepListed; }
+            set { Properties.Settings.Default.keepListed = value; }
         }
 
-        public bool OlproxyIsServer
+        public bool OlmodIsServer
         {
             get { return Properties.Settings.Default.isServer; }
             set { Properties.Settings.Default.isServer = value; }
@@ -203,6 +203,11 @@ namespace OverloadClientTool
             get { return Properties.Settings.Default.AutostartServer; }
             set { Properties.Settings.Default.AutostartServer = value; }
         }
+        public bool OlmodAssistScoring
+        {
+            get { return Properties.Settings.Default.assistScoring; }
+            set { Properties.Settings.Default.assistScoring = value; }
+        }
 
         public bool StartMinimized
         {
@@ -289,7 +294,7 @@ namespace OverloadClientTool
                         }
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     //logger?.ErrorLogMessage(String.Format($"Exception while checking STEAM registry key: {ex.Message}"));
                 }
@@ -308,7 +313,7 @@ namespace OverloadClientTool
                         }
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     //logger?.ErrorLogMessage(String.Format($"Exception while checking GOG registry key: {ex.Message}"));
                 }
@@ -327,7 +332,7 @@ namespace OverloadClientTool
                         }
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     //logger?.ErrorLogMessage(String.Format($"Exception while checking DVD registry key: {ex.Message}"));
                 }
@@ -441,11 +446,12 @@ namespace OverloadClientTool
             UseTrayIcon.Checked = TrayInsteadOfTaskBar;
 
             // Server settings.
-            ServerTrackerName.Text = OlproxyServerName;
-            ServerTrackerNotes.Text = OlproxyNotes;
-            ServerTrackerUrl.Text = OlproxyTrackerBaseUrl;
-            ServerAutoSignOffTracker.Checked = OlproxySignOff;
-            ServerAnnounceOnTrackerCheckBox.Checked = OlproxyIsServer;
+            ServerTrackerName.Text = OlmodServerName;
+            ServerTrackerNotes.Text = OlmodServerNotes;
+            ServerTrackerUrl.Text = OlmodServerTrackerBaseUrl;
+            ServerKeepListed.Checked = OlmodServerKeepListed;
+            ServerAnnounceOnTrackerCheckBox.Checked = OlmodIsServer;
+            AssistScoringCheckBox.Checked = OlmodAssistScoring;
 
             // Check for change to new theme selection.
             if (String.IsNullOrEmpty(ActiveThemeName)) ActiveThemeName = "Dark Gray";

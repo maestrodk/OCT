@@ -99,7 +99,6 @@ namespace OverloadClientTool
                     int count = serverInfoContainer.Count;
 
 
-                    int i = 0;
                     foreach (KeyValuePair<string, object> kvp in dict)
                     {
                         Server server = new Server();

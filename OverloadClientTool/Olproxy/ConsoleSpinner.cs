@@ -5,9 +5,9 @@ namespace olproxy
     class ConsoleSpinner
     {
         private static readonly char[] spinChars = new[] { '/', '-', '\\', '|' };
-        private int idx;
-        public DateTime LastUpdateTime;
-        public bool Active;
+        //private int idx;
+        public DateTime LastUpdateTime = DateTime.UtcNow;
+        public bool Active = false;
 
         public void Spin()
         {
@@ -15,10 +15,12 @@ namespace olproxy
             return;
             // -- Maestro change end --
 
+            /*
             Console.Write(new[] { spinChars[idx], '\r' });
             idx = (idx + 1) % spinChars.Length;
             LastUpdateTime = DateTime.UtcNow;
             Active = true;
+            */
         }
 
         public void Clear()
@@ -27,8 +29,8 @@ namespace olproxy
             return;
             // -- Maestro change end  --
 
-            Console.Write(" \r");
-            Active = false;
+            //Console.Write(" \r");
+            //Active = false;
         }
     }
 }

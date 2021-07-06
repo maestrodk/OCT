@@ -90,7 +90,7 @@ namespace OverloadClientTool
                     if (!String.IsNullOrEmpty(LocalZipFileName)) return LocalZipFileName.EndsWith(MapHiddenMarker);
                     if (!String.IsNullOrEmpty(LocalDLCZipFileName)) return LocalDLCZipFileName.EndsWith(MapHiddenMarker);
                 }
-                catch (Exception ex)
+                catch
                 {
 
                 }
@@ -511,7 +511,7 @@ namespace OverloadClientTool
                                         mapType = level.type;
                                         mapTypes += " " + mapType.ToUpper();
                                     }
-                                    catch (Exception ex)
+                                    catch
                                     {
                                     }
                                 }

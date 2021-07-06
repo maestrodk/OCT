@@ -76,7 +76,6 @@ namespace OverloadClientTool
                 LogDebugMessage("Removing installation files in " + args[1] + ".", debugFileName);
                 RemoveInstallDirectory(args[1], debugFileName);
                 LogDebugMessage("Finished cleanup.", debugFileName);
-
             }
 
             string applicationFolder = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
@@ -89,8 +88,8 @@ namespace OverloadClientTool
 
                 IEnumerable<XElement> settings =
                     from p in oldDoc.Descendants("setting")
-                    where p.Parent.Name == "OverloadClientTool.Properties.Settings"
-                    select p;
+                      where p.Parent.Name == "OverloadClientTool.Properties.Settings"
+                        select p;
 
                 // <setting name = "OverloadPath" serializeAs = "String">
                 //   <Value />
@@ -116,8 +115,8 @@ namespace OverloadClientTool
 
             try
             {
+                // Execute main UI loop.
                 octMain = new OCTMain(args, debugFileName, oldSettings);
-
                 LogDebugMessage("Starting OCT main UI thread.", debugFileName);
                 Application.Run(octMain);
                 LogDebugMessage("OCT main exit - shutting UI thread.", debugFileName);
@@ -166,7 +165,7 @@ namespace OverloadClientTool
             OverloadClientApplication.OCTErrorForm errorForm = new OverloadClientApplication.OCTErrorForm(message);
             OCTMain.ApplyThemeToControl(errorForm, octMain.theme);
 
-            errorForm.BackColor = lastTheme.InactivePaneButtonBackColor;
+            errorForm.BackColor = octMain.theme.InactivePaneButtonBackColor;
             errorForm.StartPosition = FormStartPosition.CenterParent;
 
             errorForm.ShowDialog();
@@ -199,6 +198,7 @@ namespace OverloadClientTool
 
         public static void TrackerMessage(string message)
         {
+            /*
             if (false)
             {
                 string trackerFileFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"C:\ProgramData\Revival");
@@ -208,10 +208,12 @@ namespace OverloadClientTool
                 message = String.IsNullOrEmpty(message) ? Environment.NewLine : message + Environment.NewLine;
                 try { System.IO.File.AppendAllText(trackerFileName, String.Format($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}")); } catch { }
             }
+            */
         }
 
         public static void DedicatedServerTrackerMessage(string message)
         {
+            /*
             if (false)
             {
                 string trackerFileFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"C:\ProgramData\Revival");
@@ -221,6 +223,7 @@ namespace OverloadClientTool
                 message = String.IsNullOrEmpty(message) ? Environment.NewLine : message + Environment.NewLine;
                 try { System.IO.File.AppendAllText(trackerFileName, String.Format($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}")); } catch { }
             }
+            */
         }
 
         public static bool ValidFileName(string fileName, bool mustExist = false)

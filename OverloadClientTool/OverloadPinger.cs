@@ -58,7 +58,7 @@ namespace OverloadClientTool
                 remoteSocket.Send(packet, packet.Length);
 
                 Task<UdpReceiveResult> result;
-                await Task.WhenAny(result = remoteSocket.ReceiveAsync(), Task.Delay(1000));
+                await Task.WhenAny(result = remoteSocket.ReceiveAsync(), Task.Delay(5000));
 
                 if (result.IsCompleted == false)
                 {
@@ -96,7 +96,7 @@ namespace OverloadClientTool
                 {
                     if (!serverPingResults.ContainsKey(host)) serverPingResults.Add(host, "9999");
                 }
-                catch (Exception ex)
+                catch
                 {
                 }
             }
@@ -111,7 +111,7 @@ namespace OverloadClientTool
                 {
                     if (Active && serverPingResults.ContainsKey(host)) result = serverPingResults[host];
                 }
-                catch (Exception ex)
+                catch
                 {
                 }
                 return result;
@@ -170,7 +170,7 @@ namespace OverloadClientTool
 
                         taskList = null;
                     }
-                    catch (Exception ex)
+                    catch
                     {
                     }
                 }
