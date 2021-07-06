@@ -301,7 +301,7 @@ namespace OverloadClientTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://olproxy.otl.gg")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://tracker.otl.gg")]
         public string trackerBaseUrl {
             get {
                 return ((string)(this["trackerBaseUrl"]));

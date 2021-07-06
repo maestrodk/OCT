@@ -393,7 +393,7 @@ namespace OverloadClientTool
             path = Path.GetDirectoryName(path);
             if (Directory.Exists(path) == false) return;
 
-            string configFileName = Path.Combine(path, "olmodsettings.json");
+            string configFileName = Path.Combine(path, "olmodSettings.json");
 
             // Set parameters.
             olmodConfig["isServer"] = OlmodIsServer;
