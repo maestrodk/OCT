@@ -233,8 +233,13 @@ namespace OverloadClientTool
                     {
                         File.Move(Path.Combine(pilotsPath, pilotSelected + ".xconfig"), Path.Combine(pilotsPath, newPilot + ".xconfig"));
                         File.Move(Path.Combine(pilotsPath, pilotSelected + ".xprefs"), Path.Combine(pilotsPath, newPilot + ".xprefs"));
+
                         if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"))) File.Move(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"), Path.Combine(pilotsPath, newPilot + ".xprefsmod"));
                         if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xscores"))) File.Move(Path.Combine(pilotsPath, pilotSelected + ".xscores"), Path.Combine(pilotsPath, newPilot + ".xscores"));
+
+                        // Added OCT 2.2.1.0 Created issue 1 by Derhass
+                        if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".extendedconfig"))) File.Move(Path.Combine(pilotsPath, pilotSelected + ".extendedconfig"), Path.Combine(pilotsPath, newPilot + ".extendedconfig"));
+                        if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xconfigmod"))) File.Move(Path.Combine(pilotsPath, pilotSelected + ".xconfigmod"), Path.Combine(pilotsPath, newPilot + ".xconfigmod"));
                     }
                     catch (Exception ex)
                     {
@@ -244,7 +249,11 @@ namespace OverloadClientTool
                         try { File.Move(Path.Combine(pilotsPath, newPilot + ".xprefsmod"), Path.Combine(pilotsPath, pilotSelected + ".xprefsmod")); } catch { }
                         try { File.Move(Path.Combine(pilotsPath, newPilot + ".xscores"), Path.Combine(pilotsPath, pilotSelected + ".xscores")); } catch { }
 
-                        MessageBox.Show($"Something went wrong during pilot rename (will try to rollback changes): {ex.Message}!");
+                        // Added OCT 2.2.1.0 Created issue 1 by Derhass
+                        try { File.Move(Path.Combine(pilotsPath, newPilot + ".extendedconfig"), Path.Combine(pilotsPath, pilotSelected + ".extendedconfig")); } catch { }
+                        try { File.Move(Path.Combine(pilotsPath, newPilot + ".xconfigmod"), Path.Combine(pilotsPath, pilotSelected + ".xconfigmod")); } catch { }
+
+                        MessageBox.Show($"Something went wrong during pilot rename (will attempt to rollback changes): {ex.Message}!");
                     }
                     finally
                     {
@@ -285,6 +294,10 @@ namespace OverloadClientTool
                     if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xprefs"))) File.Delete(Path.Combine(pilotsPath, pilotSelected + ".xprefs"));
                     if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"))) File.Delete(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"));
                     if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xscores"))) File.Delete(Path.Combine(pilotsPath, pilotSelected + ".xscores"));
+
+                    // Added OCT 2.2.1.0 Created issue 1 by Derhass
+                    if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".extendedconfig"))) File.Delete(Path.Combine(pilotsPath, pilotSelected + ".extendedconfig"));
+                    if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xconfigmod"))) File.Delete(Path.Combine(pilotsPath, pilotSelected + ".xconfigmod"));
                 }
                 catch (Exception ex)
                 {
@@ -337,11 +350,14 @@ namespace OverloadClientTool
 
                     try
                     {
-
                         if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xconfig"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xconfig"), Path.Combine(pilotsPath, newPilot + ".xconfig"));
                         if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xprefs"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xprefs"), Path.Combine(pilotsPath, newPilot + ".xprefs"));
                         if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xprefsmod"), Path.Combine(pilotsPath, newPilot + ".xprefsmod"));
                         if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xscores"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xscores"), Path.Combine(pilotsPath, newPilot + ".xscores"));
+
+                        // Added OCT 2.2.1.0 Created issue 1 by Derhass
+                        if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".extendedconfig"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".extendedconfig"), Path.Combine(pilotsPath, newPilot + ".extendedconfig"));
+                        if (File.Exists(Path.Combine(pilotsPath, pilotSelected + ".xconfigmod"))) File.Copy(Path.Combine(pilotsPath, pilotSelected + ".xconfigmod"), Path.Combine(pilotsPath, newPilot + ".xconfigmod"));
                     }
                     catch
                     {
@@ -350,6 +366,10 @@ namespace OverloadClientTool
                         try { File.Delete(Path.Combine(pilotsPath, newPilot + ".xprefs")); } catch { }
                         try { File.Delete(Path.Combine(pilotsPath, newPilot + ".xprefsmod")); } catch { }
                         try { File.Delete(Path.Combine(pilotsPath, newPilot + ".xscores")); } catch { }
+
+                        // Added OCT 2.2.1.0 Created issue 1 by Derhass
+                        try { File.Delete(Path.Combine(pilotsPath, newPilot + ".extendedconfig")); } catch { }
+                        try { File.Delete(Path.Combine(pilotsPath, newPilot + ".xconfigmod")); } catch { }
 
                         MessageBox.Show("Something went wrong during pilot rename (will try to rollback changes)!");
                     }
@@ -413,10 +433,17 @@ namespace OverloadClientTool
                         string prefsmod = Path.Combine(pilotsPath, pilot + ".xprefsmod");
                         string scores = Path.Combine(pilotsPath, pilot + ".xscores");
 
+
                         FileInfo fiXconfig = new FileInfo(xconfig);
                         FileInfo fiPrefs = new FileInfo(prefs);
                         FileInfo fiScores = new FileInfo(scores);
                         FileInfo fiMod = new FileInfo(prefsmod);
+
+                        // Added OCT 2.2.1.0 Created issue 1 by Derhass
+                        string extendedconfig = Path.Combine(pilotsPath, pilot + ".extendedconfig");
+                        string xconfigmod = Path.Combine(pilotsPath, pilot + ".xconfigmod");
+                        FileInfo fiExtendedconfig = new FileInfo(extendedconfig);
+                        FileInfo fiXconfigmod = new FileInfo(xconfigmod);
 
                         byte[] buffer;
 
@@ -445,6 +472,21 @@ namespace OverloadClientTool
                         {
                             buffer = File.ReadAllBytes(prefsmod);
                             var zipArchiveEntry = archive.CreateEntry(Path.GetFileName(prefsmod), CompressionLevel.Optimal);
+                            using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
+                        }
+
+                        // Added OCT 2.2.1.0 Created issue 1 by Derhass
+                        if (fiExtendedconfig.Exists)
+                        {
+                            buffer = File.ReadAllBytes(extendedconfig);
+                            var zipArchiveEntry = archive.CreateEntry(Path.GetFileName(extendedconfig), CompressionLevel.Optimal);
+                            using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
+                        }
+
+                        if (fiXconfigmod.Exists)
+                        {
+                            buffer = File.ReadAllBytes(xconfigmod);
+                            var zipArchiveEntry = archive.CreateEntry(Path.GetFileName(xconfigmod), CompressionLevel.Optimal);
                             using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(buffer, 0, buffer.Length);
                         }
                     }
