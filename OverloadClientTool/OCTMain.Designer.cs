@@ -78,7 +78,7 @@ namespace OverloadClientTool
             this.UseDLCLocationCheckBox = new OverloadClientTool.CustomCheckBox();
             this.AutoUpdateMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.OnlyUpdateExistingMapsCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.MapUnhideAllButton = new System.Windows.Forms.Button();
+            this.UnhideAllMapsButton = new System.Windows.Forms.Button();
             this.UnhideCMMapsButton = new System.Windows.Forms.Button();
             this.HideCMMapsButton = new System.Windows.Forms.Button();
             this.UnhideSPMapsButton = new System.Windows.Forms.Button();
@@ -292,7 +292,7 @@ namespace OverloadClientTool
             // MapUpdateButton
             // 
             this.MapUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapUpdateButton.Location = new System.Drawing.Point(301, 285);
+            this.MapUpdateButton.Location = new System.Drawing.Point(284, 295);
             this.MapUpdateButton.Name = "MapUpdateButton";
             this.MapUpdateButton.Size = new System.Drawing.Size(106, 24);
             this.MapUpdateButton.TabIndex = 9;
@@ -330,7 +330,7 @@ namespace OverloadClientTool
             // 
             this.UpdatingMaps.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.UpdatingMaps.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-            this.UpdatingMaps.Location = new System.Drawing.Point(411, 289);
+            this.UpdatingMaps.Location = new System.Drawing.Point(394, 299);
             this.UpdatingMaps.Name = "UpdatingMaps";
             this.UpdatingMaps.Size = new System.Drawing.Size(18, 18);
             this.UpdatingMaps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -421,7 +421,7 @@ namespace OverloadClientTool
             // MapDeleteButton
             // 
             this.MapDeleteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapDeleteButton.Location = new System.Drawing.Point(162, 54);
+            this.MapDeleteButton.Location = new System.Drawing.Point(257, 42);
             this.MapDeleteButton.Name = "MapDeleteButton";
             this.MapDeleteButton.Size = new System.Drawing.Size(71, 23);
             this.MapDeleteButton.TabIndex = 14;
@@ -432,7 +432,7 @@ namespace OverloadClientTool
             // MapHideButton
             // 
             this.MapHideButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapHideButton.Location = new System.Drawing.Point(162, 25);
+            this.MapHideButton.Location = new System.Drawing.Point(257, 17);
             this.MapHideButton.Name = "MapHideButton";
             this.MapHideButton.Size = new System.Drawing.Size(71, 23);
             this.MapHideButton.TabIndex = 14;
@@ -608,7 +608,7 @@ namespace OverloadClientTool
             this.PaneMaps.Controls.Add(this.AutoUpdateMapsCheckBox);
             this.PaneMaps.Controls.Add(this.UpdatingMaps);
             this.PaneMaps.Controls.Add(this.OnlyUpdateExistingMapsCheckBox);
-            this.PaneMaps.Controls.Add(this.MapUnhideAllButton);
+            this.PaneMaps.Controls.Add(this.UnhideAllMapsButton);
             this.PaneMaps.Controls.Add(this.MapHideButton);
             this.PaneMaps.Controls.Add(this.UnhideCMMapsButton);
             this.PaneMaps.Controls.Add(this.HideCMMapsButton);
@@ -627,7 +627,7 @@ namespace OverloadClientTool
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(321, 177);
+            this.label17.Location = new System.Drawing.Point(337, 174);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(195, 13);
             this.label17.TabIndex = 3;
@@ -637,7 +637,7 @@ namespace OverloadClientTool
             // 
             this.OverloadMaps.AutoSize = true;
             this.OverloadMaps.LinkColor = System.Drawing.Color.Blue;
-            this.OverloadMaps.Location = new System.Drawing.Point(322, 144);
+            this.OverloadMaps.Location = new System.Drawing.Point(338, 141);
             this.OverloadMaps.Name = "OverloadMaps";
             this.OverloadMaps.Size = new System.Drawing.Size(137, 13);
             this.OverloadMaps.TabIndex = 17;
@@ -659,9 +659,9 @@ namespace OverloadClientTool
             // 
             this.panel7.Controls.Add(this.label7);
             this.panel7.Controls.Add(this.OnlineMapJsonUrl);
-            this.panel7.Location = new System.Drawing.Point(17, 270);
+            this.panel7.Location = new System.Drawing.Point(12, 279);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(278, 47);
+            this.panel7.Size = new System.Drawing.Size(269, 47);
             this.panel7.TabIndex = 18;
             // 
             // label7
@@ -679,7 +679,7 @@ namespace OverloadClientTool
             this.MapsPanel.Controls.Add(this.MapsListBox);
             this.MapsPanel.Location = new System.Drawing.Point(16, 25);
             this.MapsPanel.Name = "MapsPanel";
-            this.MapsPanel.Size = new System.Drawing.Size(138, 236);
+            this.MapsPanel.Size = new System.Drawing.Size(228, 249);
             this.MapsPanel.TabIndex = 19;
             // 
             // MapsListBox
@@ -691,7 +691,7 @@ namespace OverloadClientTool
             this.MapsListBox.FormattingEnabled = true;
             this.MapsListBox.Location = new System.Drawing.Point(1, 1);
             this.MapsListBox.Name = "MapsListBox";
-            this.MapsListBox.Size = new System.Drawing.Size(136, 234);
+            this.MapsListBox.Size = new System.Drawing.Size(226, 247);
             this.MapsListBox.TabIndex = 0;
             this.MapsListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.MapsListBox_DrawItem);
             this.MapsListBox.SelectedIndexChanged += new System.EventHandler(this.MapsListBox_SelectedIndexChanged);
@@ -705,7 +705,7 @@ namespace OverloadClientTool
             this.CMMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.CMMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.CMMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CMMapsCheckBox.Location = new System.Drawing.Point(324, 243);
+            this.CMMapsCheckBox.Location = new System.Drawing.Point(340, 240);
             this.CMMapsCheckBox.Name = "CMMapsCheckBox";
             this.CMMapsCheckBox.Size = new System.Drawing.Size(135, 17);
             this.CMMapsCheckBox.TabIndex = 5;
@@ -722,7 +722,7 @@ namespace OverloadClientTool
             this.SPMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.SPMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.SPMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SPMapsCheckBox.Location = new System.Drawing.Point(324, 220);
+            this.SPMapsCheckBox.Location = new System.Drawing.Point(340, 217);
             this.SPMapsCheckBox.Name = "SPMapsCheckBox";
             this.SPMapsCheckBox.Size = new System.Drawing.Size(111, 17);
             this.SPMapsCheckBox.TabIndex = 5;
@@ -739,7 +739,7 @@ namespace OverloadClientTool
             this.MPMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.MPMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.MPMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MPMapsCheckBox.Location = new System.Drawing.Point(324, 197);
+            this.MPMapsCheckBox.Location = new System.Drawing.Point(340, 194);
             this.MPMapsCheckBox.Name = "MPMapsCheckBox";
             this.MPMapsCheckBox.Size = new System.Drawing.Size(101, 17);
             this.MPMapsCheckBox.TabIndex = 5;
@@ -756,7 +756,7 @@ namespace OverloadClientTool
             this.HideUnofficialMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.HideUnofficialMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.HideUnofficialMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HideUnofficialMapsCheckBox.Location = new System.Drawing.Point(324, 63);
+            this.HideUnofficialMapsCheckBox.Location = new System.Drawing.Point(340, 60);
             this.HideUnofficialMapsCheckBox.Name = "HideUnofficialMapsCheckBox";
             this.HideUnofficialMapsCheckBox.Size = new System.Drawing.Size(192, 17);
             this.HideUnofficialMapsCheckBox.TabIndex = 5;
@@ -773,7 +773,7 @@ namespace OverloadClientTool
             this.HideHiddenMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.HideHiddenMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.HideHiddenMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HideHiddenMapsCheckBox.Location = new System.Drawing.Point(324, 108);
+            this.HideHiddenMapsCheckBox.Location = new System.Drawing.Point(340, 105);
             this.HideHiddenMapsCheckBox.Name = "HideHiddenMapsCheckBox";
             this.HideHiddenMapsCheckBox.Size = new System.Drawing.Size(139, 17);
             this.HideHiddenMapsCheckBox.TabIndex = 5;
@@ -791,7 +791,7 @@ namespace OverloadClientTool
             this.UseDLCLocationCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.UseDLCLocationCheckBox.Enabled = false;
             this.UseDLCLocationCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(324, 86);
+            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(340, 83);
             this.UseDLCLocationCheckBox.Name = "UseDLCLocationCheckBox";
             this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(199, 17);
             this.UseDLCLocationCheckBox.TabIndex = 5;
@@ -808,7 +808,7 @@ namespace OverloadClientTool
             this.AutoUpdateMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.AutoUpdateMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.AutoUpdateMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(324, 17);
+            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(340, 14);
             this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
             this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(146, 17);
             this.AutoUpdateMapsCheckBox.TabIndex = 5;
@@ -825,7 +825,7 @@ namespace OverloadClientTool
             this.OnlyUpdateExistingMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.OnlyUpdateExistingMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.OnlyUpdateExistingMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(324, 39);
+            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(340, 36);
             this.OnlyUpdateExistingMapsCheckBox.Name = "OnlyUpdateExistingMapsCheckBox";
             this.OnlyUpdateExistingMapsCheckBox.Size = new System.Drawing.Size(146, 17);
             this.OnlyUpdateExistingMapsCheckBox.TabIndex = 5;
@@ -834,21 +834,21 @@ namespace OverloadClientTool
             this.OnlyUpdateExistingMapsCheckBox.UseVisualStyleBackColor = false;
             this.OnlyUpdateExistingMapsCheckBox.CheckedChanged += new System.EventHandler(this.OnlyUpdateExistingMapsCheckBox_CheckedChanged);
             // 
-            // MapUnhideAllButton
+            // UnhideAllMapsButton
             // 
-            this.MapUnhideAllButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapUnhideAllButton.Location = new System.Drawing.Point(162, 237);
-            this.MapUnhideAllButton.Name = "MapUnhideAllButton";
-            this.MapUnhideAllButton.Size = new System.Drawing.Size(71, 23);
-            this.MapUnhideAllButton.TabIndex = 14;
-            this.MapUnhideAllButton.Text = "Unhide all";
-            this.MapUnhideAllButton.UseVisualStyleBackColor = true;
-            this.MapUnhideAllButton.Click += new System.EventHandler(this.MapUnhideAllButton_Click);
+            this.UnhideAllMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UnhideAllMapsButton.Location = new System.Drawing.Point(257, 251);
+            this.UnhideAllMapsButton.Name = "UnhideAllMapsButton";
+            this.UnhideAllMapsButton.Size = new System.Drawing.Size(71, 23);
+            this.UnhideAllMapsButton.TabIndex = 14;
+            this.UnhideAllMapsButton.Text = "Unhide all";
+            this.UnhideAllMapsButton.UseVisualStyleBackColor = true;
+            this.UnhideAllMapsButton.Click += new System.EventHandler(this.MapUnhideAllButton_Click);
             // 
             // UnhideCMMapsButton
             // 
             this.UnhideCMMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UnhideCMMapsButton.Location = new System.Drawing.Point(238, 193);
+            this.UnhideCMMapsButton.Location = new System.Drawing.Point(257, 226);
             this.UnhideCMMapsButton.Name = "UnhideCMMapsButton";
             this.UnhideCMMapsButton.Size = new System.Drawing.Size(71, 23);
             this.UnhideCMMapsButton.TabIndex = 14;
@@ -859,7 +859,7 @@ namespace OverloadClientTool
             // HideCMMapsButton
             // 
             this.HideCMMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HideCMMapsButton.Location = new System.Drawing.Point(162, 193);
+            this.HideCMMapsButton.Location = new System.Drawing.Point(257, 151);
             this.HideCMMapsButton.Name = "HideCMMapsButton";
             this.HideCMMapsButton.Size = new System.Drawing.Size(71, 23);
             this.HideCMMapsButton.TabIndex = 14;
@@ -870,7 +870,7 @@ namespace OverloadClientTool
             // UnhideSPMapsButton
             // 
             this.UnhideSPMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UnhideSPMapsButton.Location = new System.Drawing.Point(238, 166);
+            this.UnhideSPMapsButton.Location = new System.Drawing.Point(257, 201);
             this.UnhideSPMapsButton.Name = "UnhideSPMapsButton";
             this.UnhideSPMapsButton.Size = new System.Drawing.Size(71, 23);
             this.UnhideSPMapsButton.TabIndex = 14;
@@ -881,7 +881,7 @@ namespace OverloadClientTool
             // HideSPMapsButton
             // 
             this.HideSPMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HideSPMapsButton.Location = new System.Drawing.Point(162, 166);
+            this.HideSPMapsButton.Location = new System.Drawing.Point(257, 126);
             this.HideSPMapsButton.Name = "HideSPMapsButton";
             this.HideSPMapsButton.Size = new System.Drawing.Size(71, 23);
             this.HideSPMapsButton.TabIndex = 14;
@@ -892,7 +892,7 @@ namespace OverloadClientTool
             // UnhideMPMapsButton
             // 
             this.UnhideMPMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UnhideMPMapsButton.Location = new System.Drawing.Point(238, 139);
+            this.UnhideMPMapsButton.Location = new System.Drawing.Point(257, 176);
             this.UnhideMPMapsButton.Name = "UnhideMPMapsButton";
             this.UnhideMPMapsButton.Size = new System.Drawing.Size(71, 23);
             this.UnhideMPMapsButton.TabIndex = 14;
@@ -903,7 +903,7 @@ namespace OverloadClientTool
             // HideMPMapsButton
             // 
             this.HideMPMapsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HideMPMapsButton.Location = new System.Drawing.Point(162, 139);
+            this.HideMPMapsButton.Location = new System.Drawing.Point(257, 101);
             this.HideMPMapsButton.Name = "HideMPMapsButton";
             this.HideMPMapsButton.Size = new System.Drawing.Size(71, 23);
             this.HideMPMapsButton.TabIndex = 14;
@@ -915,7 +915,7 @@ namespace OverloadClientTool
             // 
             this.MapRefreshButton.Enabled = false;
             this.MapRefreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MapRefreshButton.Location = new System.Drawing.Point(162, 83);
+            this.MapRefreshButton.Location = new System.Drawing.Point(257, 67);
             this.MapRefreshButton.Name = "MapRefreshButton";
             this.MapRefreshButton.Size = new System.Drawing.Size(71, 23);
             this.MapRefreshButton.TabIndex = 14;
@@ -2389,7 +2389,7 @@ namespace OverloadClientTool
         private System.Windows.Forms.Button PilotXPSetButton;
         private System.Windows.Forms.Button ForceUpdateButton;
         private System.Windows.Forms.Button StartStopOlproxyButton;
-        private System.Windows.Forms.Button MapUnhideAllButton;
+        private System.Windows.Forms.Button UnhideAllMapsButton;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel2;

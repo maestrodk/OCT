@@ -1480,8 +1480,8 @@ namespace OverloadClientTool
                 }
             }
 
-            MapUnhideAllButton.Enabled = true; // anyHidden;
-            ApplyThemeToControl(MapUnhideAllButton, theme);
+            UnhideAllMapsButton.Enabled = true; // anyHidden;
+            ApplyThemeToControl(UnhideAllMapsButton, theme);
 
             SetMapButtons();
         }
@@ -1531,6 +1531,7 @@ namespace OverloadClientTool
                 UnhideMPMapsButton.Enabled = false;
                 UnhideSPMapsButton.Enabled = false;
                 UnhideCMMapsButton.Enabled = false;
+                UnhideAllMapsButton.Enabled = false;
 
                 OnlineMapJsonUrl.Enabled = false;
 
@@ -1575,6 +1576,7 @@ namespace OverloadClientTool
                 UnhideMPMapsButton.Enabled = true;
                 UnhideSPMapsButton.Enabled = true;
                 UnhideCMMapsButton.Enabled = true;
+                UnhideAllMapsButton.Enabled = true;
 
                 OnlineMapJsonUrl.Enabled = true;
 

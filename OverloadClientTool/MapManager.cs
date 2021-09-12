@@ -535,10 +535,11 @@ namespace OverloadClientTool
                             if (!getMap)
                             {
                                 newMap.Url = null;
-                                LogMessage($"Skipping online map {mapZipDisplayName}.");
+                                // LogMessage($"Skipping online map {mapZipDisplayName}.");
                             }
 
-                            newMapList.Add(mapZipName.ToLower(), newMap);
+                            // Skip map if already in the list (should not normally happen).
+                            if (!newMapList.ContainsKey(mapZipName.ToLower())) newMapList.Add(mapZipName.ToLower(), newMap);
                         }
                     }
                 }
