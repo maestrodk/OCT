@@ -34,8 +34,6 @@ namespace OverloadClientTool
         // Shortcut link for Startupt folder (if file exists the autostart is enabled).
         string shortcutFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "OverLoad Client Tool AutoStart.lnk");
 
-        //private bool autoStart = false;
-
         // This matches MJDict defined on Olproxy.
         private Dictionary<string, object> olmodConfig = new Dictionary<string, object>();
 
@@ -142,6 +140,9 @@ namespace OverloadClientTool
             // Load user preferences.
             LoadSettings(previousSettings);
 
+            // Reflect auto-startup setting.
+            ToogleAutostartCheckBox.Checked = System.IO.File.Exists(shortcutFileName);
+
             // Init theme listbox.
             AvailableThemesListBox.Items.Clear();
             AvailableThemesListBox.Items.AddRange(Theme.AvailableThemes);
@@ -186,6 +187,11 @@ namespace OverloadClientTool
             OverloadClientToolNotifyIcon.Visible = false;
         }
 
+        private void ToogleAutostartCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SetAutoStartup(ToogleAutostartCheckBox.Checked);
+        }
+
         /// <summary>
         /// Creates or deletes shortcut link to startup OST.
         /// </summary>
@@ -206,7 +212,7 @@ namespace OverloadClientTool
                     myShortcut.TargetPath = shortcutTarget;                 // Shortcut to OverloadServerTool.exe.
                     myShortcut.IconLocation = shortcutTarget + ",0";        // Use default application icon.
                     myShortcut.WorkingDirectory = Application.StartupPath;  // Working directory.
-                    myShortcut.Arguments = "-launched";                     // Parameters sent to OverloadServerTool.exe.
+                    myShortcut.Arguments = "-launched";                     // Parameters sent to OverloadClientTool.exe.
                     myShortcut.Save();                                      // Create shortcut.
 
                     return true;

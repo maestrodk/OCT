@@ -177,6 +177,7 @@ namespace OverloadClientTool
             this.MinimizeOnStartupCheckBox = new OverloadClientTool.CustomCheckBox();
             this.OnlyMinimizeOnClose = new OverloadClientTool.CustomCheckBox();
             this.UseTrayIcon = new OverloadClientTool.CustomCheckBox();
+            this.ToogleAutostartCheckBox = new OverloadClientTool.CustomCheckBox();
             this.PartyModeCheckBox = new OverloadClientTool.CustomCheckBox();
             this.EnableDebugCheckBox = new OverloadClientTool.CustomCheckBox();
             this.AutoUpdateCheckBox = new OverloadClientTool.CustomCheckBox();
@@ -1190,6 +1191,7 @@ namespace OverloadClientTool
             this.PaneOptions.Controls.Add(this.DisplayHelpLink);
             this.PaneOptions.Controls.Add(this.MailLinkLabel);
             this.PaneOptions.Controls.Add(this.DebugFileNameLink);
+            this.PaneOptions.Controls.Add(this.ToogleAutostartCheckBox);
             this.PaneOptions.Controls.Add(this.PartyModeCheckBox);
             this.PaneOptions.Controls.Add(this.EnableDebugCheckBox);
             this.PaneOptions.Controls.Add(this.AutoUpdateCheckBox);
@@ -1933,6 +1935,24 @@ namespace OverloadClientTool
             this.UseTrayIcon.UseVisualStyleBackColor = false;
             this.UseTrayIcon.CheckedChanged += new System.EventHandler(this.UseTrayIcon_CheckedChanged);
             // 
+            // ToogleAutostartCheckBox
+            // 
+            this.ToogleAutostartCheckBox.AutoSize = true;
+            this.ToogleAutostartCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.ToogleAutostartCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.ToogleAutostartCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.ToogleAutostartCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.ToogleAutostartCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ToogleAutostartCheckBox.Location = new System.Drawing.Point(272, 175);
+            this.ToogleAutostartCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            this.ToogleAutostartCheckBox.Name = "ToogleAutostartCheckBox";
+            this.ToogleAutostartCheckBox.Size = new System.Drawing.Size(203, 17);
+            this.ToogleAutostartCheckBox.TabIndex = 5;
+            this.ToogleAutostartCheckBox.Text = "Start OCT when you login to Windows";
+            this.ToogleAutostartCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ToogleAutostartCheckBox.UseVisualStyleBackColor = false;
+            this.ToogleAutostartCheckBox.CheckedChanged += new System.EventHandler(this.ToogleAutostartCheckBox_CheckedChanged);
+            // 
             // PartyModeCheckBox
             // 
             this.PartyModeCheckBox.AutoSize = true;
@@ -2570,6 +2590,7 @@ namespace OverloadClientTool
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox HotkeyStartClient;
         private System.Windows.Forms.Button ClearHotkeyButton;
+        private CustomCheckBox ToogleAutostartCheckBox;
     }
 }
 
