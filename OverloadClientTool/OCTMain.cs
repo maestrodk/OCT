@@ -28,7 +28,10 @@ namespace OverloadClientTool
         // Set a default them (might change when reading settings).
         public Theme theme = Theme.GetDarkGrayTheme;
 
-        // Shortcut link for Startupt folde (if file exists the autostart is enabled).
+        // Keyboard hook to enable hotkeys.
+        public KeyboardHook keyboardHook = null;
+
+        // Shortcut link for Startupt folder (if file exists the autostart is enabled).
         string shortcutFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "OverLoad Client Tool AutoStart.lnk");
 
         //private bool autoStart = false;
@@ -316,7 +319,48 @@ namespace OverloadClientTool
 
             if (AutoStartServer) StartServerButton_Click(null, null);
 
+            // Enable keyboard hook.
+            keyboardHook = new KeyboardHook(true);
+            keyboardHook.KeyDown += KeyboardHook_KeyDown;
+
             LogDebugMessage("Main_Load() done");
+        }
+
+        private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt)
+        {
+            if (HotkeyStartClient.Focused)
+            {
+                string modifiers = "";
+                modifiers += (KeyboardHook.CtrlPressed) ? "<CTRL> + " : "";
+                modifiers += (KeyboardHook.ShiftPressed) ? "<SHIFT> + " : "";
+                modifiers += (KeyboardHook.AltPressed) ? "<ALT> + " : ""; 
+                HotkeyStartClient.Text = modifiers + key.ToString();
+                StartClientHotkeyString = HotkeyStartClient.Text;
+            }
+            else
+            {
+                string modifiers = "";
+                modifiers += (KeyboardHook.CtrlPressed) ? "<CTRL> + " : "";
+                modifiers += (KeyboardHook.ShiftPressed) ? "<SHIFT> + " : "";
+                modifiers += (KeyboardHook.AltPressed) ? "<ALT> + " : "";
+
+                if ((modifiers + key.ToString()) == HotkeyStartClient.Text)
+                {
+                    if (StartStopButton.Text.Contains("Start"))
+                    {
+                        StartButton_Click(null, null);
+                    }
+                    else
+                    {
+                        StopButton_Click(null, null);
+                    }
+                }
+            }
+        }
+        private void ClearHotkeyButton_Click(object sender, EventArgs e)
+        {
+            HotkeyStartClient.Text = "";
+            StartClientHotkeyString = "";
         }
 
         /// <summary>
@@ -359,12 +403,16 @@ namespace OverloadClientTool
                 if (!trayExitClick && (e.CloseReason != CloseReason.WindowsShutDown))
                 {
                     // User didn't use the tray exit option and Windows isn't doing a shutdown either.
-                    // Only continue exit if user is helding down the shift button.
-                    if (!(Control.ModifierKeys == Keys.Shift))
+                    // Check to see if we should only exit if the Shift key is being pressed.
+                    if (MinimizeOnClose == true)
                     {
-                        e.Cancel = true;
-                        WindowState = FormWindowState.Minimized;
-                        return;
+                        // Only continue exit if user is helding down the shift button.
+                        if (!(Control.ModifierKeys == Keys.Shift))
+                        {
+                            e.Cancel = true;
+                            WindowState = FormWindowState.Minimized;
+                            return;
+                        }
                     }
                 }
             }
@@ -1855,7 +1903,7 @@ namespace OverloadClientTool
                 // Check Olmod version (using GameMod.dll).
                 string olmodVersion = OverloadClientToolApplication.GetFileVersion(OlmodPath.ToLower().Replace("olmod.exe", "GameMod.dll"));
                 olmodVersion = OverloadClientToolApplication.VersionStringFix(olmodVersion);
-                return String.Format($"Olmod {olmodVersion} by Arne de Bruijn.");
+                return String.Format($"Olmod {olmodVersion}");
             }
         }
 
@@ -2133,6 +2181,11 @@ namespace OverloadClientTool
         private void FrameTimeCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             ShowFPS = FrameTimeCheckBox.Checked;
+        }
+
+        private void OnlyMinimizeOnClose_CheckedChanged(object sender, EventArgs e)
+        {
+            MinimizeOnClose = OnlyMinimizeOnClose.Checked;
         }
 
         #region Server
@@ -2570,7 +2623,8 @@ namespace OverloadClientTool
 
         internal void DrawServerListViewBackground(Theme theme)
         {
-            ServersListView.BackColor = theme.PanelBackColor;
+            //ServersListView.BackColor = theme.PanelBackColor;
+            ServersListView.BackColor = theme.InputBackColor;
 
             //Graphics graphics = this.CreateGraphics();
             //Point locationOnForm = ServersListView.FindForm().PointToClient(ServersListView.Parent.PointToScreen(ServersListView.Location));
@@ -2606,7 +2660,8 @@ namespace OverloadClientTool
         {
             if (e.ItemIndex < 0) return;
 
-            Color b = theme.PanelBackColor;
+            //Color b = theme.PanelBackColor;
+            Color b = theme.InputBackColor;
             Color f = theme.PanelForeColor;
 
             if ((ServersListView.SelectedIndices != null) && (ServersListView.SelectedIndices.Count > 0))

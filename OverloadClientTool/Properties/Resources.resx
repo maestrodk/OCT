@@ -139,8 +139,20 @@
   <data name="arrows_light_blue_on_grey_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\arrows light blue on grey 2.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="arrows_light_green_on_white_90EE90_FFFFFF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\arrows light green on white 90EE90 FFFFFF.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrows_on_pink_FF98A8_FFFFFF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\arrows on pink FF98A8 FFFFFF.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrows_orange_on_black_EE6500_000000" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\arrows orange on black EE6500 000000.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="arrows_orange_on_dark_brown_101000_FFC013" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\arrows orange on dark brown 101000 FFC013.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrows_pink_on_white_F55DD5_FFFFFF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\arrows pink on white F55DD5 FFFFFF.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="arrows_white_on_black_000000_D3D3D3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\arrows white on black 000000 D3D3D3.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

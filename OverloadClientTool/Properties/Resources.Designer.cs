@@ -133,9 +133,49 @@ namespace OverloadClientTool.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap arrows_light_green_on_white_90EE90_FFFFFF {
+            get {
+                object obj = ResourceManager.GetObject("arrows_light_green_on_white_90EE90_FFFFFF", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap arrows_on_pink_FF98A8_FFFFFF {
+            get {
+                object obj = ResourceManager.GetObject("arrows_on_pink_FF98A8_FFFFFF", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap arrows_orange_on_black_EE6500_000000 {
+            get {
+                object obj = ResourceManager.GetObject("arrows_orange_on_black_EE6500_000000", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap arrows_orange_on_dark_brown_101000_FFC013 {
             get {
                 object obj = ResourceManager.GetObject("arrows_orange_on_dark_brown_101000_FFC013", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap arrows_pink_on_white_F55DD5_FFFFFF {
+            get {
+                object obj = ResourceManager.GetObject("arrows_pink_on_white_F55DD5_FFFFFF", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

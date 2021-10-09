@@ -103,6 +103,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Install.cs" />
+    <Compile Include="KeyboardHook.cs" />
     <Compile Include="OCTRelease.cs" />
     <Compile Include="OCTErrorForm.cs">
       <SubType>Form</SubType>
@@ -227,6 +228,10 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="arrows orange on black EE6500 000000.gif" />
+    <None Include="arrows pink on white F55DD5 FFFFFF.gif" />
+    <None Include="arrows on pink FF98A8 FFFFFF.gif" />
+    <None Include="arrows light green on white 90EE90 FFFFFF.gif" />
     <Content Include="Overload Client Tool Help.html" />
     <EmbeddedResource Include="Newtonsoft.Json.dll" />
     <None Include="arrows blue on black 000000 07CEFA.gif" />

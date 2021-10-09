@@ -109,7 +109,7 @@ namespace OverloadClientTool
         {
             get
             {
-                return new string[] { "Black", "Dark Gray", "Dark Blue", "Light", "Brown", "Green", "Orange" };
+                return new string[] { "Black", "Dark Gray", "Dark Blue", "Light Blue", "Brown", "Green", "Light Green", "Orange", "Dark Orange", "Pink" };
             }
         }
 
@@ -119,9 +119,12 @@ namespace OverloadClientTool
             if (name == "Dark Gray") return GetDarkGrayTheme;
             if (name == "Dark Blue") return GetDarkBlueTheme;
             if (name == "Green") return GetGreenTheme;
+            if (name == "Light Green") return GetLightGreenTheme;
             if (name == "Brown") return GetBrownTheme;
             if (name == "Orange") return GetOrangeTheme;
-            return GetLightTheme;
+            if (name == "Dark Orange") return GetDarkOrangeTheme;
+            if (name == "Pink") return GetPinkTheme;
+            return GetLightBlueTheme;
         }
 
         /// <summary>
@@ -256,13 +259,13 @@ namespace OverloadClientTool
         /// <summary>
         /// Returns a dark theme color set.
         /// </summary>
-        public static Theme GetLightTheme
+        public static Theme GetLightBlueTheme
         {
             get
             {
                 Theme theme = new Theme();
 
-                theme.Name = "Light";
+                theme.Name = "Light Blue";
                 theme.Description = "A light theme with hints of blue.";
 
                 theme.ButtonEnabledBackColor = Color.FromArgb(200, 200, 200);
@@ -370,6 +373,44 @@ namespace OverloadClientTool
             }
         }
 
+        public static Theme GetLightGreenTheme
+        {
+            get
+            {
+                Theme theme = new Theme();
+
+                theme.Name = "Light Green";
+                theme.Description = "A light theme with hints of green.";
+
+                theme.ButtonEnabledBackColor = Color.FromArgb(200, 200, 200);
+                theme.ButtonEnabledForeColor = Color.FromArgb(64, 64, 64);
+
+                theme.ButtonDisabledBackColor = Color.FromArgb(224, 224, 224);
+                theme.ButtonDisabledForeColor = Color.FromArgb(192, 192, 192);
+
+                theme.InputBackColor = Color.FromArgb(243, 255, 248);
+                theme.InputForeColor = Color.FromArgb(50, 50, 50);
+
+                theme.TextHighlightColor = Color.Green;
+
+                theme.InvalidForeColor = Color.Coral;
+
+                theme.PanelBackColor = Color.White;
+                theme.PanelForeColor = Color.FromArgb(50, 50, 50);
+                theme.PanelInactiveForeColor = Color.FromArgb(64, 160, 96);
+
+                theme.ActivePaneButtonBackColor = Color.LightGreen;
+                theme.ActivePaneButtonForeColor = Color.Black;
+
+                theme.InactivePaneButtonBackColor = Color.White;
+                theme.InactivePaneButtonForeColor = Color.Black;
+
+                theme.IsRunningImage = Properties.Resources.arrows_light_green_on_white_90EE90_FFFFFF;
+
+                return theme;
+            }
+        }
+
         public static Theme GetOrangeTheme
         {
             get
@@ -408,5 +449,81 @@ namespace OverloadClientTool
             }
         }
 
+        public static Theme GetPinkTheme
+        {
+            get
+            {
+                Theme theme = new Theme();
+
+                theme.Name = "Pink";
+                theme.Description = "A pinkish theme.";
+
+                theme.ButtonEnabledBackColor = Color.FromArgb(0xff, 0x98, 0xa8);
+                theme.ButtonEnabledForeColor = Color.FromArgb(139, 64, 64);
+
+                theme.ButtonDisabledBackColor = Color.FromArgb(163, 147, 142);
+                theme.ButtonDisabledForeColor = Color.LightGray;
+
+                theme.InputBackColor = Color.FromArgb(255, 230, 224);
+                theme.InputForeColor = Color.FromArgb(122, 110, 106);
+
+                theme.TextHighlightColor = Color.FromArgb(163, 147, 142);
+
+                theme.InvalidForeColor = Color.Gray;
+
+                theme.PanelBackColor = Color.FromArgb(255, 255, 255);
+                theme.PanelForeColor = theme.ButtonEnabledForeColor;
+
+                theme.PanelInactiveForeColor = Color.FromArgb(122, 110, 106);
+
+                theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
+                theme.ActivePaneButtonForeColor = theme.ButtonEnabledForeColor;
+
+                theme.InactivePaneButtonBackColor = theme.PanelBackColor;
+                theme.InactivePaneButtonForeColor = Color.Gray;
+
+                theme.IsRunningImage = Properties.Resources.arrows_on_pink_FF98A8_FFFFFF;
+
+                return theme;
+            }
+        }
+
+        public static Theme GetDarkOrangeTheme
+        {
+            get
+            {
+                Theme theme = new Theme();
+
+                theme.Name = "Dark Orange";
+                theme.Description = "A orange on black theme.";
+
+                theme.ButtonEnabledBackColor = Color.FromArgb(192, 128, 16);
+                theme.ButtonEnabledForeColor = Color.Black;
+
+                theme.ButtonDisabledBackColor = Color.FromArgb(64, 64, 24);
+                theme.ButtonDisabledForeColor = Color.FromArgb(224, 80, 32);
+
+                theme.InputBackColor = Color.FromArgb(24, 16, 8);
+                theme.InputForeColor = Color.FromArgb(136, 72, 48);
+
+                theme.TextHighlightColor = Color.FromArgb(192, 152, 144);
+
+                theme.InvalidForeColor = Color.Coral;
+
+                theme.PanelBackColor = Color.FromArgb(0, 0, 0);
+                theme.PanelForeColor = theme.InputForeColor;
+                theme.PanelInactiveForeColor = Color.FromArgb(128, 96, 24); // theme.InputForeColor;
+
+                theme.ActivePaneButtonBackColor = theme.ButtonEnabledBackColor;
+                theme.ActivePaneButtonForeColor = theme.ButtonEnabledForeColor;
+
+                theme.InactivePaneButtonBackColor = theme.PanelBackColor;
+                theme.InactivePaneButtonForeColor = theme.InputForeColor;
+
+                theme.IsRunningImage = Properties.Resources.arrows_orange_on_black_EE6500_000000;
+
+                return theme;
+            }
+        }
     }
 }

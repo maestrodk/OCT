@@ -10,15 +10,25 @@ namespace OverloadClientTool
 {
     public class CustomListBox : ListBox
     {
+        public Color ListBackColor { get; set; }
+        public Color ListForeColor { get; set; }
 
-        public CustomListBox()
+        public CustomListBox() : base()
         {
+            // Default colors for the checkbox.
+            ListBackColor = Color.Gray;
+            ListForeColor = Color.SteelBlue;
+
             DrawMode = DrawMode.OwnerDrawFixed;
+            DrawItem += OnDrawItem;
         }
 
-        protected override void OnDrawItem(DrawItemEventArgs e)
+        private void OnDrawItem(object sender, DrawItemEventArgs e)
         {
             const TextFormatFlags flags = TextFormatFlags.Left | TextFormatFlags.VerticalCenter;
+
+            BackColor = ListBackColor;
+            ForeColor = ListForeColor;
 
             if (e.Index >= 0)
             {
@@ -29,8 +39,8 @@ namespace OverloadClientTool
                 // textRect.X += 20;
                 // textRect.Width -= 20;
 
-                string itemText = DesignMode ? "AddressListBox" : Items[e.Index].ToString();
-                TextRenderer.DrawText(e.Graphics, itemText, e.Font, textRect, e.ForeColor, flags);
+                string itemText = DesignMode ? "CustomListBox" : Items[e.Index].ToString();
+                TextRenderer.DrawText(e.Graphics, itemText, e.Font, textRect, ListForeColor, flags);
                 e.DrawFocusRectangle();
             }
         }

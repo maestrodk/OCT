@@ -49,7 +49,7 @@ namespace OverloadClientTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool TrayOnly {
             get {
                 return ((bool)(this["TrayOnly"]));
@@ -417,6 +417,30 @@ namespace OverloadClientTool.Properties {
             }
             set {
                 this["assistScoring"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OnlyMinimizeOnClose {
+            get {
+                return ((bool)(this["OnlyMinimizeOnClose"]));
+            }
+            set {
+                this["OnlyMinimizeOnClose"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StartClientHotkeyString {
+            get {
+                return ((string)(this["StartClientHotkeyString"]));
+            }
+            set {
+                this["StartClientHotkeyString"] = value;
             }
         }
     }

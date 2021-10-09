@@ -42,6 +42,18 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.TrayOnly = value; }
         }
 
+        public bool MinimizeOnClose
+        {
+            get { return Properties.Settings.Default.OnlyMinimizeOnClose; }
+            set { Properties.Settings.Default.OnlyMinimizeOnClose = value; }
+        }
+
+        public string StartClientHotkeyString
+        {
+            get { return Properties.Settings.Default.StartClientHotkeyString; }
+            set { Properties.Settings.Default.StartClientHotkeyString = value; }
+        }
+
         public string OlmodPath
         {
             get { return Properties.Settings.Default.OlmodPath; }
@@ -203,6 +215,7 @@ namespace OverloadClientTool
             get { return Properties.Settings.Default.AutostartServer; }
             set { Properties.Settings.Default.AutostartServer = value; }
         }
+
         public bool OlmodAssistScoring
         {
             get { return Properties.Settings.Default.assistScoring; }
@@ -440,6 +453,8 @@ namespace OverloadClientTool
             AutoUpdateCheckBox.Checked = AutoUpdateOCT;
             EnableDebugCheckBox.Checked = Debugging;
             UseTrayIcon.Checked = TrayIcon;
+            OnlyMinimizeOnClose.Checked = MinimizeOnClose;
+            HotkeyStartClient.Text = StartClientHotkeyString;
 
             AutoStartCheckBox.Checked = AutoStartServer;
             MinimizeOnStartupCheckBox.Checked = StartMinimized;
@@ -503,7 +518,30 @@ namespace OverloadClientTool
                 // The panel is used to create a border around them.
                 control.BackColor = theme.TextHighlightColor;
             }
-            else if ((control is TextBox) || (control is RichTextBox) || (control is ListBox) || (control is ListView) || (control is TabPage) || (control is TreeView))
+            else if (control is CustomListBox)
+            {
+                CustomListBox listBox = control as CustomListBox;
+                Color c = theme.InputBackColor;
+
+                // Set text colors.
+                listBox.ListBackColor = c;
+                listBox.ListForeColor = theme.PanelForeColor;
+
+                listBox.BackColor = c;
+                listBox.ForeColor = theme.PanelForeColor;
+
+                //checkBox.Invalidate();
+            }
+            else if ((control is ListBox) || (control is ListView) ||(control is TreeView))
+            {
+                Color c = theme.InputBackColor;
+
+                // control.BackColor = theme.InputBackColor;
+                // control.ForeColor = (control.Enabled) ? theme.InputForeColor : theme.PanelInactiveForeColor;
+                control.BackColor = c;
+                control.ForeColor = theme.PanelForeColor;
+            }
+            else if ((control is TextBox) || (control is RichTextBox) || (control is TabPage))
             {
                 control.BackColor = theme.InputBackColor;
                 control.ForeColor = (control.Enabled) ? theme.InputForeColor : theme.PanelInactiveForeColor;
