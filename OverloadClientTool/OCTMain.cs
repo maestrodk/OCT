@@ -336,12 +336,24 @@ namespace OverloadClientTool
         {
             if (HotkeyStartClient.Focused)
             {
+                if (key.ToString().Contains("ControlKey") || key.ToString().Contains("AltKey") || key.ToString().Contains("ShiftKey")) ;
+
                 string modifiers = "";
                 modifiers += (KeyboardHook.CtrlPressed) ? "<CTRL> + " : "";
                 modifiers += (KeyboardHook.ShiftPressed) ? "<SHIFT> + " : "";
-                modifiers += (KeyboardHook.AltPressed) ? "<ALT> + " : ""; 
-                HotkeyStartClient.Text = modifiers + key.ToString();
-                StartClientHotkeyString = HotkeyStartClient.Text;
+                modifiers += (KeyboardHook.AltPressed) ? "<ALT> + " : "";
+
+                if (key.ToString().Contains("ControlKey") || key.ToString().Contains("AltKey") || key.ToString().Contains("ShiftKey"))
+                {
+                    if (!String.IsNullOrEmpty(modifiers)) HotkeyStartClient.Text = modifiers + "???";
+                    return;
+                }
+
+                string setKey = modifiers + key.ToString();
+                HotkeyStartClient.Text = setKey;
+
+                // Save if input contains real key sequence only.
+                if (!setKey.Contains("???")) StartClientHotkeyString = setKey;
             }
             else
             {
@@ -363,6 +375,12 @@ namespace OverloadClientTool
                 }
             }
         }
+
+        private void HotkeyStartClient_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
+        }
+
         private void ClearHotkeyButton_Click(object sender, EventArgs e)
         {
             HotkeyStartClient.Text = "";

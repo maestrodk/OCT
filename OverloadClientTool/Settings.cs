@@ -543,8 +543,16 @@ namespace OverloadClientTool
             }
             else if ((control is TextBox) || (control is RichTextBox) || (control is TabPage))
             {
-                control.BackColor = theme.InputBackColor;
-                control.ForeColor = (control.Enabled) ? theme.InputForeColor : theme.PanelInactiveForeColor;
+                if (control is RichTextBox)
+                {
+                    (control as RichTextBox).SelectionColor = theme.ButtonEnabledBackColor;
+                    (control as RichTextBox).SelectionBackColor = theme.ButtonEnabledForeColor;
+                }
+                else
+                {
+                    control.BackColor = theme.InputBackColor;
+                    control.ForeColor = (control.Enabled) ? theme.InputForeColor : theme.PanelInactiveForeColor;
+                }
             }
             else if (control is LinkLabel)
             {

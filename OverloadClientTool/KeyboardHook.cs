@@ -133,7 +133,8 @@ namespace OverloadClientTool
         private int KeybHookProc(int Code, IntPtr W, IntPtr L)
         {
 
-            KBDLLHookStruct LS = new KBDLLHookStruct();
+            // KBDLLHookStruct LS = new KBDLLHookStruct();
+
             if (Code < 0)
             {
                 return CallNextHookEx(HookID, Code, W, L);
