@@ -13,23 +13,19 @@ namespace OverloadClientTool
     public partial class InputBox : Form
     {
         OCTMain parent;
+        Theme theme;
 
         public InputBox()
         {
             InitializeComponent();
         }
 
-        public InputBox(string title, string label, string value, OCTMain parent, Theme theme) // bool dark, Color darkPane, Color lightPane, Color controlDark, Color controlLight)
+        public InputBox(string title, string label, string value, OCTMain parent, Theme theme) 
         {
             InitializeComponent();
 
             this.parent = parent;
-
-            this.BackColor = theme.PanelBackColor;
-            this.ForeColor = theme.PanelForeColor;
-
-            InputData.BackColor = theme.InputBackColor;
-            InputData.ForeColor = theme.InputForeColor;                     
+            this.theme = theme;
 
             DialogResult = DialogResult.Cancel;
             StartPosition = FormStartPosition.CenterParent;
@@ -38,9 +34,9 @@ namespace OverloadClientTool
             InputDataGroupBox.Text = label;
             Result = value;
 
+            InputData.BorderStyle = BorderStyle.FixedSingle;
             InputData.Text = Result;
             InputOKButton.Enabled = (InputData.TextLength > 0);
-
         }
 
         public string Result = "";
@@ -88,6 +84,13 @@ namespace OverloadClientTool
 
         private void InputBox_Load(object sender, EventArgs e)
         {
+            this.BackColor = theme.PanelBackColor;
+            this.ForeColor = theme.PanelForeColor;
+
+            InputData.BackColor = theme.InputBackColor;
+            InputData.ForeColor = theme.InputForeColor;
+
+            OCTMain.ApplyThemeToControl(this, theme);
         }
     }
 }

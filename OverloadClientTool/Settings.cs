@@ -507,7 +507,7 @@ namespace OverloadClientTool
 
             if ((control is GroupBox) || (control.Name == "StatusMessage") || (control.Name == "PilotNameLabel")) 
             {
-                // Set group box title to blue but keep the color of its children to the theme settings.
+                // Set group box title to highlight color but keep the color of its children to the theme settings.
                 control.ForeColor = theme.TextHighlightColor;
 
                 foreach (Control child in control.Controls) child.ForeColor = theme.PanelForeColor;
