@@ -143,7 +143,13 @@ namespace OverloadClientTool
             get { return Properties.Settings.Default.DebugLogging; }
             set { Properties.Settings.Default.DebugLogging = value; }
         }
-        
+
+        public static bool SuppressWinKeys
+        {
+            get { return Properties.Settings.Default.SuppressWinKeys; }
+            set { Properties.Settings.Default.SuppressWinKeys = value; }
+        }
+
         public bool UseOlmod
         {
             get { return Properties.Settings.Default.UseOlmod; }
@@ -234,9 +240,33 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.TrayOnly = value; }
         }
 
+        public string DefaultDisplay
+        {
+            get { return Properties.Settings.Default.DefaultDisplay; }
+            set { Properties.Settings.Default.DefaultDisplay = value; }
+        }
+
+        public string GamingDisplay
+        {
+            get { return Properties.Settings.Default.GamingDisplay; }
+            set { Properties.Settings.Default.GamingDisplay = value; }
+        }
+
         public void SaveSettings()
         {
             Properties.Settings.Default.Save();
+        }
+
+        public bool SwitchGaming
+        {
+            get { return Properties.Settings.Default.SwitchGaming; }
+            set { Properties.Settings.Default.SwitchGaming = value; }
+        }
+
+        public bool SwitchDefault
+        {
+            get { return Properties.Settings.Default.SwitchDefault; }
+            set { Properties.Settings.Default.SwitchDefault = value; }
         }
 
         public void FindOverloadInstall(bool onlyOverload = false, bool showInfo = false)
@@ -460,6 +490,10 @@ namespace OverloadClientTool
             MinimizeOnStartupCheckBox.Checked = StartMinimized;
             UseTrayIcon.Checked = TrayInsteadOfTaskBar;
 
+            DefaultDisplayCheckBox.Checked = SwitchDefault;
+            GamingDisplayCheckBox.Checked = SwitchGaming;
+            SuppressWinKeysCheckBox.Checked = SuppressWinKeys;
+
             // Server settings.
             ServerTrackerName.Text = OlmodServerName;
             ServerTrackerNotes.Text = OlmodServerNotes;
@@ -470,6 +504,7 @@ namespace OverloadClientTool
 
             // Check for change to new theme selection.
             if (String.IsNullOrEmpty(ActiveThemeName)) ActiveThemeName = "Dark Gray";
+
             theme = Theme.GetThemeByName(ActiveThemeName);
         }
         
@@ -541,7 +576,7 @@ namespace OverloadClientTool
                 control.BackColor = c;
                 control.ForeColor = theme.PanelForeColor;
             }
-            else if ((control is TextBox) || (control is RichTextBox) || (control is TabPage))
+            else if ((control is TextBox) || (control is RichTextBox) || (control is TabPage) || (control is CustomComboBox))
             {
                 if (control is RichTextBox)
                 {
@@ -552,6 +587,13 @@ namespace OverloadClientTool
                 {
                     control.BackColor = theme.InputBackColor;
                     control.ForeColor = (control.Enabled) ? theme.InputForeColor : theme.PanelInactiveForeColor;
+                }
+
+                if (control is CustomComboBox)
+                {
+                    (control as CustomComboBox).ComboBackColor = theme.InputBackColor; // theme.ButtonEnabledBackColor;
+                    (control as CustomComboBox).ComboForeColor = theme.InputForeColor; // theme.ButtonEnabledForeColor;
+                    (control as CustomComboBox).BorderColor = theme.InputForeColor;
                 }
             }
             else if (control is LinkLabel)

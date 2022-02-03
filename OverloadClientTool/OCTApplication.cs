@@ -37,10 +37,15 @@ namespace OverloadClientTool
 
                 using (var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
-                    Byte[] assemblyData = new Byte[stream.Length];
-                    stream.Read(assemblyData, 0, assemblyData.Length);
-                    return System.Reflection.Assembly.Load(assemblyData);
+                    if (stream != null)
+                    { 
+                        Byte[] assemblyData = new Byte[stream.Length];
+                        stream.Read(assemblyData, 0, assemblyData.Length);
+                        return System.Reflection.Assembly.Load(assemblyData);
+                    }
                 }
+
+                return null;
             };
 
             Application.ThreadException += new ThreadExceptionEventHandler(MyCommonExceptionHandlingMethod);

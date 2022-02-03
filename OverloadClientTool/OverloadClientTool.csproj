@@ -93,6 +93,9 @@
     <Compile Include="CustomCheckBox.Designer.cs">
       <DependentUpon>CustomCheckBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomListBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -102,6 +105,8 @@
     <Compile Include="CustomTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DisplayManager.cs" />
+    <Compile Include="EnableDisableKeys.cs" />
     <Compile Include="Install.cs" />
     <Compile Include="KeyboardHook.cs" />
     <Compile Include="OCTRelease.cs" />

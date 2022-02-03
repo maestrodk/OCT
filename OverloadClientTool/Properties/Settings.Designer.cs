@@ -12,7 +12,7 @@ namespace OverloadClientTool.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.3.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -61,7 +61,7 @@ namespace OverloadClientTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-singleinstance -nolog")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-singleinstance")]
         public string OverloadParameters {
             get {
                 return ((string)(this["OverloadParameters"]));
@@ -441,6 +441,66 @@ namespace OverloadClientTool.Properties {
             }
             set {
                 this["StartClientHotkeyString"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SwitchDefault {
+            get {
+                return ((bool)(this["SwitchDefault"]));
+            }
+            set {
+                this["SwitchDefault"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SwitchGaming {
+            get {
+                return ((bool)(this["SwitchGaming"]));
+            }
+            set {
+                this["SwitchGaming"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultDisplay {
+            get {
+                return ((string)(this["DefaultDisplay"]));
+            }
+            set {
+                this["DefaultDisplay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GamingDisplay {
+            get {
+                return ((string)(this["GamingDisplay"]));
+            }
+            set {
+                this["GamingDisplay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SuppressWinKeys {
+            get {
+                return ((bool)(this["SuppressWinKeys"]));
+            }
+            set {
+                this["SuppressWinKeys"] = value;
             }
         }
     }

@@ -45,6 +45,10 @@ namespace OverloadClientTool
 
     public class Servers
     {
+        public static OCTMain Parent { get; set; } = null;
+
+        private static Dictionary<string, int> ActiveServers = new Dictionary<string, int>();
+
         private const string realServerListUrl = @"https://olproxy.otl.gg/api";
 
         private const string serverListUrl = @"https://octcache.playoverload.online/octServerList.dat";
@@ -61,13 +65,13 @@ namespace OverloadClientTool
                     {
                         wc.Headers.Add("User-Agent", "Overload Client Tool v2.0.1 - user " + WindowsIdentity.GetCurrent().Name);
                         int seconds = Convert.ToInt32(wc.DownloadString(serverListRequestTimeUrl));
-                        if ((seconds >= 30) && (seconds <= 3600)) return seconds;
+                        if ((seconds >= 15) && (seconds <= 3600)) return seconds;
                     }
                 }
                 catch
                 {
                 }
-                return 720;
+                return 60;
             }
         }
 
@@ -98,7 +102,6 @@ namespace OverloadClientTool
 
                     int count = serverInfoContainer.Count;
 
-
                     foreach (KeyValuePair<string, object> kvp in dict)
                     {
                         Server server = new Server();
@@ -119,6 +122,8 @@ namespace OverloadClientTool
                         servers.Add(server);
                     }
 
+                    UpdateActiveServers(servers);
+
                     return servers;
                 }
                 catch (Exception ex)
@@ -127,6 +132,53 @@ namespace OverloadClientTool
                 }
 
                 return null;
+            }
+        }
+        private static void UpdateActiveServers(List<Server> servers)
+        {
+            List<string> removeList = new List<string>();
+            foreach (KeyValuePair<string, int> activeServer in ActiveServers)
+            {
+                bool remove = true;
+                foreach (Server server in servers)
+                {
+                    if (server.IP == activeServer.Key) remove = false;
+                }
+                if (remove) removeList.Add(activeServer.Key);
+            }
+
+            // Remove servers not in active list.
+            foreach (string ip in removeList) ActiveServers.Remove(ip);
+
+            foreach (Server server in servers)
+            {
+                if (ActiveServers.ContainsKey(server.IP))
+                {
+                    int before = ActiveServers[server.IP];
+                    int now = server.NumPlayers;
+                    int change = now - before;
+
+                    if (change != 0)
+                    {
+                        if (change > 0) Parent.AddNewLogMessage($"Some players have joined server {server.Name}, map {server.Map}");
+                        else Parent.AddNewLogMessage($"One player left server {server.Name}, map {server.Map}");
+                    }
+
+                    // Remove from active list if no players.
+                    if (now == 0)
+                    {
+                        ActiveServers.Remove(server.IP);
+                    }
+                }
+                else
+                {
+                    // Add to active list if player joined.
+                    if (server.NumPlayers > 0)
+                    {
+                        ActiveServers.Add(server.IP, server.NumPlayers);
+                        Parent.AddNewLogMessage($"One player joined {server.Name}, map {server.Map}");
+                    }
+                }
             }
         }
     }

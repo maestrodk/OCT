@@ -109,6 +109,13 @@ namespace OverloadClientTool
             this.UseEmbeddedOlproxy = new OverloadClientTool.CustomCheckBox();
             this.UseOlproxyCheckBox = new OverloadClientTool.CustomCheckBox();
             this.PaneOverload = new System.Windows.Forms.Panel();
+            this.panel15 = new System.Windows.Forms.Panel();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.DefaultMonitorComboBox = new OverloadClientTool.CustomComboBox();
+            this.GamingMonitorComboBox = new OverloadClientTool.CustomComboBox();
+            this.DefaultDisplayCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.GamingDisplayCheckBox = new OverloadClientTool.CustomCheckBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -199,6 +206,7 @@ namespace OverloadClientTool
             this.label26 = new System.Windows.Forms.Label();
             this.CurrentServerMap = new System.Windows.Forms.TextBox();
             this.PaneSelectOnline = new System.Windows.Forms.Button();
+            this.SuppressWinKeysCheckBox = new OverloadClientTool.CustomCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).BeginInit();
@@ -215,6 +223,7 @@ namespace OverloadClientTool
             this.panel10.SuspendLayout();
             this.panel2.SuspendLayout();
             this.PaneOverload.SuspendLayout();
+            this.panel15.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.PaneOlmod.SuspendLayout();
@@ -1216,6 +1225,7 @@ namespace OverloadClientTool
             // PaneOverload
             // 
             this.PaneOverload.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOverload.Controls.Add(this.panel15);
             this.PaneOverload.Controls.Add(this.panel4);
             this.PaneOverload.Controls.Add(this.panel3);
             this.PaneOverload.Controls.Add(this.OverloadLog);
@@ -1227,6 +1237,103 @@ namespace OverloadClientTool
             this.PaneOverload.Name = "PaneOverload";
             this.PaneOverload.Size = new System.Drawing.Size(530, 336);
             this.PaneOverload.TabIndex = 22;
+            // 
+            // panel15
+            // 
+            this.panel15.Controls.Add(this.label21);
+            this.panel15.Controls.Add(this.label19);
+            this.panel15.Controls.Add(this.DefaultMonitorComboBox);
+            this.panel15.Controls.Add(this.GamingMonitorComboBox);
+            this.panel15.Controls.Add(this.DefaultDisplayCheckBox);
+            this.panel15.Controls.Add(this.GamingDisplayCheckBox);
+            this.panel15.Location = new System.Drawing.Point(8, 116);
+            this.panel15.Name = "panel15";
+            this.panel15.Size = new System.Drawing.Size(335, 125);
+            this.panel15.TabIndex = 20;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(11, 60);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(85, 13);
+            this.label21.TabIndex = 7;
+            this.label21.Text = "Overload display";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(11, 15);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(76, 13);
+            this.label19.TabIndex = 7;
+            this.label19.Text = "Default display";
+            // 
+            // DefaultMonitorComboBox
+            // 
+            this.DefaultMonitorComboBox.ComboBackColor = System.Drawing.Color.Empty;
+            this.DefaultMonitorComboBox.ComboBorderColor = System.Drawing.Color.Empty;
+            this.DefaultMonitorComboBox.ComboForeColor = System.Drawing.Color.Empty;
+            this.DefaultMonitorComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.DefaultMonitorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.DefaultMonitorComboBox.FormattingEnabled = true;
+            this.DefaultMonitorComboBox.Location = new System.Drawing.Point(14, 30);
+            this.DefaultMonitorComboBox.Name = "DefaultMonitorComboBox";
+            this.DefaultMonitorComboBox.Size = new System.Drawing.Size(237, 21);
+            this.DefaultMonitorComboBox.TabIndex = 6;
+            this.DefaultMonitorComboBox.SelectedIndexChanged += new System.EventHandler(this.DefaultMonitorComboBox_SelectedIndexChanged);
+            // 
+            // GamingMonitorComboBox
+            // 
+            this.GamingMonitorComboBox.ComboBackColor = System.Drawing.Color.Empty;
+            this.GamingMonitorComboBox.ComboBorderColor = System.Drawing.Color.Empty;
+            this.GamingMonitorComboBox.ComboForeColor = System.Drawing.Color.Empty;
+            this.GamingMonitorComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.GamingMonitorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GamingMonitorComboBox.FormattingEnabled = true;
+            this.GamingMonitorComboBox.Location = new System.Drawing.Point(13, 76);
+            this.GamingMonitorComboBox.Name = "GamingMonitorComboBox";
+            this.GamingMonitorComboBox.Size = new System.Drawing.Size(237, 21);
+            this.GamingMonitorComboBox.TabIndex = 6;
+            this.GamingMonitorComboBox.SelectedIndexChanged += new System.EventHandler(this.GamingMonitorComboBox_SelectedIndexChanged);
+            // 
+            // DefaultDisplayCheckBox
+            // 
+            this.DefaultDisplayCheckBox.AutoSize = true;
+            this.DefaultDisplayCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.DefaultDisplayCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.DefaultDisplayCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.DefaultDisplayCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.DefaultDisplayCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.DefaultDisplayCheckBox.Location = new System.Drawing.Point(261, 32);
+            this.DefaultDisplayCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            this.DefaultDisplayCheckBox.Name = "DefaultDisplayCheckBox";
+            this.DefaultDisplayCheckBox.Size = new System.Drawing.Size(56, 17);
+            this.DefaultDisplayCheckBox.TabIndex = 5;
+            this.DefaultDisplayCheckBox.Text = "Enable";
+            this.DefaultDisplayCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.MainToolTip.SetToolTip(this.DefaultDisplayCheckBox, "If enabled: Set this display as primary when Overload client stops");
+            this.DefaultDisplayCheckBox.UseVisualStyleBackColor = false;
+            this.DefaultDisplayCheckBox.CheckedChanged += new System.EventHandler(this.DefaultDisplayCheckBox_CheckedChanged);
+            // 
+            // GamingDisplayCheckBox
+            // 
+            this.GamingDisplayCheckBox.AutoSize = true;
+            this.GamingDisplayCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.GamingDisplayCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.GamingDisplayCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.GamingDisplayCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.GamingDisplayCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GamingDisplayCheckBox.Location = new System.Drawing.Point(261, 78);
+            this.GamingDisplayCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            this.GamingDisplayCheckBox.Name = "GamingDisplayCheckBox";
+            this.GamingDisplayCheckBox.Size = new System.Drawing.Size(56, 17);
+            this.GamingDisplayCheckBox.TabIndex = 5;
+            this.GamingDisplayCheckBox.Text = "Enable";
+            this.GamingDisplayCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.MainToolTip.SetToolTip(this.GamingDisplayCheckBox, "If enabled: Set this display as primary when Overload client starts");
+            this.GamingDisplayCheckBox.UseVisualStyleBackColor = false;
+            this.GamingDisplayCheckBox.CheckedChanged += new System.EventHandler(this.GamingDisplayCheckBox_CheckedChanged);
             // 
             // panel4
             // 
@@ -1268,7 +1375,7 @@ namespace OverloadClientTool
             // 
             this.OverloadLog.AutoSize = true;
             this.OverloadLog.LinkColor = System.Drawing.Color.Blue;
-            this.OverloadLog.Location = new System.Drawing.Point(19, 171);
+            this.OverloadLog.Location = new System.Drawing.Point(19, 264);
             this.OverloadLog.Name = "OverloadLog";
             this.OverloadLog.Size = new System.Drawing.Size(96, 13);
             this.OverloadLog.TabIndex = 18;
@@ -1282,7 +1389,7 @@ namespace OverloadClientTool
             this.PLayOverloadLinkLabel.ActiveLinkColor = System.Drawing.Color.DeepSkyBlue;
             this.PLayOverloadLinkLabel.AutoSize = true;
             this.PLayOverloadLinkLabel.LinkColor = System.Drawing.Color.Blue;
-            this.PLayOverloadLinkLabel.Location = new System.Drawing.Point(19, 144);
+            this.PLayOverloadLinkLabel.Location = new System.Drawing.Point(19, 244);
             this.PLayOverloadLinkLabel.Name = "PLayOverloadLinkLabel";
             this.PLayOverloadLinkLabel.Size = new System.Drawing.Size(126, 13);
             this.PLayOverloadLinkLabel.TabIndex = 17;
@@ -1371,12 +1478,12 @@ namespace OverloadClientTool
             // 
             this.OlmodReleases.AutoSize = true;
             this.OlmodReleases.LinkColor = System.Drawing.Color.Blue;
-            this.OlmodReleases.Location = new System.Drawing.Point(22, 121);
+            this.OlmodReleases.Location = new System.Drawing.Point(33, 108);
             this.OlmodReleases.Name = "OlmodReleases";
-            this.OlmodReleases.Size = new System.Drawing.Size(211, 13);
+            this.OlmodReleases.Size = new System.Drawing.Size(335, 13);
             this.OlmodReleases.TabIndex = 17;
             this.OlmodReleases.TabStop = true;
-            this.OlmodReleases.Text = "https://github.com/arbruijn/olmod/releases";
+            this.OlmodReleases.Text = "https://github.com/overload-development-community/olmod/releases";
             this.OlmodReleases.VisitedLinkColor = System.Drawing.Color.SteelBlue;
             this.OlmodReleases.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OlmodReleases_LinkClicked);
             // 
@@ -1402,7 +1509,7 @@ namespace OverloadClientTool
             this.FrameTimeCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.FrameTimeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.FrameTimeCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.FrameTimeCheckBox.Location = new System.Drawing.Point(25, 177);
+            this.FrameTimeCheckBox.Location = new System.Drawing.Point(25, 226);
             this.FrameTimeCheckBox.Name = "FrameTimeCheckBox";
             this.FrameTimeCheckBox.Size = new System.Drawing.Size(190, 17);
             this.FrameTimeCheckBox.TabIndex = 5;
@@ -1420,7 +1527,7 @@ namespace OverloadClientTool
             this.UseOlmodGameDirArg.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.UseOlmodGameDirArg.CheckState = System.Windows.Forms.CheckState.Checked;
             this.UseOlmodGameDirArg.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UseOlmodGameDirArg.Location = new System.Drawing.Point(25, 154);
+            this.UseOlmodGameDirArg.Location = new System.Drawing.Point(25, 203);
             this.UseOlmodGameDirArg.Name = "UseOlmodGameDirArg";
             this.UseOlmodGameDirArg.Size = new System.Drawing.Size(308, 17);
             this.UseOlmodGameDirArg.TabIndex = 5;
@@ -1506,6 +1613,7 @@ namespace OverloadClientTool
             this.PaneOptions.Controls.Add(this.DisplayHelpLink);
             this.PaneOptions.Controls.Add(this.MailLinkLabel);
             this.PaneOptions.Controls.Add(this.DebugFileNameLink);
+            this.PaneOptions.Controls.Add(this.SuppressWinKeysCheckBox);
             this.PaneOptions.Controls.Add(this.ToogleAutostartCheckBox);
             this.PaneOptions.Controls.Add(this.PartyModeCheckBox);
             this.PaneOptions.Controls.Add(this.EnableDebugCheckBox);
@@ -1521,9 +1629,9 @@ namespace OverloadClientTool
             this.panel14.Controls.Add(this.label13);
             this.panel14.Controls.Add(this.HotkeyStartClient);
             this.panel14.Controls.Add(this.ClearHotkeyButton);
-            this.panel14.Location = new System.Drawing.Point(263, 208);
+            this.panel14.Location = new System.Drawing.Point(289, 273);
             this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(272, 47);
+            this.panel14.Size = new System.Drawing.Size(246, 47);
             this.panel14.TabIndex = 21;
             // 
             // label13
@@ -1542,14 +1650,14 @@ namespace OverloadClientTool
             this.HotkeyStartClient.Location = new System.Drawing.Point(10, 19);
             this.HotkeyStartClient.Margin = new System.Windows.Forms.Padding(1);
             this.HotkeyStartClient.Name = "HotkeyStartClient";
-            this.HotkeyStartClient.Size = new System.Drawing.Size(186, 20);
+            this.HotkeyStartClient.Size = new System.Drawing.Size(166, 20);
             this.HotkeyStartClient.TabIndex = 1;
             this.HotkeyStartClient.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HotkeyStartClient_KeyPress);
             // 
             // ClearHotkeyButton
             // 
             this.ClearHotkeyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ClearHotkeyButton.Location = new System.Drawing.Point(208, 15);
+            this.ClearHotkeyButton.Location = new System.Drawing.Point(180, 15);
             this.ClearHotkeyButton.Name = "ClearHotkeyButton";
             this.ClearHotkeyButton.Size = new System.Drawing.Size(62, 24);
             this.ClearHotkeyButton.TabIndex = 14;
@@ -2328,6 +2436,25 @@ namespace OverloadClientTool
             this.PaneSelectOnline.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.PaneSelectOnline.UseVisualStyleBackColor = false;
             // 
+            // SuppressWinKeysCheckBox
+            // 
+            this.SuppressWinKeysCheckBox.AutoSize = true;
+            this.SuppressWinKeysCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.SuppressWinKeysCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.SuppressWinKeysCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.SuppressWinKeysCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.SuppressWinKeysCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SuppressWinKeysCheckBox.Location = new System.Drawing.Point(272, 204);
+            this.SuppressWinKeysCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            this.SuppressWinKeysCheckBox.Name = "SuppressWinKeysCheckBox";
+            this.SuppressWinKeysCheckBox.Size = new System.Drawing.Size(130, 17);
+            this.SuppressWinKeysCheckBox.TabIndex = 5;
+            this.SuppressWinKeysCheckBox.Text = "Disable Windows keys";
+            this.SuppressWinKeysCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.MainToolTip.SetToolTip(this.SuppressWinKeysCheckBox, "Disableds the Windows and shortcut Menu keys when the client is running");
+            this.SuppressWinKeysCheckBox.UseVisualStyleBackColor = false;
+            this.SuppressWinKeysCheckBox.CheckedChanged += new System.EventHandler(this.SuppressWinKeysCheckBox_CheckedChanged);
+            // 
             // OCTMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2389,6 +2516,8 @@ namespace OverloadClientTool
             this.panel2.PerformLayout();
             this.PaneOverload.ResumeLayout(false);
             this.PaneOverload.PerformLayout();
+            this.panel15.ResumeLayout(false);
+            this.panel15.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -2592,6 +2721,14 @@ namespace OverloadClientTool
         private System.Windows.Forms.TextBox HotkeyStartClient;
         private System.Windows.Forms.Button ClearHotkeyButton;
         private CustomCheckBox ToogleAutostartCheckBox;
+        private System.Windows.Forms.Panel panel15;
+        private CustomCheckBox DefaultDisplayCheckBox;
+        private CustomCheckBox GamingDisplayCheckBox;
+        private CustomComboBox GamingMonitorComboBox;
+        private CustomComboBox DefaultMonitorComboBox;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label19;
+        private CustomCheckBox SuppressWinKeysCheckBox;
     }
 }
 

@@ -12,7 +12,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="OverloadParameters" Type="System.String" Scope="User">
-      <Value Profile="(Default)">-singleinstance -nolog</Value>
+      <Value Profile="(Default)">-singleinstance</Value>
     </Setting>
     <Setting Name="OlproxyParameters" Type="System.String" Scope="User">
       <Value Profile="(Default)">-v</Value>
@@ -106,6 +106,21 @@
     </Setting>
     <Setting Name="StartClientHotkeyString" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SwitchDefault" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SwitchGaming" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DefaultDisplay" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="GamingDisplay" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SuppressWinKeys" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

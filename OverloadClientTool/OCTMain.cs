@@ -31,6 +31,9 @@ namespace OverloadClientTool
         // Keyboard hook to enable hotkeys.
         public KeyboardHook keyboardHook = null;
 
+        // Low level keyboard hook.
+        EnableDisableKeys enableDisableKeys = new EnableDisableKeys();
+
         // Shortcut link for Startupt folder (if file exists the autostart is enabled).
         string shortcutFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "OverLoad Client Tool AutoStart.lnk");
 
@@ -315,6 +318,29 @@ namespace OverloadClientTool
             // Check for OCT update.
             if (AutoUpdateOCT) UpdateCheck(debugFileName, false);
 
+            // Setup dislays. At this time default values are set 
+            Dictionary<uint, string> displays = DisplayManager.Displays;
+            GamingMonitorComboBox.Items.Clear();
+            DefaultMonitorComboBox.Items.Clear();
+            foreach (KeyValuePair<uint, string> kvp in displays)
+            {
+                DefaultMonitorComboBox.Items.Add(kvp.Value);
+                GamingMonitorComboBox.Items.Add(kvp.Value);
+            }
+
+            if (displays.ContainsValue(DefaultDisplay))
+            {
+                DefaultMonitorComboBox.SelectedItem = DefaultDisplay;
+            }
+
+            if (displays.ContainsValue(GamingDisplay))
+            {
+                GamingMonitorComboBox.SelectedItem = GamingDisplay;
+            }
+
+            // Set parent form for servers to enable logging.
+            Servers.Parent = this;
+
             // Start background pinger.
             pingerThread = new Thread(pinger.PingUpdateThread);
             pingerThread.IsBackground = true;
@@ -329,14 +355,24 @@ namespace OverloadClientTool
             keyboardHook = new KeyboardHook(true);
             keyboardHook.KeyDown += KeyboardHook_KeyDown;
 
+            // Enable low level keyboard hook.
+            enableDisableKeys.KeyHook();
+
             LogDebugMessage("Main_Load() done");
         }
 
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt)
         {
+            string testKey = key.ToString();
+            if ((testKey.ToLower() == "lwin") || (testKey.ToLower() == "apps"))
+            {
+                // Either the Windows key or the Apps (right-click) key.
+                return;
+            }
+
             if (HotkeyStartClient.Focused)
             {
-                if (key.ToString().Contains("ControlKey") || key.ToString().Contains("AltKey") || key.ToString().Contains("ShiftKey")) ;
+                //if (key.ToString().Contains("ControlKey") || key.ToString().Contains("AltKey") || key.ToString().Contains("ShiftKey")) ;
 
                 string modifiers = "";
                 modifiers += (KeyboardHook.CtrlPressed) ? "<CTRL> + " : "";
@@ -444,6 +480,8 @@ namespace OverloadClientTool
             // Shutdown background workers.
             ShutdownTasks();
 
+            CheckDisplaySwitch();
+
             // Save settings for main application.
             try
             {
@@ -453,6 +491,8 @@ namespace OverloadClientTool
             {
                 MessageBox.Show($"Unable to save settings: {ex.Message}", "Error");
             }
+
+            CheckDisplaySwitch();
         }
 
         // This saves a JSON config file to the Olmod application folder.
@@ -504,7 +544,7 @@ namespace OverloadClientTool
             }
         }
 
-        private void AddNewLogMessage(string text, bool error = false)
+        public void AddNewLogMessage(string text, bool error = false)
         {
             this.UIThread(delegate
             {
@@ -809,6 +849,12 @@ namespace OverloadClientTool
                 bool olproxyRunning = IsOlproxyRunning;
                 bool olmodRunning = IsOlmodRunning;
 
+                if (!overloadRunning && !olmodRunning && !shutdown)
+                {
+                    // See if we should switch primary display.
+                    this.UIThread(delegate { CheckDisplaySwitch(); ; });
+                }
+
                 int reqHours = requestInterval / 3600;
                 int reqMins = (requestInterval - (reqHours * 3600)) / 60;
                 int reqSecs = requestInterval - (reqHours * 3600) - (reqMins * 60);
@@ -862,6 +908,7 @@ namespace OverloadClientTool
                     StartStopOlproxyButton.Text = (olproxyRunning) ? "Stop" : "Start";
 
                     trayMenuItemStart.Text = (overloadRunning || olmodRunning) ? "&Stop" : "&Start";
+
 
                     if (StartStopButton.Enabled)
                     {
@@ -997,6 +1044,8 @@ namespace OverloadClientTool
         {
             if (StartStopButton.Text.Contains("Stop"))
             {
+                enableDisableKeys.SuppressWinKeys = false;
+
                 StopButton_Click(null, null);
                 StartStopButton.Text = "Start client";
             }
@@ -1010,6 +1059,18 @@ namespace OverloadClientTool
                         LaunchOlproxy();
                     }
                 }
+
+                // Switch display if enabled and the display exists.
+                if (GamingDisplayCheckBox.Checked)
+                {
+                    string gamingDisplay = GamingMonitorComboBox.SelectedItem as string;
+                    if (DisplayManager.Displays.ContainsValue(gamingDisplay))
+                    {
+                        if (gamingDisplay != DisplayManager.PrimaryDisplay) DisplayManager.SetAsPrimaryMonitor(gamingDisplay);
+                    }
+                }
+
+                enableDisableKeys.SuppressWinKeys = SuppressWinKeys;
 
                 LaunchOverloadClient();
             }
@@ -1205,6 +1266,19 @@ namespace OverloadClientTool
             if ((serverProcessId == 0) && IsOlproxyRunning) ShutdownOlproxy();
         }
 
+        private void CheckDisplaySwitch()
+        {
+            // Switch display if enabled and the display exists.
+            if (DefaultDisplayCheckBox.Checked)
+            {
+                string defaultDisplay = DefaultMonitorComboBox.SelectedItem as string;
+                if (DisplayManager.Displays.ContainsValue(defaultDisplay))
+                {
+                    if (defaultDisplay != DisplayManager.PrimaryDisplay) DisplayManager.SetAsPrimaryMonitor(defaultDisplay);
+                }
+            }
+        }
+
         /// <summary>
         /// Unfocus all controls.
         /// </summary>
@@ -1216,8 +1290,10 @@ namespace OverloadClientTool
         private void StopExitButton_Click(object sender, EventArgs e)
         {
             if (serverProcessId > 0) StartServerButton_Click(null, null);
+
             StopButton_Click(null, null);
             trayExitClick = true;
+            
             Close();
         }
 
@@ -2359,7 +2435,7 @@ namespace OverloadClientTool
             commandLineArgs += " " + OverloadParameters;
             commandLineArgs = commandLineArgs.Trim();
 
-            LogDebugMessage($"Launcing server {exePath} with \"{commandLineArgs}\"");
+            LogDebugMessage($"Launching server {exePath} with \"{commandLineArgs}\"");
 
             // Start server.
             if (name.ToLower().Contains("olmod")) Info($"Starting up Overload server (using Olmod).");
@@ -2372,14 +2448,16 @@ namespace OverloadClientTool
             };
 
             appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(exePath);
+
             appStart.StartInfo.UseShellExecute = false;
+
             appStart.StartInfo.RedirectStandardError = true;
             appStart.StartInfo.RedirectStandardOutput = true;
 
-            appStart.EnableRaisingEvents = true;
-
             appStart.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler(ServerLogging);
             appStart.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler(ServerErrorLogging);
+
+            appStart.EnableRaisingEvents = true;
             appStart.Exited += new System.EventHandler(ServerProcessExit);
 
             appStart.Start();
@@ -2708,6 +2786,13 @@ namespace OverloadClientTool
             // Draw the current item text
             string text = e.SubItem.Text.Replace("\r", "").Replace("\n", "");
 
+            // Don't show '0' for 'numPlayers' or 'maxNumPlayers'.
+            if ((e.ColumnIndex == 3) || (e.ColumnIndex == 4))
+            {
+                if (text.Trim() == "0") text = "";
+            }
+
+            // Ping time.
             if (e.ColumnIndex == 5)
             {
                 while (text.StartsWith("0")) text = text.Substring(1);
@@ -2745,9 +2830,7 @@ namespace OverloadClientTool
             graphics.DrawRectangle(new Pen(b), rect);
         }
 
-        private 
-
-        class ListViewItemComparer : IComparer
+        private class ListViewItemComparer : IComparer
         {
             public SortOrder Order = SortOrder.Descending;
             public int Column = 0;
@@ -2850,6 +2933,33 @@ namespace OverloadClientTool
         private void OTLTracker_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try { Process.Start(new ProcessStartInfo(OTLTracker.Text)); } catch { }
+        }
+
+        private void DefaultDisplayCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SwitchDefault = DefaultDisplayCheckBox.Checked;
+        }
+
+        private void GamingDisplayCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SwitchGaming = GamingDisplayCheckBox.Checked;
+        }
+
+        private void DefaultMonitorComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DefaultDisplay = DefaultMonitorComboBox.SelectedItem as string;
+            Defocus();
+        }
+
+        private void GamingMonitorComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GamingDisplay = GamingMonitorComboBox.SelectedItem as string;
+            Defocus();
+        }
+
+        private void SuppressWinKeysCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SuppressWinKeys = SuppressWinKeysCheckBox.Checked;
         }
     }
 }
