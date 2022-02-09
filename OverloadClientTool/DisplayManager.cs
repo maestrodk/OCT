@@ -65,7 +65,7 @@ namespace OverloadClientTool
                 var device = new DISPLAY_DEVICE();
                 device.cb = Marshal.SizeOf(device);
 
-                uint count = 0;
+                //uint count = 0;
                 for (uint otherid = 0; NativeMethods.EnumDisplayDevices(null, otherid, ref device, 0); otherid++)
                 {
                     if (device.StateFlags.HasFlag(DisplayDeviceStateFlags.AttachedToDesktop))

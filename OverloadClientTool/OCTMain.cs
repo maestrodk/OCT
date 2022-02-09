@@ -57,6 +57,9 @@ namespace OverloadClientTool
 
         private int serverProcessId = 0;
 
+        private int D3ProcessId = 0;
+        private int D2ProcessId = 0;
+
         // Directory for DLC.
         private string dlcLocation = null;
 
@@ -138,6 +141,7 @@ namespace OverloadClientTool
             paneController.SetupPaneButton(PaneSelectOlmod, PaneOlmod);
             paneController.SetupPaneButton(PaneSelectServer, PaneServer);
             paneController.SetupPaneButton(PaneSelectOnline, PaneOnline);
+            paneController.SetupPaneButton(PaneSelectDescent, PanelDescent);
             paneController.SetupPaneButton(PaneSelectOptions, PaneOptions);
 
             // Load user preferences.
@@ -822,6 +826,30 @@ namespace OverloadClientTool
             }
         }
 
+        public bool IsD3Running
+        {
+            get
+            {
+                bool running = false;
+                string name = Path.GetFileNameWithoutExtension(Descent3Executable.Text);
+                if (name.EndsWith("\\")) name = name.Substring(0, name.Length - 1);
+                try { if (GetRunningProcess(name) != null) running = true; } catch { }
+                return running;
+            }
+        }
+
+        public bool IsD2Running
+        {
+            get
+            {
+                bool running = false;
+                string name = Path.GetFileNameWithoutExtension(Descent2Executable.Text);
+                if (name.EndsWith("\\")) name = name.Substring(0, name.Length - 1);
+                try { if (GetRunningProcess(name) != null) running = true; } catch { }
+                return running;
+            }
+        }
+
         /// <summary>
         /// Background logging monitor. Sets GroupBox titles to reflect running status.
         /// </summary>
@@ -848,11 +876,13 @@ namespace OverloadClientTool
                 bool overloadRunning = IsOverloadRunning;
                 bool olproxyRunning = IsOlproxyRunning;
                 bool olmodRunning = IsOlmodRunning;
+                bool d3Running = IsD3Running;
+                bool d2Running = IsD2Running;
 
-                if (!overloadRunning && !olmodRunning && !shutdown)
+                if (!overloadRunning && !olmodRunning && !d3Running && !d2Running && !shutdown)
                 {
                     // See if we should switch primary display.
-                    this.UIThread(delegate { CheckDisplaySwitch(); ; });
+                    this.UIThread(delegate { CheckDisplaySwitch(); });
                 }
 
                 int reqHours = requestInterval / 3600;
@@ -902,13 +932,17 @@ namespace OverloadClientTool
                     OlproxyRunning.Visible = olproxyRunning;
                     ServerRunning.Visible = serverProcessId > 0;
 
+                    Descent3Running.Visible = d3Running;
+                    Descent2Running.Visible = d2Running;
+
                     UpdateOlmodButton.Enabled = !olmodRunning;
 
                     StartStopButton.Text = (overloadRunning || olmodRunning) ? "Stop client" : "Start client";
                     StartStopOlproxyButton.Text = (olproxyRunning) ? "Stop" : "Start";
 
-                    trayMenuItemStart.Text = (overloadRunning || olmodRunning) ? "&Stop" : "&Start";
+                    StartD3Main.Text = (d3Running) ? "Stop D3" : "Start D3";
 
+                    trayMenuItemStart.Text = (overloadRunning || olmodRunning) ? "&Stop" : "&Start";
 
                     if (StartStopButton.Enabled)
                     {
@@ -962,6 +996,8 @@ namespace OverloadClientTool
             TestSetTextBoxColor(OverloadExecutable);
             TestSetTextBoxColor(OlproxyExecutable);
             TestSetTextBoxColor(OlmodExecutable);
+            TestSetTextBoxColor(Descent3Executable);
+            TestSetTextBoxColor(Descent2Executable);
             ValidateButton(StartStopButton, theme);
         }
 
@@ -1061,18 +1097,23 @@ namespace OverloadClientTool
                 }
 
                 // Switch display if enabled and the display exists.
-                if (GamingDisplayCheckBox.Checked)
-                {
-                    string gamingDisplay = GamingMonitorComboBox.SelectedItem as string;
-                    if (DisplayManager.Displays.ContainsValue(gamingDisplay))
-                    {
-                        if (gamingDisplay != DisplayManager.PrimaryDisplay) DisplayManager.SetAsPrimaryMonitor(gamingDisplay);
-                    }
-                }
+                CheckSwitchDisplay();
 
                 enableDisableKeys.SuppressWinKeys = SuppressWinKeys;
 
                 LaunchOverloadClient();
+            }
+        }
+
+        private void CheckSwitchDisplay()
+        {
+            if (GamingDisplayCheckBox.Checked)
+            {
+                string gamingDisplay = GamingMonitorComboBox.SelectedItem as string;
+                if (DisplayManager.Displays.ContainsValue(gamingDisplay))
+                {
+                    if (gamingDisplay != DisplayManager.PrimaryDisplay) DisplayManager.SetAsPrimaryMonitor(gamingDisplay);
+                }
             }
         }
 
@@ -2224,7 +2265,7 @@ namespace OverloadClientTool
 
             LogTreeView.Nodes[LogTreeView.Nodes.Count - 1].EnsureVisible();
         }
-
+        
         private void LogTreeView_DrawNode(object sender, DrawTreeNodeEventArgs e)
         {
             String nodeText = String.IsNullOrEmpty(e.Node.Text) ? "- This message shouldn't be shown - " : e.Node.Text;
@@ -2960,6 +3001,245 @@ namespace OverloadClientTool
         private void SuppressWinKeysCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             SuppressWinKeys = SuppressWinKeysCheckBox.Checked;
+        }
+
+        private void Descent2Executable_TextChanged(object sender, EventArgs e)
+        {
+            D2App = Descent2Executable.Text;
+            ValidateSettings();
+        }
+
+        private void Descent3Executable_TextChanged(object sender, EventArgs e)
+        {
+            D3App = Descent3Executable.Text;
+            ValidateSettings();
+        }
+
+        private void Descent3Executable_DoubleClick(object sender, EventArgs e)
+        {
+            Descent3Executable.SelectionLength = 0;
+
+            string save = Directory.GetCurrentDirectory();
+
+            SelectExecutable.FileName = Path.GetFileName(Descent3Executable.Text);
+            SelectExecutable.InitialDirectory = Path.GetDirectoryName(Descent3Executable.Text);
+
+            DialogResult result = SelectExecutable.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                Descent3Executable.Text = SelectExecutable.FileName;
+                Descent3Executable.SelectionLength = 0;
+
+                D3App = Descent3Executable.Text;
+            }
+
+            Directory.SetCurrentDirectory(save);
+        }
+
+        private void Descent2Executable_DoubleClick(object sender, EventArgs e)
+        {
+            Descent3Executable.SelectionLength = 0;
+
+            string save = Directory.GetCurrentDirectory();
+
+            SelectExecutable.FileName = Path.GetFileName(Descent2Executable.Text);
+            SelectExecutable.InitialDirectory = Path.GetDirectoryName(Descent2Executable.Text);
+
+            DialogResult result = SelectExecutable.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                Descent2Executable.Text = SelectExecutable.FileName;
+                Descent2Executable.SelectionLength = 0;
+
+                D2App = Descent2Executable.Text;
+            }
+
+            Directory.SetCurrentDirectory(save);
+        }
+
+        private void Descent3Args_TextChanged(object sender, EventArgs e)
+        {
+            D3Args = Descent3Args.Text;
+        }
+
+        private void StartD3Main_Click(object sender, EventArgs e)
+        {
+            if (StartD3Main.Text.Contains("Stop D3"))
+            {
+                enableDisableKeys.SuppressWinKeys = false;
+
+                KillD3();
+
+                StartD3Main.Text = "Start D3";
+            }
+            else
+            {
+                // Switch display if enabled and the display exists.
+                CheckSwitchDisplay();
+
+                enableDisableKeys.SuppressWinKeys = SuppressWinKeys;
+
+                LaunchD3();
+
+                StartD3Main.Text = "Stop D3";
+            }
+        }
+
+        private void KillD3()
+        {
+            string name = Path.GetFileNameWithoutExtension(Descent3Executable.Text);
+            if (name.EndsWith("\\")) name = name.Substring(0, name.Length - 1);
+            KillRunningProcess(name);
+        }
+
+        private void LaunchD3()
+        {
+            LogDebugMessage("LaunchD3()");
+
+            string exePath = Descent3Executable.Text;
+            if (!OverloadClientToolApplication.ValidFileName(exePath, true))
+            {
+                MessageBox.Show("Descent 3 (main.exe) not found!");
+                return;
+            }
+
+            LogDebugMessage($"Setting up name and parameters");
+
+            string name = Path.GetFileNameWithoutExtension(exePath);
+            if (name.EndsWith("\\")) name = name.Substring(0, name.Length - 1);
+
+            // Prepare command line parameters.
+            string commandLineArgs = D3Args.Trim();
+
+            // Start application it is not already running.
+            int running = 0;
+            foreach (Process process in Process.GetProcesses())
+            {
+                if ((process.Id != D3ProcessId) && (process.ProcessName.ToLower() == name)) running++;
+            }
+
+            if (running == 1)
+            {
+                Info("Descent 3 (main.exe) ís already running.");
+                return;
+            }
+
+            Info($"Starting up Descent 3 (main.exe).");
+
+            // If more than one is running we kill them all and start fresh instance.
+            if (running > 1) KillRunningProcess(name);
+
+            LogDebugMessage($"Launcing {exePath} with \"{commandLineArgs}\"");
+
+            // (Re)start application..
+            Process appStart = new Process
+            {
+                StartInfo = new ProcessStartInfo(exePath, commandLineArgs)
+            };
+
+            appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(exePath);
+            appStart.Start();
+
+            D3ProcessId = appStart.Id;
+        }
+
+        private void KillD2()
+        {
+            string name = Path.GetFileNameWithoutExtension(Descent2Executable.Text);
+            if (name.EndsWith("\\")) name = name.Substring(0, name.Length - 1);
+            KillRunningProcess(name);
+        }
+
+        private void StartD2_Click(object sender, EventArgs e)
+        {
+            if (StartD2.Text.Contains("Stop D2"))
+            {
+                enableDisableKeys.SuppressWinKeys = false;
+
+                KillD2();
+
+                StartD2.Text = "Start D2";
+            }
+            else
+            {
+                // Switch display if enabled and the display exists.
+                CheckSwitchDisplay();
+
+                enableDisableKeys.SuppressWinKeys = SuppressWinKeys;
+
+                LaunchD2();
+
+                StartD2.Text = "Stop D2";
+            }
+        }
+
+        private void LaunchD2()
+        {
+            LogDebugMessage("LaunchD2()");
+
+            string exePath = Descent2Executable.Text;
+            if (!OverloadClientToolApplication.ValidFileName(exePath, true))
+            {
+                MessageBox.Show("Descent 2 application not found!");
+                return;
+            }
+
+            LogDebugMessage($"Setting up name and parameters");
+
+            string name = Path.GetFileNameWithoutExtension(exePath);
+            if (name.EndsWith("\\")) name = name.Substring(0, name.Length - 1);
+
+            // Prepare command line parameters.
+            //string commandLineArgs = D3Args.Trim();
+
+            // Start application it is not already running.
+            int running = 0;
+            foreach (Process process in Process.GetProcesses())
+            {
+                if ((process.Id != D2ProcessId) && (process.ProcessName.ToLower() == name)) running++;
+            }
+
+            if (running == 1)
+            {
+                Info("Descent 2 ís already running.");
+                return;
+            }
+
+            Info($"Starting up Descent 2.");
+
+            // If more than one is running we kill them all and start fresh instance.
+            if (running > 1) KillRunningProcess(name);
+
+            //LogDebugMessage($"Launcing {exePath} with \"{commandLineArgs}\"");
+            LogDebugMessage($"Launcing {exePath}");
+
+            // (Re)start application..
+            Process appStart = new Process
+            {
+                StartInfo = new ProcessStartInfo(exePath /*commandLineArgs */)
+            };
+
+            appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(exePath);
+            appStart.Start();
+
+            D2ProcessId = appStart.Id;
+        }
+
+        private void DescentForumSOD_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try { Process.Start(new ProcessStartInfo(DescentForumSOD.Text)); } catch { }
+        }
+
+        private void DataiListLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try { Process.Start(new ProcessStartInfo(DataiListLink.Text)); } catch { }
+        }
+
+        private void DXXRebirthLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try { Process.Start(new ProcessStartInfo(DXXRebirthLink.Text)); } catch { }
         }
     }
 }

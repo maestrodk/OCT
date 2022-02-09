@@ -72,6 +72,24 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.OlproxyPath = value; }
         }
 
+        public string D3App
+        {
+            get { return Properties.Settings.Default.D3App; }
+            set { Properties.Settings.Default.D3App = value; }
+        }
+
+        public string D3Args
+        {
+            get { return Properties.Settings.Default.D3Args; }
+            set { Properties.Settings.Default.D3Args = value; }
+        }
+
+        public string D2App
+        {
+            get { return Properties.Settings.Default.D2App; }
+            set { Properties.Settings.Default.D2App = value; }
+        }
+
         public string OlmodServerTrackerBaseUrl
         {
             get { return Properties.Settings.Default.trackerBaseUrl; }
@@ -502,6 +520,11 @@ namespace OverloadClientTool
             ServerAnnounceOnTrackerCheckBox.Checked = OlmodIsServer;
             AssistScoringCheckBox.Checked = OlmodAssistScoring;
 
+            // Descent 2 and 3 settings.
+            Descent3Executable.Text = D3App;
+            Descent2Executable.Text = D2App;
+            Descent3Args.Text = D3Args;
+
             // Check for change to new theme selection.
             if (String.IsNullOrEmpty(ActiveThemeName)) ActiveThemeName = "Dark Gray";
 
@@ -522,6 +545,9 @@ namespace OverloadClientTool
             OlproxyRunning.Image = theme.IsRunningImage;
             OverloadRunning.Image = theme.IsRunningImage;
             ServerRunning.Image = theme.IsRunningImage;
+
+            Descent3Running.Image = theme.IsRunningImage;
+            Descent2Running.Image = theme.IsRunningImage;
 
             // Set the active theme (recursively).
             ApplyThemeToControl(this, theme);

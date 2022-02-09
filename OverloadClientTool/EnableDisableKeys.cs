@@ -54,12 +54,11 @@ namespace OverloadClientTool
             {
                 KBDLLHOOKSTRUCT objKeyInfo = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lp, typeof(KBDLLHOOKSTRUCT));
 
-                Debug.WriteLine($"Keyhook: {objKeyInfo.key.ToString()}");
+                // Debug.WriteLine($"Keyhook: {objKeyInfo.key.ToString()}");
 
                 // Check for left/right Windows keys and the right-click Menu key.
                 if ((objKeyInfo.key == Keys.RWin) || (objKeyInfo.key == Keys.LWin) || (objKeyInfo.key == Keys.Apps)) 
                 {
-
                     if (SuppressWinKeys)
                     {
                         return (IntPtr)1;

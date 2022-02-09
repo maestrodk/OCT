@@ -154,6 +154,7 @@ namespace OverloadClientTool
             this.DisplayHelpLink = new System.Windows.Forms.LinkLabel();
             this.MailLinkLabel = new System.Windows.Forms.LinkLabel();
             this.DebugFileNameLink = new System.Windows.Forms.LinkLabel();
+            this.SuppressWinKeysCheckBox = new OverloadClientTool.CustomCheckBox();
             this.ToogleAutostartCheckBox = new OverloadClientTool.CustomCheckBox();
             this.PartyModeCheckBox = new OverloadClientTool.CustomCheckBox();
             this.EnableDebugCheckBox = new OverloadClientTool.CustomCheckBox();
@@ -163,6 +164,8 @@ namespace OverloadClientTool
             this.ServerKeepListed = new OverloadClientTool.CustomCheckBox();
             this.AssistScoringCheckBox = new OverloadClientTool.CustomCheckBox();
             this.AutoStartCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.StartD3Main = new System.Windows.Forms.Button();
+            this.StartD2 = new System.Windows.Forms.Button();
             this.PaneSelectServer = new System.Windows.Forms.Button();
             this.PaneServer = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -206,7 +209,22 @@ namespace OverloadClientTool
             this.label26 = new System.Windows.Forms.Label();
             this.CurrentServerMap = new System.Windows.Forms.TextBox();
             this.PaneSelectOnline = new System.Windows.Forms.Button();
-            this.SuppressWinKeysCheckBox = new OverloadClientTool.CustomCheckBox();
+            this.PanelDescent = new System.Windows.Forms.Panel();
+            this.panel16 = new System.Windows.Forms.Panel();
+            this.Descent3Args = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.DataiListLink = new System.Windows.Forms.LinkLabel();
+            this.DescentForumSOD = new System.Windows.Forms.LinkLabel();
+            this.panel17 = new System.Windows.Forms.Panel();
+            this.Descent2Executable = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.panel18 = new System.Windows.Forms.Panel();
+            this.Descent3Executable = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.Descent3Running = new System.Windows.Forms.PictureBox();
+            this.Descent2Running = new System.Windows.Forms.PictureBox();
+            this.PaneSelectDescent = new System.Windows.Forms.Button();
+            this.DXXRebirthLink = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).BeginInit();
@@ -241,6 +259,12 @@ namespace OverloadClientTool
             this.ServerViewPanel.SuspendLayout();
             this.panel11.SuspendLayout();
             this.panel13.SuspendLayout();
+            this.PanelDescent.SuspendLayout();
+            this.panel16.SuspendLayout();
+            this.panel17.SuspendLayout();
+            this.panel18.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Descent3Running)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Descent2Running)).BeginInit();
             this.SuspendLayout();
             // 
             // OverloadExecutable
@@ -565,7 +589,7 @@ namespace OverloadClientTool
             this.PaneSelectMapManager.Location = new System.Drawing.Point(50, 0);
             this.PaneSelectMapManager.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectMapManager.Name = "PaneSelectMapManager";
-            this.PaneSelectMapManager.Size = new System.Drawing.Size(54, 23);
+            this.PaneSelectMapManager.Size = new System.Drawing.Size(49, 23);
             this.PaneSelectMapManager.TabIndex = 0;
             this.PaneSelectMapManager.TabStop = false;
             this.PaneSelectMapManager.Text = "  Maps";
@@ -579,7 +603,7 @@ namespace OverloadClientTool
             this.PaneSelectPilots.FlatAppearance.BorderSize = 0;
             this.PaneSelectPilots.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectPilots.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectPilots.Location = new System.Drawing.Point(104, 0);
+            this.PaneSelectPilots.Location = new System.Drawing.Point(96, 0);
             this.PaneSelectPilots.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectPilots.Name = "PaneSelectPilots";
             this.PaneSelectPilots.Size = new System.Drawing.Size(52, 23);
@@ -596,10 +620,10 @@ namespace OverloadClientTool
             this.PaneSelectOverload.FlatAppearance.BorderSize = 0;
             this.PaneSelectOverload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectOverload.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectOverload.Location = new System.Drawing.Point(156, 0);
+            this.PaneSelectOverload.Location = new System.Drawing.Point(148, 0);
             this.PaneSelectOverload.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectOverload.Name = "PaneSelectOverload";
-            this.PaneSelectOverload.Size = new System.Drawing.Size(68, 23);
+            this.PaneSelectOverload.Size = new System.Drawing.Size(66, 23);
             this.PaneSelectOverload.TabIndex = 0;
             this.PaneSelectOverload.TabStop = false;
             this.PaneSelectOverload.Text = "  Overload";
@@ -1081,10 +1105,10 @@ namespace OverloadClientTool
             this.PaneSelectOlproxy.FlatAppearance.BorderSize = 0;
             this.PaneSelectOlproxy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectOlproxy.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectOlproxy.Location = new System.Drawing.Point(224, 0);
+            this.PaneSelectOlproxy.Location = new System.Drawing.Point(214, 0);
             this.PaneSelectOlproxy.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectOlproxy.Name = "PaneSelectOlproxy";
-            this.PaneSelectOlproxy.Size = new System.Drawing.Size(61, 23);
+            this.PaneSelectOlproxy.Size = new System.Drawing.Size(57, 23);
             this.PaneSelectOlproxy.TabIndex = 0;
             this.PaneSelectOlproxy.TabStop = false;
             this.PaneSelectOlproxy.Text = "  Olproxy";
@@ -1098,7 +1122,7 @@ namespace OverloadClientTool
             this.PaneSelectOlmod.FlatAppearance.BorderSize = 0;
             this.PaneSelectOlmod.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectOlmod.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectOlmod.Location = new System.Drawing.Point(285, 0);
+            this.PaneSelectOlmod.Location = new System.Drawing.Point(271, 0);
             this.PaneSelectOlmod.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectOlmod.Name = "PaneSelectOlmod";
             this.PaneSelectOlmod.Size = new System.Drawing.Size(57, 23);
@@ -1578,7 +1602,7 @@ namespace OverloadClientTool
             this.PaneButtonLine.Location = new System.Drawing.Point(0, 26);
             this.PaneButtonLine.Margin = new System.Windows.Forms.Padding(0);
             this.PaneButtonLine.Name = "PaneButtonLine";
-            this.PaneButtonLine.Size = new System.Drawing.Size(496, 10);
+            this.PaneButtonLine.Size = new System.Drawing.Size(556, 10);
             this.PaneButtonLine.TabIndex = 24;
             // 
             // PaneSelectOptions
@@ -1588,10 +1612,10 @@ namespace OverloadClientTool
             this.PaneSelectOptions.FlatAppearance.BorderSize = 0;
             this.PaneSelectOptions.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectOptions.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectOptions.Location = new System.Drawing.Point(456, 0);
+            this.PaneSelectOptions.Location = new System.Drawing.Point(491, 0);
             this.PaneSelectOptions.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectOptions.Name = "PaneSelectOptions";
-            this.PaneSelectOptions.Size = new System.Drawing.Size(57, 23);
+            this.PaneSelectOptions.Size = new System.Drawing.Size(62, 23);
             this.PaneSelectOptions.TabIndex = 0;
             this.PaneSelectOptions.TabStop = false;
             this.PaneSelectOptions.Text = "  Options";
@@ -1820,6 +1844,25 @@ namespace OverloadClientTool
             this.DebugFileNameLink.Text = "View logs";
             this.DebugFileNameLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OpenDebugFolder_LinkClicked);
             // 
+            // SuppressWinKeysCheckBox
+            // 
+            this.SuppressWinKeysCheckBox.AutoSize = true;
+            this.SuppressWinKeysCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.SuppressWinKeysCheckBox.CheckBackColor = System.Drawing.Color.Gray;
+            this.SuppressWinKeysCheckBox.CheckForeColor = System.Drawing.Color.Black;
+            this.SuppressWinKeysCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
+            this.SuppressWinKeysCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SuppressWinKeysCheckBox.Location = new System.Drawing.Point(272, 204);
+            this.SuppressWinKeysCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            this.SuppressWinKeysCheckBox.Name = "SuppressWinKeysCheckBox";
+            this.SuppressWinKeysCheckBox.Size = new System.Drawing.Size(130, 17);
+            this.SuppressWinKeysCheckBox.TabIndex = 5;
+            this.SuppressWinKeysCheckBox.Text = "Disable Windows keys";
+            this.SuppressWinKeysCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.MainToolTip.SetToolTip(this.SuppressWinKeysCheckBox, "Disableds the Windows and shortcut Menu keys when the client is running");
+            this.SuppressWinKeysCheckBox.UseVisualStyleBackColor = false;
+            this.SuppressWinKeysCheckBox.CheckedChanged += new System.EventHandler(this.SuppressWinKeysCheckBox_CheckedChanged);
+            // 
             // ToogleAutostartCheckBox
             // 
             this.ToogleAutostartCheckBox.AutoSize = true;
@@ -1977,6 +2020,30 @@ namespace OverloadClientTool
             this.AutoStartCheckBox.UseVisualStyleBackColor = false;
             this.AutoStartCheckBox.CheckedChanged += new System.EventHandler(this.AutoStartCheckBox_CheckedChanged);
             // 
+            // StartD3Main
+            // 
+            this.StartD3Main.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StartD3Main.Location = new System.Drawing.Point(20, 108);
+            this.StartD3Main.Name = "StartD3Main";
+            this.StartD3Main.Size = new System.Drawing.Size(72, 23);
+            this.StartD3Main.TabIndex = 14;
+            this.StartD3Main.Text = "Start D3";
+            this.MainToolTip.SetToolTip(this.StartD3Main, "Start Descent 3 using MAIN.EXE");
+            this.StartD3Main.UseVisualStyleBackColor = true;
+            this.StartD3Main.Click += new System.EventHandler(this.StartD3Main_Click);
+            // 
+            // StartD2
+            // 
+            this.StartD2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StartD2.Location = new System.Drawing.Point(20, 264);
+            this.StartD2.Name = "StartD2";
+            this.StartD2.Size = new System.Drawing.Size(72, 23);
+            this.StartD2.TabIndex = 14;
+            this.StartD2.Text = "Start D2";
+            this.MainToolTip.SetToolTip(this.StartD2, "Start Descent 2");
+            this.StartD2.UseVisualStyleBackColor = true;
+            this.StartD2.Click += new System.EventHandler(this.StartD2_Click);
+            // 
             // PaneSelectServer
             // 
             this.PaneSelectServer.BackColor = System.Drawing.Color.MidnightBlue;
@@ -1984,7 +2051,7 @@ namespace OverloadClientTool
             this.PaneSelectServer.FlatAppearance.BorderSize = 0;
             this.PaneSelectServer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectServer.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectServer.Location = new System.Drawing.Point(342, 0);
+            this.PaneSelectServer.Location = new System.Drawing.Point(328, 0);
             this.PaneSelectServer.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectServer.Name = "PaneSelectServer";
             this.PaneSelectServer.Size = new System.Drawing.Size(57, 23);
@@ -2426,34 +2493,205 @@ namespace OverloadClientTool
             this.PaneSelectOnline.FlatAppearance.BorderSize = 0;
             this.PaneSelectOnline.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PaneSelectOnline.ForeColor = System.Drawing.Color.White;
-            this.PaneSelectOnline.Location = new System.Drawing.Point(399, 0);
+            this.PaneSelectOnline.Location = new System.Drawing.Point(382, 0);
             this.PaneSelectOnline.Margin = new System.Windows.Forms.Padding(0);
             this.PaneSelectOnline.Name = "PaneSelectOnline";
-            this.PaneSelectOnline.Size = new System.Drawing.Size(57, 23);
+            this.PaneSelectOnline.Size = new System.Drawing.Size(45, 23);
             this.PaneSelectOnline.TabIndex = 28;
             this.PaneSelectOnline.TabStop = false;
             this.PaneSelectOnline.Text = "  OTL";
             this.PaneSelectOnline.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.PaneSelectOnline.UseVisualStyleBackColor = false;
             // 
-            // SuppressWinKeysCheckBox
+            // PanelDescent
             // 
-            this.SuppressWinKeysCheckBox.AutoSize = true;
-            this.SuppressWinKeysCheckBox.BackColor = System.Drawing.Color.LightSlateGray;
-            this.SuppressWinKeysCheckBox.CheckBackColor = System.Drawing.Color.Gray;
-            this.SuppressWinKeysCheckBox.CheckForeColor = System.Drawing.Color.Black;
-            this.SuppressWinKeysCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
-            this.SuppressWinKeysCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SuppressWinKeysCheckBox.Location = new System.Drawing.Point(272, 204);
-            this.SuppressWinKeysCheckBox.Margin = new System.Windows.Forms.Padding(0);
-            this.SuppressWinKeysCheckBox.Name = "SuppressWinKeysCheckBox";
-            this.SuppressWinKeysCheckBox.Size = new System.Drawing.Size(130, 17);
-            this.SuppressWinKeysCheckBox.TabIndex = 5;
-            this.SuppressWinKeysCheckBox.Text = "Disable Windows keys";
-            this.SuppressWinKeysCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.MainToolTip.SetToolTip(this.SuppressWinKeysCheckBox, "Disableds the Windows and shortcut Menu keys when the client is running");
-            this.SuppressWinKeysCheckBox.UseVisualStyleBackColor = false;
-            this.SuppressWinKeysCheckBox.CheckedChanged += new System.EventHandler(this.SuppressWinKeysCheckBox_CheckedChanged);
+            this.PanelDescent.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PanelDescent.Controls.Add(this.panel16);
+            this.PanelDescent.Controls.Add(this.DXXRebirthLink);
+            this.PanelDescent.Controls.Add(this.DataiListLink);
+            this.PanelDescent.Controls.Add(this.DescentForumSOD);
+            this.PanelDescent.Controls.Add(this.panel17);
+            this.PanelDescent.Controls.Add(this.panel18);
+            this.PanelDescent.Controls.Add(this.Descent3Running);
+            this.PanelDescent.Controls.Add(this.Descent2Running);
+            this.PanelDescent.Controls.Add(this.StartD2);
+            this.PanelDescent.Controls.Add(this.StartD3Main);
+            this.PanelDescent.Location = new System.Drawing.Point(585, 739);
+            this.PanelDescent.Margin = new System.Windows.Forms.Padding(0);
+            this.PanelDescent.Name = "PanelDescent";
+            this.PanelDescent.Size = new System.Drawing.Size(547, 336);
+            this.PanelDescent.TabIndex = 21;
+            // 
+            // panel16
+            // 
+            this.panel16.Controls.Add(this.Descent3Args);
+            this.panel16.Controls.Add(this.label24);
+            this.panel16.Location = new System.Drawing.Point(14, 59);
+            this.panel16.Name = "panel16";
+            this.panel16.Size = new System.Drawing.Size(521, 43);
+            this.panel16.TabIndex = 18;
+            // 
+            // Descent3Args
+            // 
+            this.Descent3Args.BackColor = System.Drawing.Color.Gray;
+            this.Descent3Args.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Descent3Args.Location = new System.Drawing.Point(6, 17);
+            this.Descent3Args.Margin = new System.Windows.Forms.Padding(2);
+            this.Descent3Args.Name = "Descent3Args";
+            this.Descent3Args.Size = new System.Drawing.Size(501, 20);
+            this.Descent3Args.TabIndex = 4;
+            this.Descent3Args.TextChanged += new System.EventHandler(this.Descent3Args_TextChanged);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(4, 2);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(200, 13);
+            this.label24.TabIndex = 3;
+            this.label24.Text = "Descent 3 Startup Parameters (main.exe)";
+            // 
+            // DataiListLink
+            // 
+            this.DataiListLink.AutoSize = true;
+            this.DataiListLink.LinkColor = System.Drawing.Color.Blue;
+            this.DataiListLink.Location = new System.Drawing.Point(17, 167);
+            this.DataiListLink.Name = "DataiListLink";
+            this.DataiListLink.Size = new System.Drawing.Size(220, 13);
+            this.DataiListLink.TabIndex = 17;
+            this.DataiListLink.TabStop = true;
+            this.DataiListLink.Text = "http://www.dateiliste.com/en/descent-3.html";
+            this.DataiListLink.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
+            this.DataiListLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DataiListLink_LinkClicked);
+            // 
+            // DescentForumSOD
+            // 
+            this.DescentForumSOD.AutoSize = true;
+            this.DescentForumSOD.LinkColor = System.Drawing.Color.Blue;
+            this.DescentForumSOD.Location = new System.Drawing.Point(17, 144);
+            this.DescentForumSOD.Name = "DescentForumSOD";
+            this.DescentForumSOD.Size = new System.Drawing.Size(174, 13);
+            this.DescentForumSOD.TabIndex = 17;
+            this.DescentForumSOD.TabStop = true;
+            this.DescentForumSOD.Text = "https://www.descentforum.net/sod";
+            this.DescentForumSOD.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
+            this.DescentForumSOD.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DescentForumSOD_LinkClicked);
+            // 
+            // panel17
+            // 
+            this.panel17.Controls.Add(this.Descent2Executable);
+            this.panel17.Controls.Add(this.label22);
+            this.panel17.Location = new System.Drawing.Point(14, 215);
+            this.panel17.Name = "panel17";
+            this.panel17.Size = new System.Drawing.Size(521, 43);
+            this.panel17.TabIndex = 18;
+            // 
+            // Descent2Executable
+            // 
+            this.Descent2Executable.BackColor = System.Drawing.Color.Gray;
+            this.Descent2Executable.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Descent2Executable.Location = new System.Drawing.Point(6, 17);
+            this.Descent2Executable.Margin = new System.Windows.Forms.Padding(2);
+            this.Descent2Executable.Name = "Descent2Executable";
+            this.Descent2Executable.Size = new System.Drawing.Size(501, 20);
+            this.Descent2Executable.TabIndex = 4;
+            this.Descent2Executable.TextChanged += new System.EventHandler(this.Descent2Executable_TextChanged);
+            this.Descent2Executable.DoubleClick += new System.EventHandler(this.Descent2Executable_DoubleClick);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(4, 2);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(111, 13);
+            this.label22.TabIndex = 3;
+            this.label22.Text = "Descent 2 Application";
+            // 
+            // panel18
+            // 
+            this.panel18.Controls.Add(this.Descent3Executable);
+            this.panel18.Controls.Add(this.label23);
+            this.panel18.Location = new System.Drawing.Point(14, 10);
+            this.panel18.Name = "panel18";
+            this.panel18.Size = new System.Drawing.Size(521, 43);
+            this.panel18.TabIndex = 18;
+            // 
+            // Descent3Executable
+            // 
+            this.Descent3Executable.BackColor = System.Drawing.Color.Gray;
+            this.Descent3Executable.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Descent3Executable.Location = new System.Drawing.Point(6, 17);
+            this.Descent3Executable.Margin = new System.Windows.Forms.Padding(4);
+            this.Descent3Executable.Name = "Descent3Executable";
+            this.Descent3Executable.Size = new System.Drawing.Size(501, 20);
+            this.Descent3Executable.TabIndex = 3;
+            this.Descent3Executable.TextChanged += new System.EventHandler(this.Descent3Executable_TextChanged);
+            this.Descent3Executable.DoubleClick += new System.EventHandler(this.Descent3Executable_DoubleClick);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(3, 2);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(111, 13);
+            this.label23.TabIndex = 3;
+            this.label23.Text = "Descent 3 Application";
+            // 
+            // Descent3Running
+            // 
+            this.Descent3Running.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Descent3Running.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
+            this.Descent3Running.Location = new System.Drawing.Point(101, 109);
+            this.Descent3Running.Margin = new System.Windows.Forms.Padding(3, 3, 8, 3);
+            this.Descent3Running.Name = "Descent3Running";
+            this.Descent3Running.Size = new System.Drawing.Size(22, 21);
+            this.Descent3Running.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.Descent3Running.TabIndex = 10;
+            this.Descent3Running.TabStop = false;
+            this.Descent3Running.Visible = false;
+            // 
+            // Descent2Running
+            // 
+            this.Descent2Running.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Descent2Running.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
+            this.Descent2Running.Location = new System.Drawing.Point(102, 265);
+            this.Descent2Running.Margin = new System.Windows.Forms.Padding(3, 3, 8, 3);
+            this.Descent2Running.Name = "Descent2Running";
+            this.Descent2Running.Size = new System.Drawing.Size(22, 21);
+            this.Descent2Running.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.Descent2Running.TabIndex = 10;
+            this.Descent2Running.TabStop = false;
+            this.Descent2Running.Visible = false;
+            // 
+            // PaneSelectDescent
+            // 
+            this.PaneSelectDescent.BackColor = System.Drawing.Color.MidnightBlue;
+            this.PaneSelectDescent.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.PaneSelectDescent.FlatAppearance.BorderSize = 0;
+            this.PaneSelectDescent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.PaneSelectDescent.ForeColor = System.Drawing.Color.White;
+            this.PaneSelectDescent.Location = new System.Drawing.Point(426, 0);
+            this.PaneSelectDescent.Margin = new System.Windows.Forms.Padding(0);
+            this.PaneSelectDescent.Name = "PaneSelectDescent";
+            this.PaneSelectDescent.Size = new System.Drawing.Size(69, 23);
+            this.PaneSelectDescent.TabIndex = 0;
+            this.PaneSelectDescent.TabStop = false;
+            this.PaneSelectDescent.Text = "  Descent";
+            this.PaneSelectDescent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.PaneSelectDescent.UseVisualStyleBackColor = false;
+            // 
+            // DXXRebirthLink
+            // 
+            this.DXXRebirthLink.AutoSize = true;
+            this.DXXRebirthLink.LinkColor = System.Drawing.Color.Blue;
+            this.DXXRebirthLink.Location = new System.Drawing.Point(18, 305);
+            this.DXXRebirthLink.Name = "DXXRebirthLink";
+            this.DXXRebirthLink.Size = new System.Drawing.Size(146, 13);
+            this.DXXRebirthLink.TabIndex = 17;
+            this.DXXRebirthLink.TabStop = true;
+            this.DXXRebirthLink.Text = "https://www.dxx-rebirth.com/";
+            this.DXXRebirthLink.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
+            this.DXXRebirthLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DXXRebirthLink_LinkClicked);
             // 
             // OCTMain
             // 
@@ -2469,8 +2707,10 @@ namespace OverloadClientTool
             this.Controls.Add(this.PaneButtonLine);
             this.Controls.Add(this.PaneOlmod);
             this.Controls.Add(this.PaneOverload);
+            this.Controls.Add(this.PanelDescent);
             this.Controls.Add(this.PaneOlproxy);
             this.Controls.Add(this.PaneMaps);
+            this.Controls.Add(this.PaneSelectDescent);
             this.Controls.Add(this.PaneSelectOptions);
             this.Controls.Add(this.PaneSelectOlmod);
             this.Controls.Add(this.PanePilots);
@@ -2549,6 +2789,16 @@ namespace OverloadClientTool
             this.panel11.PerformLayout();
             this.panel13.ResumeLayout(false);
             this.panel13.PerformLayout();
+            this.PanelDescent.ResumeLayout(false);
+            this.PanelDescent.PerformLayout();
+            this.panel16.ResumeLayout(false);
+            this.panel16.PerformLayout();
+            this.panel17.ResumeLayout(false);
+            this.panel17.PerformLayout();
+            this.panel18.ResumeLayout(false);
+            this.panel18.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Descent3Running)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Descent2Running)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2729,6 +2979,24 @@ namespace OverloadClientTool
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label19;
         private CustomCheckBox SuppressWinKeysCheckBox;
+        private System.Windows.Forms.Panel PanelDescent;
+        private System.Windows.Forms.Panel panel17;
+        private System.Windows.Forms.TextBox Descent2Executable;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Panel panel18;
+        private System.Windows.Forms.TextBox Descent3Executable;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.PictureBox Descent2Running;
+        private System.Windows.Forms.PictureBox Descent3Running;
+        private System.Windows.Forms.Panel panel16;
+        private System.Windows.Forms.TextBox Descent3Args;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Button PaneSelectDescent;
+        private System.Windows.Forms.Button StartD2;
+        private System.Windows.Forms.Button StartD3Main;
+        private System.Windows.Forms.LinkLabel DescentForumSOD;
+        private System.Windows.Forms.LinkLabel DataiListLink;
+        private System.Windows.Forms.LinkLabel DXXRebirthLink;
     }
 }
 

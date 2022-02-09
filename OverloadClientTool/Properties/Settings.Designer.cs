@@ -503,5 +503,41 @@ namespace OverloadClientTool.Properties {
                 this["SuppressWinKeys"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Descent3\\main.exe")]
+        public string D3App {
+            get {
+                return ((string)(this["D3App"]));
+            }
+            set {
+                this["D3App"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(" -launched -nomultibmp -nointro -nooutragelogo -pilot Maestro")]
+        public string D3Args {
+            get {
+                return ((string)(this["D3Args"]));
+            }
+            set {
+                this["D3Args"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Descent2\\d2x-rebirth.exe")]
+        public string D2App {
+            get {
+                return ((string)(this["D2App"]));
+            }
+            set {
+                this["D2App"] = value;
+            }
+        }
     }
 }

@@ -122,5 +122,14 @@
     <Setting Name="SuppressWinKeys" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="D3App" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Descent3\main.exe</Value>
+    </Setting>
+    <Setting Name="D3Args" Type="System.String" Scope="User">
+      <Value Profile="(Default)"> -launched -nomultibmp -nointro -nooutragelogo -pilot Maestro</Value>
+    </Setting>
+    <Setting Name="D2App" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Descent2\d2x-rebirth.exe</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

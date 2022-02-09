@@ -132,7 +132,6 @@ namespace OverloadClientTool
         //The listener that will trigger events
         private int KeybHookProc(int Code, IntPtr W, IntPtr L)
         {
-
             // KBDLLHookStruct LS = new KBDLLHookStruct();
 
             if (Code < 0)
@@ -156,7 +155,7 @@ namespace OverloadClientTool
                         {
                             if (KeyUp != null) KeyUp((Keys)W, GetShiftPressed(), GetCtrlPressed(), GetAltPressed());
                         }
-                        //System.Diagnostics.Debug.WriteLine("Down: " + (Keys)W);
+                        // System.Diagnostics.Debug.WriteLine("Down: " + (Keys)W);
                     }
                 }
                 else
