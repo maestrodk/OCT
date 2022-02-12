@@ -21,7 +21,9 @@ namespace OverloadClientTool
 
         public CustomComboBox() : base()
         {
-            BorderColor = Color.DimGray;
+            this.BorderColor = Color.DimGray;
+            this.FlatStyle = FlatStyle.Flat;
+
             this.DrawItem += new DrawItemEventHandler(CustomComboBox_DrawItem);
         }
 
@@ -33,10 +35,9 @@ namespace OverloadClientTool
 
         void CustomComboBox_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index < 0)
-                return;
+            if (e.Index < 0) return;
 
-            ComboBox combo = sender as ComboBox;
+            CustomComboBox combo = sender as CustomComboBox;
 
             if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
             {
@@ -49,7 +50,12 @@ namespace OverloadClientTool
                 e.Graphics.DrawString(combo.Items[e.Index].ToString(), e.Font, new SolidBrush(ComboForeColor), new Point(e.Bounds.X, e.Bounds.Y));
             }
 
+
             e.DrawFocusRectangle();
+            using (var p = new Pen(ComboBorderColor, 1))
+            {
+                e.Graphics.DrawRectangle(p, 0, 0, Width - 1, Height - 1);
+            }
         }
 
 
@@ -70,33 +76,10 @@ namespace OverloadClientTool
                     using (var p = new Pen(ComboBackColor, 2))
                     {
                         g.DrawRectangle(p, 2, 2, Width - buttonWidth - 4, Height - 4);
-                    }                    
+                    }
                 }
             }
         }
 
-        /*
-        private void OnDrawItem(object sender, DrawItemEventArgs e)
-        {
-            const TextFormatFlags flags = TextFormatFlags.Left | TextFormatFlags.VerticalCenter;
-
-            BackColor = ComboBackColor;
-            ForeColor = ComboForeColor;
-
-            if (e.Index >= 0)
-            {
-                e.DrawBackground();
-                // e.Graphics.DrawRectangle(Pens.Red, 2, e.Bounds.Y + 2, 14, 14); // Simulate an icon.
-
-                var textRect = e.Bounds;
-                // textRect.X += 20;
-                // textRect.Width -= 20;
-
-                string itemText = DesignMode ? "CustomListBox" : Items[e.Index].ToString();
-                TextRenderer.DrawText(e.Graphics, itemText, e.Font, textRect, ComboForeColor, flags);
-                e.DrawFocusRectangle();
-            }
-        }
-    */
     }
 }

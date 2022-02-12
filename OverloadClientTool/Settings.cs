@@ -90,6 +90,12 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.D2App = value; }
         }
 
+        public string D1App
+        {
+            get { return Properties.Settings.Default.D1App; }
+            set { Properties.Settings.Default.D1App = value; }
+        }
+
         public string OlmodServerTrackerBaseUrl
         {
             get { return Properties.Settings.Default.trackerBaseUrl; }
@@ -521,8 +527,9 @@ namespace OverloadClientTool
             AssistScoringCheckBox.Checked = OlmodAssistScoring;
 
             // Descent 2 and 3 settings.
-            Descent3Executable.Text = D3App;
+            Descent1Executable.Text = D1App;
             Descent2Executable.Text = D2App;
+            Descent3Executable.Text = D3App;
             Descent3Args.Text = D3Args;
 
             // Check for change to new theme selection.
@@ -546,8 +553,9 @@ namespace OverloadClientTool
             OverloadRunning.Image = theme.IsRunningImage;
             ServerRunning.Image = theme.IsRunningImage;
 
-            Descent3Running.Image = theme.IsRunningImage;
+            Descent1Running.Image = theme.IsRunningImage;
             Descent2Running.Image = theme.IsRunningImage;
+            Descent3Running.Image = theme.IsRunningImage;
 
             // Set the active theme (recursively).
             ApplyThemeToControl(this, theme);
@@ -619,7 +627,7 @@ namespace OverloadClientTool
                 {
                     (control as CustomComboBox).ComboBackColor = theme.InputBackColor; // theme.ButtonEnabledBackColor;
                     (control as CustomComboBox).ComboForeColor = theme.InputForeColor; // theme.ButtonEnabledForeColor;
-                    (control as CustomComboBox).BorderColor = theme.InputForeColor;
+                    (control as CustomComboBox).ComboBorderColor = theme.InputForeColor;
                 }
             }
             else if (control is LinkLabel)

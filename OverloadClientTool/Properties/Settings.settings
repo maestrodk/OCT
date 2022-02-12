@@ -131,5 +131,8 @@
     <Setting Name="D2App" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Descent2\d2x-rebirth.exe</Value>
     </Setting>
+    <Setting Name="D1App" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Descent\d1x-rebirth.exe</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

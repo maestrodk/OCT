@@ -59,6 +59,7 @@ namespace OverloadClientTool
 
         private int D3ProcessId = 0;
         private int D2ProcessId = 0;
+        private int D1ProcessId = 0;
 
         // Directory for DLC.
         private string dlcLocation = null;
@@ -292,7 +293,7 @@ namespace OverloadClientTool
             LabelDownArrow.Visible = false;
 
             // Announce ourself.
-            Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren Michélsen.");
+            Info("Overload Client Tool " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " by Søren 'Maestro' Michélsen.");
             Info("Olproxy 0.3.1 by Arne de Bruijn.");
 
             // Start background monitor for periodic log updates.
@@ -850,6 +851,18 @@ namespace OverloadClientTool
             }
         }
 
+        public bool IsD1Running
+        {
+            get
+            {
+                bool running = false;
+                string name = Path.GetFileNameWithoutExtension(Descent1Executable.Text);
+                if (name.EndsWith("\\")) name = name.Substring(0, name.Length - 1);
+                try { if (GetRunningProcess(name) != null) running = true; } catch { }
+                return running;
+            }
+        }
+
         /// <summary>
         /// Background logging monitor. Sets GroupBox titles to reflect running status.
         /// </summary>
@@ -876,8 +889,10 @@ namespace OverloadClientTool
                 bool overloadRunning = IsOverloadRunning;
                 bool olproxyRunning = IsOlproxyRunning;
                 bool olmodRunning = IsOlmodRunning;
+
                 bool d3Running = IsD3Running;
                 bool d2Running = IsD2Running;
+                bool d1Running = IsD1Running;
 
                 if (!overloadRunning && !olmodRunning && !d3Running && !d2Running && !shutdown)
                 {
@@ -934,12 +949,15 @@ namespace OverloadClientTool
 
                     Descent3Running.Visible = d3Running;
                     Descent2Running.Visible = d2Running;
+                    Descent1Running.Visible = d1Running;
 
                     UpdateOlmodButton.Enabled = !olmodRunning;
 
                     StartStopButton.Text = (overloadRunning || olmodRunning) ? "Stop client" : "Start client";
                     StartStopOlproxyButton.Text = (olproxyRunning) ? "Stop" : "Start";
 
+                    StartD1.Text = (d1Running) ? "Stop D1" : "Start D1";
+                    StartD2.Text = (d1Running) ? "Stop D2" : "Start D2";
                     StartD3Main.Text = (d3Running) ? "Stop D3" : "Start D3";
 
                     trayMenuItemStart.Text = (overloadRunning || olmodRunning) ? "&Stop" : "&Start";
@@ -2989,13 +3007,27 @@ namespace OverloadClientTool
         private void DefaultMonitorComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             DefaultDisplay = DefaultMonitorComboBox.SelectedItem as string;
-            Defocus();
+
+            new System.Threading.Timer((s) =>
+            {
+                DefaultMonitorComboBox.Invoke(new Action(() =>
+                {
+                    Defocus();
+                }));
+            }, null, 10, System.Threading.Timeout.Infinite);
         }
 
         private void GamingMonitorComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             GamingDisplay = GamingMonitorComboBox.SelectedItem as string;
-            Defocus();
+
+            new System.Threading.Timer((s) =>
+            {
+                GamingMonitorComboBox.Invoke(new Action(() =>
+                {
+                    Defocus();
+                }));
+            }, null, 10, System.Threading.Timeout.Infinite);
         }
 
         private void SuppressWinKeysCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -3117,23 +3149,18 @@ namespace OverloadClientTool
             int running = 0;
             foreach (Process process in Process.GetProcesses())
             {
-                if ((process.Id != D3ProcessId) && (process.ProcessName.ToLower() == name)) running++;
+                if (process.ProcessName.ToLower() == name) running++;
             }
 
-            if (running == 1)
+            if (running > 0)
             {
                 Info("Descent 3 (main.exe) ís already running.");
                 return;
-            }
-
-            Info($"Starting up Descent 3 (main.exe).");
-
-            // If more than one is running we kill them all and start fresh instance.
-            if (running > 1) KillRunningProcess(name);
+            }            
 
             LogDebugMessage($"Launcing {exePath} with \"{commandLineArgs}\"");
 
-            // (Re)start application..
+            // Start application..
             Process appStart = new Process
             {
                 StartInfo = new ProcessStartInfo(exePath, commandLineArgs)
@@ -3198,10 +3225,10 @@ namespace OverloadClientTool
             int running = 0;
             foreach (Process process in Process.GetProcesses())
             {
-                if ((process.Id != D2ProcessId) && (process.ProcessName.ToLower() == name)) running++;
+                if (process.ProcessName.ToLower() == name) running++;
             }
 
-            if (running == 1)
+            if (running > 0)
             {
                 Info("Descent 2 ís already running.");
                 return;
@@ -3209,10 +3236,6 @@ namespace OverloadClientTool
 
             Info($"Starting up Descent 2.");
 
-            // If more than one is running we kill them all and start fresh instance.
-            if (running > 1) KillRunningProcess(name);
-
-            //LogDebugMessage($"Launcing {exePath} with \"{commandLineArgs}\"");
             LogDebugMessage($"Launcing {exePath}");
 
             // (Re)start application..
@@ -3240,6 +3263,120 @@ namespace OverloadClientTool
         private void DXXRebirthLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try { Process.Start(new ProcessStartInfo(DXXRebirthLink.Text)); } catch { }
+        }
+
+        private void KillD1()
+        {
+            string name = Path.GetFileNameWithoutExtension(Descent1Executable.Text);
+            if (name.EndsWith("\\")) name = name.Substring(0, name.Length - 1);
+            KillRunningProcess(name);
+        }
+
+        private void StartD1_Click(object sender, EventArgs e)
+        {
+            if (StartD1.Text.Contains("Stop D1"))
+            {
+                enableDisableKeys.SuppressWinKeys = false;
+
+                KillD1();
+
+                StartD1.Text = "Start D1";
+            }
+            else
+            {
+                // Switch display if enabled and the display exists.
+                CheckSwitchDisplay();
+
+                enableDisableKeys.SuppressWinKeys = SuppressWinKeys;
+
+                LaunchD1();
+
+                StartD1.Text = "Stop D1";
+            }
+        }
+
+        private void LaunchD1()
+        {
+            LogDebugMessage("LaunchD2()");
+
+            string exePath = Descent1Executable.Text;
+            if (!OverloadClientToolApplication.ValidFileName(exePath, true))
+            {
+                MessageBox.Show("Descent application not found!");
+                return;
+            }
+
+            string name = Path.GetFileNameWithoutExtension(exePath);
+            if (name.EndsWith("\\")) name = name.Substring(0, name.Length - 1);
+
+            // Start application it is not already running.
+            int running = 0;
+            foreach (Process process in Process.GetProcesses())
+            {
+                if (process.ProcessName.ToLower() == name) running++;
+            }
+
+            if (running > 0)
+            {
+                Info("Descent ís already running.");
+                return;
+            }
+
+            Info($"Starting up Descent.");
+
+            LogDebugMessage($"Launcing {exePath}");
+
+            // (Re)start application..
+            Process appStart = new Process
+            {
+                StartInfo = new ProcessStartInfo(exePath /*commandLineArgs */)
+            };
+
+            appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(exePath);
+            appStart.Start();
+
+            D1ProcessId = appStart.Id;
+        }
+
+        private void Descent1Executable_TextChanged(object sender, EventArgs e)
+        {
+            D1App = Descent1Executable.Text;
+            ValidateSettings();
+        }
+
+        private void Descent1Executable_DoubleClick(object sender, EventArgs e)
+        {
+            Descent1Executable.SelectionLength = 0;
+
+            string save = Directory.GetCurrentDirectory();
+
+            SelectExecutable.FileName = Path.GetFileName(Descent1Executable.Text);
+            SelectExecutable.InitialDirectory = Path.GetDirectoryName(Descent1Executable.Text);
+
+            DialogResult result = SelectExecutable.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                Descent1Executable.Text = SelectExecutable.FileName;
+                Descent1Executable.SelectionLength = 0;
+
+                D1App = Descent1Executable.Text;
+            }
+
+            Directory.SetCurrentDirectory(save);
+        }
+
+        private void DefaultMonitorComboBox_MouseUp(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void GamingMonitorComboBox_MouseUp(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void DefaultMonitorComboBox_MouseClick(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

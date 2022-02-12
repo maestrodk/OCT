@@ -160,12 +160,12 @@ namespace OverloadClientTool
             this.EnableDebugCheckBox = new OverloadClientTool.CustomCheckBox();
             this.AutoUpdateCheckBox = new OverloadClientTool.CustomCheckBox();
             this.MainToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.StartD3Main = new System.Windows.Forms.Button();
+            this.StartD2 = new System.Windows.Forms.Button();
             this.ServerAnnounceOnTrackerCheckBox = new OverloadClientTool.CustomCheckBox();
             this.ServerKeepListed = new OverloadClientTool.CustomCheckBox();
             this.AssistScoringCheckBox = new OverloadClientTool.CustomCheckBox();
             this.AutoStartCheckBox = new OverloadClientTool.CustomCheckBox();
-            this.StartD3Main = new System.Windows.Forms.Button();
-            this.StartD2 = new System.Windows.Forms.Button();
             this.PaneSelectServer = new System.Windows.Forms.Button();
             this.PaneServer = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -213,18 +213,23 @@ namespace OverloadClientTool
             this.panel16 = new System.Windows.Forms.Panel();
             this.Descent3Args = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
+            this.DXXRebirthLink = new System.Windows.Forms.LinkLabel();
             this.DataiListLink = new System.Windows.Forms.LinkLabel();
             this.DescentForumSOD = new System.Windows.Forms.LinkLabel();
+            this.panel19 = new System.Windows.Forms.Panel();
+            this.Descent1Executable = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
             this.panel17 = new System.Windows.Forms.Panel();
             this.Descent2Executable = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.panel18 = new System.Windows.Forms.Panel();
             this.Descent3Executable = new System.Windows.Forms.TextBox();
             this.label23 = new System.Windows.Forms.Label();
+            this.Descent1Running = new System.Windows.Forms.PictureBox();
             this.Descent3Running = new System.Windows.Forms.PictureBox();
+            this.StartD1 = new System.Windows.Forms.Button();
             this.Descent2Running = new System.Windows.Forms.PictureBox();
             this.PaneSelectDescent = new System.Windows.Forms.Button();
-            this.DXXRebirthLink = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).BeginInit();
@@ -261,8 +266,10 @@ namespace OverloadClientTool
             this.panel13.SuspendLayout();
             this.PanelDescent.SuspendLayout();
             this.panel16.SuspendLayout();
+            this.panel19.SuspendLayout();
             this.panel17.SuspendLayout();
             this.panel18.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Descent1Running)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Descent3Running)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Descent2Running)).BeginInit();
             this.SuspendLayout();
@@ -1300,12 +1307,15 @@ namespace OverloadClientTool
             this.DefaultMonitorComboBox.ComboForeColor = System.Drawing.Color.Empty;
             this.DefaultMonitorComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.DefaultMonitorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.DefaultMonitorComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.DefaultMonitorComboBox.FormattingEnabled = true;
             this.DefaultMonitorComboBox.Location = new System.Drawing.Point(14, 30);
             this.DefaultMonitorComboBox.Name = "DefaultMonitorComboBox";
             this.DefaultMonitorComboBox.Size = new System.Drawing.Size(237, 21);
             this.DefaultMonitorComboBox.TabIndex = 6;
+            this.MainToolTip.SetToolTip(this.DefaultMonitorComboBox, "Default Desktop monitor");
             this.DefaultMonitorComboBox.SelectedIndexChanged += new System.EventHandler(this.DefaultMonitorComboBox_SelectedIndexChanged);
+            this.DefaultMonitorComboBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DefaultMonitorComboBox_MouseUp);
             // 
             // GamingMonitorComboBox
             // 
@@ -1314,12 +1324,15 @@ namespace OverloadClientTool
             this.GamingMonitorComboBox.ComboForeColor = System.Drawing.Color.Empty;
             this.GamingMonitorComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.GamingMonitorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GamingMonitorComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.GamingMonitorComboBox.FormattingEnabled = true;
             this.GamingMonitorComboBox.Location = new System.Drawing.Point(13, 76);
             this.GamingMonitorComboBox.Name = "GamingMonitorComboBox";
             this.GamingMonitorComboBox.Size = new System.Drawing.Size(237, 21);
             this.GamingMonitorComboBox.TabIndex = 6;
+            this.MainToolTip.SetToolTip(this.GamingMonitorComboBox, "Overload gaming monitor");
             this.GamingMonitorComboBox.SelectedIndexChanged += new System.EventHandler(this.GamingMonitorComboBox_SelectedIndexChanged);
+            this.GamingMonitorComboBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GamingMonitorComboBox_MouseUp);
             // 
             // DefaultDisplayCheckBox
             // 
@@ -1946,6 +1959,30 @@ namespace OverloadClientTool
             this.MainToolTip.InitialDelay = 1000;
             this.MainToolTip.ReshowDelay = 100;
             // 
+            // StartD3Main
+            // 
+            this.StartD3Main.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StartD3Main.Location = new System.Drawing.Point(20, 108);
+            this.StartD3Main.Name = "StartD3Main";
+            this.StartD3Main.Size = new System.Drawing.Size(72, 23);
+            this.StartD3Main.TabIndex = 14;
+            this.StartD3Main.Text = "Start D3";
+            this.MainToolTip.SetToolTip(this.StartD3Main, "Start Descent 3 using MAIN.EXE");
+            this.StartD3Main.UseVisualStyleBackColor = true;
+            this.StartD3Main.Click += new System.EventHandler(this.StartD3Main_Click);
+            // 
+            // StartD2
+            // 
+            this.StartD2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StartD2.Location = new System.Drawing.Point(20, 195);
+            this.StartD2.Name = "StartD2";
+            this.StartD2.Size = new System.Drawing.Size(72, 23);
+            this.StartD2.TabIndex = 14;
+            this.StartD2.Text = "Start D2";
+            this.MainToolTip.SetToolTip(this.StartD2, "Start Descent 2");
+            this.StartD2.UseVisualStyleBackColor = true;
+            this.StartD2.Click += new System.EventHandler(this.StartD2_Click);
+            // 
             // ServerAnnounceOnTrackerCheckBox
             // 
             this.ServerAnnounceOnTrackerCheckBox.AutoSize = true;
@@ -2019,30 +2056,6 @@ namespace OverloadClientTool
             this.MainToolTip.SetToolTip(this.AutoStartCheckBox, "Select this to start the server when OCT starts");
             this.AutoStartCheckBox.UseVisualStyleBackColor = false;
             this.AutoStartCheckBox.CheckedChanged += new System.EventHandler(this.AutoStartCheckBox_CheckedChanged);
-            // 
-            // StartD3Main
-            // 
-            this.StartD3Main.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StartD3Main.Location = new System.Drawing.Point(20, 108);
-            this.StartD3Main.Name = "StartD3Main";
-            this.StartD3Main.Size = new System.Drawing.Size(72, 23);
-            this.StartD3Main.TabIndex = 14;
-            this.StartD3Main.Text = "Start D3";
-            this.MainToolTip.SetToolTip(this.StartD3Main, "Start Descent 3 using MAIN.EXE");
-            this.StartD3Main.UseVisualStyleBackColor = true;
-            this.StartD3Main.Click += new System.EventHandler(this.StartD3Main_Click);
-            // 
-            // StartD2
-            // 
-            this.StartD2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StartD2.Location = new System.Drawing.Point(20, 264);
-            this.StartD2.Name = "StartD2";
-            this.StartD2.Size = new System.Drawing.Size(72, 23);
-            this.StartD2.TabIndex = 14;
-            this.StartD2.Text = "Start D2";
-            this.MainToolTip.SetToolTip(this.StartD2, "Start Descent 2");
-            this.StartD2.UseVisualStyleBackColor = true;
-            this.StartD2.Click += new System.EventHandler(this.StartD2_Click);
             // 
             // PaneSelectServer
             // 
@@ -2510,9 +2523,12 @@ namespace OverloadClientTool
             this.PanelDescent.Controls.Add(this.DXXRebirthLink);
             this.PanelDescent.Controls.Add(this.DataiListLink);
             this.PanelDescent.Controls.Add(this.DescentForumSOD);
+            this.PanelDescent.Controls.Add(this.panel19);
             this.PanelDescent.Controls.Add(this.panel17);
             this.PanelDescent.Controls.Add(this.panel18);
+            this.PanelDescent.Controls.Add(this.Descent1Running);
             this.PanelDescent.Controls.Add(this.Descent3Running);
+            this.PanelDescent.Controls.Add(this.StartD1);
             this.PanelDescent.Controls.Add(this.Descent2Running);
             this.PanelDescent.Controls.Add(this.StartD2);
             this.PanelDescent.Controls.Add(this.StartD3Main);
@@ -2551,11 +2567,24 @@ namespace OverloadClientTool
             this.label24.TabIndex = 3;
             this.label24.Text = "Descent 3 Startup Parameters (main.exe)";
             // 
+            // DXXRebirthLink
+            // 
+            this.DXXRebirthLink.AutoSize = true;
+            this.DXXRebirthLink.LinkColor = System.Drawing.Color.Blue;
+            this.DXXRebirthLink.Location = new System.Drawing.Point(375, 292);
+            this.DXXRebirthLink.Name = "DXXRebirthLink";
+            this.DXXRebirthLink.Size = new System.Drawing.Size(146, 13);
+            this.DXXRebirthLink.TabIndex = 17;
+            this.DXXRebirthLink.TabStop = true;
+            this.DXXRebirthLink.Text = "https://www.dxx-rebirth.com/";
+            this.DXXRebirthLink.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
+            this.DXXRebirthLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DXXRebirthLink_LinkClicked);
+            // 
             // DataiListLink
             // 
             this.DataiListLink.AutoSize = true;
             this.DataiListLink.LinkColor = System.Drawing.Color.Blue;
-            this.DataiListLink.Location = new System.Drawing.Point(17, 167);
+            this.DataiListLink.Location = new System.Drawing.Point(134, 119);
             this.DataiListLink.Name = "DataiListLink";
             this.DataiListLink.Size = new System.Drawing.Size(220, 13);
             this.DataiListLink.TabIndex = 17;
@@ -2568,7 +2597,7 @@ namespace OverloadClientTool
             // 
             this.DescentForumSOD.AutoSize = true;
             this.DescentForumSOD.LinkColor = System.Drawing.Color.Blue;
-            this.DescentForumSOD.Location = new System.Drawing.Point(17, 144);
+            this.DescentForumSOD.Location = new System.Drawing.Point(134, 103);
             this.DescentForumSOD.Name = "DescentForumSOD";
             this.DescentForumSOD.Size = new System.Drawing.Size(174, 13);
             this.DescentForumSOD.TabIndex = 17;
@@ -2577,11 +2606,41 @@ namespace OverloadClientTool
             this.DescentForumSOD.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
             this.DescentForumSOD.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DescentForumSOD_LinkClicked);
             // 
+            // panel19
+            // 
+            this.panel19.Controls.Add(this.Descent1Executable);
+            this.panel19.Controls.Add(this.label27);
+            this.panel19.Location = new System.Drawing.Point(14, 234);
+            this.panel19.Name = "panel19";
+            this.panel19.Size = new System.Drawing.Size(521, 43);
+            this.panel19.TabIndex = 18;
+            // 
+            // Descent1Executable
+            // 
+            this.Descent1Executable.BackColor = System.Drawing.Color.Gray;
+            this.Descent1Executable.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Descent1Executable.Location = new System.Drawing.Point(6, 17);
+            this.Descent1Executable.Margin = new System.Windows.Forms.Padding(2);
+            this.Descent1Executable.Name = "Descent1Executable";
+            this.Descent1Executable.Size = new System.Drawing.Size(501, 20);
+            this.Descent1Executable.TabIndex = 4;
+            this.Descent1Executable.TextChanged += new System.EventHandler(this.Descent1Executable_TextChanged);
+            this.Descent1Executable.DoubleClick += new System.EventHandler(this.Descent1Executable_DoubleClick);
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(4, 2);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(102, 13);
+            this.label27.TabIndex = 3;
+            this.label27.Text = "Descent Application";
+            // 
             // panel17
             // 
             this.panel17.Controls.Add(this.Descent2Executable);
             this.panel17.Controls.Add(this.label22);
-            this.panel17.Location = new System.Drawing.Point(14, 215);
+            this.panel17.Location = new System.Drawing.Point(14, 146);
             this.panel17.Name = "panel17";
             this.panel17.Size = new System.Drawing.Size(521, 43);
             this.panel17.TabIndex = 18;
@@ -2637,6 +2696,19 @@ namespace OverloadClientTool
             this.label23.TabIndex = 3;
             this.label23.Text = "Descent 3 Application";
             // 
+            // Descent1Running
+            // 
+            this.Descent1Running.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Descent1Running.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
+            this.Descent1Running.Location = new System.Drawing.Point(102, 284);
+            this.Descent1Running.Margin = new System.Windows.Forms.Padding(3, 3, 8, 3);
+            this.Descent1Running.Name = "Descent1Running";
+            this.Descent1Running.Size = new System.Drawing.Size(22, 21);
+            this.Descent1Running.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.Descent1Running.TabIndex = 10;
+            this.Descent1Running.TabStop = false;
+            this.Descent1Running.Visible = false;
+            // 
             // Descent3Running
             // 
             this.Descent3Running.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
@@ -2650,11 +2722,22 @@ namespace OverloadClientTool
             this.Descent3Running.TabStop = false;
             this.Descent3Running.Visible = false;
             // 
+            // StartD1
+            // 
+            this.StartD1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StartD1.Location = new System.Drawing.Point(20, 283);
+            this.StartD1.Name = "StartD1";
+            this.StartD1.Size = new System.Drawing.Size(72, 23);
+            this.StartD1.TabIndex = 14;
+            this.StartD1.Text = "Start D1";
+            this.StartD1.UseVisualStyleBackColor = true;
+            this.StartD1.Click += new System.EventHandler(this.StartD1_Click);
+            // 
             // Descent2Running
             // 
             this.Descent2Running.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Descent2Running.Image = global::OverloadClientTool.Properties.Resources.arrows_blue_on_white;
-            this.Descent2Running.Location = new System.Drawing.Point(102, 265);
+            this.Descent2Running.Location = new System.Drawing.Point(102, 196);
             this.Descent2Running.Margin = new System.Windows.Forms.Padding(3, 3, 8, 3);
             this.Descent2Running.Name = "Descent2Running";
             this.Descent2Running.Size = new System.Drawing.Size(22, 21);
@@ -2679,19 +2762,6 @@ namespace OverloadClientTool
             this.PaneSelectDescent.Text = "  Descent";
             this.PaneSelectDescent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.PaneSelectDescent.UseVisualStyleBackColor = false;
-            // 
-            // DXXRebirthLink
-            // 
-            this.DXXRebirthLink.AutoSize = true;
-            this.DXXRebirthLink.LinkColor = System.Drawing.Color.Blue;
-            this.DXXRebirthLink.Location = new System.Drawing.Point(18, 305);
-            this.DXXRebirthLink.Name = "DXXRebirthLink";
-            this.DXXRebirthLink.Size = new System.Drawing.Size(146, 13);
-            this.DXXRebirthLink.TabIndex = 17;
-            this.DXXRebirthLink.TabStop = true;
-            this.DXXRebirthLink.Text = "https://www.dxx-rebirth.com/";
-            this.DXXRebirthLink.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
-            this.DXXRebirthLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DXXRebirthLink_LinkClicked);
             // 
             // OCTMain
             // 
@@ -2793,10 +2863,13 @@ namespace OverloadClientTool
             this.PanelDescent.PerformLayout();
             this.panel16.ResumeLayout(false);
             this.panel16.PerformLayout();
+            this.panel19.ResumeLayout(false);
+            this.panel19.PerformLayout();
             this.panel17.ResumeLayout(false);
             this.panel17.PerformLayout();
             this.panel18.ResumeLayout(false);
             this.panel18.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Descent1Running)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Descent3Running)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Descent2Running)).EndInit();
             this.ResumeLayout(false);
@@ -2997,6 +3070,11 @@ namespace OverloadClientTool
         private System.Windows.Forms.LinkLabel DescentForumSOD;
         private System.Windows.Forms.LinkLabel DataiListLink;
         private System.Windows.Forms.LinkLabel DXXRebirthLink;
+        private System.Windows.Forms.Panel panel19;
+        private System.Windows.Forms.TextBox Descent1Executable;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.PictureBox Descent1Running;
+        private System.Windows.Forms.Button StartD1;
     }
 }
 

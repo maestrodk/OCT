@@ -134,6 +134,7 @@ namespace OverloadClientTool
                 return null;
             }
         }
+
         private static void UpdateActiveServers(List<Server> servers)
         {
             List<string> removeList = new List<string>();
@@ -160,8 +161,16 @@ namespace OverloadClientTool
 
                     if (change != 0)
                     {
-                        if (change > 0) Parent.AddNewLogMessage($"Some players have joined server {server.Name}, map {server.Map}");
-                        else Parent.AddNewLogMessage($"One player left server {server.Name}, map {server.Map}");
+                        if (change > 0)
+                        {
+                            if (change == 1) Parent.AddNewLogMessage($"A player joined server {server.Name}, map {server.Map}");
+                            else Parent.AddNewLogMessage($"Some players joined server {server.Name}, map {server.Map}");
+                        }
+                        else
+                        {
+                            if (change == -1 ) Parent.AddNewLogMessage($"A player left server {server.Name}, map {server.Map}");
+                            else Parent.AddNewLogMessage($"Some players left server {server.Name}, map {server.Map}");
+                        }
                     }
 
                     // Remove from active list if no players.
@@ -175,8 +184,9 @@ namespace OverloadClientTool
                     // Add to active list if player joined.
                     if (server.NumPlayers > 0)
                     {
+                        if (server.NumPlayers == 1) Parent.AddNewLogMessage($"A player joined server {server.Name}, map {server.Map}");
+                        else Parent.AddNewLogMessage($"Some players joined server {server.Name}, map {server.Map}");
                         ActiveServers.Add(server.IP, server.NumPlayers);
-                        Parent.AddNewLogMessage($"One player joined {server.Name}, map {server.Map}");
                     }
                 }
             }

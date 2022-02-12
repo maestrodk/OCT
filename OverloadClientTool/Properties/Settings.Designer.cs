@@ -539,5 +539,17 @@ namespace OverloadClientTool.Properties {
                 this["D2App"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Descent\\d1x-rebirth.exe")]
+        public string D1App {
+            get {
+                return ((string)(this["D1App"]));
+            }
+            set {
+                this["D1App"] = value;
+            }
+        }
     }
 }
