@@ -3373,10 +3373,5 @@ namespace OverloadClientTool
         private void GamingMonitorComboBox_MouseUp(object sender, MouseEventArgs e)
         {
         }
-
-        private void DefaultMonitorComboBox_MouseClick(object sender, MouseEventArgs e)
-        {
-
-        }
     }
 }

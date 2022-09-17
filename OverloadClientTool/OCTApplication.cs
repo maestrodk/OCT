@@ -22,7 +22,7 @@ namespace OverloadClientTool
         [STAThread]
         static void Main(string[] args)
         {
-            if (!singleton.WaitOne(0, false)) return;
+            if (!singleton.WaitOne(1000, false)) return;
 
             // To embed a dll in a compiled exe:
             // 1 - Change the properties of the dll in References so that Copy Local=false
@@ -120,11 +120,37 @@ namespace OverloadClientTool
 
             try
             {
+                bool retry = true;
+
                 // Execute main UI loop.
-                octMain = new OCTMain(args, debugFileName, oldSettings);
-                LogDebugMessage("Starting OCT main UI thread.", debugFileName);
+                while (retry)
+                {
+                    retry = false;
+
+                    try
+                    {
+                        octMain = new OCTMain(args, debugFileName, oldSettings);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("The configuration file seems to be corrupted and all settings had to be reset.", "Uh-oh!");
+
+                        string configurationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OverloadClientTool");
+
+                        string[] dirList = Directory.GetDirectories(configurationFolder, "OverloadClientTool.exe_Url_*", SearchOption.TopDirectoryOnly);
+                        foreach (string dir in dirList)
+                        {
+                            Directory.Delete(dir, true);
+                        }
+
+                        Application.Restart();
+                        Environment.Exit(0);
+                    }
+                }
+
+                LogDebugMessage("Starting OCT main thread, launching UI loop.", debugFileName);
                 Application.Run(octMain);
-                LogDebugMessage("OCT main exit - shutting UI thread.", debugFileName);
+                LogDebugMessage("OCT main exit - shutting down mail startup thread.", debugFileName);
             }
             catch (Exception ex)
             {
@@ -133,12 +159,17 @@ namespace OverloadClientTool
                 LogDebugMessage($"Application crashed: {message}", debugFileName);
 
                 OverloadClientApplication.OCTErrorForm errorForm = new OverloadClientApplication.OCTErrorForm(message);
-                OCTMain.ApplyThemeToControl(errorForm, octMain.theme);
+                try 
+                { 
+                    OCTMain.ApplyThemeToControl(errorForm, octMain.theme);
+                    errorForm.BackColor = octMain.theme.InactivePaneButtonBackColor;
+                    errorForm.StartPosition = FormStartPosition.CenterParent;
+                    octMain.Dispose();
+                }
+                catch 
+                { 
+                }
 
-                errorForm.BackColor = octMain.theme.InactivePaneButtonBackColor;
-                errorForm.StartPosition = FormStartPosition.CenterParent;
-
-                octMain.Dispose();
 
                 errorForm.ShowDialog();
             }

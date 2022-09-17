@@ -21,13 +21,16 @@ namespace OverloadClientTool
         private string pilotsBackupPath = SpecialFolderLocalLowPath + Path.DirectorySeparatorChar + "Revival" + Path.DirectorySeparatorChar + "Overload" + Path.DirectorySeparatorChar + "Pilot Backup";
 
         private List<string> currentPilots = null;
+        private string currentLanguageId = null;
 
-        BackgroundWorker pilotsBackgroundWorker = null;        
- 
+        BackgroundWorker pilotsBackgroundWorker = null;
+
+        private bool updating = false;
+
         private void InitPilotsListBox()
         {
             LogDebugMessage("InitPilotsListBox()");
-            
+
             // Init listbox.
             CheckAndUpdatePilots();
 
@@ -40,6 +43,7 @@ namespace OverloadClientTool
             pilotsBackgroundWorker = new BackgroundWorker();
             pilotsBackgroundWorker.DoWork += BackgroundPilotChecker;
             pilotsBackgroundWorker.RunWorkerAsync();
+
         }
 
         private void CheckAndUpdatePilots()
@@ -50,27 +54,51 @@ namespace OverloadClientTool
                 List<string> overloadPilots = OverloadPilots;
 
                 bool update = (currentPilots == null) || (overloadPilots.Count != currentPilots.Count);
-                if (!update) foreach (string pilotName in overloadPilots) if (!currentPilots.Contains(pilotName)) update = true;
+                if (!update)
+                {
+                    foreach (string pilotName in overloadPilots)
+                    {
+                        if (!currentPilots.Contains(pilotName)) update = true;
+                    }
+                }
 
                 if (update)
                 {
                     // Update listbox content.
                     currentPilots = overloadPilots;
                     PilotsListBox.Items.Clear();
-                    foreach (string pilot in currentPilots) PilotsListBox.Items.Add(pilot);
+
+                    string selectPilot = null;
+                    foreach (string pilot in currentPilots)
+                    {
+                        PilotsListBox.Items.Add(pilot);
+                        if (pilot == CurrentPilot) selectPilot = pilot;
+                    }
+
+                    if (!String.IsNullOrEmpty(selectPilot)) PilotsListBox.SelectedItem = selectPilot;
                 }
 
                 // Enabled/disable buttons.
-                bool delete = (PilotsListBox.Items.Count > 1) && (PilotsListBox.SelectedIndex >= 0);     // Don't allow last pilot to be deleted.
-                bool rename = (PilotsListBox.SelectedIndex >= 0);
-                bool clone = (PilotsListBox.SelectedIndex >= 0);
                 bool select = (PilotsListBox.SelectedIndex >= 0);
+                bool delete = (PilotsListBox.Items.Count > 1) && select;     // Don't allow last pilot to be deleted.
+                bool rename = select;
+                bool clone = select;
+
+                string pilotSelected = select ? (string)PilotsListBox.SelectedItem.ToString() : null;
+                string pilotCurrent = CurrentPilot;
 
                 if (select)
                 {
-                    string pilotSelected = (string)PilotsListBox.Items[PilotsListBox.SelectedIndex];
-                    string pilotCurrent = CurrentPilot;
                     if (pilotSelected.ToLower() == pilotCurrent.ToLower()) select = false;
+                }
+
+                if (!String.IsNullOrEmpty(pilotSelected) && !updating)
+                {
+                    PilotLanguageComboBox.Enabled = true;
+                }
+                else
+                {
+                    PilotLanguageComboBox.Enabled = false;
                 }
 
                 if (IsOverloadOrOlmodRunning)
@@ -81,6 +109,7 @@ namespace OverloadClientTool
                     select = false;
                 }
 
+                // From here on select indicates able to set the current pilot.
                 if (!IsElevated) select = false;
 
                 PilotDeleteButton.Enabled = delete;
@@ -172,12 +201,18 @@ namespace OverloadClientTool
             if (PilotsListBox.SelectedIndex >= 0)
             {
                 string pilotSelected = (string)PilotsListBox.Items[PilotsListBox.SelectedIndex];
+
                 GetPilotXP(pilotSelected);
+                currentLanguageId = GetPilotOption(pilotSelected, "O_LANGUAGE");
+                PilotLanguageComboBox.SelectedIndex = Convert.ToInt32(currentLanguageId);
             }
             else
             {
                 GetPilotXP(null);
             }
+
+            PilotLanguageComboBox.Focus();
+            label28.Focus();
         }
 
         private void PilotBackupButton_Click(object sender, EventArgs e)
@@ -600,6 +635,65 @@ namespace OverloadClientTool
                 return;
             }
 
+            try
+            {
+                PilotXPTextBox.Text = GetPilotOption(pilotName, "PS_XP2");
+            }
+            catch
+            {
+                PilotXPTextBox.Text = "???";
+            }
+        }
+
+        private void PilotLanguageComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        // Language codes.
+        //
+        // "0" = English
+        // "1" = Deutsch
+        // "2" = Espanõl
+        // "3" = Français
+        // "4" = Русский
+
+        private void PilotLanguageComboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            string pilotSelected = PilotsListBox.SelectedItem.ToString();
+
+            if (IsOverloadOrOlmodRunning && (CurrentPilot.ToLower() == pilotSelected))
+            {
+                MessageBox.Show($"Can't modify the active pilot!");
+                return;
+            }
+
+            updating = true;
+
+            try
+            {
+                string newLanguageId = PilotLanguageComboBox.SelectedIndex.ToString();
+                if (currentLanguageId != newLanguageId) SetPilotOption(pilotSelected, "O_LANGUAGE", newLanguageId);
+                currentLanguageId = newLanguageId;
+            }
+            catch
+            {
+            }
+            finally
+            {
+                updating = false;
+            }
+
+            label28.Focus();
+        }
+
+        /// <summary>
+        /// Get pilot option as string value or null if not found/error occurs.
+        /// </summary>
+        /// <param name="pilotName">Pilot name</param>
+        /// <param name="optionName">Option name</param>
+        /// <returns></returns>
+        private string GetPilotOption(string pilotName, string optionName)
+        {
             try { Directory.CreateDirectory(pilotsPath); } catch { }
 
             try
@@ -609,12 +703,69 @@ namespace OverloadClientTool
                 string[] xprefsList = xprefs.Split(";".ToCharArray(), StringSplitOptions.None);
                 for (int i = 0; i < xprefsList.Length; i++)
                 {
-                    if (xprefsList[i].StartsWith("PS_XP2:")) PilotXPTextBox.Text = xprefsList[i].Split(":".ToCharArray(), StringSplitOptions.None)[1];
+                    if (xprefsList[i].StartsWith(optionName + ":")) 
+                    {
+                        return xprefsList[i].Split(":".ToCharArray(), StringSplitOptions.None)[1];
+                    }
+
                 }
             }
             catch
             {
-                PilotXPTextBox.Text = "???";
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Set pilot option in the XPREFS file.
+        /// </summary>
+        /// <param name="pilotName">Pilot name</param>
+        /// <param name="optionName">Option name</param>
+        /// <param name="value">Value (as a string)</param>
+        private void SetPilotOption(string pilotName, string optionName, string value)
+        {
+            if (String.IsNullOrEmpty(pilotName)) return;
+
+            try { Directory.CreateDirectory(pilotsPath); } catch { }
+
+            try
+            {
+                bool update = false;
+
+                string xprefsFileName = Path.Combine(pilotsPath, pilotName + ".xprefs");
+                string xprefs = File.ReadAllText(xprefsFileName);
+                string[] xprefsList = xprefs.Split(";".ToCharArray(), StringSplitOptions.None);
+                for (int i = 0; i < xprefsList.Length; i++)
+                {
+                    if (xprefsList[i].StartsWith(optionName + ":"))
+                    {
+                        string[] xprefsFields = xprefsList[i].Split(":".ToCharArray(), StringSplitOptions.None);
+
+                        if (xprefsFields[1] != PilotXPTextBox.Text)
+                        {
+                            xprefsList[i] = xprefsFields[0] + ":" + value + ":" + xprefsFields[2];
+                            update = true;
+                        }
+                    }
+                }
+
+                if (update)
+                {
+                    string text = "";
+                    for (int i = 0; i < xprefsList.Length; i++)
+                    {
+                        text += String.IsNullOrEmpty(text) ? "" : ";";
+                        text += xprefsList[i];
+                    }
+
+                    File.WriteAllText(xprefsFileName, text);
+                }
+
+            }
+            catch
+            {
+                MessageBox.Show($"Cannot update pilot {pilotName} options!", "Error");
             }
         }
 

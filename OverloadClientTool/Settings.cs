@@ -475,65 +475,73 @@ namespace OverloadClientTool
                 }
             }
 
-            OverloadExecutable.Text = OverloadPath;
-            OverloadArgs.Text = OverloadParameters;
+            try
+            {
+                OverloadExecutable.Text = OverloadPath;
+                OverloadArgs.Text = OverloadParameters;
 
-            OlproxyExecutable.Text = OlproxyPath;
-            OlproxyArgs.Text = OlproxyParameters;
-            UseOlproxyCheckBox.Checked = UseOlproxy;
-            UseEmbeddedOlproxy.Checked = OlproxyEmbedded;
+                OlproxyExecutable.Text = OlproxyPath;
+                OlproxyArgs.Text = OlproxyParameters;
+                UseOlproxyCheckBox.Checked = UseOlproxy;
+                UseEmbeddedOlproxy.Checked = OlproxyEmbedded;
 
-            OlmodExecutable.Text = OlmodPath;
-            AutoUpdateOlmod.Checked = OlmodAutoUpdate;
-            UseOlmodCheckBox.Checked = UseOlmod;
-            FrameTimeCheckBox.Checked = ShowFPS;
-            UseOlmodGameDirArg.Checked = PassGameDirToOlmod;
+                OlmodExecutable.Text = OlmodPath;
+                AutoUpdateOlmod.Checked = OlmodAutoUpdate;
+                UseOlmodCheckBox.Checked = UseOlmod;
+                FrameTimeCheckBox.Checked = ShowFPS;
+                UseOlmodGameDirArg.Checked = PassGameDirToOlmod;
 
-            // Map settings.
-            OnlineMapJsonUrl.Text = MapListUrl;
-            AutoUpdateMapsCheckBox.Checked = AutoUpdateMaps;
-            OnlyUpdateExistingMapsCheckBox.Checked = UpdateOnlyExistingMaps;
-            UseDLCLocationCheckBox.Checked = UseDLCLocation;            
-            HideUnofficialMapsCheckBox.Checked = HideNonOfficialMaps;
-            HideHiddenMapsCheckBox.Checked = HideHiddenMaps;
-            MPMapsCheckBox.Checked = IncludeMP;
-            SPMapsCheckBox.Checked = IncludeSP;
-            CMMapsCheckBox.Checked = IncludeCM;
+                // Map settings.
+                OnlineMapJsonUrl.Text = MapListUrl;
+                AutoUpdateMapsCheckBox.Checked = AutoUpdateMaps;
+                OnlyUpdateExistingMapsCheckBox.Checked = UpdateOnlyExistingMaps;
+                UseDLCLocationCheckBox.Checked = UseDLCLocation;
+                HideUnofficialMapsCheckBox.Checked = HideNonOfficialMaps;
+                HideHiddenMapsCheckBox.Checked = HideHiddenMaps;
+                MPMapsCheckBox.Checked = IncludeMP;
+                SPMapsCheckBox.Checked = IncludeSP;
+                CMMapsCheckBox.Checked = IncludeCM;
 
-            // Pilot settings.
-            AutoPilotsBackupCheckbox.Checked = AutoSavePilots;
+                // Pilot settings.
+                AutoPilotsBackupCheckbox.Checked = AutoSavePilots;
 
-            // General settings.
-            AutoUpdateCheckBox.Checked = AutoUpdateOCT;
-            EnableDebugCheckBox.Checked = Debugging;
-            UseTrayIcon.Checked = TrayIcon;
-            OnlyMinimizeOnClose.Checked = MinimizeOnClose;
-            HotkeyStartClient.Text = StartClientHotkeyString;
+                // General settings.
+                AutoUpdateCheckBox.Checked = AutoUpdateOCT;
+                EnableDebugCheckBox.Checked = Debugging;
+                UseTrayIcon.Checked = TrayIcon;
+                OnlyMinimizeOnClose.Checked = MinimizeOnClose;
+                HotkeyStartClient.Text = StartClientHotkeyString;
 
-            AutoStartCheckBox.Checked = AutoStartServer;
-            MinimizeOnStartupCheckBox.Checked = StartMinimized;
-            UseTrayIcon.Checked = TrayInsteadOfTaskBar;
+                AutoStartCheckBox.Checked = AutoStartServer;
+                MinimizeOnStartupCheckBox.Checked = StartMinimized;
+                UseTrayIcon.Checked = TrayInsteadOfTaskBar;
 
-            DefaultDisplayCheckBox.Checked = SwitchDefault;
-            GamingDisplayCheckBox.Checked = SwitchGaming;
-            SuppressWinKeysCheckBox.Checked = SuppressWinKeys;
+                DefaultDisplayCheckBox.Checked = SwitchDefault;
+                GamingDisplayCheckBox.Checked = SwitchGaming;
+                SuppressWinKeysCheckBox.Checked = SuppressWinKeys;
 
-            // Server settings.
-            ServerTrackerName.Text = OlmodServerName;
-            ServerTrackerNotes.Text = OlmodServerNotes;
-            ServerTrackerUrl.Text = OlmodServerTrackerBaseUrl;
-            ServerKeepListed.Checked = OlmodServerKeepListed;
-            ServerAnnounceOnTrackerCheckBox.Checked = OlmodIsServer;
-            AssistScoringCheckBox.Checked = OlmodAssistScoring;
+                // Server settings.
+                ServerTrackerName.Text = OlmodServerName;
+                ServerTrackerNotes.Text = OlmodServerNotes;
+                ServerTrackerUrl.Text = OlmodServerTrackerBaseUrl;
+                ServerKeepListed.Checked = OlmodServerKeepListed;
+                ServerAnnounceOnTrackerCheckBox.Checked = OlmodIsServer;
+                AssistScoringCheckBox.Checked = OlmodAssistScoring;
 
-            // Descent 2 and 3 settings.
-            Descent1Executable.Text = D1App;
-            Descent2Executable.Text = D2App;
-            Descent3Executable.Text = D3App;
-            Descent3Args.Text = D3Args;
+                // Descent 2 and 3 settings.
+                Descent1Executable.Text = D1App;
+                Descent2Executable.Text = D2App;
+                Descent3Executable.Text = D3App;
+                Descent3Args.Text = D3Args;
 
-            // Check for change to new theme selection.
-            if (String.IsNullOrEmpty(ActiveThemeName)) ActiveThemeName = "Dark Gray";
+                // Check for change to new theme selection.
+                if (String.IsNullOrEmpty(ActiveThemeName)) ActiveThemeName = "Dark Gray";
+            }
+            catch
+            {
+                DialogResult reset = MessageBox.Show("The configuration file seems to be corrupted. OCT will try to recover as best as possible but you should to check the settings.", "Uh-oh!");
+                SaveSettings();
+            }
 
             theme = Theme.GetThemeByName(ActiveThemeName);
         }
@@ -625,9 +633,12 @@ namespace OverloadClientTool
 
                 if (control is CustomComboBox)
                 {
-                    (control as CustomComboBox).ComboBackColor = theme.InputBackColor; // theme.ButtonEnabledBackColor;
-                    (control as CustomComboBox).ComboForeColor = theme.InputForeColor; // theme.ButtonEnabledForeColor;
+                    //(control as CustomComboBox).ComboBackColor = theme.InputBackColor; // theme.ButtonEnabledBackColor;
+                    //(control as CustomComboBox).ComboForeColor = theme.InputForeColor; // theme.ButtonEnabledForeColor;
+                    (control as CustomComboBox).ComboBackColor = theme.ButtonEnabledBackColor;
+                    (control as CustomComboBox).ComboForeColor = theme.ButtonEnabledForeColor;
                     (control as CustomComboBox).ComboBorderColor = theme.InputForeColor;
+                    (control as CustomComboBox).BorderColor = theme.ButtonEnabledBackColor;
                 }
             }
             else if (control is LinkLabel)

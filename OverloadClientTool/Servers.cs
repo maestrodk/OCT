@@ -10,6 +10,7 @@ using System.Net;
 using System.Security.Principal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Xml;
 
 namespace OverloadClientTool
 {
@@ -161,16 +162,18 @@ namespace OverloadClientTool
 
                     if (change != 0)
                     {
+                        string message;
                         if (change > 0)
                         {
-                            if (change == 1) Parent.AddNewLogMessage($"A player joined server {server.Name}, map {server.Map}");
-                            else Parent.AddNewLogMessage($"Some players joined server {server.Name}, map {server.Map}");
+                            if (change == 1) message = $"A player joined server {server.Name}, map {server.Map}";
+                            else message = $"Some players joined server {server.Name}, map {server.Map}";
                         }
                         else
                         {
-                            if (change == -1 ) Parent.AddNewLogMessage($"A player left server {server.Name}, map {server.Map}");
-                            else Parent.AddNewLogMessage($"Some players left server {server.Name}, map {server.Map}");
+                            if (change == -1 ) message = $"A player left server {server.Name}" + (String.IsNullOrEmpty(server.Map) ? "" : $", map {server.Map}");
+                            else message = $"Some players left server {server.Name}" + (String.IsNullOrEmpty(server.Map) ? "" : $", map {server.Map}");
                         }
+                        Parent.AddNewLogMessage(message);
                     }
 
                     // Remove from active list if no players.
@@ -184,12 +187,15 @@ namespace OverloadClientTool
                     // Add to active list if player joined.
                     if (server.NumPlayers > 0)
                     {
-                        if (server.NumPlayers == 1) Parent.AddNewLogMessage($"A player joined server {server.Name}, map {server.Map}");
-                        else Parent.AddNewLogMessage($"Some players joined server {server.Name}, map {server.Map}");
+                        string message;
+                        if (server.NumPlayers == 1) message = $"A player joined server {server.Name}, map {server.Map}";
+                        else message = $"Some players joined server {server.Name}, map {server.Map}";
+                        Parent.AddNewLogMessage(message);
                         ActiveServers.Add(server.IP, server.NumPlayers);
                     }
                 }
             }
         }
+
     }
 }

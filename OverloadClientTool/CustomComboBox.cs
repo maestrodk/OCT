@@ -16,7 +16,6 @@ namespace OverloadClientTool
 
         public Color ComboBackColor { get; set; }
         public Color ComboForeColor { get; set; }
-
         public Color ComboBorderColor { get; set; }
 
         public CustomComboBox() : base()
@@ -31,7 +30,6 @@ namespace OverloadClientTool
         [Category("Appearance")]
         [DefaultValue(typeof(Color), "DimGray")]
         public Color BorderColor { get; set; }
-
 
         void CustomComboBox_DrawItem(object sender, DrawItemEventArgs e)
         {
@@ -52,9 +50,10 @@ namespace OverloadClientTool
 
 
             e.DrawFocusRectangle();
+
             using (var p = new Pen(ComboBorderColor, 1))
             {
-                e.Graphics.DrawRectangle(p, 0, 0, Width - 1, Height - 1);
+                //e.Graphics.DrawRectangle(p, 0, 0, Width - 1, Height - 1);
             }
         }
 
