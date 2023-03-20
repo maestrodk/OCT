@@ -84,7 +84,7 @@ namespace OverloadClientTool
                 bool rename = select;
                 bool clone = select;
 
-                string pilotSelected = select ? (string)PilotsListBox.SelectedItem.ToString() : null;
+                string pilotSelected = select ? (string)PilotsListBox.SelectedItem.ToString() : "";
                 string pilotCurrent = CurrentPilot;
 
                 if (select)
@@ -92,7 +92,11 @@ namespace OverloadClientTool
                     if (pilotSelected.ToLower() == pilotCurrent.ToLower()) select = false;
                 }
 
-                if (!String.IsNullOrEmpty(pilotSelected) && !updating)
+                if (IsOverloadOrOlmodRunning && (pilotSelected == CurrentPilot))
+                {
+                    PilotLanguageComboBox.Enabled = false;
+                }
+                else if (!String.IsNullOrEmpty(pilotSelected) && !updating)
                 {
                     PilotLanguageComboBox.Enabled = true;
                 }
@@ -226,7 +230,7 @@ namespace OverloadClientTool
 
             if (CurrentPilot.ToLower() == pilotSelected)
             {
-                MessageBox.Show($"Can't rename the active pilot!");
+                MessageBox.Show($"Can't rename the active pilot as Overload is running!");
                 return;
             }
 
@@ -305,7 +309,7 @@ namespace OverloadClientTool
 
             if (CurrentPilot.ToLower() == pilotSelected)
             {
-                MessageBox.Show($"Can't delete the active pilot!");
+                MessageBox.Show($"Can't delete the active pilot when Overload is running!");
                 return;
             }
 
@@ -368,7 +372,7 @@ namespace OverloadClientTool
 
                 if (pilotSelected.ToLower() == newPilot.ToLower())
                 {
-                    MessageBox.Show("New pilot name is the same as the selected pilot!", "Unable to rename");
+                    MessageBox.Show("New pilot name is the same when the selected pilot!", "Unable to rename");
                 }
 
                 // Make sure Overload/Oldmod isn't running.
@@ -660,10 +664,10 @@ namespace OverloadClientTool
         private void PilotLanguageComboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
             string pilotSelected = PilotsListBox.SelectedItem.ToString();
-
-            if (IsOverloadOrOlmodRunning && (CurrentPilot.ToLower() == pilotSelected))
+             
+            if (IsOverloadOrOlmodRunning && (CurrentPilot == pilotSelected))
             {
-                MessageBox.Show($"Can't modify the active pilot!");
+                MessageBox.Show($"Can't modify the active pilot when Overload is running!");
                 return;
             }
 

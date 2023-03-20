@@ -170,7 +170,7 @@ namespace OverloadClientTool
                         }
                         else
                         {
-                            if (change == -1 ) message = $"A player left server {server.Name}" + (String.IsNullOrEmpty(server.Map) ? "" : $", map {server.Map}");
+                            if (change == -1) message = $"A player left server {server.Name}" + (String.IsNullOrEmpty(server.Map) ? "" : $", map {server.Map}");
                             else message = $"Some players left server {server.Name}" + (String.IsNullOrEmpty(server.Map) ? "" : $", map {server.Map}");
                         }
                         Parent.AddNewLogMessage(message);

@@ -363,7 +363,46 @@ namespace OverloadClientTool
             // Enable low level keyboard hook.
             enableDisableKeys.KeyHook();
 
+            // Determine available gamemod.dll files.
+            SetupGameModListBox();      
+
             LogDebugMessage("Main_Load() done");
+        }
+
+        private void SetupGameModListBox()
+        {
+            GameModComboBox.Items.Clear();
+
+            string[] gameModFiles = Directory.GetFiles(Path.GetDirectoryName(OlmodPath), "GameMod*.dll");
+            foreach (string gameModFile in gameModFiles)
+            {
+                try
+                {
+                    FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(gameModFile);
+
+                    string version = versionInfo.FileVersion;
+                    if (version.EndsWith(".0")) version = version.Substring(0, version.Length - 2);
+
+                    string gameModFileName = "GameMod_" + version + ".dll";
+                    gameModFileName = Path.Combine(Path.GetDirectoryName(gameModFile), gameModFileName);
+
+                    if (!System.IO.File.Exists(gameModFileName) && (Path.GetFileName(gameModFile).ToLower() == "gamemod.dll"))
+                    {
+                        System.IO.File.Copy(gameModFile, Path.Combine(Path.GetDirectoryName(gameModFile), gameModFileName));
+                        GameModComboBox.Items.Add(Path.GetFileName(gameModFileName));
+                    }
+                    else
+                    {
+                        if (Path.GetFileName(gameModFile) != "GameMod.dll") GameModComboBox.Items.Add(Path.GetFileName(gameModFile));
+                    }
+                }
+                catch
+                {
+                }
+
+                GameModComboBox.Enabled = GameModComboBox.Items.Count > 0;
+                if (IsOverloadOrOlmodRunning) GameModComboBox.Enabled =false;
+            }
         }
 
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt)
@@ -889,6 +928,8 @@ namespace OverloadClientTool
                 bool overloadRunning = IsOverloadRunning;
                 bool olproxyRunning = IsOlproxyRunning;
                 bool olmodRunning = IsOlmodRunning;
+
+                GameModComboBox.Enabled = !(overloadRunning || olmodRunning); ;
 
                 bool d3Running = IsD3Running;
                 bool d2Running = IsD2Running;
@@ -3372,6 +3413,20 @@ namespace OverloadClientTool
 
         private void GamingMonitorComboBox_MouseUp(object sender, MouseEventArgs e)
         {
+        }
+
+        private void GameModComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!(IsOverloadOrOlmodRunning))
+            {
+                try
+                {
+                    System.IO.File.Copy(Path.Combine(Path.GetDirectoryName(OlmodPath), GameModComboBox.SelectedItem.ToString()), Path.Combine(Path.GetDirectoryName(OlmodPath), "GameMod.dll"));
+                }
+                catch
+                {
+                }
+            }
         }
     }
 }
