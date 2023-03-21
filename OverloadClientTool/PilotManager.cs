@@ -131,7 +131,7 @@ namespace OverloadClientTool
                 {
                     try
                     {
-                        string activeText = " is the active pilot.";
+                        string activeText = " is the active pilot";
                         if (PilotNameLabel.Text != (testPilotName + activeText))
                         {
                             PilotNameLabel.Text = "";
@@ -647,10 +647,6 @@ namespace OverloadClientTool
             {
                 PilotXPTextBox.Text = "???";
             }
-        }
-
-        private void PilotLanguageComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
         }
 
         // Language codes.

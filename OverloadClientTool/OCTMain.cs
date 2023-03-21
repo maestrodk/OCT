@@ -24,7 +24,7 @@ namespace OverloadClientTool
         public bool exited = false;
         public bool shutdown = false;
         private bool trayExitClick = false;
-        
+
         // Set a default them (might change when reading settings).
         public Theme theme = Theme.GetDarkGrayTheme;
 
@@ -46,7 +46,7 @@ namespace OverloadClientTool
         private OlmodManager olmodManager = null;
 
         private OverloadMapManager mapManager = null;
-        
+
         internal Thread mapManagerThread = null;
         internal Thread pingerThread = null;
         internal Thread backgroundThread = null;
@@ -317,7 +317,7 @@ namespace OverloadClientTool
 
             if (MinimizeOnStartupCheckBox.Checked) WindowState = FormWindowState.Minimized;
             else this.WindowState = FormWindowState.Normal;
-         
+
             Defocus();
 
             // Check for OCT update.
@@ -364,12 +364,12 @@ namespace OverloadClientTool
             enableDisableKeys.KeyHook();
 
             // Determine available gamemod.dll files.
-            SetupGameModListBox();      
+            UpdateGameModList();
 
             LogDebugMessage("Main_Load() done");
         }
 
-        private void SetupGameModListBox()
+        public void UpdateGameModList()
         {
             GameModComboBox.Items.Clear();
 
@@ -401,7 +401,7 @@ namespace OverloadClientTool
                 }
 
                 GameModComboBox.Enabled = GameModComboBox.Items.Count > 0;
-                if (IsOverloadOrOlmodRunning) GameModComboBox.Enabled =false;
+                if (IsOverloadOrOlmodRunning) GameModComboBox.Enabled = false;
             }
         }
 
@@ -543,7 +543,7 @@ namespace OverloadClientTool
         public void SetOlmodSettings()
         {
             string path = String.IsNullOrEmpty(OlmodPath) ? OverloadPath : OlmodPath;
-            
+
             if (String.IsNullOrEmpty(path)) return;
 
             path = Path.GetDirectoryName(path);
@@ -557,7 +557,7 @@ namespace OverloadClientTool
             olmodConfig["assistScoring"] = OlmodAssistScoring;
             olmodConfig["trackerBaseUrl"] = OlmodServerTrackerBaseUrl;
             olmodConfig["serverName"] = OlmodServerName;
-            olmodConfig["notes"] = OlmodServerNotes;           
+            olmodConfig["notes"] = OlmodServerNotes;
 
             string jsonString = MiniJson.ToString(olmodConfig);
 
@@ -646,7 +646,7 @@ namespace OverloadClientTool
                 {
                     text = text.Substring(text.IndexOf("{"));
                     Dictionary<string, object> list = (Dictionary<string, object>)MiniJson.Parse(text);
-                    
+
                     string id = list["type"] as string;
 
                     string matchMode, level, attacker, defender, player;
@@ -716,7 +716,7 @@ namespace OverloadClientTool
                             break;
                     }
                 }
-                catch 
+                catch
                 {
 
                 }
@@ -760,7 +760,7 @@ namespace OverloadClientTool
                     UseDLCLocationCheckBox.Enabled = true;
                 }
             }
-            catch 
+            catch
             {
                 LogDebugMessage(String.Format($""));
 
@@ -1393,7 +1393,7 @@ namespace OverloadClientTool
 
             StopButton_Click(null, null);
             trayExitClick = true;
-            
+
             Close();
         }
 
@@ -1514,11 +1514,14 @@ namespace OverloadClientTool
             try { return Directory.Exists(directoryName); } catch { return false; }
         }
 
-        private void PlayOverload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void OverloadMapDatabase_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
-                ProcessStartInfo sInfo = new ProcessStartInfo(PLayOverloadLinkLabel.Text);
+                string url = OverloadMapDatabaseUrl.Text;
+                url += "?teamname=JAT&modus=3";
+
+                ProcessStartInfo sInfo = new ProcessStartInfo(url);
                 Process.Start(sInfo);
             }
             catch
@@ -2086,6 +2089,9 @@ namespace OverloadClientTool
             try
             {
                 olmodManager.DownloadAndInstallOlmod(latest, olmodInstallFolder);
+
+                // May have a new version of GameMod.dll to add to the selection list.
+                UpdateGameModList();
             }
             catch
             {
@@ -2310,13 +2316,13 @@ namespace OverloadClientTool
         }
 
         private Font treeViewFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
-        
+
         public void LogTreeViewText(string text, bool error = false)
         {
             if (LogTreeView.Nodes.Count > 9999) LogTreeView.Nodes[0].Remove();
 
             LogTreeView.Nodes.Add(text);
- 
+
             LogTreeView.ShowNodeToolTips = true;
             TreeNode node = LogTreeView.Nodes[LogTreeView.Nodes.Count - 1];
             node.ToolTipText = text;
@@ -2324,7 +2330,7 @@ namespace OverloadClientTool
 
             LogTreeView.Nodes[LogTreeView.Nodes.Count - 1].EnsureVisible();
         }
-        
+
         private void LogTreeView_DrawNode(object sender, DrawTreeNodeEventArgs e)
         {
             String nodeText = String.IsNullOrEmpty(e.Node.Text) ? "- This message shouldn't be shown - " : e.Node.Text;
@@ -2397,6 +2403,7 @@ namespace OverloadClientTool
         private void ServerTrackerUrl_TextChanged(object sender, EventArgs e)
         {
             OlmodServerTrackerBaseUrl = ServerTrackerUrl.Text;
+            ClickableTrackerUrl.Text = ServerTrackerUrl.Text;
         }
 
         private void ServerAnnounceOnTrackerCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -2760,7 +2767,7 @@ namespace OverloadClientTool
                 values[2] = server.Mode;
                 values[3] = server.NumPlayers.ToString().PadLeft(3);
                 values[4] = server.MaxNumPlayers.ToString().PadLeft(3);
-                values[5] = pinger.PingTime(server.IP);               
+                values[5] = pinger.PingTime(server.IP);
 
                 ListViewItem lvi = new ListViewItem(values);
                 lvi.Tag = server.IP;
@@ -2789,7 +2796,7 @@ namespace OverloadClientTool
                     ListViewItem item = ServersListView.Items[i];
                     item.SubItems[5].Text = pinger.PingTime(item.SubItems[0].Text);
                 }
-                catch 
+                catch
                 {
                 }
             }
@@ -2943,7 +2950,7 @@ namespace OverloadClientTool
             {
                 Column = column;
             }
-            
+
             public int Compare(object x, object y)
             {
                 int result = String.Compare(((ListViewItem)x).SubItems[Column].Text, ((ListViewItem)y).SubItems[Column].Text);
@@ -3028,11 +3035,6 @@ namespace OverloadClientTool
         private void LabelServerPing_Click(object sender, EventArgs e)
         {
             SortServers(5);
-        }
-
-        private void OTLTracker_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try { Process.Start(new ProcessStartInfo(OTLTracker.Text)); } catch { }
         }
 
         private void DefaultDisplayCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -3197,7 +3199,7 @@ namespace OverloadClientTool
             {
                 Info("Descent 3 (main.exe) ís already running.");
                 return;
-            }            
+            }
 
             LogDebugMessage($"Launcing {exePath} with \"{commandLineArgs}\"");
 
@@ -3426,6 +3428,30 @@ namespace OverloadClientTool
                 catch
                 {
                 }
+            }
+        }
+
+        private void ClickableTrackerUrl_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ProcessStartInfo sInfo = new ProcessStartInfo(ClickableTrackerUrl.Text);
+                Process.Start(sInfo);
+            }
+            catch
+            {
+            }
+        }
+
+        private void OverloadMaps_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                ProcessStartInfo sInfo = new ProcessStartInfo(OverloadMaps.Text);
+                Process.Start(sInfo);
+            }
+            catch
+            {
             }
         }
     }

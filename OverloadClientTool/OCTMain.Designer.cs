@@ -70,6 +70,7 @@ namespace OverloadClientTool
             this.label7 = new System.Windows.Forms.Label();
             this.MapsPanel = new System.Windows.Forms.Panel();
             this.MapsListBox = new OverloadClientTool.CustomListBox();
+            this.OverloadMapDatabaseUrl = new System.Windows.Forms.LinkLabel();
             this.CMMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.SPMapsCheckBox = new OverloadClientTool.CustomCheckBox();
             this.MPMapsCheckBox = new OverloadClientTool.CustomCheckBox();
@@ -124,13 +125,13 @@ namespace OverloadClientTool
             this.panel3 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.OverloadLog = new System.Windows.Forms.LinkLabel();
-            this.PLayOverloadLinkLabel = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.SearchOverloadButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.PaneOlmod = new System.Windows.Forms.Panel();
             this.panel21 = new System.Windows.Forms.Panel();
             this.label29 = new System.Windows.Forms.Label();
+            this.GameModComboBox = new OverloadClientTool.CustomComboBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.OlmodExecutable = new System.Windows.Forms.TextBox();
@@ -167,6 +168,7 @@ namespace OverloadClientTool
             this.MainToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.StartD3Main = new System.Windows.Forms.Button();
             this.StartD2 = new System.Windows.Forms.Button();
+            this.ClickableTrackerUrl = new System.Windows.Forms.LinkLabel();
             this.ServerAnnounceOnTrackerCheckBox = new OverloadClientTool.CustomCheckBox();
             this.ServerKeepListed = new OverloadClientTool.CustomCheckBox();
             this.AssistScoringCheckBox = new OverloadClientTool.CustomCheckBox();
@@ -186,7 +188,6 @@ namespace OverloadClientTool
             this.ServerRunning = new System.Windows.Forms.PictureBox();
             this.PaneOnline = new System.Windows.Forms.Panel();
             this.LabelDownArrow = new System.Windows.Forms.Label();
-            this.OTLTracker = new System.Windows.Forms.LinkLabel();
             this.LabelUpArrow = new System.Windows.Forms.Label();
             this.LabelServerPing = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
@@ -235,7 +236,6 @@ namespace OverloadClientTool
             this.StartD1 = new System.Windows.Forms.Button();
             this.Descent2Running = new System.Windows.Forms.PictureBox();
             this.PaneSelectDescent = new System.Windows.Forms.Button();
-            this.GameModComboBox = new OverloadClientTool.CustomComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OlproxyRunning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdatingMaps)).BeginInit();
@@ -653,6 +653,7 @@ namespace OverloadClientTool
             this.PaneMaps.Controls.Add(this.label6);
             this.PaneMaps.Controls.Add(this.panel7);
             this.PaneMaps.Controls.Add(this.MapsPanel);
+            this.PaneMaps.Controls.Add(this.OverloadMapDatabaseUrl);
             this.PaneMaps.Controls.Add(this.CMMapsCheckBox);
             this.PaneMaps.Controls.Add(this.SPMapsCheckBox);
             this.PaneMaps.Controls.Add(this.MPMapsCheckBox);
@@ -682,7 +683,7 @@ namespace OverloadClientTool
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(337, 174);
+            this.label17.Location = new System.Drawing.Point(337, 194);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(195, 13);
             this.label17.TabIndex = 3;
@@ -699,7 +700,7 @@ namespace OverloadClientTool
             this.OverloadMaps.TabStop = true;
             this.OverloadMaps.Text = "https://overloadmaps.com/";
             this.OverloadMaps.VisitedLinkColor = System.Drawing.Color.SteelBlue;
-            this.OverloadMaps.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OlmodReleases_LinkClicked);
+            this.OverloadMaps.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OverloadMaps_LinkClicked);
             // 
             // label6
             // 
@@ -755,6 +756,21 @@ namespace OverloadClientTool
             this.MapsListBox.SelectedIndexChanged += new System.EventHandler(this.MapsListBox_SelectedIndexChanged);
             this.MapsListBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MapsListBox_MouseMove);
             // 
+            // OverloadMapDatabaseUrl
+            // 
+            this.OverloadMapDatabaseUrl.ActiveLinkColor = System.Drawing.Color.DeepSkyBlue;
+            this.OverloadMapDatabaseUrl.AutoSize = true;
+            this.OverloadMapDatabaseUrl.LinkColor = System.Drawing.Color.Blue;
+            this.OverloadMapDatabaseUrl.Location = new System.Drawing.Point(338, 165);
+            this.OverloadMapDatabaseUrl.Name = "OverloadMapDatabaseUrl";
+            this.OverloadMapDatabaseUrl.Size = new System.Drawing.Size(197, 13);
+            this.OverloadMapDatabaseUrl.TabIndex = 17;
+            this.OverloadMapDatabaseUrl.TabStop = true;
+            this.OverloadMapDatabaseUrl.Text = "http://www.omdb.net/homesviewer.php";
+            this.MainToolTip.SetToolTip(this.OverloadMapDatabaseUrl, "Go to the Overload Map Database");
+            this.OverloadMapDatabaseUrl.VisitedLinkColor = System.Drawing.Color.SteelBlue;
+            this.OverloadMapDatabaseUrl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OverloadMapDatabase_LinkClicked);
+            // 
             // CMMapsCheckBox
             // 
             this.CMMapsCheckBox.AutoSize = true;
@@ -763,7 +779,7 @@ namespace OverloadClientTool
             this.CMMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.CMMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.CMMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CMMapsCheckBox.Location = new System.Drawing.Point(340, 240);
+            this.CMMapsCheckBox.Location = new System.Drawing.Point(340, 259);
             this.CMMapsCheckBox.Name = "CMMapsCheckBox";
             this.CMMapsCheckBox.Size = new System.Drawing.Size(135, 17);
             this.CMMapsCheckBox.TabIndex = 5;
@@ -780,7 +796,7 @@ namespace OverloadClientTool
             this.SPMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.SPMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.SPMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SPMapsCheckBox.Location = new System.Drawing.Point(340, 217);
+            this.SPMapsCheckBox.Location = new System.Drawing.Point(340, 236);
             this.SPMapsCheckBox.Name = "SPMapsCheckBox";
             this.SPMapsCheckBox.Size = new System.Drawing.Size(111, 17);
             this.SPMapsCheckBox.TabIndex = 5;
@@ -797,7 +813,7 @@ namespace OverloadClientTool
             this.MPMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.MPMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.MPMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MPMapsCheckBox.Location = new System.Drawing.Point(340, 194);
+            this.MPMapsCheckBox.Location = new System.Drawing.Point(340, 213);
             this.MPMapsCheckBox.Name = "MPMapsCheckBox";
             this.MPMapsCheckBox.Size = new System.Drawing.Size(101, 17);
             this.MPMapsCheckBox.TabIndex = 5;
@@ -814,7 +830,7 @@ namespace OverloadClientTool
             this.HideUnofficialMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.HideUnofficialMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.HideUnofficialMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HideUnofficialMapsCheckBox.Location = new System.Drawing.Point(340, 60);
+            this.HideUnofficialMapsCheckBox.Location = new System.Drawing.Point(340, 64);
             this.HideUnofficialMapsCheckBox.Name = "HideUnofficialMapsCheckBox";
             this.HideUnofficialMapsCheckBox.Size = new System.Drawing.Size(192, 17);
             this.HideUnofficialMapsCheckBox.TabIndex = 5;
@@ -831,7 +847,7 @@ namespace OverloadClientTool
             this.HideHiddenMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.HideHiddenMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.HideHiddenMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HideHiddenMapsCheckBox.Location = new System.Drawing.Point(340, 105);
+            this.HideHiddenMapsCheckBox.Location = new System.Drawing.Point(340, 109);
             this.HideHiddenMapsCheckBox.Name = "HideHiddenMapsCheckBox";
             this.HideHiddenMapsCheckBox.Size = new System.Drawing.Size(139, 17);
             this.HideHiddenMapsCheckBox.TabIndex = 5;
@@ -849,7 +865,7 @@ namespace OverloadClientTool
             this.UseDLCLocationCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.UseDLCLocationCheckBox.Enabled = false;
             this.UseDLCLocationCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(340, 83);
+            this.UseDLCLocationCheckBox.Location = new System.Drawing.Point(340, 87);
             this.UseDLCLocationCheckBox.Name = "UseDLCLocationCheckBox";
             this.UseDLCLocationCheckBox.Size = new System.Drawing.Size(199, 17);
             this.UseDLCLocationCheckBox.TabIndex = 5;
@@ -866,7 +882,7 @@ namespace OverloadClientTool
             this.AutoUpdateMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.AutoUpdateMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.AutoUpdateMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(340, 14);
+            this.AutoUpdateMapsCheckBox.Location = new System.Drawing.Point(340, 18);
             this.AutoUpdateMapsCheckBox.Name = "AutoUpdateMapsCheckBox";
             this.AutoUpdateMapsCheckBox.Size = new System.Drawing.Size(146, 17);
             this.AutoUpdateMapsCheckBox.TabIndex = 5;
@@ -883,7 +899,7 @@ namespace OverloadClientTool
             this.OnlyUpdateExistingMapsCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.OnlyUpdateExistingMapsCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.OnlyUpdateExistingMapsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(340, 36);
+            this.OnlyUpdateExistingMapsCheckBox.Location = new System.Drawing.Point(340, 40);
             this.OnlyUpdateExistingMapsCheckBox.Name = "OnlyUpdateExistingMapsCheckBox";
             this.OnlyUpdateExistingMapsCheckBox.Size = new System.Drawing.Size(146, 17);
             this.OnlyUpdateExistingMapsCheckBox.TabIndex = 5;
@@ -1016,7 +1032,7 @@ namespace OverloadClientTool
             // 
             this.panel20.Controls.Add(this.label28);
             this.panel20.Controls.Add(this.PilotLanguageComboBox);
-            this.panel20.Location = new System.Drawing.Point(345, 66);
+            this.panel20.Location = new System.Drawing.Point(345, 84);
             this.panel20.Name = "panel20";
             this.panel20.Size = new System.Drawing.Size(104, 52);
             this.panel20.TabIndex = 18;
@@ -1049,14 +1065,13 @@ namespace OverloadClientTool
             this.PilotLanguageComboBox.Name = "PilotLanguageComboBox";
             this.PilotLanguageComboBox.Size = new System.Drawing.Size(83, 21);
             this.PilotLanguageComboBox.TabIndex = 6;
-            this.PilotLanguageComboBox.SelectedIndexChanged += new System.EventHandler(this.PilotLanguageComboBox_SelectedIndexChanged);
             this.PilotLanguageComboBox.SelectionChangeCommitted += new System.EventHandler(this.PilotLanguageComboBox_SelectionChangeCommitted);
             // 
             // panel9
             // 
             this.panel9.Controls.Add(this.label9);
             this.panel9.Controls.Add(this.PilotXPTextBox);
-            this.panel9.Location = new System.Drawing.Point(345, 8);
+            this.panel9.Location = new System.Drawing.Point(345, 26);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(89, 39);
             this.panel9.TabIndex = 18;
@@ -1095,7 +1110,7 @@ namespace OverloadClientTool
             // 
             this.OpenPilotsBackupFolder.AutoSize = true;
             this.OpenPilotsBackupFolder.LinkColor = System.Drawing.Color.Blue;
-            this.OpenPilotsBackupFolder.Location = new System.Drawing.Point(220, 234);
+            this.OpenPilotsBackupFolder.Location = new System.Drawing.Point(309, 213);
             this.OpenPilotsBackupFolder.Name = "OpenPilotsBackupFolder";
             this.OpenPilotsBackupFolder.Size = new System.Drawing.Size(123, 13);
             this.OpenPilotsBackupFolder.TabIndex = 17;
@@ -1108,11 +1123,11 @@ namespace OverloadClientTool
             // 
             this.PilotNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.PilotNameLabel.Enabled = false;
-            this.PilotNameLabel.Location = new System.Drawing.Point(22, 255);
+            this.PilotNameLabel.Location = new System.Drawing.Point(19, 215);
             this.PilotNameLabel.Multiline = false;
             this.PilotNameLabel.Name = "PilotNameLabel";
             this.PilotNameLabel.ReadOnly = true;
-            this.PilotNameLabel.Size = new System.Drawing.Size(471, 17);
+            this.PilotNameLabel.Size = new System.Drawing.Size(200, 27);
             this.PilotNameLabel.TabIndex = 17;
             this.PilotNameLabel.Text = "Pilot";
             // 
@@ -1146,7 +1161,7 @@ namespace OverloadClientTool
             // PilotXPSetButton
             // 
             this.PilotXPSetButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PilotXPSetButton.Location = new System.Drawing.Point(438, 23);
+            this.PilotXPSetButton.Location = new System.Drawing.Point(438, 41);
             this.PilotXPSetButton.Name = "PilotXPSetButton";
             this.PilotXPSetButton.Size = new System.Drawing.Size(62, 24);
             this.PilotXPSetButton.TabIndex = 14;
@@ -1309,7 +1324,6 @@ namespace OverloadClientTool
             this.PaneOverload.Controls.Add(this.panel4);
             this.PaneOverload.Controls.Add(this.panel3);
             this.PaneOverload.Controls.Add(this.OverloadLog);
-            this.PaneOverload.Controls.Add(this.PLayOverloadLinkLabel);
             this.PaneOverload.Controls.Add(this.label1);
             this.PaneOverload.Controls.Add(this.SearchOverloadButton);
             this.PaneOverload.Location = new System.Drawing.Point(1155, 393);
@@ -1328,7 +1342,7 @@ namespace OverloadClientTool
             this.panel15.Controls.Add(this.GamingDisplayCheckBox);
             this.panel15.Location = new System.Drawing.Point(8, 116);
             this.panel15.Name = "panel15";
-            this.panel15.Size = new System.Drawing.Size(335, 125);
+            this.panel15.Size = new System.Drawing.Size(335, 108);
             this.panel15.TabIndex = 20;
             // 
             // label21
@@ -1461,7 +1475,7 @@ namespace OverloadClientTool
             // 
             this.OverloadLog.AutoSize = true;
             this.OverloadLog.LinkColor = System.Drawing.Color.Blue;
-            this.OverloadLog.Location = new System.Drawing.Point(19, 264);
+            this.OverloadLog.Location = new System.Drawing.Point(19, 260);
             this.OverloadLog.Name = "OverloadLog";
             this.OverloadLog.Size = new System.Drawing.Size(96, 13);
             this.OverloadLog.TabIndex = 18;
@@ -1469,20 +1483,6 @@ namespace OverloadClientTool
             this.OverloadLog.Text = "Open Overload log";
             this.OverloadLog.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
             this.OverloadLog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OverloadLog_LinkClicked);
-            // 
-            // PLayOverloadLinkLabel
-            // 
-            this.PLayOverloadLinkLabel.ActiveLinkColor = System.Drawing.Color.DeepSkyBlue;
-            this.PLayOverloadLinkLabel.AutoSize = true;
-            this.PLayOverloadLinkLabel.LinkColor = System.Drawing.Color.Blue;
-            this.PLayOverloadLinkLabel.Location = new System.Drawing.Point(19, 244);
-            this.PLayOverloadLinkLabel.Name = "PLayOverloadLinkLabel";
-            this.PLayOverloadLinkLabel.Size = new System.Drawing.Size(126, 13);
-            this.PLayOverloadLinkLabel.TabIndex = 17;
-            this.PLayOverloadLinkLabel.TabStop = true;
-            this.PLayOverloadLinkLabel.Text = "https://playoverload.com";
-            this.PLayOverloadLinkLabel.VisitedLinkColor = System.Drawing.Color.SteelBlue;
-            this.PLayOverloadLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PlayOverload_LinkClicked);
             // 
             // label1
             // 
@@ -1509,9 +1509,9 @@ namespace OverloadClientTool
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(27, 304);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(308, 13);
+            this.label2.Size = new System.Drawing.Size(305, 13);
             this.label2.TabIndex = 16;
-            this.label2.Text = "IF Olmod is enabled it will use the parameters setup for Overload";
+            this.label2.Text = "If Olmod is enabled it will use the parameters setup for Overload";
             // 
             // PaneOlmod
             // 
@@ -1535,19 +1535,36 @@ namespace OverloadClientTool
             // 
             this.panel21.Controls.Add(this.label29);
             this.panel21.Controls.Add(this.GameModComboBox);
-            this.panel21.Location = new System.Drawing.Point(21, 143);
+            this.panel21.Location = new System.Drawing.Point(25, 131);
             this.panel21.Name = "panel21";
-            this.panel21.Size = new System.Drawing.Size(500, 54);
+            this.panel21.Size = new System.Drawing.Size(504, 54);
             this.panel21.TabIndex = 19;
             // 
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(12, 9);
+            this.label29.Location = new System.Drawing.Point(10, 9);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(89, 13);
+            this.label29.Size = new System.Drawing.Size(91, 13);
             this.label29.TabIndex = 0;
-            this.label29.Text = "Select GameMod";
+            this.label29.Tag = "Lets you switch to another GameMod (only available if Overload isn\'t running)";
+            this.label29.Text = "Switch GameMod";
+            // 
+            // GameModComboBox
+            // 
+            this.GameModComboBox.ComboBackColor = System.Drawing.Color.Empty;
+            this.GameModComboBox.ComboBorderColor = System.Drawing.Color.Empty;
+            this.GameModComboBox.ComboForeColor = System.Drawing.Color.Empty;
+            this.GameModComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.GameModComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GameModComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GameModComboBox.FormattingEnabled = true;
+            this.GameModComboBox.Location = new System.Drawing.Point(9, 25);
+            this.GameModComboBox.Name = "GameModComboBox";
+            this.GameModComboBox.Size = new System.Drawing.Size(237, 21);
+            this.GameModComboBox.TabIndex = 6;
+            this.GameModComboBox.SelectedIndexChanged += new System.EventHandler(this.GameModComboBox_SelectedIndexChanged);
+            this.GameModComboBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DefaultMonitorComboBox_MouseUp);
             // 
             // panel5
             // 
@@ -1773,7 +1790,7 @@ namespace OverloadClientTool
             // ForceUpdateButton
             // 
             this.ForceUpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ForceUpdateButton.Location = new System.Drawing.Point(443, 36);
+            this.ForceUpdateButton.Location = new System.Drawing.Point(443, 44);
             this.ForceUpdateButton.Margin = new System.Windows.Forms.Padding(0);
             this.ForceUpdateButton.Name = "ForceUpdateButton";
             this.ForceUpdateButton.Size = new System.Drawing.Size(77, 23);
@@ -1832,7 +1849,7 @@ namespace OverloadClientTool
             this.MinimizeOnStartupCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.MinimizeOnStartupCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.MinimizeOnStartupCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MinimizeOnStartupCheckBox.Location = new System.Drawing.Point(272, 66);
+            this.MinimizeOnStartupCheckBox.Location = new System.Drawing.Point(272, 74);
             this.MinimizeOnStartupCheckBox.Margin = new System.Windows.Forms.Padding(0);
             this.MinimizeOnStartupCheckBox.Name = "MinimizeOnStartupCheckBox";
             this.MinimizeOnStartupCheckBox.Size = new System.Drawing.Size(113, 17);
@@ -1851,7 +1868,7 @@ namespace OverloadClientTool
             this.OnlyMinimizeOnClose.CheckForeColor = System.Drawing.Color.Black;
             this.OnlyMinimizeOnClose.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.OnlyMinimizeOnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OnlyMinimizeOnClose.Location = new System.Drawing.Point(272, 120);
+            this.OnlyMinimizeOnClose.Location = new System.Drawing.Point(272, 128);
             this.OnlyMinimizeOnClose.Margin = new System.Windows.Forms.Padding(0);
             this.OnlyMinimizeOnClose.Name = "OnlyMinimizeOnClose";
             this.OnlyMinimizeOnClose.Size = new System.Drawing.Size(249, 17);
@@ -1869,7 +1886,7 @@ namespace OverloadClientTool
             this.UseTrayIcon.CheckForeColor = System.Drawing.Color.Black;
             this.UseTrayIcon.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.UseTrayIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UseTrayIcon.Location = new System.Drawing.Point(272, 92);
+            this.UseTrayIcon.Location = new System.Drawing.Point(272, 100);
             this.UseTrayIcon.Margin = new System.Windows.Forms.Padding(0);
             this.UseTrayIcon.Name = "UseTrayIcon";
             this.UseTrayIcon.Size = new System.Drawing.Size(85, 17);
@@ -1917,7 +1934,7 @@ namespace OverloadClientTool
             // DebugFileNameLink
             // 
             this.DebugFileNameLink.AutoSize = true;
-            this.DebugFileNameLink.Location = new System.Drawing.Point(399, 15);
+            this.DebugFileNameLink.Location = new System.Drawing.Point(399, 23);
             this.DebugFileNameLink.Name = "DebugFileNameLink";
             this.DebugFileNameLink.Size = new System.Drawing.Size(52, 13);
             this.DebugFileNameLink.TabIndex = 17;
@@ -1933,7 +1950,7 @@ namespace OverloadClientTool
             this.SuppressWinKeysCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.SuppressWinKeysCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.SuppressWinKeysCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SuppressWinKeysCheckBox.Location = new System.Drawing.Point(272, 204);
+            this.SuppressWinKeysCheckBox.Location = new System.Drawing.Point(272, 212);
             this.SuppressWinKeysCheckBox.Margin = new System.Windows.Forms.Padding(0);
             this.SuppressWinKeysCheckBox.Name = "SuppressWinKeysCheckBox";
             this.SuppressWinKeysCheckBox.Size = new System.Drawing.Size(130, 17);
@@ -1952,7 +1969,7 @@ namespace OverloadClientTool
             this.ToogleAutostartCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.ToogleAutostartCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.ToogleAutostartCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ToogleAutostartCheckBox.Location = new System.Drawing.Point(272, 175);
+            this.ToogleAutostartCheckBox.Location = new System.Drawing.Point(272, 183);
             this.ToogleAutostartCheckBox.Margin = new System.Windows.Forms.Padding(0);
             this.ToogleAutostartCheckBox.Name = "ToogleAutostartCheckBox";
             this.ToogleAutostartCheckBox.Size = new System.Drawing.Size(203, 17);
@@ -1970,7 +1987,7 @@ namespace OverloadClientTool
             this.PartyModeCheckBox.CheckForeColor = System.Drawing.Color.Black;
             this.PartyModeCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.PartyModeCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PartyModeCheckBox.Location = new System.Drawing.Point(272, 147);
+            this.PartyModeCheckBox.Location = new System.Drawing.Point(272, 155);
             this.PartyModeCheckBox.Margin = new System.Windows.Forms.Padding(0);
             this.PartyModeCheckBox.Name = "PartyModeCheckBox";
             this.PartyModeCheckBox.Size = new System.Drawing.Size(79, 17);
@@ -1990,7 +2007,7 @@ namespace OverloadClientTool
             this.EnableDebugCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.EnableDebugCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.EnableDebugCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.EnableDebugCheckBox.Location = new System.Drawing.Point(272, 14);
+            this.EnableDebugCheckBox.Location = new System.Drawing.Point(272, 22);
             this.EnableDebugCheckBox.Margin = new System.Windows.Forms.Padding(0);
             this.EnableDebugCheckBox.Name = "EnableDebugCheckBox";
             this.EnableDebugCheckBox.Size = new System.Drawing.Size(126, 17);
@@ -2010,7 +2027,7 @@ namespace OverloadClientTool
             this.AutoUpdateCheckBox.CheckInactiveForeColor = System.Drawing.Color.Black;
             this.AutoUpdateCheckBox.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
             this.AutoUpdateCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AutoUpdateCheckBox.Location = new System.Drawing.Point(272, 40);
+            this.AutoUpdateCheckBox.Location = new System.Drawing.Point(272, 48);
             this.AutoUpdateCheckBox.Margin = new System.Windows.Forms.Padding(0);
             this.AutoUpdateCheckBox.Name = "AutoUpdateCheckBox";
             this.AutoUpdateCheckBox.Size = new System.Drawing.Size(167, 17);
@@ -2050,6 +2067,21 @@ namespace OverloadClientTool
             this.MainToolTip.SetToolTip(this.StartD2, "Start Descent 2");
             this.StartD2.UseVisualStyleBackColor = true;
             this.StartD2.Click += new System.EventHandler(this.StartD2_Click);
+            // 
+            // ClickableTrackerUrl
+            // 
+            this.ClickableTrackerUrl.ActiveLinkColor = System.Drawing.Color.DeepSkyBlue;
+            this.ClickableTrackerUrl.AutoSize = true;
+            this.ClickableTrackerUrl.LinkColor = System.Drawing.Color.Blue;
+            this.ClickableTrackerUrl.Location = new System.Drawing.Point(14, 286);
+            this.ClickableTrackerUrl.Name = "ClickableTrackerUrl";
+            this.ClickableTrackerUrl.Size = new System.Drawing.Size(105, 13);
+            this.ClickableTrackerUrl.TabIndex = 20;
+            this.ClickableTrackerUrl.TabStop = true;
+            this.ClickableTrackerUrl.Text = "https://tracker.otl.gg";
+            this.MainToolTip.SetToolTip(this.ClickableTrackerUrl, "Go to the OTL tracker page");
+            this.ClickableTrackerUrl.VisitedLinkColor = System.Drawing.Color.SteelBlue;
+            this.ClickableTrackerUrl.Click += new System.EventHandler(this.ClickableTrackerUrl_Click);
             // 
             // ServerAnnounceOnTrackerCheckBox
             // 
@@ -2274,8 +2306,8 @@ namespace OverloadClientTool
             // PaneOnline
             // 
             this.PaneOnline.BackColor = System.Drawing.Color.LightSlateGray;
+            this.PaneOnline.Controls.Add(this.ClickableTrackerUrl);
             this.PaneOnline.Controls.Add(this.LabelDownArrow);
-            this.PaneOnline.Controls.Add(this.OTLTracker);
             this.PaneOnline.Controls.Add(this.LabelUpArrow);
             this.PaneOnline.Controls.Add(this.LabelServerPing);
             this.PaneOnline.Controls.Add(this.label25);
@@ -2304,19 +2336,6 @@ namespace OverloadClientTool
             this.LabelDownArrow.Size = new System.Drawing.Size(48, 15);
             this.LabelDownArrow.TabIndex = 23;
             this.LabelDownArrow.Text = "<down>";
-            // 
-            // OTLTracker
-            // 
-            this.OTLTracker.AutoSize = true;
-            this.OTLTracker.LinkColor = System.Drawing.Color.Blue;
-            this.OTLTracker.Location = new System.Drawing.Point(11, 284);
-            this.OTLTracker.Name = "OTLTracker";
-            this.OTLTracker.Size = new System.Drawing.Size(110, 13);
-            this.OTLTracker.TabIndex = 17;
-            this.OTLTracker.TabStop = true;
-            this.OTLTracker.Text = "https://tracker.otl.gg/";
-            this.OTLTracker.VisitedLinkColor = System.Drawing.Color.SteelBlue;
-            this.OTLTracker.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OTLTracker_LinkClicked);
             // 
             // LabelUpArrow
             // 
@@ -2652,7 +2671,7 @@ namespace OverloadClientTool
             // 
             this.DataiListLink.AutoSize = true;
             this.DataiListLink.LinkColor = System.Drawing.Color.Blue;
-            this.DataiListLink.Location = new System.Drawing.Point(134, 119);
+            this.DataiListLink.Location = new System.Drawing.Point(145, 125);
             this.DataiListLink.Name = "DataiListLink";
             this.DataiListLink.Size = new System.Drawing.Size(220, 13);
             this.DataiListLink.TabIndex = 17;
@@ -2665,7 +2684,7 @@ namespace OverloadClientTool
             // 
             this.DescentForumSOD.AutoSize = true;
             this.DescentForumSOD.LinkColor = System.Drawing.Color.Blue;
-            this.DescentForumSOD.Location = new System.Drawing.Point(134, 103);
+            this.DescentForumSOD.Location = new System.Drawing.Point(145, 106);
             this.DescentForumSOD.Name = "DescentForumSOD";
             this.DescentForumSOD.Size = new System.Drawing.Size(174, 13);
             this.DescentForumSOD.TabIndex = 17;
@@ -2831,22 +2850,6 @@ namespace OverloadClientTool
             this.PaneSelectDescent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.PaneSelectDescent.UseVisualStyleBackColor = false;
             // 
-            // GameModComboBox
-            // 
-            this.GameModComboBox.ComboBackColor = System.Drawing.Color.Empty;
-            this.GameModComboBox.ComboBorderColor = System.Drawing.Color.Empty;
-            this.GameModComboBox.ComboForeColor = System.Drawing.Color.Empty;
-            this.GameModComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.GameModComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GameModComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GameModComboBox.FormattingEnabled = true;
-            this.GameModComboBox.Location = new System.Drawing.Point(9, 25);
-            this.GameModComboBox.Name = "GameModComboBox";
-            this.GameModComboBox.Size = new System.Drawing.Size(237, 21);
-            this.GameModComboBox.TabIndex = 6;
-            this.GameModComboBox.SelectedIndexChanged += new System.EventHandler(this.GameModComboBox_SelectedIndexChanged);
-            this.GameModComboBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DefaultMonitorComboBox_MouseUp);
-            // 
             // OCTMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3005,7 +3008,7 @@ namespace OverloadClientTool
         private System.Windows.Forms.Label StatusMessage;
         private TransparentLabel PilotNameLabel;
         private System.Windows.Forms.LinkLabel OlproxyReleases;
-        private System.Windows.Forms.LinkLabel PLayOverloadLinkLabel;
+        private System.Windows.Forms.LinkLabel OverloadMapDatabaseUrl;
         private System.Windows.Forms.LinkLabel OlmodReleases;
         private System.Windows.Forms.LinkLabel OpenPilotsBackupFolder;
         private System.Windows.Forms.Button PaneSelectOptions;
@@ -3124,7 +3127,6 @@ namespace OverloadClientTool
         private System.Windows.Forms.Label LabelUpArrow;
         private System.Windows.Forms.Button StartServerButtonMain;
         private System.Windows.Forms.LinkLabel OverloadMaps;
-        private System.Windows.Forms.LinkLabel OTLTracker;
         private CustomCheckBox AssistScoringCheckBox;
         private CustomCheckBox OnlyMinimizeOnClose;
         private System.Windows.Forms.Panel panel14;
@@ -3169,6 +3171,7 @@ namespace OverloadClientTool
         private System.Windows.Forms.Panel panel21;
         private System.Windows.Forms.Label label29;
         private CustomComboBox GameModComboBox;
+        private System.Windows.Forms.LinkLabel ClickableTrackerUrl;
     }
 }
 

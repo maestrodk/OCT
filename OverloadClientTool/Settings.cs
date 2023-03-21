@@ -528,6 +528,9 @@ namespace OverloadClientTool
                 ServerAnnounceOnTrackerCheckBox.Checked = OlmodIsServer;
                 AssistScoringCheckBox.Checked = OlmodAssistScoring;
 
+                // Set clickable tracker URL.
+                ClickableTrackerUrl.Text = ServerTrackerUrl.Text;
+
                 // Descent 2 and 3 settings.
                 Descent1Executable.Text = D1App;
                 Descent2Executable.Text = D2App;
