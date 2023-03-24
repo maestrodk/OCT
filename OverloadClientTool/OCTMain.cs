@@ -3423,7 +3423,7 @@ namespace OverloadClientTool
             {
                 try
                 {
-                    System.IO.File.Copy(Path.Combine(Path.GetDirectoryName(OlmodPath), GameModComboBox.SelectedItem.ToString()), Path.Combine(Path.GetDirectoryName(OlmodPath), "GameMod.dll"));
+                    System.IO.File.Copy(Path.Combine(Path.GetDirectoryName(OlmodPath), GameModComboBox.SelectedItem.ToString()), Path.Combine(Path.GetDirectoryName(OlmodPath), "GameMod.dll"), true);
                 }
                 catch
                 {
