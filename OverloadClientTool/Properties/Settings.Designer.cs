@@ -37,18 +37,6 @@ namespace OverloadClientTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string OlproxyPath {
-            get {
-                return ((string)(this["OlproxyPath"]));
-            }
-            set {
-                this["OlproxyPath"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool TrayOnly {
             get {
@@ -68,30 +56,6 @@ namespace OverloadClientTool.Properties {
             }
             set {
                 this["OverloadParameters"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-v")]
-        public string OlproxyParameters {
-            get {
-                return ((string)(this["OlproxyParameters"]));
-            }
-            set {
-                this["OlproxyParameters"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EmbeddedOlproxy {
-            get {
-                return ((bool)(this["EmbeddedOlproxy"]));
-            }
-            set {
-                this["EmbeddedOlproxy"] = value;
             }
         }
         
@@ -549,6 +513,18 @@ namespace OverloadClientTool.Properties {
             }
             set {
                 this["D1App"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Small")]
+        public string WindowSize {
+            get {
+                return ((string)(this["WindowSize"]));
+            }
+            set {
+                this["WindowSize"] = value;
             }
         }
     }

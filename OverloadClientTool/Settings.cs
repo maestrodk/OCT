@@ -36,6 +36,12 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.HideHiddenMaps = value; }
         }
 
+        public string WindowSize
+        {
+            get { return Properties.Settings.Default.WindowSize; }
+            set { Properties.Settings.Default.WindowSize = value; }
+        }
+
         public bool TrayIcon
         {
             get { return Properties.Settings.Default.TrayOnly; }
@@ -64,12 +70,6 @@ namespace OverloadClientTool
         {
             get { return Properties.Settings.Default.OverloadParameters; }
             set { Properties.Settings.Default.OverloadParameters = value; }
-        }
-
-        public string OlproxyPath
-        {
-            get { return Properties.Settings.Default.OlproxyPath; }
-            set { Properties.Settings.Default.OlproxyPath = value; }
         }
 
         public string D3App
@@ -126,18 +126,6 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.isServer = value; }
         }
 
-        public bool OlproxyEmbedded
-        {
-            get { return Properties.Settings.Default.EmbeddedOlproxy; }
-            set { Properties.Settings.Default.EmbeddedOlproxy = value; }
-        }
- 
-        public string OlproxyParameters
-        {
-            get { return Properties.Settings.Default.OlproxyParameters; }
-            set { Properties.Settings.Default.OlproxyParameters = value; }
-        }
-
         public string ActiveThemeName
         {
             get { return Properties.Settings.Default.ActiveThemeName; }
@@ -154,12 +142,6 @@ namespace OverloadClientTool
         {
             get { return Properties.Settings.Default.PassGameDirToOlmod; }
             set { Properties.Settings.Default.PassGameDirToOlmod = value; }
-        }
-
-        public bool UseOlproxy
-        {
-            get { return Properties.Settings.Default.UseOlproxy; }
-            set { Properties.Settings.Default.UseOlproxy = value; }
         }
 
         public static bool Debugging
@@ -413,12 +395,8 @@ namespace OverloadClientTool
                 }
 
                 string overloadFileName = Path.Combine(initPath, "overload.exe");
-                string olproxyFileName = Path.Combine(initPath, "olproxy.exe");
 
                 OverloadPath = overloadFileName;
-
-                // Set Olproxy path.
-                if (!onlyOverload) OlproxyPath = olproxyFileName;
             }
 
             // Set Olmod.exe path to Overload installation folder if not found.
@@ -440,7 +418,6 @@ namespace OverloadClientTool
             }
 
             OverloadExecutable.Text = OverloadPath;
-            OlproxyExecutable.Text = OlproxyPath;
             OlmodExecutable.Text = OlmodPath;
         }
 
@@ -480,11 +457,6 @@ namespace OverloadClientTool
                 OverloadExecutable.Text = OverloadPath;
                 OverloadArgs.Text = OverloadParameters;
 
-                OlproxyExecutable.Text = OlproxyPath;
-                OlproxyArgs.Text = OlproxyParameters;
-                UseOlproxyCheckBox.Checked = UseOlproxy;
-                UseEmbeddedOlproxy.Checked = OlproxyEmbedded;
-
                 OlmodExecutable.Text = OlmodPath;
                 AutoUpdateOlmod.Checked = OlmodAutoUpdate;
                 UseOlmodCheckBox.Checked = UseOlmod;
@@ -511,10 +483,10 @@ namespace OverloadClientTool
                 UseTrayIcon.Checked = TrayIcon;
                 OnlyMinimizeOnClose.Checked = MinimizeOnClose;
                 HotkeyStartClient.Text = StartClientHotkeyString;
-
                 AutoStartCheckBox.Checked = AutoStartServer;
                 MinimizeOnStartupCheckBox.Checked = StartMinimized;
                 UseTrayIcon.Checked = TrayInsteadOfTaskBar;
+                WindowSizeComboBox.SelectedItem = WindowSize;
 
                 DefaultDisplayCheckBox.Checked = SwitchDefault;
                 GamingDisplayCheckBox.Checked = SwitchGaming;
@@ -560,7 +532,6 @@ namespace OverloadClientTool
             inactiveTextBoxColor = theme.InvalidForeColor;
 
             UpdatingMaps.Image = theme.IsRunningImage;
-            OlproxyRunning.Image = theme.IsRunningImage;
             OverloadRunning.Image = theme.IsRunningImage;
             ServerRunning.Image = theme.IsRunningImage;
 

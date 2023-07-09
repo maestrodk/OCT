@@ -112,6 +112,7 @@
     <Compile Include="EnableDisableKeys.cs" />
     <Compile Include="Install.cs" />
     <Compile Include="KeyboardHook.cs" />
+    <Compile Include="MiniJson.cs" />
     <Compile Include="OCTRelease.cs" />
     <Compile Include="OCTErrorForm.cs">
       <SubType>Form</SubType>
@@ -125,7 +126,6 @@
     <Compile Include="OlmodUpdateForm.Designer.cs">
       <DependentUpon>OlmodUpdateForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Olproxy\OCTExtensions.cs" />
     <Compile Include="OverloadPinger.cs" />
     <Compile Include="Resolution.cs" />
     <Compile Include="OCTUpdateForm.cs">
@@ -151,13 +151,6 @@
     </Compile>
     <Compile Include="MapManager.cs" />
     <Compile Include="OlmodManager.cs" />
-    <Compile Include="Olproxy\Broadcast.cs" />
-    <Compile Include="Olproxy\ConsoleSpinner.cs" />
-    <Compile Include="Olproxy\MatchInfo.cs" />
-    <Compile Include="Olproxy\MiniJson.cs" />
-    <Compile Include="Olproxy\PrivateMatchData.cs" />
-    <Compile Include="Olproxy\Program.cs" />
-    <Compile Include="Olproxy\xxHash.cs" />
     <Compile Include="PaneController.cs" />
     <Compile Include="PilotManager.cs">
       <SubType>Form</SubType>

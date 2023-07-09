@@ -564,43 +564,61 @@ namespace OverloadClientTool
                             string mapKey = Path.GetFileName(mapFileName).ToLower();
 
                             FileInfo fiLocalMap = new FileInfo(mapFileName);
-                            OverloadMap newMap = new OverloadMap(null, UnixTimeStampToDateTime(0), Convert.ToInt32(fiLocalMap.Length), mapFileName);
 
-                            bool found = false;
-                            foreach (KeyValuePair<string, OverloadMap> map in newMapList)
+                            OverloadMap newMap = null;
+                            try
                             {
-                                if (newMap.SameZipFileName(map.Value))
-                                {
-                                    // We found a local map that matches the ZIP filename as found online.
-                                    found = true;
-
-                                    // Uppercase first char in map name and remove hidden marker if present.
-                                    string mapZipName = fiLocalMap.Name;
-                                    mapZipName = mapZipName.Substring(0, 1).ToUpper() + mapZipName.Substring(1);
-                                    mapZipName = mapZipName.Replace(HiddenMarker, "");
-                                    map.Value.ZipName = mapZipName;
-
-                                    // Save full path to ZIP file in the application data folder.
-                                    map.Value.LocalZipFileName = fiLocalMap.FullName;
-                                }
+                                newMap = new OverloadMap(null, UnixTimeStampToDateTime(0), Convert.ToInt32(fiLocalMap.Length), mapFileName);
+                            }
+                            catch
+                            {
                             }
 
-                            if (!found)
+                            if (newMap != null)
                             {
-                                // See if we should hide map if not included in the official map list and not purposedly skipped.
-                                //if (HideUnOfficialMaps && OverloadMap.ContainsMultiplayerMap(mapFileName) && !newMap.Hidden)
-                                if (HideUnOfficialMaps && !newMap.Hidden)
+                                bool found = false;
+
+                                foreach (KeyValuePair<string, OverloadMap> map in newMapList)
                                 {
-                                    string zipName = newMap.ZipName;
-                                    if (zipName.ToLower().EndsWith(".zip")) zipName = zipName.Substring(0, zipName.Length - ".zip".Length);
-                                    LogMessage($"Hidding {zipName} as it is not in the official map list.");
-                                    newMap.Hide();
+                                    if (newMap.SameZipFileName(map.Value))
+                                    {
+                                        // We found a local map that matches the ZIP filename as found online.
+                                        found = true;
+
+                                        // Uppercase first char in map name and remove hidden marker if present.
+                                        string mapZipName = fiLocalMap.Name;
+                                        mapZipName = mapZipName.Substring(0, 1).ToUpper() + mapZipName.Substring(1);
+                                        mapZipName = mapZipName.Replace(HiddenMarker, "");
+                                        map.Value.ZipName = mapZipName;
+
+                                        // Save full path to ZIP file in the application data folder.
+                                        map.Value.LocalZipFileName = fiLocalMap.FullName;
+                                    }
                                 }
 
-                                if (mapKey.ToLower().EndsWith(HiddenMarker)) mapKey = mapKey.Substring(0, mapKey.Length - HiddenMarker.Length);
-                                if (mapKey.ToLower().EndsWith(".zip")) mapKey = mapKey.Substring(0, mapKey.Length - ".zip".Length);
+                                if (!found)
+                                {
+                                    // See if we should hide map if not included in the official map list and not purposedly skipped.
+                                    //if (HideUnOfficialMaps && OverloadMap.ContainsMultiplayerMap(mapFileName) && !newMap.Hidden)
+                                    if (HideUnOfficialMaps && !newMap.Hidden)
+                                    {
+                                        string zipName = newMap.ZipName;
+                                        if (zipName.ToLower().EndsWith(".zip")) zipName = zipName.Substring(0, zipName.Length - ".zip".Length);
+                                        LogMessage($"Hidding {zipName} as it is not in the official map list.");
+                                        newMap.Hide();
+                                    }
 
-                                newMapList.Add(mapKey, newMap);
+                                    if (mapKey.ToLower().EndsWith(HiddenMarker)) mapKey = mapKey.Substring(0, mapKey.Length - HiddenMarker.Length);
+                                    if (mapKey.ToLower().EndsWith(".zip")) mapKey = mapKey.Substring(0, mapKey.Length - ".zip".Length);
+
+                                    newMapList.Add(mapKey, newMap);
+                                }
+
+                            }
+                            else
+                            {
+                                LogMessage($"Map file {Path.GetFileName(mapFileName)} is invalid it will be deleted.");
+                                try { File.Delete(mapFileName); } catch { }
                             }
                         }
                     }

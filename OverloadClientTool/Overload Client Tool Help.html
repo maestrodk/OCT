@@ -35,21 +35,11 @@
     </ul>
     <h3><a id="Introduction_28"></a>Introduction</h3>
     <p><a href="https://github.com/maestrodk/OCT">Overload Client Tool</a> is a UI frontend for <a href="https://www.revivalprod.com/">Revival Productions</a> superb 6-DOF shooter <a href="https://playoverload.com/">Overload</a>. You don’t need OCT to play Overload but it offers several benefits that isn’t a part of the original game.</p>
-    <p>OCT was created to make it easier to maintain maps, use Olproxy + Olmod and whatever else is needed to get the most out of Overload.</p>
+    <p>OCT was created to make it easier to maintain maps, use Olmod and whatever else is needed to get the most out of Overload.</p>
     <p>Note that originally there also was a Overload <em>Server</em> Tool (OST) also written by the same author. But both tools have since merged into a single tool (OCT). So don’t get misled by the ‘client’ part, OCT does everything OST did (and some more :)).</p>
     <h4><a id="Main_features_37"></a>Main features</h4>
     <ul>
         <li>Easy-to-use frontend for playing Overload / hosting an Overload server (or both)</li>
-        <li>
-            Support for <a href="https://github.com/arbruijn/olproxy">Olproxy</a> (by Arne de Bruijn):
-            <ul>
-                <li>Built-in Olproxy code base (standalone Olproxy is not required)</li>
-                <li>Support for external standalone Olproxy application</li>
-                <li>Olproxy may be turned on/off at any time</li>
-                <li>Olproxy may be switched from embedded / external at any time</li>
-                <li>When server is running Olproxy can optionally send info to the online tracker</li>
-            </ul>
-        </li>
         <li>
             Support for <a href="https://github.com/overload-development-community/olmod/releases">Olmod</a> (Created by Arne de Bruijn, now maintained by the Overload Developer Community):
             <ul>
@@ -100,18 +90,17 @@
         <li>Maps</li>
         <li>Pilots</li>
         <li>Overload</li>
-        <li>Olproxy</li>
         <li>Olmod</li>
         <li>Server</li>
         <li>Options</li>
     </ul>
     <h4><a id="Main_86"></a>Main</h4>
-    <p>The Main tab is where you start/stop Overload (using the <code>Start</code> button). It is also where you view a running log of all actions. Especially when using Olproxy the log shows any interaction being exchange between the local Olproxy running on your computer and a remote Olproxy used by a remote server or remote clients.</p>
-    <p>When OCT starts it will display the version of OCT itself but also the version of the embedded Olproxy and Olmod. If Olmod auto-update is enabled you will also see a message in case Olmod gets updated.</p>
+    <p>The Main tab is where you start/stop Overload (using the <code>Start</code> button). It is also where you view a running log of all actions.</p>
+    <p>When OCT starts it will display the version of OCT itself but also the version of Olmod (if installed). If Olmod auto-update is enabled you will also see a message in case Olmod gets updated.</p>
     <p><em>Note that if a log entry is longer than can be shown in the log window hovering the mouse over the entry will display the complete text.</em></p>
-    <p>At the bottom you can always see the running status of Overload/Olmod and Olproxy (if running as a client). The <code>Start</code> button will change to either <code>Stop</code> if Overload/Olmod is running.</p>
+    <p>At the bottom you can always see the running status of Overload/Olmod . The <code>Start</code> button will change to either <code>Stop</code> if Overload/Olmod is running.</p>
     <p>Note that this only pertains to a client Overload/Olmod - if you’re running a server Overload/Olmod at the same time that is a separate Overload instance that is controlled using the <code>Server</code> tab.</p>
-    <p>Also note that when you chose to exit OCT (using the <code>Exit</code> button) <em>all</em> running instances of Overload/Olmod/Olproxy will be automatically shut down.</p>
+    <p>Also note that when you chose to exit OCT (using the <code>Exit</code> button) <em>all</em> running instances of Overload/Olmod will be automatically shut down.</p>
     <h4><a id="Maps_100"></a>Maps</h4>
     <p>Here you can see all maps installed in either the Overload DLC or the Overload ProgramData folder. To see information on a specific map just hover the mouse over the entry in the listbox to view the map ZIP filename, size and location.</p>
     <p>The <code>Hide</code> button will change between ‘Hide’ and ‘Unhide’ depending whether the selected map is hidden or not. Hiding a map (using the <code>Hide</code> button) is useful to limit the maps visible to Overload as you then can find your favorite maps faster (less clicking!).</p>
@@ -155,11 +144,7 @@
 
     <p>The <code>Search</code> button at the bottom of the Overload tab does the same auto-search as when OCT first runs.</p>
     <p>The <code>Overload Startup Parameters</code> will be auto-set on first run of OCT. After that you can change this field to whatever you like. Note that OCT does some sanity checking when using this field as some parameters are server-only and others doesn’t make much sense if user for an Overload client. If using Olmod then the paramters set here will be added to then parameters setup for Olmod.</p>
-    <h4><a id="Olproxy_153"></a>Olproxy</h4>
-    <p><a href="https://github.com/arbruijn/olproxy">Olproxy</a> is a LAN-to-Internet proxy created by Arne de Bruijn. In a nutshell it allows you to connect to a ‘LAN’ server that is hosted online. To use the feature simply enabled Olproxy, start Overload and then start a LAN game where you enter the remote servers IP address or domain name in the password field. The remote Olproxy (on the Internet server) and your local Olproxy then talk together to connect your Overload client with the remote Overload server. From there on Olproxy doesn’t interfere with the actual gameplay.</p>
-    <p>Use the settings provided in this tab to tell OCT if and how to use Olproxy. If you want to use the external standalone Olproxy application you must manually download and install this as OCT does not (currently) have a feature to do this (that may come in the future). You only need to do this if you don’t want to use the Olproxy embedded into OCT of course. The tab has a link to Olproxy on Github.</p>
-    <p>Setting the path to the external Olproxy.exe is done in the same way as setting the path to Overload and Olmod - simply doubleclick the <code>External Olproxy Application</code>field and select the Olproxy.exe file.</p>
-    <p>When starting a Overload server OCT will configure Olproxy to use the server settings setup on the Server tab. If needed OCT will start/stop Olproxy temporarily to set Olproxy so that server information is only sent if the server is running and if set to do so according to the settings on the Server tab. If you are only running a Overload client (or if you stop the server) then Olproxy will switch to use ‘client’ mode, e.g. no information will be sent to the tracker.</p>
+
     <h4><a id="Olmod_164"></a>Olmod</h4>
     <p>Generally using Olmod is always recommended except when you want to do a CM and want your public score to be updated - or if you are joining a server game where the use of Olmod is prohibited.</p>
     <p>If you have Olmod installed to your Overload game folder then OCT will find it automatically. Otherwise you have to doubleclick the <code>Olmod Application</code> field and select Olmod.exe where you have installed it - also you must select the option <code>Tell Olmod where Overload is installed (using -gamedir option)</code> - otherwise Olmod will be unable to run as it needs the Overload game files.</p>

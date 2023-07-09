@@ -16,7 +16,7 @@ namespace OverloadClientTool
 
         private Button activeButton = null;
 
-        private Dictionary<Button, Panel> panels = new Dictionary<Button, Panel>();
+        public Dictionary<Button, Panel> panels = new Dictionary<Button, Panel>();
 
         private Theme theme;
 

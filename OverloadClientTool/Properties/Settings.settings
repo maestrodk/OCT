@@ -5,20 +5,11 @@
     <Setting Name="OverloadPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="OlproxyPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="TrayOnly" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="OverloadParameters" Type="System.String" Scope="User">
       <Value Profile="(Default)">-singleinstance</Value>
-    </Setting>
-    <Setting Name="OlproxyParameters" Type="System.String" Scope="User">
-      <Value Profile="(Default)">-v</Value>
-    </Setting>
-    <Setting Name="EmbeddedOlproxy" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MapListUrl" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://www.overloadmaps.com/data/all.json</Value>
@@ -133,6 +124,9 @@
     </Setting>
     <Setting Name="D1App" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Descent\d1x-rebirth.exe</Value>
+    </Setting>
+    <Setting Name="WindowSize" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Small</Value>
     </Setting>
   </Settings>
 </SettingsFile>

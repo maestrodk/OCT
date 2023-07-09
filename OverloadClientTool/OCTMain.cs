@@ -25,6 +25,10 @@ namespace OverloadClientTool
         public bool shutdown = false;
         private bool trayExitClick = false;
 
+        private Font treeViewFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
+
+        public float ScaleFactor { get; set; } = 1.0f;
+
         // Set a default them (might change when reading settings).
         public Theme theme = Theme.GetDarkGrayTheme;
 
@@ -39,9 +43,6 @@ namespace OverloadClientTool
 
         // This matches MJDict defined on Olproxy.
         private Dictionary<string, object> olmodConfig = new Dictionary<string, object>();
-
-        private olproxy.Program olproxyTask = null;
-        private Thread olproxyThread = null;
 
         private OlmodManager olmodManager = null;
 
@@ -104,6 +105,42 @@ namespace OverloadClientTool
             // Initialize controls on main form.
             InitializeComponent();
 
+            if (WindowSize != "Small")
+            {
+                float NewFontSize = 12f;
+                if (WindowSize == "Normal") NewFontSize = 10f;
+
+                ScaleFactor = NewFontSize / Font.Size;
+                Font = new Font(this.Font.FontFamily.Name, NewFontSize);
+
+                // Fix text size and line heights.
+                treeViewFont = new Font(this.Font.FontFamily.Name, NewFontSize);
+
+                LogTreeView.Font = treeViewFont;
+                LogTreeView.ItemHeight = (int)((((float)LogTreeView.ItemHeight) * ScaleFactor)); //  19;  // Default is 14.
+
+                MapsListBox.Font = treeViewFont;
+                MapsListBox.ItemHeight = (int)((((float)MapsListBox.ItemHeight) * ScaleFactor)); //  20;  // Default is 13.
+                MapsListBox.ItemHeight++;
+
+                PilotsListBox.Font = treeViewFont;
+                PilotsListBox.ItemHeight = (int)((((float)PilotsListBox.ItemHeight) * ScaleFactor)); //  20;  // Default is 13.
+                PilotsListBox.ItemHeight++;
+                if (NewFontSize == 12f) PilotsListBox.ItemHeight++;
+
+                AvailableThemesListBox.Font = treeViewFont;
+                AvailableThemesListBox.ItemHeight = (int)((((float)AvailableThemesListBox.ItemHeight) * ScaleFactor)); //  20;  // Default is 13.
+                if (NewFontSize == 12f) AvailableThemesListBox.ItemHeight--;
+
+                ServersListView.Font = treeViewFont;
+                if (NewFontSize == 12f) ServersListView.Height--;                
+
+                foreach (ColumnHeader header in ServersListView.Columns)
+                {
+                    header.Width = (int)(((float)header.Width) * ScaleFactor);
+                }
+            }
+
             // Initialize tray menu item 1.
             trayMenuItemStart.Index = 0;
             trayMenuItemStart.Text = "&Start Overload";
@@ -138,7 +175,6 @@ namespace OverloadClientTool
             paneController.SetupPaneButton(PaneSelectMapManager, PaneMaps);
             paneController.SetupPaneButton(PaneSelectPilots, PanePilots);
             paneController.SetupPaneButton(PaneSelectOverload, PaneOverload);
-            paneController.SetupPaneButton(PaneSelectOlproxy, PaneOlproxy);
             paneController.SetupPaneButton(PaneSelectOlmod, PaneOlmod);
             paneController.SetupPaneButton(PaneSelectServer, PaneServer);
             paneController.SetupPaneButton(PaneSelectOnline, PaneOnline);
@@ -168,10 +204,6 @@ namespace OverloadClientTool
 
             // Init maps listbox and start monitoring.
             InitMapsListBox();
-
-            // Prepare embedded OlproxyProgram instance before attempting to start thread.
-            olproxyTask = new olproxy.Program();
-            olproxyTask.SetLogger(Info);
 
             // Set logging for map manager.
             mapManager.SetLogger(Info, Error);
@@ -490,9 +522,6 @@ namespace OverloadClientTool
             try { pingerThread.Abort(); } catch { }
             try { backgroundThread.Abort(); } catch { }
 
-            // Kill embedded Olproxy.
-            if (IsOlproxyRunning) ShutdownOlproxy();
-
             // Shut down server.
             if (serverProcessId > 0) StartServerButton_Click(null, null);
 
@@ -608,7 +637,7 @@ namespace OverloadClientTool
 
                     SizeF textSize = graphics.MeasureString(text, treeViewFont);
 
-                    while ((prefixSize.Width + textSize.Width + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth + 2) > LogTreeView.Width)
+                    while ((prefixSize.Width + textSize.Width + SystemInformation.VerticalScrollBarWidth + 2) > LogTreeView.Width)
                     {
                         int i = text.LastIndexOf(' ');
                         if (i < 0) text.LastIndexOf('-');
@@ -770,77 +799,6 @@ namespace OverloadClientTool
             }
         }
 
-        /// <summary>
-        /// Starts embedded Olproxy.
-        /// </summary>
-        private void OlproxyThread()
-        {
-            olproxyTask.Run(new string[1] { OverloadArgs.Text });
-        }
-
-        /// <summary>
-        /// Start emnbedded Olproxy thread.
-        /// </summary>
-        private void StartOlproxyThread()
-        {
-            olproxyThread = new Thread(OlproxyThread);
-            olproxyThread.IsBackground = true;
-            olproxyThread.Start();
-        }
-
-        /// <summary>
-        /// Try to gracefully shutdown Olproxy thread.
-        /// </summary>
-        private void KillOlproxyThread()
-        {
-            if (olproxyThread != null)
-            {
-                try
-                {
-                    if (olproxyTask.KillFlag == false) olproxyTask.KillFlag = true;
-
-                    int n = 25;
-                    while ((n-- > 0) && (olproxyTask.KillFlag == true))
-                    {
-                        Thread.Sleep(100);
-                    }
-                }
-                catch
-                {
-                }
-                finally
-                {
-                    olproxyThread = null;
-                }
-            }
-        }
-
-        public bool IsOlproxyRunning
-        {
-            get
-            {
-                bool running = false;
-
-                try
-                {
-                    // Check Olproxy.
-                    if (UseEmbeddedOlproxy.Checked)
-                    {
-                        if ((olproxyTask.KillFlag == false) && (olproxyThread != null) && olproxyThread.IsAlive) running = true;
-                    }
-                    else
-                    {
-                        try { running = (GetRunningProcess("olproxy") != null); } catch { }
-                    }
-                }
-                catch
-                {
-                }
-
-                return running;
-            }
-        }
-
         public bool IsOverloadRunning
         {
             get
@@ -926,10 +884,9 @@ namespace OverloadClientTool
                 Thread.Sleep(850);
 
                 bool overloadRunning = IsOverloadRunning;
-                bool olproxyRunning = IsOlproxyRunning;
                 bool olmodRunning = IsOlmodRunning;
 
-                GameModComboBox.Enabled = !(overloadRunning || olmodRunning); ;
+                try { GameModComboBox.Enabled = !(overloadRunning || olmodRunning); } catch { }
 
                 bool d3Running = IsD3Running;
                 bool d2Running = IsD2Running;
@@ -965,11 +922,8 @@ namespace OverloadClientTool
                     string statusText = "";
                     string server = "";
 
-                    if (overloadRunning && !olproxyRunning && !olmodRunning) statusText = $"Overload{server}is running.";
-                    else if (overloadRunning && olproxyRunning && !olmodRunning) statusText = $"Overload{server} and Olproxy (external) are running.";
-                    else if (olmodRunning && !olproxyRunning) statusText = $"Overload{server} (using Olmod) is running.";
-                    else if (olmodRunning && olproxyRunning) statusText = $"Overload{server} (using Olmod) and Olproxy are running.";
-                    else if (olproxyRunning) statusText = "Olproxy is running.";
+                    if (overloadRunning && !olmodRunning) statusText = $"Overload{server}is running.";
+                    else if (olmodRunning) statusText = $"Overload{server} (using Olmod) is running.";
                     else
                     {
                         bool foundOverload = false;
@@ -985,7 +939,6 @@ namespace OverloadClientTool
                     if (serverProcessId > 0) statusText += " Server is running.";
 
                     OverloadRunning.Visible = overloadRunning || olmodRunning || (serverProcessId > 0);
-                    OlproxyRunning.Visible = olproxyRunning;
                     ServerRunning.Visible = serverProcessId > 0;
 
                     Descent3Running.Visible = d3Running;
@@ -995,7 +948,6 @@ namespace OverloadClientTool
                     UpdateOlmodButton.Enabled = !olmodRunning;
 
                     StartStopButton.Text = (overloadRunning || olmodRunning) ? "Stop client" : "Start client";
-                    StartStopOlproxyButton.Text = (olproxyRunning) ? "Stop" : "Start";
 
                     StartD1.Text = (d1Running) ? "Stop D1" : "Start D1";
                     StartD2.Text = (d1Running) ? "Stop D2" : "Start D2";
@@ -1053,7 +1005,6 @@ namespace OverloadClientTool
         private void ValidateSettings()
         {
             TestSetTextBoxColor(OverloadExecutable);
-            TestSetTextBoxColor(OlproxyExecutable);
             TestSetTextBoxColor(OlmodExecutable);
             TestSetTextBoxColor(Descent3Executable);
             TestSetTextBoxColor(Descent2Executable);
@@ -1081,12 +1032,6 @@ namespace OverloadClientTool
             UpdateDLCLocation();
         }
 
-        private void OlproxyExecutable_TextChanged(object sender, EventArgs e)
-        {
-            OlproxyPath = OlproxyExecutable.Text;
-            ValidateSettings();
-        }
-
         private void OverloadExecutable_MouseDoubleClick(object sender, EventArgs e)
         {
             OverloadExecutable.SelectionLength = 0;
@@ -1109,26 +1054,6 @@ namespace OverloadClientTool
             Directory.SetCurrentDirectory(save);
         }
 
-        private void OlproxyExecutable_DoubleClick(object sender, EventArgs e)
-        {
-            OlproxyExecutable.SelectionLength = 0;
-
-            string save = Directory.GetCurrentDirectory();
-
-            SelectExecutable.FileName = Path.GetFileName(OlproxyExecutable.Text);
-            SelectExecutable.InitialDirectory = Path.GetDirectoryName(OlproxyExecutable.Text);
-
-            DialogResult result = SelectExecutable.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                OlproxyExecutable.Text = SelectExecutable.FileName;
-                OlproxyExecutable.SelectionLength = 0;
-            }
-
-            Directory.SetCurrentDirectory(save);
-        }
-
         private void ExitButton_Click(object sender, EventArgs e)
         {
             StopButton_Click(null, null);
@@ -1146,15 +1071,6 @@ namespace OverloadClientTool
             }
             else
             {
-                if (UseOlproxyCheckBox.Checked)
-                {
-                    // Only start Olproxy if server isn't running.
-                    if (serverProcessId == 0)
-                    {
-                        LaunchOlproxy();
-                    }
-                }
-
                 // Switch display if enabled and the display exists.
                 CheckSwitchDisplay();
 
@@ -1174,72 +1090,6 @@ namespace OverloadClientTool
                     if (gamingDisplay != DisplayManager.PrimaryDisplay) DisplayManager.SetAsPrimaryMonitor(gamingDisplay);
                 }
             }
-        }
-
-        private void LaunchOlproxy(bool server = false)
-        {
-            if (IsOlproxyRunning || !UseOlproxy) return;
-
-            LogDebugMessage($"LaunchOlproxy()");
-
-            string name = "";
-            try
-            {
-                if (OverloadClientToolApplication.ValidFileName(OlproxyExecutable.Text))
-                {
-                    name = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
-                }
-                else
-                {
-                    name = "olproxy";
-                }
-            }
-            catch
-            {
-            }
-
-            // Start application it is not already running.
-            int running = 0;
-            foreach (Process process in Process.GetProcesses())
-            {
-                if (process.ProcessName.ToLower() == name) running++;
-            }
-
-            // If set to use external Olproxy and one instance is running the exit with OK status.
-            if ((running == 1) && (UseEmbeddedOlproxy.Checked == false)) return;
-
-            // If we get here either embedded Olproxy is selected or 0/more than one instance of the external Olproxy is running.
-            KillRunningProcess(name);
-
-            // Should have no running instances now.
-            if (OlproxyEmbedded)
-            {
-                if (server) Info("Starting up embedded Olproxy for server.");
-                else Info("Starting up embedded Olproxy.");
-
-                if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive)) KillOlproxyThread();
-                StartOlproxyThread();
-                return;
-            }
-
-            // Make sure Olproxy.exe exists.
-            if (new FileInfo(OlproxyExecutable.Text).Exists == false)
-            {
-                MessageBox.Show("Missing Olproxy.exe!");
-                return;
-            }
-
-            if (server) Info("Starting up external Olproxy for server.");
-            else Info("Starting up external Olproxy.");
-
-            LogDebugMessage($"Starting external Olproxy");
-
-            // Start external Olproxy application.
-            Process appStart = new Process();
-            appStart.StartInfo = new ProcessStartInfo(OlproxyExecutable.Text, OlproxyArgs.Text);
-            appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(OlproxyExecutable.Text);
-            appStart.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-            appStart.Start();
         }
 
         private void LaunchOverloadClient()
@@ -1280,7 +1130,7 @@ namespace OverloadClientTool
             // Add Olmod parameters if Olmod is enabled.
             if (UseOlmodCheckBox.Checked)
             {
-                if (PassGameDirToOlmod && !OlproxyArgs.Text.ToLower().Contains("-gamedir")) commandLineArgs = " -gamedir \"" + path + "\"";
+                if (PassGameDirToOlmod && !commandLineArgs.ToLower().Contains("-gamedir")) commandLineArgs = " -gamedir \"" + path + "\"";
                 if (ShowFPS && !commandLineArgs.ToLower().Contains("-frametime")) commandLineArgs += " -frametime";
             }
 
@@ -1361,9 +1211,6 @@ namespace OverloadClientTool
 
             KillRunningProcess("overload");
             KillRunningProcess("olmod");
-
-            // Only shut down Olproxy live if server isn't running.
-            if ((serverProcessId == 0) && IsOlproxyRunning) ShutdownOlproxy();
         }
 
         private void CheckDisplaySwitch()
@@ -1397,37 +1244,6 @@ namespace OverloadClientTool
             Close();
         }
 
-        private void UseEmbeddedOlproxy_CheckedChanged(object sender, EventArgs e)
-        {
-            OlproxyEmbedded = UseEmbeddedOlproxy.Checked;
-
-            Info((UseEmbeddedOlproxy.Checked) ? "Using embedded Olproxy." : "Using external Olproxy.");
-
-            if (UseEmbeddedOlproxy.Checked == true)
-            {
-                // Kill Olproxy application if it is running.
-                string olproxyName = Path.GetFileNameWithoutExtension(OlproxyExecutable.Text).ToLower();
-                Process process = GetRunningProcess(olproxyName);
-                if (process != null)
-                {
-                    // Kill running Olproxy application. 
-                    process.Kill();
-
-                    // Start embedded Olproxy task.
-                    StartOlproxyThread();
-                }
-            }
-            else
-            {
-                // Kill Olproxy task.
-                if ((olproxyTask != null) && (olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive))
-                {
-                    KillOlproxyThread();
-                    LaunchOlproxy();
-                }
-            }
-        }
-
         private void Main_Resize(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Minimized)
@@ -1455,14 +1271,6 @@ namespace OverloadClientTool
         {
             UseOlmod = UseOlmodCheckBox.Checked;
             Info((UseOlmodCheckBox.Checked) ? "Olmod enabled." : "Olmod disabled.");
-        }
-
-        private void UseOlproxy_CheckedChanged(object sender, EventArgs e)
-        {
-            UseOlproxy = UseOlproxyCheckBox.Checked;
-            StartStopOlproxyButton.Visible = UseOlproxy;
-            Verbose((UseOlproxyCheckBox.Checked) ? "Olproxy enabled." : "Olproxy disabled.");
-            if (!UseOlproxy) StartStopOlproxyButton_Click(null, null);
         }
 
         private void SearchOverloadButton_Click(object sender, EventArgs e)
@@ -1495,11 +1303,6 @@ namespace OverloadClientTool
         private void OlmodReleases_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try { Process.Start(new ProcessStartInfo(OlmodReleases.Text)); } catch { }
-        }
-
-        private void OlproxyReleases_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try { Process.Start(new ProcessStartInfo(OlproxyReleases.Text)); } catch { }
         }
 
         /// <summary>
@@ -1549,11 +1352,6 @@ namespace OverloadClientTool
         {
             OlmodPath = OlmodExecutable.Text;
             ValidateSettings();
-        }
-
-        private void OlproxyArgs_TextChanged(object sender, EventArgs e)
-        {
-            OlproxyParameters = OlproxyArgs.Text;
         }
 
         private void OverloadArgs_TextChanged(object sender, EventArgs e)
@@ -2132,41 +1930,6 @@ namespace OverloadClientTool
             }
         }
 
-        private void ShutdownOlproxy()
-        {
-            Info("Shutting down Olproxy.");
-
-            KillRunningProcess("olproxy");
-            if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive)) KillOlproxyThread();
-        }
-
-        private void StartStopOlproxyButton_Click(object sender, EventArgs e)
-        {
-            if (sender != null)
-            {
-                // Only launch Olproxy if OCT isn't shutting down.
-                if (IsOlproxyRunning) ShutdownOlproxy();
-                else LaunchOlproxy();
-                return;
-            }
-
-            // Either we are shutting down or user wants to shut down Olproxy.
-            if (IsOlproxyRunning)
-            {
-                Info("Shutting down Olproxy.");
-
-                // ValidateButton(StartButton, theme);
-                // Defocus();
-
-                KillRunningProcess("olproxy");
-                if ((olproxyTask.KillFlag == false) && ((olproxyThread != null) && olproxyThread.IsAlive)) KillOlproxyThread();
-            }
-        }
-
-        private void PilotXPTextBox_TextChanged(object sender, EventArgs e)
-        {
-        }
-
         private void AvailableThemes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (AvailableThemesListBox.SelectedIndex >= 0)
@@ -2315,8 +2078,6 @@ namespace OverloadClientTool
             AutoUpdateOCT = AutoUpdateCheckBox.Checked;
         }
 
-        private Font treeViewFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
-
         public void LogTreeViewText(string text, bool error = false)
         {
             if (LogTreeView.Nodes.Count > 9999) LogTreeView.Nodes[0].Remove();
@@ -2463,17 +2224,6 @@ namespace OverloadClientTool
                     serverProcessId = 0;
                 }
 
-                if (IsOlproxyRunning) ShutdownOlproxy();
-
-                // Switch to client-only Olproxy if Overload/Olmod client is running.
-                if (IsOverloadOrOlmodRunning)
-                {
-                    if (UseOlproxy)
-                    {
-                        LaunchOlproxy();
-                    }
-                }
-
                 StartServerButton.Text = "Start server";
                 StartServerButtonMain.Text = StartServerButton.Text;
                 trayMenuItemStartServer.Text = "St&art server";
@@ -2484,14 +2234,6 @@ namespace OverloadClientTool
             StartServerButton.Text = "Stop server";
             StartServerButtonMain.Text = StartServerButton.Text;
             trayMenuItemStartServer.Text = "St&op server";
-
-            // Setup Olproxy for server.
-            if (IsOlproxyRunning) ShutdownOlproxy();
-
-            if (UseOlproxy)
-            {
-                LaunchOlproxy(true);
-            }
 
             string exePath = OverloadExecutable.Text;
             string olmodExe = OlmodExecutable.Text;
@@ -2536,7 +2278,7 @@ namespace OverloadClientTool
             // Add Olmod parameters if Olmod is enabled.
             if (UseOlmodCheckBox.Checked)
             {
-                if (PassGameDirToOlmod && !OlproxyArgs.Text.ToLower().Contains("-gamedir")) commandLineArgs += " -gamedir \"" + path + "\"";
+                if (PassGameDirToOlmod && !commandLineArgs.ToLower().Contains("-gamedir")) commandLineArgs += " -gamedir \"" + path + "\"";
             }
 
             commandLineArgs += " " + OverloadParameters;
@@ -3453,6 +3195,11 @@ namespace OverloadClientTool
             catch
             {
             }
+        }
+
+        private void WindowSizeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            WindowSize = WindowSizeComboBox.SelectedItem.ToString();
         }
     }
 }

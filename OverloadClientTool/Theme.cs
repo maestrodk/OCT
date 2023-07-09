@@ -418,7 +418,7 @@ namespace OverloadClientTool
                 Theme theme = new Theme();
 
                 theme.Name = "Orange";
-                theme.Description = "A orange theme resembling Overload orange menus.";
+                theme.Description = "A orange theme.";
 
                 theme.ButtonEnabledBackColor = Color.FromArgb(224, 160, 16);
                 theme.ButtonEnabledForeColor = Color.Black;
