@@ -34,6 +34,8 @@ namespace OverloadClientTool
 
         public string MapTypes = null;
 
+        public string MapKey = null;
+
         public OverloadMap(string url, DateTime dateTime, int size, string mapZipName = null, string mapTypes = null)
         {
             this.Url = url;
@@ -57,8 +59,14 @@ namespace OverloadClientTool
                 this.ZipName = mapZipName;
             }
 
-            if (mapTypes != null) MapTypes = mapTypes;
-            else ReflectMapTypes();
+            if (mapTypes != null)
+            {
+                MapTypes = mapTypes;
+            }
+            else
+            {
+                ReflectMapTypes();
+            }
         }
 
         /// <summary>
@@ -229,6 +237,9 @@ namespace OverloadClientTool
                         }
                     }
                 }
+
+                result += " , " + this.DateTime.ToString("O").Substring(0, 14).Replace("T", " ");
+
 
                 if (InApplicationDataFolder) result += String.Format($", Application data folder");
                 if (InDLCFolder) result += String.Format($", DLC folder");
@@ -613,7 +624,6 @@ namespace OverloadClientTool
 
                                     newMapList.Add(mapKey, newMap);
                                 }
-
                             }
                             else
                             {
@@ -692,6 +702,44 @@ namespace OverloadClientTool
             // Update maps.
             SortedMaps = newMapList;
         }
+
+        public void Resort(bool newestFirst)
+        {
+            SortedList<string, OverloadMap> newList = new SortedList<string, OverloadMap>();
+            List<OverloadMap> list = new List<OverloadMap>();
+
+            if (newestFirst)
+            {
+                foreach (KeyValuePair<string, OverloadMap> kv in SortedMaps)
+                {
+                    list.Add(kv.Value);
+                }
+
+                list = list.OrderBy(kv => kv.DateTime).ToList();
+
+                foreach (OverloadMap map in list)
+                {
+                    newList.Add(map.DateTime.ToString("O") + Guid.NewGuid().ToString(), map);
+                }
+            }
+            else
+            {
+                foreach (KeyValuePair<string, OverloadMap> kv in SortedMaps)
+                {
+                    list.Add(kv.Value);
+                }
+
+                list = list.OrderBy(kv => kv.ZipName.ToLower()).ToList();
+
+                foreach (OverloadMap map in list)
+                {
+                    newList.Add(map.ZipName.ToLower(), map);
+                }
+            }
+
+            SortedMaps = newList;
+        }
+
 
         /// <summary>
         /// Get online master map list.

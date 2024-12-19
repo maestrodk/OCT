@@ -659,24 +659,28 @@ namespace OverloadClientTool
 
         private void PilotLanguageComboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            string pilotSelected = PilotsListBox.SelectedItem.ToString();
-             
-            if (IsOverloadOrOlmodRunning && (CurrentPilot == pilotSelected))
-            {
-                MessageBox.Show($"Can't modify the active pilot when Overload is running!");
-                return;
-            }
-
-            updating = true;
-
             try
             {
+                LogDebugMessage($"PilotLanguageComboBox_SelectionChangeCommitted: getting selected pilot");
+                string pilotSelected = PilotsListBox.SelectedItem.ToString();
+
+                LogDebugMessage($"PilotLanguageComboBox_SelectionChangeCommitted: getting language ID");
                 string newLanguageId = PilotLanguageComboBox.SelectedIndex.ToString();
+
+                if (IsOverloadOrOlmodRunning && (CurrentPilot == pilotSelected))
+                {
+                    MessageBox.Show($"Can't modify the active pilot when Overload is running!");
+                    return;
+                }
+
+                updating = true;
+
                 if (currentLanguageId != newLanguageId) SetPilotOption(pilotSelected, "O_LANGUAGE", newLanguageId);
                 currentLanguageId = newLanguageId;
             }
-            catch
+            catch (Exception ex)
             {
+                LogDebugMessage($"PilotLanguageComboBox_SelectionChangeCommitted: {ex.Message}");
             }
             finally
             {

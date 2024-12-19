@@ -3,27 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
-using System.Linq;
-using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using IWshRuntimeLibrary;
 using minijson;
-using static System.Windows.Forms.ListView;
-using static OverloadClientTool.OverloadMap;
 
 namespace OverloadClientTool
 {
     public partial class OCTMain : Form
     {
+        DisplayConfiguration DisplayConfiguration = DisplayConfiguration.ActiveConfiguration;
+
+        IEnumerable<Monitor> Monitors = Monitor.AllMonitors;
+        IEnumerable<string> MonitorFriendlyNames = Monitor.GetAllMonitorFriendlyNames();
+
         public bool exited = false;
         public bool shutdown = false;
         private bool trayExitClick = false;
+        
+        private bool NeedToRunPostApp { get; set; } = false;
+        private bool NeedToRestoreDisplay { get; set; } = false;
 
         private Font treeViewFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
 
@@ -38,7 +40,7 @@ namespace OverloadClientTool
         // Low level keyboard hook.
         EnableDisableKeys enableDisableKeys = new EnableDisableKeys();
 
-        // Shortcut link for Startupt folder (if file exists the autostart is enabled).
+        // Shortcut link for Startupt folder (if file exists the auto4 is enabled).
         string shortcutFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "OverLoad Client Tool AutoStart.lnk");
 
         // This matches MJDict defined on Olproxy.
@@ -129,8 +131,10 @@ namespace OverloadClientTool
                 if (NewFontSize == 12f) PilotsListBox.ItemHeight++;
 
                 AvailableThemesListBox.Font = treeViewFont;
+
+                if (NewFontSize == 12f) AvailableThemesListBox.ItemHeight++;
                 AvailableThemesListBox.ItemHeight = (int)((((float)AvailableThemesListBox.ItemHeight) * ScaleFactor)); //  20;  // Default is 13.
-                if (NewFontSize == 12f) AvailableThemesListBox.ItemHeight--;
+                if (NewFontSize == 10f) AvailableThemesListBox.ItemHeight++;
 
                 ServersListView.Font = treeViewFont;
                 if (NewFontSize == 12f) ServersListView.Height--;                
@@ -280,9 +284,29 @@ namespace OverloadClientTool
             }
         }
 
+        //private Form BlackForm { get; set; } = null;
+        
+        private Form CreateBlackForm()//Image image)
+        {
+            Form form = new Form();
+            form.ControlBox = false;
+            form.FormBorderStyle = FormBorderStyle.None;
+            //frm.BackgroundImage = image;
+            form.BackgroundImageLayout = ImageLayout.Zoom;
+            Screen scr = Screen.AllScreens.Length > 1 ? Screen.AllScreens[1] : Screen.PrimaryScreen;
+            form.Location = new Point(scr.Bounds.Left, scr.Bounds.Top);
+            form.Size = scr.Bounds.Size;
+            form.BackColor = Color.Black;
+            form.Show();
+            return form;
+        }
+
         private void Main_Load(object sender, EventArgs e)
         {
             LogDebugMessage("Main_Load()");
+
+            // Blank second monitor.
+            //BlackForm = CreateBlackForm();
 
             // Set controls colors according to the selected theme.
             UpdateTheme(theme);
@@ -530,6 +554,9 @@ namespace OverloadClientTool
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
+            RestoreDisplayConfiguration();
+            RunPostApp();
+
             if ((sender != null) && (e != null))
             {
                 // Not a forced shutdown.
@@ -874,15 +901,6 @@ namespace OverloadClientTool
 
             while (shutdown == false)
             {
-                CycleTheme();
-                Thread.Sleep(1000);
-
-                CycleTheme();
-                Thread.Sleep(1000);
-
-                CycleTheme();
-                Thread.Sleep(850);
-
                 bool overloadRunning = IsOverloadRunning;
                 bool olmodRunning = IsOlmodRunning;
 
@@ -897,6 +915,45 @@ namespace OverloadClientTool
                     // See if we should switch primary display.
                     this.UIThread(delegate { CheckDisplaySwitch(); });
                 }
+
+                this.UIThread(delegate
+                {
+                    if (overloadRunning || olmodRunning)
+                    {
+                        if (BlankSecondMonitorCheckBox.Checked && (Screen.AllScreens.Length > 1))
+                        {
+                            /*
+                            if (BlackForm == null) BlackForm = CreateBlackForm();
+
+                            Screen primary = Screen.PrimaryScreen;
+                            Screen secondary = (primary == Screen.AllScreens[0]) ? Screen.AllScreens[1] : Screen.AllScreens[0];
+
+                            BlackForm.Location = new Point(secondary.Bounds.X, secondary.Bounds.Y);
+                            BlackForm.Size = secondary.Bounds.Size;
+                            */
+                            if (DisplayConfiguration != null)
+                            {
+                                NeedToRestoreDisplay = true;
+                                int displayNumber = (Screen.PrimaryScreen == Screen.AllScreens[0]) ? 1 : 0;
+                                Monitor.Disconnect(displayNumber);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        /*
+                        if (BlackForm != null)
+                        {
+                            BlackForm.Dispose();
+                            BlackForm = null;
+                        }
+                        */
+
+                        RestoreDisplayConfiguration();
+                        RunPostApp();
+                    }
+                });
+
 
                 int reqHours = requestInterval / 3600;
                 int reqMins = (requestInterval - (reqHours * 3600)) / 60;
@@ -979,6 +1036,15 @@ namespace OverloadClientTool
 
                     StatusMessage.Text = statusText;
                 });
+
+                CycleTheme();
+                Thread.Sleep(1000);
+
+                CycleTheme();
+                Thread.Sleep(1000);
+
+                CycleTheme();
+                Thread.Sleep(850);
             }
         }
 
@@ -1008,6 +1074,8 @@ namespace OverloadClientTool
             TestSetTextBoxColor(OlmodExecutable);
             TestSetTextBoxColor(Descent3Executable);
             TestSetTextBoxColor(Descent2Executable);
+            TestSetTextBoxColor(OnStartAppPath);
+            TestSetTextBoxColor(OnStopAppPath);
             ValidateButton(StartStopButton, theme);
         }
 
@@ -1169,6 +1237,60 @@ namespace OverloadClientTool
 
             appStart.StartInfo.WorkingDirectory = Path.GetDirectoryName(exePath);
             appStart.Start();
+
+            // Check if we need to start pre-app.
+            try 
+            {
+                NeedToRunPostApp = true;
+
+                Process preAppStart = new Process
+                {
+                    StartInfo = new ProcessStartInfo(OnStartAppPath.Text)
+                    {
+                        WorkingDirectory = Path.GetDirectoryName(OnStartAppPath.Text)
+                    }
+                };
+
+                preAppStart.Start();
+            } 
+            catch
+            {
+            }
+        }
+
+        private void RunPostApp()
+        {
+            if (NeedToRunPostApp)
+            {
+                NeedToRunPostApp = false;
+                try
+                {
+                    Process postApp = new Process
+                    {
+                        StartInfo = new ProcessStartInfo(OnStopAppPath.Text)
+                        {
+                            WorkingDirectory = Path.GetDirectoryName(OnStopAppPath.Text)
+                        }
+                    };
+
+                    postApp.Start();
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        private void RestoreDisplayConfiguration()
+        {
+            if (NeedToRestoreDisplay)
+            {
+                NeedToRestoreDisplay = false;
+                if (DisplayConfiguration != null)
+                {
+                    DisplayConfiguration.ActiveConfiguration = DisplayConfiguration;
+                }
+            }
         }
 
         // Return process if instance is active otherwise return null.
@@ -1207,6 +1329,9 @@ namespace OverloadClientTool
 
             Defocus();
 
+            RestoreDisplayConfiguration();
+            RunPostApp();
+
             Info("Shutting down Overload.");
 
             KillRunningProcess("overload");
@@ -1236,12 +1361,7 @@ namespace OverloadClientTool
 
         private void StopExitButton_Click(object sender, EventArgs e)
         {
-            if (serverProcessId > 0) StartServerButton_Click(null, null);
 
-            StopButton_Click(null, null);
-            trayExitClick = true;
-
-            Close();
         }
 
         private void Main_Resize(object sender, EventArgs e)
@@ -1508,6 +1628,8 @@ namespace OverloadClientTool
         {
             MapsListBox.Items.Clear();
 
+            mapManager.Resort(NewMapsFirstCheckBox.Checked);
+
             foreach (KeyValuePair<string, OverloadMap> map in mapManager.SortedMaps)
             {
                 if (map.Value.IsLocal && !(HideHiddenMaps && map.Value.Hidden))
@@ -1743,7 +1865,6 @@ namespace OverloadClientTool
                 }
             }
         }
-
         private void AutoUpdateMaps_Click(object sender, EventArgs e)
         {
             AutoUpdateMaps = AutoUpdateMapsCheckBox.Checked;
@@ -1940,7 +2061,6 @@ namespace OverloadClientTool
                 ActiveThemeName = newThemeName;
 
                 UpdateTheme(theme);
-                ThemeDescriptionLabel.Text = theme.Description;
 
                 AvailableThemesListBox.Invalidate();
             }
@@ -3200,6 +3320,83 @@ namespace OverloadClientTool
         private void WindowSizeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             WindowSize = WindowSizeComboBox.SelectedItem.ToString();
+        }
+
+        private void OnStartAppPath_TextChanged(object sender, EventArgs e)
+        {
+            OnStartApp = OnStartAppPath.Text;
+            ValidateSettings();
+        }
+
+        private void OnStopAppPath_TextChanged(object sender, EventArgs e)
+        {
+            OnStopApp = OnStopAppPath.Text;
+            ValidateSettings();
+        }
+
+        private void OnStartApp_DoubleClick(object sender, EventArgs e)
+        {
+            OnStartAppPath.SelectionLength = 0;
+
+            string save = Directory.GetCurrentDirectory();
+
+            try
+            {
+                OpenAppDialog.FileName = Path.GetFileName(OnStartAppPath.Text);
+                OpenAppDialog.InitialDirectory = Path.GetDirectoryName(OnStartAppPath.Text);
+            }
+            catch
+            {
+            }
+
+            DialogResult result = OpenAppDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                OnStartAppPath.Text = OpenAppDialog.FileName;
+                OnStartAppPath.SelectionLength = 0;
+
+                OnStartApp = OnStartAppPath.Text;
+            }
+
+            Directory.SetCurrentDirectory(save);
+        }
+
+        private void OnStopAppPath_DoubleClick(object sender, EventArgs e)
+        {
+            OnStopAppPath.SelectionLength = 0;
+
+            string save = Directory.GetCurrentDirectory();
+
+            try
+            {
+                OpenAppDialog.FileName = Path.GetFileName(OnStopAppPath.Text);
+                OpenAppDialog.InitialDirectory = Path.GetDirectoryName(OnStopAppPath.Text);
+            }
+            catch
+            {
+            }
+
+            DialogResult result = OpenAppDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                OnStopAppPath.Text = OpenAppDialog.FileName;
+                OnStopAppPath.SelectionLength = 0;
+
+                OnStopApp = OnStopAppPath.Text;
+            }
+
+            Directory.SetCurrentDirectory(save);
+        }
+
+        private void NewMapsFirstCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            NewestMapFirst = this.NewMapsFirstCheckBox.Checked;
+            UpdateMapListBox();
+        }
+
+        private void BlackSecondMonitorCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            BlankSecondMonitor = BlankSecondMonitorCheckBox.Checked;
         }
     }
 }

@@ -18,6 +18,18 @@ namespace OverloadClientTool
             get { return Properties.Resources.Overload_Client_Tool_Help; }
         }
 
+        public string OnStartApp
+        {
+            get { return Properties.Settings.Default.OnStartApp; }
+            set { Properties.Settings.Default.OnStartApp = value; }
+        }
+
+        public string OnStopApp
+        {
+            get { return Properties.Settings.Default.OnStopApp; }
+            set { Properties.Settings.Default.OnStopApp = value; }
+        }
+
         public string OverloadPath
         {
             get { return Properties.Settings.Default.OverloadPath; }
@@ -258,6 +270,12 @@ namespace OverloadClientTool
             set { Properties.Settings.Default.GamingDisplay = value; }
         }
 
+        public bool BlankSecondMonitor
+        {
+            get { return Properties.Settings.Default.BlankSecondMonitor; }
+            set { Properties.Settings.Default.BlankSecondMonitor = value; }
+        }
+
         public void SaveSettings()
         {
             Properties.Settings.Default.Save();
@@ -273,6 +291,12 @@ namespace OverloadClientTool
         {
             get { return Properties.Settings.Default.SwitchDefault; }
             set { Properties.Settings.Default.SwitchDefault = value; }
+        }
+
+        public bool NewestMapFirst
+        {
+            get { return Properties.Settings.Default.NewestMapFirst; }
+            set { Properties.Settings.Default.NewestMapFirst = value; }
         }
 
         public void FindOverloadInstall(bool onlyOverload = false, bool showInfo = false)
@@ -473,6 +497,7 @@ namespace OverloadClientTool
                 MPMapsCheckBox.Checked = IncludeMP;
                 SPMapsCheckBox.Checked = IncludeSP;
                 CMMapsCheckBox.Checked = IncludeCM;
+                NewMapsFirstCheckBox.Checked = NewestMapFirst;
 
                 // Pilot settings.
                 AutoPilotsBackupCheckbox.Checked = AutoSavePilots;
@@ -487,10 +512,12 @@ namespace OverloadClientTool
                 MinimizeOnStartupCheckBox.Checked = StartMinimized;
                 UseTrayIcon.Checked = TrayInsteadOfTaskBar;
                 WindowSizeComboBox.SelectedItem = WindowSize;
-
                 DefaultDisplayCheckBox.Checked = SwitchDefault;
                 GamingDisplayCheckBox.Checked = SwitchGaming;
+                BlankSecondMonitorCheckBox.Checked = BlankSecondMonitor;
                 SuppressWinKeysCheckBox.Checked = SuppressWinKeys;
+                OnStartAppPath.Text = OnStartApp;
+                OnStopAppPath.Text = OnStopApp;
 
                 // Server settings.
                 ServerTrackerName.Text = OlmodServerName;
@@ -610,7 +637,10 @@ namespace OverloadClientTool
                     //(control as CustomComboBox).ComboBackColor = theme.InputBackColor; // theme.ButtonEnabledBackColor;
                     //(control as CustomComboBox).ComboForeColor = theme.InputForeColor; // theme.ButtonEnabledForeColor;
                     (control as CustomComboBox).ComboBackColor = theme.ButtonEnabledBackColor;
+
                     (control as CustomComboBox).ComboForeColor = theme.ButtonEnabledForeColor;
+                    //(control as CustomComboBox).ComboForeColor = theme.PanelForeColor;
+
                     (control as CustomComboBox).ComboBorderColor = theme.InputForeColor;
                     (control as CustomComboBox).BorderColor = theme.ButtonEnabledBackColor;
                 }
@@ -635,7 +665,7 @@ namespace OverloadClientTool
 
                 // Set text colors.
                 checkBox.BackColor = theme.PanelBackColor;
-                checkBox.ForeColor = (checkBox.Enabled) ? theme.PanelForeColor : Color.Red;
+                checkBox.ForeColor = theme.TextHighlightColor;
 
                 // Set checkmark colors.
                 checkBox.CheckBackColor = theme.PanelBackColor;

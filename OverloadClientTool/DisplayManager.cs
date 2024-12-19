@@ -383,6 +383,7 @@ namespace OverloadClientTool
 
         [DllImport("user32.dll")]
         public static extern bool EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE devMode);
+
     }
 
     [StructLayout(LayoutKind.Sequential)]

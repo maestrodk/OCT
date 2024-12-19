@@ -50,7 +50,7 @@ namespace OverloadClientTool
 
         private static Dictionary<string, int> ActiveServers = new Dictionary<string, int>();
 
-        private const string realServerListUrl = @"https://olproxy.otl.gg/api";
+        private const string realServerListUrl = @"https://tracker.otl.gg/api";
 
         private const string serverListUrl = @"https://octcache.playoverload.online/octServerList.dat";
         private const string serverListRequestTimeUrl = @"https://octcache.playoverload.online/octServerListRequestTime.dat";

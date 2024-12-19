@@ -11,7 +11,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>OverloadClientTool</RootNamespace>
     <AssemblyName>OverloadClientTool</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
@@ -78,6 +78,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -90,6 +91,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CCDWrapper\D3DmtVideoSignalStandard.cs" />
+    <Compile Include="CCDWrapper\DisplayConfig2DRegion.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigAdapterName.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigDeviceInfoHeader.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigDeviceInfoType.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigFlags.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigModeInfo.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigModeInfoType.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigPathInfo.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigPathSourceInfo.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigPathTargetInfo.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigPathWrap.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigPixelFormat.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigRational.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigRotation.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigScaling.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigScanLineOrdering.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigSetTargetPersistence.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigSourceDeviceName.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigSourceMode.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigSourceStatus.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigTargetDeviceName.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigTargetDeviceNameFlags.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigTargetMode.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigTargetPreferredMode.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigTargetStatus.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigTopologyId.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigVideoOutputTechnology.cs" />
+    <Compile Include="CCDWrapper\DisplayConfigVideoSignalInfo.cs" />
+    <Compile Include="CCDWrapper\IDisplayConfigInfo.cs" />
+    <Compile Include="CCDWrapper\LUID.cs" />
+    <Compile Include="CCDWrapper\PointL.cs" />
+    <Compile Include="CCDWrapper\QueryDisplayFlags.cs" />
+    <Compile Include="CCDWrapper\SdcFlags.cs" />
+    <Compile Include="CCDWrapper\StatusCode.cs" />
+    <Compile Include="CCDWrapper\Wrapper.cs" />
     <Compile Include="CustomCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -113,6 +150,7 @@
     <Compile Include="Install.cs" />
     <Compile Include="KeyboardHook.cs" />
     <Compile Include="MiniJson.cs" />
+    <Compile Include="Monitor.cs" />
     <Compile Include="OCTRelease.cs" />
     <Compile Include="OCTErrorForm.cs">
       <SubType>Form</SubType>
@@ -133,6 +171,9 @@
     </Compile>
     <Compile Include="OCTUpdateForm.Designer.cs">
       <DependentUpon>OCTUpdateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoundCorneredButton.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Servers.cs" />
     <Compile Include="Theme.cs" />

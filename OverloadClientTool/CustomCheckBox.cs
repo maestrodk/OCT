@@ -35,7 +35,7 @@ namespace OverloadClientTool
 
         protected override void OnPaint(PaintEventArgs paintEvent)
         {
-            Color foreColor = (this.Enabled) ? this.CheckForeColor : this.CheckInactiveForeColor;
+            Color checkForeColor = (this.Enabled) ? this.CheckForeColor : this.CheckInactiveForeColor;
 
             base.OnPaint(paintEvent);
 
@@ -43,19 +43,19 @@ namespace OverloadClientTool
             paintEvent.Graphics.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(0, 0, this.Width, this.Height));
 
             // Paint the checkbox.
-            paintEvent.Graphics.DrawRectangle(new Pen(foreColor), new Rectangle(0, 0, 14, 14));
+            paintEvent.Graphics.DrawRectangle(new Pen(checkForeColor), new Rectangle(0, 0, 14, 14));
             paintEvent.Graphics.FillRectangle(new SolidBrush(this.CheckBackColor), new Rectangle(1, 1, 13, 13));
 
             // Paint the checkmark.
             if (this.Checked)
             {
-                paintEvent.Graphics.DrawLine(new Pen(foreColor, 1),  2, 6,   5, 11);
-                paintEvent.Graphics.DrawLine(new Pen(foreColor, 1),  5, 11,  12, 2);
+                paintEvent.Graphics.DrawLine(new Pen(checkForeColor, 1),  2, 6,   5, 11);
+                paintEvent.Graphics.DrawLine(new Pen(checkForeColor, 1),  5, 11,  12, 2);
             }
 
             // Paint the text.
             Rectangle rect = new Rectangle(16, 1, this.Width - 16, this.Height);
-            TextRenderer.DrawText(paintEvent.Graphics, this.Text, Font, rect, foreColor, this.BackColor, TextFormatFlags.Left | TextFormatFlags.Default);
+            TextRenderer.DrawText(paintEvent.Graphics, this.Text, Font, rect, this.ForeColor, this.BackColor, TextFormatFlags.Left | TextFormatFlags.Default);
         }
     }
 }
