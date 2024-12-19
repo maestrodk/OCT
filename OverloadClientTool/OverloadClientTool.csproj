@@ -218,6 +218,7 @@
     <Compile Include="TrackerMatchIdle.cs" />
     <Compile Include="TrackerMatchJoin.cs" />
     <Compile Include="TrackerMatchCreate.cs" />
+    <None Include="OCT_Update_now.cmd" />
     <None Include="OverloadClientTool.snk" />
     <EmbeddedResource Include="OCTErrorForm.resx">
       <DependentUpon>OCTErrorForm.cs</DependentUpon>
@@ -238,6 +239,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="OverloadClientToolHelp.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
